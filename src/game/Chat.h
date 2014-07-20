@@ -99,7 +99,7 @@ class MANGOS_DLL_SPEC ChatHandler
         *
         * Method:    BuildChatPacket build message chat packet generic way
         * FullName:  ChatHandler::BuildChatPacket
-        * Access:    public static 
+        * Access:    public static
         * Returns:   void
         *
         * \param WorldPacket& data             : Provided packet will be filled with requested info
@@ -140,7 +140,7 @@ class MANGOS_DLL_SPEC ChatHandler
         bool SetDataForCommandInTable(ChatCommand* table, const char* text, uint32 security, std::string const& help);
         void ExecuteCommand(const char* text);
         void LogCommand(char const* fullcmd);
-        
+
         bool ShowHelpForCommand(ChatCommand* table, const char* cmd);
         bool ShowHelpForSubCommands(ChatCommand* table, char const* cmd);
         ChatCommandSearchResult FindCommand(ChatCommand* table, char const*& text, ChatCommand*& command, ChatCommand** parentCommand = NULL, std::string* cmdNamePtr = NULL, bool allAvailable = false, bool exactlyName = false);
@@ -460,7 +460,6 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleReloadSpellThreatsCommand(char* args);
         bool HandleReloadSpellPetAurasCommand(char* args);
 
-        bool HandleResetAchievementsCommand(char* args);
         bool HandleResetAllCommand(char* args);
         bool HandleResetHonorCommand(char* args);
         bool HandleResetLevelCommand(char* args);
