@@ -40,7 +40,9 @@
 #include "Util.h"
 #include "ScriptMgr.h"
 #include "vmap/GameObjectModel.h"
+#include "CreatureAISelector.h"
 #include "SQLStorages.h"
+#include "LuaEngine.h"
 
 GameObject::GameObject() : WorldObject(),
     loot(this),
@@ -69,11 +71,16 @@ GameObject::GameObject() : WorldObject(),
 
 GameObject::~GameObject()
 {
+    Eluna::RemoveRef(this);
+
     delete m_model;
 }
 
 void GameObject::AddToWorld()
 {
+    if (!IsInWorld())
+        sEluna->OnAddToWorld(this);
+
     ///- Register the gameobject for guid lookup
     if (!IsInWorld())
         GetMap()->GetObjectsStore().insert<GameObject>(GetObjectGuid(), (GameObject*)this);
@@ -92,6 +99,8 @@ void GameObject::RemoveFromWorld()
     ///- Remove the gameobject from the accessor
     if (IsInWorld())
     {
+        sEluna->OnRemoveFromWorld(this);
+
         // Notify the outdoor pvp script
         if (OutdoorPvP* outdoorPvP = sOutdoorPvPMgr.GetScript(GetZoneId()))
             outdoorPvP->HandleGameObjectRemove(this);
@@ -115,6 +124,15 @@ void GameObject::RemoveFromWorld()
     }
 
     Object::RemoveFromWorld();
+}
+
+void GameObject::CleanupsBeforeDelete()
+{
+    if (m_uint32Values)
+    {
+        m_Events.KillAllEvents(false);
+    }
+    WorldObject::CleanupsBeforeDelete();
 }
 
 bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state)
@@ -179,6 +197,8 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, float x, float
             break;
     }
 
+    sEluna->OnSpawn(this);
+
     // Notify the battleground or outdoor pvp script
     if (map->IsBattleGround())
         ((BattleGroundMap*)map)->GetBG()->HandleGameObjectCreate(this);
@@ -201,6 +221,10 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
         //((Transport*)this)->Update(p_time);
         return;
     }
+
+    m_Events.Update(p_time);
+    // used by eluna
+    sEluna->UpdateAI(this, p_time);
 
     switch (m_lootState)
     {
@@ -968,6 +992,12 @@ void GameObject::Use(Unit* user)
     uint32 spellId = 0;
     bool triggered = false;
 
+    if (Player* playerUser = user->ToPlayer())
+    {
+        if (sScriptMgr.OnGossipHello(playerUser, this))
+            return;
+    }
+
     // test only for exist cooldown data (cooldown timer used for door/buttons reset that not have use cooldown)
     if (uint32 cooldown = GetGOInfo()->GetCooldown())
     {
@@ -1694,12 +1724,14 @@ bool GameObject::IsFriendlyTo(Unit const* unit) const
 void GameObject::SetLootState(LootState state)
 {
     m_lootState = state;
+    sEluna->OnLootStateChanged(this, state);
     UpdateCollisionState();
 }
 
 void GameObject::SetGoState(GOState state)
 {
     SetByteValue(GAMEOBJECT_STATE, 0, state);
+    sEluna->OnGameObjectStateChanged(this, state);
     UpdateCollisionState();
 }
 

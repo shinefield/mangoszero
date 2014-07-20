@@ -32,6 +32,12 @@ if(WITH_MAP_TOOLS)
 endif()
 
 #-----------------------------------------------------------------------------
+# Build internal Lua library
+if(WITH_MOD_LUA)
+    add_subdirectory(lua)
+endif()
+
+#-----------------------------------------------------------------------------
 # Build internal recast-navigation
 add_subdirectory(recastnavigation)
 

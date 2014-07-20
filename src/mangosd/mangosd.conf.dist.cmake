@@ -302,6 +302,10 @@ CleanCharacterDB = 1
 #        Log file of DB errors detected at server run
 #        Default: "DBErrors.log"
 #
+#    ElunaErrorLogFile
+#        Log file of Eluna errors detected at server run
+#        Default: "ElunaErrors.log"
+#
 #    EventAIErrorLogFile
 #        Log file of EventAI errors detected at server run
 #        Default: "EventAIErrors.log"
@@ -379,6 +383,7 @@ LogFilter_SpellCast = 0
 WorldLogFile = ""
 WorldLogTimestamp = 0
 DBErrorLogFile = "DBErrors.log"
+ElunaErrorLogFile = "ElunaErrors.log"
 EventAIErrorLogFile = "EventAIErrors.log"
 CharLogFile = "Char.log"
 CharLogTimestamp = 0
@@ -962,7 +967,7 @@ GuidReserveSize.GameObject = 100
 #                 1 (enable fake messages preventing)
 #
 #    ChatStrictLinkChecking.Severity
-#        Check chat messages for ingame links to spells, items, quests, achievements etc.
+#        Check chat messages for ingame links to spells, items, quests, etc.
 #        Default: 0 (disable link checking)
 #                 1 (check if only valid pipe commands are used. This prevents posting pictures for example)
 #                 2 (verifiy that pipe commands are used in a correct order)
@@ -1529,3 +1534,19 @@ SOAP.Port = 7878
 CharDelete.Method = 0
 CharDelete.MinLevel = 0
 CharDelete.KeepDays = 30
+
+###################################################################################################################
+# ELUNA SETTINGS
+#
+#    Eluna.Enabled
+#        Enable Enabled Eluna LuaEngine
+#        Default: 0 (Disabled)
+#                 1 (Enabled)
+#
+#    Eluna.ScriptPath
+#        Default: "lua_scripts"
+#
+###################################################################################################################
+
+Eluna.Enabled = 1
+Eluna.ScriptPath = "${CMAKE_INSTALL_PREFIX}/share/${APPLICATION_NAME}/lua_scripts"

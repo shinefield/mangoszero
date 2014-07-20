@@ -48,6 +48,12 @@ add_subdirectory(OutdoorPvP)
 add_subdirectory(movement)
 
 #-----------------------------------------------------------------------------
+# Build the Eluna Lua scripting library
+if(WITH_MOD_LUA)
+    add_subdirectory(Eluna)
+endif()
+
+#-----------------------------------------------------------------------------
 # Define the game library
 set(sources
     AccountMgr.cpp
@@ -313,6 +319,13 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src/shared/
 )
 
+if(WITH_MOD_LUA)
+    include_directories(
+        ${CMAKE_SOURCE_DIR}/dep/lua/src/
+        ${CMAKE_CURRENT_SOURCE_DIR}/Eluna/
+    )
+endif()
+
 #-----------------------------------------------------------------------------
 # Build the game library
 add_library(mangos-game STATIC ${game_LIB_SRCS})
@@ -323,7 +336,11 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
 
-if(WITH_MOD_SCRIPTDEV2)
+if(WITH_MOD_LUA)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_LUA" )
+    set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+    target_link_libraries(mangos-game mangos-eluna)
+elseif(WITH_MOD_SCRIPTDEV2)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_SCRIPTDEV2" )
     set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 endif()
