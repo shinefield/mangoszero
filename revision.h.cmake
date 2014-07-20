@@ -3,7 +3,7 @@
  * version, supporting clients for patch 1.12.x.
  *
  * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
- * Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
