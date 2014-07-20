@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "InstanceData.h"
 #include "Database/DatabaseEnv.h"
+#include "InstanceData.h"
 #include "Map.h"
 
 void InstanceData::SaveToDB() const

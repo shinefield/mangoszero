@@ -24,12 +24,12 @@
  */
 
 #include "Common.h"
-#include "Language.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "Language.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Player.h"

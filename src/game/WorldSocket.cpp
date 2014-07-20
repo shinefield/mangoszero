@@ -34,22 +34,21 @@
 #include <ace/Reactor.h>
 #include <ace/Auto_Ptr.h>
 
-#include "WorldSocket.h"
 #include "Common.h"
-
+#include "ByteBuffer.h"
+#include "Auth/BigNumber.h"
+#include "Auth/Sha1.h"
+#include "Database/DatabaseEnv.h"
+#include "Log.h"
 #include "Util.h"
+#include "WorldSocket.h"
 #include "World.h"
 #include "WorldPacket.h"
 #include "SharedDefines.h"
-#include "ByteBuffer.h"
 #include "AddonHandler.h"
 #include "Opcodes.h"
-#include "Database/DatabaseEnv.h"
-#include "Auth/BigNumber.h"
-#include "Auth/Sha1.h"
 #include "WorldSession.h"
 #include "WorldSocketMgr.h"
-#include "Log.h"
 #include "DBCStores.h"
 #include "LuaEngine.h"
 

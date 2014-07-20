@@ -23,10 +23,13 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Player.h"
-#include "Language.h"
+#include <cmath>
+
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
+#include "Util.h"
+#include "Player.h"
+#include "Language.h"
 #include "Opcodes.h"
 #include "SpellMgr.h"
 #include "World.h"
@@ -52,7 +55,6 @@
 #include "Guild.h"
 #include "GuildMgr.h"
 #include "Pet.h"
-#include "Util.h"
 #include "Transports.h"
 #include "Weather.h"
 #include "BattleGround/BattleGround.h"
@@ -68,8 +70,6 @@
 #include "DBCStores.h"
 #include "SQLStorages.h"
 #include "LuaEngine.h"
-
-#include <cmath>
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 

@@ -23,19 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup mangosd
-*/
-
-#include "WorldSocketMgr.h"
 #include "Common.h"
+#include "Database/DatabaseEnv.h"
+#include "Timer.h"
+#include "WorldSocketMgr.h"
 #include "World.h"
 #include "WorldRunnable.h"
-#include "Timer.h"
 #include "ObjectAccessor.h"
 #include "MapManager.h"
-
-#include "Database/DatabaseEnv.h"
 
 #define WORLD_SLEEP_CONST 50
 

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "ChannelMgr.h"
 #include "Policies/Singleton.h"
+#include "ChannelMgr.h"
 #include "World.h"
 
 INSTANTIATE_SINGLETON_1(AllianceChannelMgr);

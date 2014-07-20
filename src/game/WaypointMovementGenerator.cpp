@@ -24,6 +24,7 @@
  */
 
 #include <ctime>
+#include <cassert>
 
 #include "WaypointMovementGenerator.h"
 #include "ObjectMgr.h"
@@ -35,8 +36,6 @@
 #include "ScriptMgr.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"
-
-#include <cassert>
 
 //-----------------------------------------------//
 void WaypointMovementGenerator<Creature>::LoadPath(Creature& creature)

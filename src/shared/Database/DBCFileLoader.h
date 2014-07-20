@@ -25,9 +25,10 @@
 
 #ifndef DBC_FILE_LOADER_H
 #define DBC_FILE_LOADER_H
+
+#include <cassert>
 #include "Platform/Define.h"
 #include "Utilities/ByteConverter.h"
-#include <cassert>
 
 enum FieldFormat
 {

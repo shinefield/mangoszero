@@ -28,8 +28,8 @@
 #include <ace/TSS_T.h>
 #include <ace/INET_Addr.h>
 
-#include "Util.h"
 #include "Timer.h"
+#include "Util.h"
 
 typedef ACE_TSS<MTRand> MTRandTSS;
 static MTRandTSS mtRand;

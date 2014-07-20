@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "GuardAI.h"
 #include "Errors.h"
+#include "GuardAI.h"
 #include "Creature.h"
 #include "Player.h"
 #include "World.h"

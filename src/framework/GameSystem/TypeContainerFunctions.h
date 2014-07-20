@@ -26,15 +26,16 @@
 #ifndef TYPECONTAINER_FUNCTIONS_H
 #define TYPECONTAINER_FUNCTIONS_H
 
-/*
- * Here you'll find a list of helper functions to make
- * the TypeContainer usefull.  Without it, its hard
- * to access or mutate the container.
- */
+#include <map>
 
 #include "Platform/Define.h"
 #include "Utilities/TypeList.h"
-#include <map>
+
+/*
+ * Here you'll find a list of helper functions to make
+ * the TypeContainer useful.  Without it, its hard
+ * to access or mutate the container.
+ */
 
 namespace MaNGOS
 {

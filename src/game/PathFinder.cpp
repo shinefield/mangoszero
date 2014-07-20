@@ -25,11 +25,11 @@
 
 #include <DetourCommon.h>
 
+#include "Log.h"
 #include "MoveMap.h"
 #include "GridMap.h"
 #include "Creature.h"
 #include "PathFinder.h"
-#include "Log.h"
 
 ////////////////// PathFinder //////////////////
 PathFinder::PathFinder(const Unit* owner) :

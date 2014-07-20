@@ -23,9 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Pet.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
+#include "Util.h"
+#include "Pet.h"
 #include "WorldPacket.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
@@ -33,7 +34,6 @@
 #include "SpellAuras.h"
 #include "CreatureAI.h"
 #include "Unit.h"
-#include "Util.h"
 
 // numbers represent minutes * 100 while happy (you get 100 loyalty points per min while happy)
 uint32 const LevelUpLoyalty[6] =

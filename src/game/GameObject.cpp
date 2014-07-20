@@ -23,6 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Database/DatabaseEnv.h"
+#include "Util.h"
 #include "GameObject.h"
 #include "QuestDef.h"
 #include "ObjectMgr.h"
@@ -33,7 +35,6 @@
 #include "Opcodes.h"
 #include "WorldPacket.h"
 #include "World.h"
-#include "Database/DatabaseEnv.h"
 #include "LootMgr.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
@@ -44,7 +45,6 @@
 #include "BattleGround/BattleGround.h"
 #include "BattleGround/BattleGroundAV.h"
 #include "OutdoorPvP/OutdoorPvP.h"
-#include "Util.h"
 #include "ScriptMgr.h"
 #include "vmap/GameObjectModel.h"
 #include "CreatureAISelector.h"

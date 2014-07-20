@@ -23,9 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "MoveSplineFlag.h"
 #include <math.h>
 #include <string>
+
+#include "MoveSplineFlag.h"
 
 namespace Movement
 {

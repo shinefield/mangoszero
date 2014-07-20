@@ -23,16 +23,16 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "AggressorAI.h"
+#include <list>
+
 #include "Errors.h"
+#include "AggressorAI.h"
 #include "Creature.h"
 #include "SharedDefines.h"
 #include "VMapFactory.h"
 #include "World.h"
 #include "DBCStores.h"
 #include "Map.h"
-
-#include <list>
 
 int
 AggressorAI::Permissible(const Creature* creature)

@@ -23,12 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "ObjectGuid.h"
+#include <sstream>
 
+#include "ObjectGuid.h"
 #include "World.h"
 #include "ObjectMgr.h"
-
-#include <sstream>
 
 char const* ObjectGuid::GetTypeName(HighGuid high)
 {

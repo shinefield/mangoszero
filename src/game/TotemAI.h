@@ -26,9 +26,9 @@
 #ifndef MANGOS_TOTEMAI_H
 #define MANGOS_TOTEMAI_H
 
+#include "Timer.h"
 #include "CreatureAI.h"
 #include "ObjectGuid.h"
-#include "Timer.h"
 
 class Creature;
 class Totem;
@@ -52,4 +52,5 @@ class MANGOS_DLL_DECL TotemAI : public CreatureAI
     private:
         ObjectGuid i_victimGuid;
 };
+
 #endif

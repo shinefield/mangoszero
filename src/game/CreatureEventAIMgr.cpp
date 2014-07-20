@@ -23,14 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "ProgressBar.h"
 #include "SQLStorages.h"
 #include "CreatureEventAI.h"
 #include "CreatureEventAIMgr.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
-#include "Policies/Singleton.h"
 #include "ObjectGuid.h"
 #include "GridDefines.h"
 #include "SpellMgr.h"

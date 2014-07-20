@@ -23,16 +23,16 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "AuctionHouseMgr.h"
+#include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
+#include "ProgressBar.h"
+#include "Log.h"
+#include "AuctionHouseMgr.h"
 #include "SQLStorages.h"
 #include "DBCStores.h"
-#include "ProgressBar.h"
-
 #include "AccountMgr.h"
 #include "Item.h"
 #include "Language.h"
-#include "Log.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "Player.h"
@@ -41,8 +41,6 @@
 #include "WorldSession.h"
 #include "Mail.h"
 #include "LuaEngine.h"
-
-#include "Policies/Singleton.h"
 
 INSTANTIATE_SINGLETON_1(AuctionHouseMgr);
 

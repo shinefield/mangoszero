@@ -28,13 +28,13 @@
 /// \file
 
 #include "Common.h"
+#include "Config/Config.h"
 #include "Language.h"
 #include "Log.h"
+#include "Util.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "WorldSession.h"
-#include "Config/Config.h"
-#include "Util.h"
 #include "AccountMgr.h"
 #include "CliRunnable.h"
 #include "MapManager.h"

@@ -27,20 +27,21 @@
 /// @{
 /// \file
 
-#include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Config/Config.h"
-#include "ProgressBar.h"
-#include "Log.h"
-#include "Master.h"
-#include "SystemConfig.h"
-#include "AuctionHouseBot/AuctionHouseBot.h"
-#include "revision.h"
-#include "revision_nr.h"
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
 #include <ace/Version.h>
 #include <ace/Get_Opt.h>
+
+#include "Common.h"
+#include "Config/Config.h"
+#include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "ProgressBar.h"
+#include "SystemConfig.h"
+#include "revision.h"
+#include "revision_nr.h"
+#include "Master.h"
+#include "AuctionHouseBot/AuctionHouseBot.h"
 
 #ifdef WIN32
 #include "ServiceWin32.h"

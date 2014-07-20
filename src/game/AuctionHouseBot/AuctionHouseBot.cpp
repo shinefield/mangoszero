@@ -23,19 +23,18 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "AuctionHouseBot.h"
-#include "ProgressBar.h"
+#include "Policies/Singleton.h"
 #include "Log.h"
+#include "ProgressBar.h"
+#include "SystemConfig.h"
+#include "AuctionHouseBot.h"
 #include "ObjectMgr.h"
 #include "AuctionHouseMgr.h"
-#include "SystemConfig.h"
 #include "SQLStorages.h"
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
 #define AUCTIONHOUSEBOT_CONF_VERSION    2010102201
-
-#include "Policies/Singleton.h"
 
 struct BuyerAuctionEval
 {

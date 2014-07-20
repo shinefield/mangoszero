@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "DatabaseEnv.h"
 #include "Database/SqlDelayThread.h"
 #include "Database/SqlOperations.h"
-#include "DatabaseEnv.h"
 
 SqlDelayThread::SqlDelayThread(Database* db, SqlConnection* conn) : m_dbEngine(db), m_dbConnection(conn), m_running(true)
 {

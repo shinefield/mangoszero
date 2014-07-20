@@ -23,13 +23,13 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <algorithm>
+#include <stdio.h>
+
 #include "model.h"
 #include "dbcfile.h"
 #include "adtfile.h"
 #include "vmapexport.h"
-
-#include <algorithm>
-#include <stdio.h>
 
 bool ExtractSingleModel(std::string& origPath, std::string& fixedName, StringSet& failedPaths)
 {

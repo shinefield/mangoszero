@@ -23,12 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "Util.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "UpdateMask.h"
 #include "World.h"
 #include "ObjectMgr.h"
@@ -40,7 +42,6 @@
 #include "Group.h"
 #include "UpdateData.h"
 #include "ObjectAccessor.h"
-#include "Policies/Singleton.h"
 #include "Totem.h"
 #include "Creature.h"
 #include "Formulas.h"
@@ -48,7 +49,6 @@
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "CreatureAI.h"
 #include "ScriptMgr.h"
-#include "Util.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"

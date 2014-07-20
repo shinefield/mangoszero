@@ -26,11 +26,12 @@
 #ifndef _SCRIPTMGR_H
 #define _SCRIPTMGR_H
 
-#include "Common.h"
+#include <ace/Atomic_Op.h>
+
 #include "Policies/Singleton.h"
+#include "Common.h"
 #include "ObjectGuid.h"
 #include "DBCEnums.h"
-#include "ace/Atomic_Op.h"
 
 struct AreaTriggerEntry;
 struct SpellEntry;

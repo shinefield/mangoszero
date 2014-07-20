@@ -27,9 +27,9 @@
 #define __BATTLEGROUND_H
 
 #include "Common.h"
+#include "ByteBuffer.h"
 #include "SharedDefines.h"
 #include "Map.h"
-#include "ByteBuffer.h"
 #include "ObjectGuid.h"
 
 // magic event-numbers

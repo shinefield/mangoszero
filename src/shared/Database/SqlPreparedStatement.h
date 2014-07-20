@@ -26,10 +26,11 @@
 #ifndef SQLPREPAREDSTATEMENTS_H
 #define SQLPREPAREDSTATEMENTS_H
 
-#include "Common.h"
-#include <ace/TSS_T.h>
 #include <vector>
 #include <stdexcept>
+#include <ace/TSS_T.h>
+
+#include "Common.h"
 
 class Database;
 class SqlConnection;

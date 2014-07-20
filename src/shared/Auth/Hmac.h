@@ -26,9 +26,10 @@
 #ifndef _AUTH_HMAC_H
 #define _AUTH_HMAC_H
 
-#include "Common.h"
 #include <openssl/hmac.h>
 #include <openssl/sha.h>
+
+#include "Common.h"
 
 class BigNumber;
 
@@ -50,4 +51,5 @@ class HmacHash
         uint8 m_key[SEED_KEY_SIZE];
         uint8 m_digest[SHA_DIGEST_LENGTH];
 };
+
 #endif

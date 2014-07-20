@@ -27,14 +27,14 @@
     \ingroup world
 */
 
+#include "Log.h"
+#include "Util.h"
 #include "Weather.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "World.h"
-#include "Log.h"
 #include "ObjectMgr.h"
-#include "Util.h"
 #include "LuaEngine.h"
 
 /// Weather sound defines ( only for 1.12 )

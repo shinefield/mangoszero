@@ -39,10 +39,10 @@
  *
  */
 
-#include "CreatureLinkingMgr.h"
 #include "Policies/Singleton.h"
-#include "ProgressBar.h"
 #include "Database/DatabaseEnv.h"
+#include "ProgressBar.h"
+#include "CreatureLinkingMgr.h"
 #include "ObjectMgr.h"
 #include "SharedDefines.h"
 #include "Creature.h"

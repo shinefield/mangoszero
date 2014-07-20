@@ -26,8 +26,8 @@
 #ifndef WORLD_PVP_MGR_H
 #define WORLD_PVP_MGR_H
 
-#include "Common.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
 #include "Timer.h"
 
 enum

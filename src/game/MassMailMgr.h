@@ -41,11 +41,11 @@
 #ifndef MANGOS_MASS_MAIL_MGR_H
 #define MANGOS_MASS_MAIL_MGR_H
 
+#include <memory>
+
+#include "Policies/Singleton.h"
 #include "Common.h"
 #include "Mail.h"
-#include "Policies/Singleton.h"
-
-#include <memory>
 
 /**
  * A class to represent the mail send factory to multiple (often all existing) characters.

@@ -28,8 +28,7 @@
 *  \author Derex <derex101@gmail.com>
 */
 
-#include "WorldSocketMgr.h"
-
+#include <set>
 #include <ace/ACE.h>
 #include <ace/Log_Msg.h>
 #include <ace/Reactor.h>
@@ -43,12 +42,11 @@
 #include <ace/os_include/sys/os_types.h>
 #include <ace/os_include/sys/os_socket.h>
 
-#include <set>
-
-#include "Log.h"
 #include "Common.h"
 #include "Config/Config.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "WorldSocketMgr.h"
 #include "WorldSocket.h"
 
 /**

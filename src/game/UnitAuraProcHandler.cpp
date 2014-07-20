@@ -25,6 +25,7 @@
 
 #include "Common.h"
 #include "Log.h"
+#include "Util.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Player.h"
@@ -36,7 +37,6 @@
 #include "Formulas.h"
 #include "CreatureAI.h"
 #include "ScriptMgr.h"
-#include "Util.h"
 
 pAuraProcHandler AuraProcHandler[TOTAL_AURAS] =
 {

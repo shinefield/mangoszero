@@ -28,11 +28,8 @@
 #ifndef _DATABASEMYSQL_H
 #define _DATABASEMYSQL_H
 
-//#include "Common.h"
-#include "Database.h"
-#include "Policies/Singleton.h"
-#include "ace/Thread_Mutex.h"
-#include "ace/Guard_T.h"
+#include <ace/Thread_Mutex.h>
+#include <ace/Guard_T.h>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -40,6 +37,9 @@
 #else
 #include <mysql.h>
 #endif
+
+#include "Policies/Singleton.h"
+#include "Database.h"
 
 // MySQL prepared statement class
 class MANGOS_DLL_SPEC MySqlPreparedStatement : public SqlPreparedStatement

@@ -26,10 +26,10 @@
 #ifndef THREADING_H
 #define THREADING_H
 
+#include <assert.h>
 #include <ace/Thread.h>
 #include <ace/TSS_T.h>
-#include "ace/Atomic_Op.h"
-#include <assert.h>
+#include <ace/Atomic_Op.h>
 
 namespace ACE_Based
 {

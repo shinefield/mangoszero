@@ -26,17 +26,16 @@
 #ifndef _BIH_H
 #define _BIH_H
 
-#include <G3D/Vector3.h>
-#include <G3D/Ray.h>
-#include <G3D/AABox.h>
-
-#include <Platform/Define.h>
-
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 #include <limits>
 #include <cmath>
+#include <G3D/Vector3.h>
+#include <G3D/Ray.h>
+#include <G3D/AABox.h>
+
+#include "Platform/Define.h"
 
 #define MAX_STACK_SIZE 64
 

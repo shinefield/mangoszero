@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "MapManager.h"
-#include "MapPersistentStateMgr.h"
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
+#include "MapManager.h"
+#include "MapPersistentStateMgr.h"
 #include "Transports.h"
 #include "GridDefines.h"
 #include "World.h"

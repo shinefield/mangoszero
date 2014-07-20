@@ -26,11 +26,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <vector>
+
 #include "loadlib/loadlib.h"
 #include "vec3d.h"
-//#include "mpq.h"
 #include "modelheaders.h"
-#include <vector>
 #include "vmapexport.h"
 
 class WMOInstance;

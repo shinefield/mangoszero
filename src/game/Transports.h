@@ -26,11 +26,11 @@
 #ifndef TRANSPORTS_H
 #define TRANSPORTS_H
 
-#include "GameObject.h"
-
 #include <map>
 #include <set>
 #include <string>
+
+#include "GameObject.h"
 
 class Transport : public GameObject
 {

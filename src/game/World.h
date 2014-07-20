@@ -30,14 +30,14 @@
 #ifndef __WORLD_H
 #define __WORLD_H
 
-#include "Common.h"
-#include "Timer.h"
-#include "Policies/Singleton.h"
-#include "SharedDefines.h"
-
 #include <map>
 #include <set>
 #include <list>
+
+#include "Policies/Singleton.h"
+#include "Common.h"
+#include "Timer.h"
+#include "SharedDefines.h"
 
 class Object;
 class WorldPacket;

@@ -26,9 +26,10 @@
 #ifndef _ACCMGR_H
 #define _ACCMGR_H
 
-#include "Common.h"
-#include "Policies/Singleton.h"
 #include <string>
+
+#include "Policies/Singleton.h"
+#include "Common.h"
 
 enum AccountOpResult
 {
@@ -64,4 +65,5 @@ class AccountMgr
 };
 
 #define sAccountMgr MaNGOS::Singleton<AccountMgr>::Instance()
+
 #endif

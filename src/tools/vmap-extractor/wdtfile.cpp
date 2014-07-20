@@ -23,10 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cstdio>
+
 #include "vmapexport.h"
 #include "wdtfile.h"
 #include "adtfile.h"
-#include <cstdio>
 
 char* wdtGetPlainName(char* FileName)
 {

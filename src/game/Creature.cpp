@@ -23,8 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Creature.h"
+#include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "Util.h"
+#include "Creature.h"
 #include "WorldPacket.h"
 #include "World.h"
 #include "ObjectMgr.h"
@@ -38,7 +41,6 @@
 #include "GameEventMgr.h"
 #include "PoolManager.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "LootMgr.h"
 #include "MapManager.h"
 #include "CreatureAI.h"
@@ -50,17 +52,12 @@
 #include "BattleGround/BattleGroundMgr.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "Spell.h"
-#include "Util.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "movement/MoveSplineInit.h"
 #include "CreatureLinkingMgr.h"
 #include "LuaEngine.h"
-
-// apply implementation of the singletons
-#include "Policies/Singleton.h"
-
 
 TrainerSpell const* TrainerSpellData::Find(uint32 spell_id) const
 {

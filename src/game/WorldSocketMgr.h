@@ -32,11 +32,10 @@
 #ifndef __WORLDSOCKETMGR_H
 #define __WORLDSOCKETMGR_H
 
+#include <string>
 #include <ace/Basic_Types.h>
 #include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>
-
-#include <string>
 
 class WorldSocket;
 class ReactorRunnable;

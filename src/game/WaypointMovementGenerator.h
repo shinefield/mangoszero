@@ -32,12 +32,12 @@
  * packets for the players.
  */
 
+#include <vector>
+#include <set>
+
 #include "MovementGenerator.h"
 #include "WaypointManager.h"
 #include "DBCStructure.h"
-
-#include <vector>
-#include <set>
 
 #define FLIGHT_TRAVEL_UPDATE  100
 #define STOP_TIME_FOR_PLAYER  (3 * MINUTE * IN_MILLISECONDS)// 3 Minutes

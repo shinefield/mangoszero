@@ -23,15 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd
-/// @{
-/// \file
-
 #ifndef _MASTER_H
 #define _MASTER_H
 
-#include "Common.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
 
 /// Start the server
 class Master
@@ -53,5 +49,5 @@ class Master
 };
 
 #define sMaster MaNGOS::Singleton<Master>::Instance()
+
 #endif
-/// @}

@@ -26,8 +26,9 @@
 #ifndef _AUTHCRYPT_H
 #define _AUTHCRYPT_H
 
-#include <Common.h>
 #include <vector>
+
+#include "Common.h"
 
 class BigNumber;
 
@@ -56,4 +57,5 @@ class AuthCrypt
         uint8 _send_i, _send_j, _recv_i, _recv_j;
         bool _initialized;
 };
+
 #endif

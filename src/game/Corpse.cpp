@@ -23,12 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Database/DatabaseEnv.h"
 #include "Corpse.h"
 #include "Player.h"
 #include "UpdateMask.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
-#include "Database/DatabaseEnv.h"
 #include "Opcodes.h"
 #include "GossipDef.h"
 #include "World.h"

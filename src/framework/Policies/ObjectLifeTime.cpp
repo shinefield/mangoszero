@@ -24,6 +24,7 @@
  */
 
 #include <cstdlib>
+
 #include "ObjectLifeTime.h"
 
 namespace MaNGOS

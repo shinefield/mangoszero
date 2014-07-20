@@ -26,12 +26,15 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
+#include <string>
+#include <vector>
+
 #include "Common.h"
+#include "Database/DatabaseEnv.h"
+#include "Util.h"                                           // for Tokens typedef
 #include "ItemPrototype.h"
 #include "Unit.h"
 #include "Item.h"
-
-#include "Database/DatabaseEnv.h"
 #include "NPCHandler.h"
 #include "QuestDef.h"
 #include "Group.h"
@@ -39,15 +42,11 @@
 #include "WorldSession.h"
 #include "Pet.h"
 #include "MapReference.h"
-#include "Util.h"                                           // for Tokens typedef
 #include "ReputationMgr.h"
 #include "BattleGround/BattleGround.h"
 #include "DBCStores.h"
 #include "SharedDefines.h"
 #include "Chat.h"
-
-#include<string>
-#include<vector>
 
 struct Mail;
 class Channel;

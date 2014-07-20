@@ -23,19 +23,19 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
+#include "Log.h"
+#include "ProgressBar.h"
 #include "GameEventMgr.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "PoolManager.h"
-#include "ProgressBar.h"
 #include "Language.h"
-#include "Log.h"
 #include "MapManager.h"
 #include "BattleGround/BattleGroundMgr.h"
 #include "MassMailMgr.h"
 #include "SpellMgr.h"
-#include "Policies/Singleton.h"
 
 INSTANTIATE_SINGLETON_1(GameEventMgr);
 

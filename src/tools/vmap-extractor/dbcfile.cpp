@@ -23,12 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cstdio>
+
 #include "dbcfile.h"
 #include "mpq_libmpq.h"
 #undef min
 #undef max
-
-#include <cstdio>
 
 DBCFile::DBCFile(const std::string& filename) : filename(filename)
 {

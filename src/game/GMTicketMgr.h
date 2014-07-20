@@ -26,11 +26,12 @@
 #ifndef _GMTICKETMGR_H
 #define _GMTICKETMGR_H
 
+#include <map>
+
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Util.h"
 #include "ObjectGuid.h"
-#include <map>
 
 class GMTicket
 {

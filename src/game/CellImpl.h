@@ -26,10 +26,11 @@
 #ifndef MANGOS_CELLIMPL_H
 #define MANGOS_CELLIMPL_H
 
+#include <cmath>
+
 #include "Common.h"
 #include "Cell.h"
 #include "Map.h"
-#include <cmath>
 
 inline Cell::Cell(CellPair const& p)
 {

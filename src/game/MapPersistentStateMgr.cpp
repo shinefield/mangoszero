@@ -23,17 +23,17 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Log.h"
+#include "ProgressBar.h"
+#include "Timer.h"
 #include "MapPersistentStateMgr.h"
-
 #include "SQLStorages.h"
 #include "Player.h"
 #include "GridNotifiers.h"
-#include "Log.h"
 #include "GridStates.h"
 #include "CellImpl.h"
 #include "Map.h"
 #include "MapManager.h"
-#include "Timer.h"
 #include "GridNotifiersImpl.h"
 #include "Transports.h"
 #include "ObjectMgr.h"
@@ -41,7 +41,6 @@
 #include "World.h"
 #include "Group.h"
 #include "InstanceData.h"
-#include "ProgressBar.h"
 
 INSTANTIATE_SINGLETON_1(MapPersistentStateManager);
 

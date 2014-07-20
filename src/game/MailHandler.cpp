@@ -32,9 +32,9 @@
  *
  */
 
+#include "Log.h"
 #include "Mail.h"
 #include "Language.h"
-#include "Log.h"
 #include "ObjectGuid.h"
 #include "ObjectMgr.h"
 #include "Item.h"
@@ -65,7 +65,7 @@ bool WorldSession::CheckMailBox(ObjectGuid guid)
  * - Creates a MailDraft and adds the needed items, money, cost data.
  * - Sends the mail.
  *
- * Depending on the outcome of the checks performed the player will recieve a different
+ * Depending on the outcome of the checks performed the player will receive a different
  * MailResponseResult.
  *
  * @see MailResponseResult

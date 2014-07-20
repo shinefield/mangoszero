@@ -24,8 +24,9 @@
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
 #include "Log.h"
+#include "Util.h"
+#include "WorldPacket.h"
 #include "Corpse.h"
 #include "GameObject.h"
 #include "Player.h"
@@ -36,7 +37,6 @@
 #include "Object.h"
 #include "Group.h"
 #include "World.h"
-#include "Util.h"
 #include "DBCStores.h"
 #include "LuaEngine.h"
 

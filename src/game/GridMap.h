@@ -26,15 +26,15 @@
 #ifndef MANGOS_GRIDMAP_H
 #define MANGOS_GRIDMAP_H
 
+#include <bitset>
+#include <list>
+
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"
 #include "DBCStructure.h"
 #include "GridDefines.h"
 #include "Object.h"
 #include "SharedDefines.h"
-
-#include <bitset>
-#include <list>
 
 class Creature;
 class Unit;

@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
+#include "Log.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "Player.h"
 #include "ObjectMgr.h"
 #include "WorldSession.h"

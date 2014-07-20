@@ -23,13 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "vmapexport.h"
-#include "model.h"
-#include "wmo.h"
-#include "mpq_libmpq.h"
 #include <cassert>
 #include <algorithm>
 #include <cstdio>
+
+#include "mpq_libmpq.h"
+#include "vmapexport.h"
+#include "model.h"
+#include "wmo.h"
 
 Model::Model(std::string& filename) : filename(filename), vertices(0), indices(0)
 {

@@ -26,10 +26,10 @@
 #ifndef MANGOS_OBJECT_GUID_H
 #define MANGOS_OBJECT_GUID_H
 
+#include <functional>
+
 #include "Common.h"
 #include "ByteBuffer.h"
-
-#include <functional>
 
 enum TypeID
 {

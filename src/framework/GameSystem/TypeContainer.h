@@ -26,18 +26,19 @@
 #ifndef MANGOS_TYPECONTAINER_H
 #define MANGOS_TYPECONTAINER_H
 
-/*
- * Here, you'll find a series of containers that allow you to hold multiple
- * types of object at the same time.
- */
-
 #include <cassert>
 #include <map>
 #include <vector>
+
 #include "Platform/Define.h"
 #include "Utilities/TypeList.h"
 #include "Utilities/UnorderedMapSet.h"
 #include "GameSystem/GridRefManager.h"
+
+/*
+ * Here, you'll find a series of containers that allow you to hold multiple
+ * types of object at the same time.
+ */
 
 template<class OBJECT, class KEY_TYPE>
 struct ContainerUnorderedMap

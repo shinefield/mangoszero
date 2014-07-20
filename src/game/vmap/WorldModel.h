@@ -30,9 +30,9 @@
 #include <G3D/Vector3.h>
 #include <G3D/AABox.h>
 #include <G3D/Ray.h>
-#include "BIH.h"
 
 #include "Platform/Define.h"
+#include "BIH.h"
 
 namespace VMAP
 {

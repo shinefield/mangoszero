@@ -32,10 +32,10 @@
  *
  */
 
-#include "MassMailMgr.h"
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Database/DatabaseImpl.h"
+#include "MassMailMgr.h"
 #include "SharedDefines.h"
 #include "World.h"
 #include "ObjectMgr.h"

@@ -23,12 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "LootMgr.h"
 #include "Log.h"
-#include "ObjectMgr.h"
 #include "ProgressBar.h"
-#include "World.h"
 #include "Util.h"
+#include "LootMgr.h"
+#include "ObjectMgr.h"
+#include "World.h"
 #include "SharedDefines.h"
 #include "DBCStores.h"
 #include "SQLStorages.h"

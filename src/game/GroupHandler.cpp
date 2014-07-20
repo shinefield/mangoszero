@@ -25,8 +25,9 @@
 
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
-#include "Opcodes.h"
 #include "Log.h"
+#include "Util.h"
+#include "Opcodes.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
@@ -34,9 +35,8 @@
 #include "Player.h"
 #include "Group.h"
 #include "SocialMgr.h"
-#include "Util.h"
 
-/* differeces from off:
+/* differences from off:
     -you can uninvite yourself - is is useful
     -you can accept invitation even if leader went offline
 */

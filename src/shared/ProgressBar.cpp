@@ -25,8 +25,8 @@
 
 #include <stdio.h>
 
-#include "ProgressBar.h"
 #include "Errors.h"
+#include "ProgressBar.h"
 
 bool BarGoLink::m_showOutput = true;
 

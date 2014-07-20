@@ -26,10 +26,11 @@
 #ifndef __MANGOS_REPUTATION_MGR_H
 #define __MANGOS_REPUTATION_MGR_H
 
+#include <map>
+
 #include "Common.h"
 #include "SharedDefines.h"
 #include "DBCStructure.h"
-#include <map>
 
 enum FactionFlags
 {

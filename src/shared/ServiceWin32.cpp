@@ -25,11 +25,12 @@
 
 #ifdef WIN32
 
-#include "Common.h"
-#include "Log.h"
 #include <cstring>
 #include <windows.h>
 #include <winsvc.h>
+
+#include "Common.h"
+#include "Log.h"
 
 #if !defined(WINADVAPI)
 #if !defined(_ADVAPI32_)

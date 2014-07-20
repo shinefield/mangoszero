@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "TargetedMovementGenerator.h"
 #include "ByteBuffer.h"
 #include "Errors.h"
+#include "TargetedMovementGenerator.h"
 #include "PathFinder.h"
 #include "Unit.h"
 #include "Creature.h"

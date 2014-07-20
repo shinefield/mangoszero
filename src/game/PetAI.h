@@ -26,9 +26,9 @@
 #ifndef MANGOS_PETAI_H
 #define MANGOS_PETAI_H
 
+#include "Timer.h"
 #include "CreatureAI.h"
 #include "ObjectGuid.h"
-#include "Timer.h"
 
 class Creature;
 class Spell;

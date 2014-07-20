@@ -23,14 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "AccountMgr.h"
+#include "Policies/Singleton.h"
+#include "Auth/Sha1.h"
 #include "Database/DatabaseEnv.h"
+#include "Util.h"
+#include "AccountMgr.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
 #include "Player.h"
-#include "Policies/Singleton.h"
-#include "Util.h"
-#include "Auth/Sha1.h"
 
 extern DatabaseType LoginDatabase;
 

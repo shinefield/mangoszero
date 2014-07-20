@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Log.h"
 #include "Map.h"
 #include "MapManager.h"
 #include "Player.h"
 #include "GridNotifiers.h"
-#include "Log.h"
 #include "GridStates.h"
 #include "CellImpl.h"
 #include "InstanceData.h"

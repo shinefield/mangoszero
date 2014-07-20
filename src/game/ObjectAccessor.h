@@ -26,23 +26,21 @@
 #ifndef MANGOS_OBJECTACCESSOR_H
 #define MANGOS_OBJECTACCESSOR_H
 
-#include "Common.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include <set>
+#include <list>
 #include <ace/Thread_Mutex.h>
 #include <ace/RW_Thread_Mutex.h>
+
+#include "Platform/Define.h"
+#include "Policies/Singleton.h"
 #include "Utilities/UnorderedMapSet.h"
 #include "Policies/ThreadingModel.h"
-
+#include "Common.h"
 #include "UpdateData.h"
-
 #include "GridDefines.h"
 #include "Object.h"
 #include "Player.h"
 #include "Corpse.h"
-
-#include <set>
-#include <list>
 
 class Unit;
 class WorldObject;

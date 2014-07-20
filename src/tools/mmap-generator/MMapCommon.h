@@ -34,12 +34,12 @@
 #include <string>
 #include <vector>
 
-#include "Platform/Define.h"
-
 #ifndef WIN32
 #include <stddef.h>
 #include <dirent.h>
 #endif
+
+#include "Platform/Define.h"
 
 using namespace std;
 

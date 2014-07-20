@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Util.h"
 #include "Creature.h"
 #include "MapManager.h"
 #include "RandomMovementGenerator.h"
 #include "Map.h"
-#include "Util.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"
 

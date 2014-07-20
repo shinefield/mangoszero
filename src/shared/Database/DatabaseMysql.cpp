@@ -25,11 +25,11 @@
 
 #ifndef DO_POSTGRESQL
 
-#include "Util.h"
-#include "Policies/Singleton.h"
 #include "Platform/Define.h"
-#include "Threading.h"
+#include "Policies/Singleton.h"
 #include "DatabaseEnv.h"
+#include "Util.h"
+#include "Threading.h"
 #include "Timer.h"
 
 size_t DatabaseMysql::db_count = 0;

@@ -26,13 +26,13 @@
 #ifndef MANGOS_LOOTMGR_H
 #define MANGOS_LOOTMGR_H
 
-#include "ItemEnchantmentMgr.h"
-#include "ByteBuffer.h"
-#include "ObjectGuid.h"
-#include "Utilities/LinkedReference/RefManager.h"
-
 #include <map>
 #include <vector>
+
+#include "Utilities/LinkedReference/RefManager.h"
+#include "ByteBuffer.h"
+#include "ItemEnchantmentMgr.h"
+#include "ObjectGuid.h"
 
 class Player;
 class LootStore;

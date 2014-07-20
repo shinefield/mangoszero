@@ -30,14 +30,13 @@
 #ifndef _BUFFEREDSOCKET_H_
 #define _BUFFEREDSOCKET_H_
 
+#include <string>
 #include <ace/Basic_Types.h>
 #include <ace/Synch_Traits.h>
 #include <ace/Svc_Handler.h>
 #include <ace/SOCK_Stream.h>
 #include <ace/Message_Block.h>
 #include <ace/Basic_Types.h>
-
-#include <string>
 
 class BufferedSocket: public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
 {

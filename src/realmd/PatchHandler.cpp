@@ -27,17 +27,16 @@
   \ingroup realmd
   */
 
-#include "Common.h"
-#include "PatchHandler.h"
-#include "AuthCodes.h"
-#include "Log.h"
-
 #include <ace/OS_NS_sys_socket.h>
 #include <ace/OS_NS_dirent.h>
 #include <ace/OS_NS_errno.h>
 #include <ace/OS_NS_unistd.h>
-
 #include <ace/os_include/netinet/os_tcp.h>
+
+#include "Common.h"
+#include "Log.h"
+#include "PatchHandler.h"
+#include "AuthCodes.h"
 
 #ifndef MSG_NOSIGNAL
 #define MSG_NOSIGNAL 0

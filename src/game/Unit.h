@@ -32,7 +32,11 @@
 #ifndef __UNIT_H
 #define __UNIT_H
 
+#include <list>
+
+#include "Utilities/EventProcessor.h"
 #include "Common.h"
+#include "Timer.h"
 #include "Object.h"
 #include "Opcodes.h"
 #include "SpellAuraDefines.h"
@@ -42,13 +46,10 @@
 #include "HostileRefManager.h"
 #include "FollowerReference.h"
 #include "FollowerRefManager.h"
-#include "Utilities/EventProcessor.h"
 #include "MotionMaster.h"
 #include "DBCStructure.h"
 #include "Path.h"
 #include "WorldPacket.h"
-#include "Timer.h"
-#include <list>
 
 enum SpellInterruptFlags
 {

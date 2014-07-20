@@ -26,10 +26,10 @@
 #ifndef _TILEASSEMBLER_H_
 #define _TILEASSEMBLER_H_
 
-#include <G3D/Vector3.h>
-#include <G3D/Matrix3.h>
 #include <map>
 #include <set>
+#include <G3D/Vector3.h>
+#include <G3D/Matrix3.h>
 
 #include "ModelInstance.h"
 #include "WorldModel.h"

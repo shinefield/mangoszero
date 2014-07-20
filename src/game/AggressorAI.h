@@ -26,8 +26,8 @@
 #ifndef MANGOS_AGGRESSORAI_H
 #define MANGOS_AGGRESSORAI_H
 
-#include "CreatureAI.h"
 #include "Timer.h"
+#include "CreatureAI.h"
 #include "ObjectGuid.h"
 
 class Creature;

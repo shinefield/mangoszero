@@ -26,20 +26,20 @@
 #ifndef MANGOS_GRIDLOADER_H
 #define MANGOS_GRIDLOADER_H
 
-/**
-  @class GridLoader
-  The GridLoader is working in conjuction with the Grid and responsible
-  for loading and unloading object-types (one or more) when objects
-  enters a grid.  Unloading is scheduled and might be canceled if
-  an interested object re-enters.  GridLoader does not do the actuall
-  loading and unloading but implements as a template pattern that
-  delicate its loading and unloading for the actualy loader and unloader.
-  GridLoader manages the grid (both local and remote).
- */
-
 #include "Platform/Define.h"
 #include "Grid.h"
 #include "TypeContainerVisitor.h"
+
+/**
+  @class GridLoader
+  The GridLoader is working in conjunction with the Grid and responsible
+  for loading and unloading object-types (one or more) when objects
+  enters a grid.  Unloading is scheduled and might be cancelled if
+  an interested object re-enters.  GridLoader does not do the actual
+  loading and unloading but implements as a template pattern that
+  delicate its loading and unloading for the actual loader and unloader.
+  GridLoader manages the grid (both local and remote).
+ */
 
 template
 <

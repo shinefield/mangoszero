@@ -41,9 +41,10 @@
 #ifndef MANGOS_MAIL_H
 #define MANGOS_MAIL_H
 
+#include <map>
+
 #include "Common.h"
 #include "ObjectGuid.h"
-#include <map>
 
 struct AuctionEntry;
 class Item;

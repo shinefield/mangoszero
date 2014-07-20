@@ -24,11 +24,11 @@
  */
 
 #include "Common.h"
+#include "Database/DatabaseEnv.h"
+#include "ProgressBar.h"
 #include "CharacterDatabaseCleaner.h"
 #include "World.h"
-#include "Database/DatabaseEnv.h"
 #include "DBCStores.h"
-#include "ProgressBar.h"
 
 void CharacterDatabaseCleaner::CleanDatabase()
 {

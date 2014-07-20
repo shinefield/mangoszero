@@ -24,6 +24,7 @@
  */
 
 #include "Database/DatabaseEnv.h"
+#include "Util.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
@@ -33,7 +34,6 @@
 #include "GuildMgr.h"
 #include "Chat.h"
 #include "SocialMgr.h"
-#include "Util.h"
 #include "Language.h"
 #include "World.h"
 #include "LuaEngine.h"

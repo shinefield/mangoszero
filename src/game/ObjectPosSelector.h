@@ -26,9 +26,9 @@
 #ifndef _OBJECT_POS_SELECTOR_H
 #define _OBJECT_POS_SELECTOR_H
 
-#include<Common.h>
+#include <map>
 
-#include<map>
+#include "Common.h"
 
 class WorldObject;
 

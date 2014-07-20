@@ -23,8 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cctype>
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <typeinfo>
+
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "Util.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "Item.h"
@@ -48,12 +55,6 @@
 #include "GMTicketMgr.h"
 #include "WaypointManager.h"
 #include "DBCStores.h"
-#include "Util.h"
-#include <cctype>
-#include <iostream>
-#include <fstream>
-#include <map>
-#include <typeinfo>
 #include "Formulas.h"
 
 #include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand

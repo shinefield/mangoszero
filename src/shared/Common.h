@@ -49,7 +49,7 @@
 #ifdef VERSION
 #undef VERSION
 #endif // VERSION
-# include "config.h"
+#include "config.h"
 #undef PACKAGE
 #undef PACKAGE_BUGREPORT
 #undef PACKAGE_NAME
@@ -91,15 +91,15 @@
 #include <sstream>
 #include <algorithm>
 
-#include "Errors.h"
-#include "LockedQueue.h"
-#include "Threading.h"
-
 #include <ace/Basic_Types.h>
 #include <ace/Guard_T.h>
 #include <ace/RW_Thread_Mutex.h>
 #include <ace/Thread_Mutex.h>
 #include <ace/OS_NS_arpa_inet.h>
+
+#include "Errors.h"
+#include "LockedQueue.h"
+#include "Threading.h"
 
 // Old ACE versions (pre-ACE-5.5.4) not have this type (add for allow use at Unix side external old ACE versions)
 #if PLATFORM != PLATFORM_WINDOWS
@@ -124,27 +124,21 @@ typedef off_t ACE_OFF_T;
 #endif
 
 #if COMPILER == COMPILER_MICROSOFT
-
 #  include <float.h>
-
 #  define I32FMT "%08I32X"
 #  define I64FMT "%016I64X"
 #  define snprintf _snprintf
 #  define vsnprintf _vsnprintf
 #  define finite(X) _finite(X)
-
 #else
-
 #  define stricmp strcasecmp
 #  define strnicmp strncasecmp
-
 #  define I32FMT "%08X"
 #  if ACE_SIZEOF_LONG == 8
 #    define I64FMT "%016lX"
 #  else
 #    define I64FMT "%016llX"
 #  endif /* ACE_SIZEOF_LONG == 8 */
-
 #endif
 
 #define UI64FMTD ACE_UINT64_FORMAT_SPECIFIER

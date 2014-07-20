@@ -23,12 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "ObjectMgr.h"
+#include <limits>
+
 #include "Database/DatabaseEnv.h"
 #include "Policies/Singleton.h"
-
-#include "SQLStorages.h"
 #include "Log.h"
+#include "ProgressBar.h"
+#include "Util.h"
+#include "ObjectMgr.h"
+#include "SQLStorages.h"
 #include "MapManager.h"
 #include "ObjectGuid.h"
 #include "ScriptMgr.h"
@@ -37,7 +40,6 @@
 #include "World.h"
 #include "Group.h"
 #include "Transports.h"
-#include "ProgressBar.h"
 #include "Language.h"
 #include "PoolManager.h"
 #include "GameEventMgr.h"
@@ -46,14 +48,11 @@
 #include "AccountMgr.h"
 #include "MapPersistentStateMgr.h"
 #include "SpellAuras.h"
-#include "Util.h"
 #include "WaypointManager.h"
 #include "GossipDef.h"
 #include "Mail.h"
 #include "Formulas.h"
 #include "InstanceData.h"
-
-#include <limits>
 
 INSTANTIATE_SINGLETON_1(ObjectMgr);
 

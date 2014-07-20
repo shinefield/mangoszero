@@ -26,12 +26,9 @@
 #ifndef _DatabasePostgre_H
 #define _DatabasePostgre_H
 
-#include "Common.h"
-#include "Database.h"
-#include "Policies/Singleton.h"
-#include "ace/Thread_Mutex.h"
-#include "ace/Guard_T.h"
 #include <stdarg.h>
+#include <ace/Thread_Mutex.h>
+#include <ace/Guard_T.h>
 
 #ifdef WIN32
 #define FD_SETSIZE 1024
@@ -40,6 +37,10 @@
 #else
 #include <libpq-fe.h>
 #endif
+
+#include "Policies/Singleton.h"
+#include "Common.h"
+#include "Database.h"
 
 class MANGOS_DLL_SPEC PostgreSQLConnection : public SqlConnection
 {

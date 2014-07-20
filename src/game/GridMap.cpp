@@ -23,8 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "MapManager.h"
+#include "Policies/Singleton.h"
 #include "Log.h"
+#include "Util.h"
+#include "MapManager.h"
 #include "GridStates.h"
 #include "CellImpl.h"
 #include "Map.h"
@@ -34,8 +36,6 @@
 #include "VMapFactory.h"
 #include "MoveMap.h"
 #include "World.h"
-#include "Policies/Singleton.h"
-#include "Util.h"
 
 char const* MAP_MAGIC         = "MAPS";
 char const* MAP_VERSION_MAGIC = "z1.3";

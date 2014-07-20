@@ -28,11 +28,11 @@
 #include "VMapDefinitions.h"
 #include "WorldModel.h"
 
-#include "../GameObject.h"
-#include "../World.h"
+#include "GameObject.h"
+#include "World.h"
+#include "DBCStores.h"
+#include "Creature.h"
 #include "GameObjectModel.h"
-#include "../DBCStores.h"
-#include "../Creature.h"
 
 struct GameobjectModelData
 {

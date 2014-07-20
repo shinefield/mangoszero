@@ -25,7 +25,9 @@
 
 #ifndef DYNAMICMAP_TREE_H
 #define DYNAMICMAP_TREE_H
+
 #include "Platform/Define.h"
+
 namespace G3D
 {
     class Vector3;

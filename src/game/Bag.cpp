@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Bag.h"
-#include "ObjectMgr.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
+#include "Bag.h"
+#include "ObjectMgr.h"
 #include "UpdateData.h"
 
 Bag::Bag(): Item()

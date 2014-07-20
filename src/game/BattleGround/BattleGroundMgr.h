@@ -26,10 +26,11 @@
 #ifndef __BATTLEGROUNDMGR_H
 #define __BATTLEGROUNDMGR_H
 
-#include "Common.h"
+#include <ace/Recursive_Thread_Mutex.h>
+
 #include "Policies/Singleton.h"
+#include "Common.h"
 #include "BattleGround.h"
-#include "ace/Recursive_Thread_Mutex.h"
 
 typedef std::map<uint32, BattleGround*> BattleGroundSet;
 

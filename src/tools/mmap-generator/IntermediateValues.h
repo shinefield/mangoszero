@@ -26,11 +26,11 @@
 #ifndef _INTERMEDIATE_VALUES_H
 #define _INTERMEDIATE_VALUES_H
 
+#include <Recast.h>
+#include <DetourNavMesh.h>
+
 #include "MMapCommon.h"
 #include "TerrainBuilder.h"
-
-#include "Recast.h"
-#include "DetourNavMesh.h"
 
 namespace MMAP
 {
@@ -58,4 +58,5 @@ namespace MMAP
         void generateObjFile(uint32 mapID, uint32 tileX, uint32 tileY, MeshData& meshData);
     };
 }
+
 #endif

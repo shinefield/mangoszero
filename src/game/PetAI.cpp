@@ -23,8 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "PetAI.h"
 #include "Errors.h"
+#include "Util.h"
+#include "PetAI.h"
 #include "Pet.h"
 #include "Player.h"
 #include "DBCStores.h"
@@ -33,7 +34,6 @@
 #include "SpellMgr.h"
 #include "Creature.h"
 #include "World.h"
-#include "Util.h"
 
 int PetAI::Permissible(const Creature* creature)
 {

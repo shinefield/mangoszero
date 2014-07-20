@@ -23,6 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cassert>
+
 #include "MotionMaster.h"
 #include "ConfusedMovementGenerator.h"
 #include "FleeingMovementGenerator.h"
@@ -40,8 +42,6 @@
 #include "CreatureLinkingMgr.h"
 #include "Pet.h"
 #include "DBCStores.h"
-
-#include <cassert>
 
 inline bool isStatic(MovementGenerator* mv)
 {

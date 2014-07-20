@@ -23,6 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "Player.h"
@@ -39,8 +40,6 @@
 #include "WorldPacket.h"
 #include "Language.h"
 #include "GameEventMgr.h"
-
-#include "Policies/Singleton.h"
 
 INSTANTIATE_SINGLETON_1(BattleGroundMgr);
 

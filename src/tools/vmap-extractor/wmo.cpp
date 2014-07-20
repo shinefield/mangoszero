@@ -23,14 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "vmapexport.h"
-#include "wmo.h"
-#include "vec3d.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
 #include <map>
 #include <fstream>
+
+#include "vmapexport.h"
+#include "wmo.h"
+#include "vec3d.h"
 #undef min
 #undef max
 #include "mpq_libmpq.h"

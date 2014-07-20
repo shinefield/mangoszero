@@ -26,8 +26,9 @@
 #ifndef MANGOSSERVER_SPLINE_H
 #define MANGOSSERVER_SPLINE_H
 
-#include "typedefs.h"
 #include <G3D/Vector3.h>
+
+#include "typedefs.h"
 
 namespace Movement
 {

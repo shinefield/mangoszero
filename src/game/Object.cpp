@@ -23,11 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Log.h"
+#include "Util.h"
 #include "Object.h"
 #include "SharedDefines.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "Creature.h"
 #include "Player.h"
@@ -35,9 +36,7 @@
 #include "ObjectGuid.h"
 #include "UpdateData.h"
 #include "UpdateMask.h"
-#include "Util.h"
 #include "MapManager.h"
-#include "Log.h"
 #include "Transports.h"
 #include "TargetedMovementGenerator.h"
 #include "WaypointMovementGenerator.h"

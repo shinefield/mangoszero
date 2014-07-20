@@ -23,9 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "mpq_libmpq.h"
 #include <deque>
 #include <stdio.h>
+
+#include "mpq_libmpq.h"
 
 ArchiveSet gOpenArchives;
 

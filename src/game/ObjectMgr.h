@@ -26,7 +26,13 @@
 #ifndef _OBJECTMGR_H
 #define _OBJECTMGR_H
 
+#include <string>
+#include <map>
+#include <limits>
+
+#include "Policies/Singleton.h"
 #include "Common.h"
+#include "Database/DatabaseEnv.h"
 #include "Log.h"
 #include "Object.h"
 #include "Bag.h"
@@ -37,16 +43,10 @@
 #include "QuestDef.h"
 #include "ItemPrototype.h"
 #include "NPCHandler.h"
-#include "Database/DatabaseEnv.h"
 #include "Map.h"
 #include "MapPersistentStateMgr.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
-#include "Policies/Singleton.h"
-
-#include <string>
-#include <map>
-#include <limits>
 
 class Group;
 class Item;

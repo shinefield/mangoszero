@@ -333,7 +333,7 @@ target_link_libraries(mangos-game mangos-auctionhouse-bot mangos-battleground ma
 
 set(BUILD_PROPERTIES "")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG -DVMAP_DEBUG")
 endif()
 
 if(WITH_MOD_LUA)

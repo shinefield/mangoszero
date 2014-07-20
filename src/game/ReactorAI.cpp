@@ -24,11 +24,11 @@
  */
 
 #include "ByteBuffer.h"
-#include "ReactorAI.h"
 #include "Errors.h"
+#include "Log.h"
+#include "ReactorAI.h"
 #include "Creature.h"
 #include "Map.h"
-#include "Log.h"
 
 #define REACTOR_VISIBLE_RANGE (26.46f)
 

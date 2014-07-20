@@ -23,9 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "spline.h"
 #include <sstream>
 #include <G3D/Matrix4.h>
+
+#include "spline.h"
 
 namespace Movement
 {

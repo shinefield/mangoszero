@@ -26,17 +26,16 @@
 #ifndef _MANGOSSOAP_H
 #define _MANGOSSOAP_H
 
-#include "Common.h"
-#include "World.h"
-#include "AccountMgr.h"
-#include "Log.h"
-
-#include "soapH.h"
-#include "soapStub.h"
-
 #include <ace/Semaphore.h>
 #include <ace/Task.h>
 
+#include "Common.h"
+#include "Log.h"
+#include "World.h"
+#include "AccountMgr.h"
+
+#include "soapH.h"
+#include "soapStub.h"
 
 class MaNGOSsoapRunnable: public ACE_Based::Runnable
 {

@@ -23,10 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Log.h"
+#include "Util.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
@@ -34,7 +35,6 @@
 #include "UpdateMask.h"
 #include "AuctionHouseMgr.h"
 #include "Mail.h"
-#include "Util.h"
 #include "Chat.h"
 #include "LuaEngine.h"
 

@@ -29,21 +29,18 @@
 #include <cstdlib>
 
 #ifdef WIN32
-#include "direct.h"
+#include <direct.h>
 #else
 #include <sys/stat.h>
+#include <unistd.h>
 #endif
 
-#include "dbcfile.h"
-#include "mpq_libmpq.h"
+#include <fcntl.h>
 
 #include "loadlib/adt.h"
 #include "loadlib/wdt.h"
-#include <fcntl.h>
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
+#include "dbcfile.h"
+#include "mpq_libmpq.h"
 
 #if defined( __GNUC__ )
 #define _open   open

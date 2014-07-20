@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "SqlOperations.h"
-#include "SqlDelayThread.h"
 #include "DatabaseEnv.h"
 #include "DatabaseImpl.h"
+#include "SqlOperations.h"
+#include "SqlDelayThread.h"
 
 #define LOCK_DB_CONN(conn) SqlConnection::Lock guard(conn)
 

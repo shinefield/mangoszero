@@ -27,39 +27,39 @@
     \ingroup mangosd
 */
 
+#include <ace/OS_NS_signal.h>
+#include <ace/TP_Reactor.h>
+#include <ace/Dev_Poll_Reactor.h>
+
 #ifndef WIN32
 #include "PosixDaemon.h"
 #endif
 
-#include "WorldSocketMgr.h"
+#ifdef WIN32
+#include "ServiceWin32.h"
+extern int m_ServiceStatus;
+#endif
+
+#include "Policies/Singleton.h"
 #include "Common.h"
+#include "Config/Config.h"
+#include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "SystemConfig.h"
+#include "Timer.h"
+#include "Util.h"
+#include "revision_sql.h"
+#include "WorldSocketMgr.h"
 #include "Master.h"
 #include "WorldSocket.h"
 #include "WorldRunnable.h"
 #include "World.h"
-#include "Log.h"
-#include "Timer.h"
-#include "Policies/Singleton.h"
-#include "SystemConfig.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
-#include "revision_sql.h"
 #include "MassMailMgr.h"
 #include "DBCStores.h"
 #include "CliRunnable.h"
 #include "RASocket.h"
 #ifdef ENABLE_SOAP
 #include "MaNGOSsoap.h"
-#endif
-
-#include <ace/OS_NS_signal.h>
-#include <ace/TP_Reactor.h>
-#include <ace/Dev_Poll_Reactor.h>
-
-#ifdef WIN32
-#include "ServiceWin32.h"
-extern int m_ServiceStatus;
 #endif
 
 INSTANTIATE_SINGLETON_1(Master);

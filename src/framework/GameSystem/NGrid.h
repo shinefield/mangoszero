@@ -26,15 +26,15 @@
 #ifndef MANGOS_NGRID_H
 #define MANGOS_NGRID_H
 
-/** NGrid is nothing more than a wrapper of the Grid with an NxN cells
- */
+#include <cassert>
 
 #include "GameSystem/Grid.h"
 #include "GameSystem/GridReference.h"
 #include "Timer.h"
 
-#include <cassert>
-
+/**
+ * NGrid is nothing more than a wrapper of the Grid with an NxN cells
+ */
 class GridInfo
 {
     public:

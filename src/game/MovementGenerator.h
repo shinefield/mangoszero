@@ -26,13 +26,13 @@
 #ifndef MANGOS_MOVEMENTGENERATOR_H
 #define MANGOS_MOVEMENTGENERATOR_H
 
-#include "Common.h"
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"
 #include "Dynamic/ObjectRegistry.h"
 #include "Dynamic/FactoryHolder.h"
-#include "MotionMaster.h"
+#include "Common.h"
 #include "Timer.h"
+#include "MotionMaster.h"
 
 class Unit;
 class Creature;

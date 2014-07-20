@@ -23,8 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Unit.h"
+#include <math.h>
+#include <stdarg.h>
+
 #include "Log.h"
+#include "Util.h"
+#include "Unit.h"
 #include "Opcodes.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
@@ -44,7 +48,6 @@
 #include "TemporarySummon.h"
 #include "Formulas.h"
 #include "Pet.h"
-#include "Util.h"
 #include "Totem.h"
 #include "BattleGround/BattleGround.h"
 #include "InstanceData.h"
@@ -59,9 +62,6 @@
 #include "movement/MoveSpline.h"
 #include "CreatureLinkingMgr.h"
 #include "LuaEngine.h"
-
-#include <math.h>
-#include <stdarg.h>
 
 float baseMoveSpeed[MAX_MOVE_TYPE] =
 {

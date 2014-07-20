@@ -26,12 +26,11 @@
 #ifndef __EVENTPROCESSOR_H
 #define __EVENTPROCESSOR_H
 
-#include "Platform/Define.h"
-
 #include <map>
 
-// Note. All times are in milliseconds here.
+#include "Platform/Define.h"
 
+// Note. All times are in milliseconds here.
 class BasicEvent
 {
     public:

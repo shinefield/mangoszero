@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "vmapexport.h"
-#include "adtfile.h"
-
 #include <algorithm>
 #include <cstdio>
+
+#include "vmapexport.h"
+#include "adtfile.h"
 
 #ifdef WIN32
 #define snprintf _snprintf

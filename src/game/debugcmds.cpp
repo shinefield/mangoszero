@@ -23,19 +23,20 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <fstream>
+
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
 #include "DBCStores.h"
 #include "WorldPacket.h"
 #include "Player.h"
 #include "Opcodes.h"
 #include "Chat.h"
-#include "Log.h"
 #include "Unit.h"
 #include "GossipDef.h"
 #include "Language.h"
 #include "BattleGround/BattleGroundMgr.h"
-#include <fstream>
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "SpellMgr.h"

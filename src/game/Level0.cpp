@@ -25,6 +25,10 @@
 
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "Util.h"
+#include "SystemConfig.h"
+#include "revision.h"
+#include "revision_nr.h"
 #include "World.h"
 #include "Player.h"
 #include "Opcodes.h"
@@ -33,10 +37,6 @@
 #include "Language.h"
 #include "AccountMgr.h"
 #include "ScriptMgr.h"
-#include "SystemConfig.h"
-#include "revision.h"
-#include "revision_nr.h"
-#include "Util.h"
 
 bool ChatHandler::HandleHelpCommand(char* args)
 {

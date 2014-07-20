@@ -23,16 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "DBCStores.h"
+#include <map>
+
 #include "Policies/Singleton.h"
 #include "Log.h"
 #include "ProgressBar.h"
+#include "DBCStores.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
-
 #include "DBCfmt.h"
-
-#include <map>
 
 typedef std::map<uint32, uint32> AreaIDByAreaFlag;
 typedef std::map<uint32, uint32> AreaFlagByMapID;

@@ -23,9 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cmath>
+
+#include "Policies/Singleton.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
-#include "Policies/Singleton.h"
 #include "Player.h"
 #include "WorldPacket.h"
 #include "Item.h"
@@ -37,8 +39,6 @@
 #include "GridNotifiersImpl.h"
 #include "ObjectGuid.h"
 #include "World.h"
-
-#include <cmath>
 
 #define CLASS_LOCK MaNGOS::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex>
 INSTANTIATE_SINGLETON_2(ObjectAccessor, CLASS_LOCK);

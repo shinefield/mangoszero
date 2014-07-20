@@ -26,12 +26,12 @@
 #ifndef __SQLOPERATIONS_H
 #define __SQLOPERATIONS_H
 
-#include "Common.h"
-
-#include "ace/Thread_Mutex.h"
-#include "LockedQueue.h"
 #include <queue>
+#include <ace/Thread_Mutex.h>
+
 #include "Utilities/Callback.h"
+#include "Common.h"
+#include "LockedQueue.h"
 
 /// ---- BASE ---
 

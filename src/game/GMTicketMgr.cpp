@@ -23,14 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "ProgressBar.h"
 #include "SQLStorages.h"
 #include "GMTicketMgr.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
-#include "ProgressBar.h"
-#include "Policies/Singleton.h"
 #include "Player.h"
 
 INSTANTIATE_SINGLETON_1(GMTicketMgr);

@@ -23,19 +23,18 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Common.h"
-#include "Log.h"
-#include "Policies/Singleton.h"
-#include "Config/Config.h"
-#include "Util.h"
-#include "ByteBuffer.h"
-#include "ProgressBar.h"
-
 #include <stdarg.h>
 #include <fstream>
 #include <iostream>
+#include <ace/OS_NS_unistd.h>
 
-#include "ace/OS_NS_unistd.h"
+#include "Policies/Singleton.h"
+#include "Common.h"
+#include "ByteBuffer.h"
+#include "Config/Config.h"
+#include "Log.h"
+#include "ProgressBar.h"
+#include "Util.h"
 
 INSTANTIATE_SINGLETON_1(Log);
 

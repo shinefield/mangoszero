@@ -23,15 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
+#include "Log.h"
+#include "ProgressBar.h"
 #include "PoolManager.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
-#include "ProgressBar.h"
-#include "Log.h"
 #include "MapPersistentStateMgr.h"
 #include "MapManager.h"
 #include "World.h"
-#include "Policies/Singleton.h"
 
 INSTANTIATE_SINGLETON_1(PoolManager);
 

@@ -26,8 +26,8 @@
 #ifndef _HOSTILEREFMANAGER
 #define _HOSTILEREFMANAGER
 
-#include "Common.h"
 #include "Utilities/LinkedReference/RefManager.h"
+#include "Common.h"
 
 class Unit;
 class ThreatManager;

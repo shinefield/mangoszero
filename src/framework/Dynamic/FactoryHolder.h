@@ -28,8 +28,8 @@
 
 #include "Platform/Define.h"
 #include "Utilities/TypeList.h"
-#include "ObjectRegistry.h"
 #include "Policies/Singleton.h"
+#include "ObjectRegistry.h"
 
 /** FactoryHolder holds a factory object of a specific type
  */

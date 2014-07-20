@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Errors.h"
+#include "Log.h"
 #include "Camera.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
-#include "Log.h"
-#include "Errors.h"
 #include "Player.h"
 
 Camera::Camera(Player* pl) : m_owner(*pl), m_source(pl)

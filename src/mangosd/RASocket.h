@@ -23,20 +23,17 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd
-/// @{
-/// \file
-
 #ifndef _RASOCKET_H
 #define _RASOCKET_H
 
-#include "Common.h"
 #include <ace/Synch_Traits.h>
 #include <ace/Svc_Handler.h>
 #include <ace/SOCK_Acceptor.h>
 #include <ace/Acceptor.h>
 #include <ace/Thread_Mutex.h>
 #include <ace/Semaphore.h>
+
+#include "Common.h"
 
 #define RA_BUFF_SIZE 8192
 
@@ -99,5 +96,5 @@ class RASocket: protected RAHandler
         static void zprint(void* callbackArg, const char* szText);
         static void commandFinished(void* callbackArg, bool success);
 };
+
 #endif
-/// @}

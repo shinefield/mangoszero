@@ -26,10 +26,10 @@
 #ifndef MANGOS_GRIDNOTIFIERS_H
 #define MANGOS_GRIDNOTIFIERS_H
 
-#include "ObjectGridLoader.h"
-#include "UpdateData.h"
 #include <iostream>
 
+#include "ObjectGridLoader.h"
+#include "UpdateData.h"
 #include "Corpse.h"
 #include "Object.h"
 #include "DynamicObject.h"

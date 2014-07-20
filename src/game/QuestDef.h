@@ -26,11 +26,11 @@
 #ifndef MANGOSSERVER_QUEST_H
 #define MANGOSSERVER_QUEST_H
 
-#include "Platform/Define.h"
-#include "Database/DatabaseEnv.h"
-
 #include <string>
 #include <vector>
+
+#include "Platform/Define.h"
+#include "Database/DatabaseEnv.h"
 
 class Player;
 

@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "loadlib.h"
-#include "../mpq_libmpq.h"
-
 #include <stdio.h>
+
+#include "mpq_libmpq.h"
+#include "loadlib.h"
 
 class MPQFile;
 

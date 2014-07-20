@@ -26,8 +26,8 @@
 #ifndef MANGOSSERVER_LOG_H
 #define MANGOSSERVER_LOG_H
 
-#include "Common.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
 
 class Config;
 class ByteBuffer;

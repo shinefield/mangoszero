@@ -25,6 +25,8 @@
 
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "Util.h"
 #include "DBCStores.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
@@ -33,16 +35,14 @@
 #include "Player.h"
 #include "Opcodes.h"
 #include "Chat.h"
-#include "Log.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "Language.h"
 #include "CellImpl.h"
 #include "MapPersistentStateMgr.h"
 #include "Mail.h"
-#include "Util.h"
 #include "SpellMgr.h"
-#ifdef _DEBUG_VMAPS
+#ifdef VMAP_DEBUG
 #include "VMapFactory.h"
 #endif
 
@@ -360,7 +360,7 @@ bool ChatHandler::HandleGPSCommand(char* args)
     }
 
     // Additional vmap debugging help
-#ifdef _DEBUG_VMAPS
+#ifdef VMAP_DEBUG
     PSendSysMessage("Static terrain height (maps only): %f", obj->GetTerrain()->GetHeightStatic(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), false));
 
     if (VMAP::IVMapManager* vmgr = VMAP::VMapFactory::createOrGetVMapManager())

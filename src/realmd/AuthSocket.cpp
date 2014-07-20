@@ -27,21 +27,19 @@
     \ingroup realmd
 */
 
+#include <openssl/md5.h>
+#include <ace/OS_NS_unistd.h>
+#include <ace/OS_NS_fcntl.h>
+#include <ace/OS_NS_sys_stat.h>
+
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
 #include "Config/Config.h"
+#include "Database/DatabaseEnv.h"
 #include "Log.h"
 #include "RealmList.h"
 #include "AuthSocket.h"
 #include "AuthCodes.h"
 #include "PatchHandler.h"
-
-#include <openssl/md5.h>
-//#include "Util.h" -- for commented utf8ToUpperOnlyLatin
-
-#include <ace/OS_NS_unistd.h>
-#include <ace/OS_NS_fcntl.h>
-#include <ace/OS_NS_sys_stat.h>
 
 extern DatabaseType LoginDatabase;
 

@@ -26,28 +26,27 @@
 #ifndef MANGOS_MAP_H
 #define MANGOS_MAP_H
 
-#include "Common.h"
+#include <bitset>
+#include <list>
+#include <ace/RW_Thread_Mutex.h>
+#include <ace/Thread_Mutex.h>
+
 #include "Platform/Define.h"
 #include "Policies/ThreadingModel.h"
-#include "ace/RW_Thread_Mutex.h"
-#include "ace/Thread_Mutex.h"
-
+#include "Utilities/TypeList.h"
+#include "GameSystem/GridRefManager.h"
+#include "Common.h"
+#include "Timer.h"
 #include "DBCStructure.h"
 #include "GridDefines.h"
 #include "Cell.h"
 #include "Object.h"
-#include "Timer.h"
 #include "SharedDefines.h"
 #include "GridMap.h"
-#include "GameSystem/GridRefManager.h"
 #include "MapRefManager.h"
-#include "Utilities/TypeList.h"
 #include "ScriptMgr.h"
 #include "CreatureLinkingMgr.h"
 #include "vmap/DynamicTree.h"
-
-#include <bitset>
-#include <list>
 
 struct CreatureInfo;
 class Creature;

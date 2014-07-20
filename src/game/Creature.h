@@ -26,17 +26,17 @@
 #ifndef MANGOSSERVER_CREATURE_H
 #define MANGOSSERVER_CREATURE_H
 
+#include <list>
+
 #include "Common.h"
+#include "Database/DatabaseEnv.h"
 #include "Unit.h"
 #include "UpdateMask.h"
 #include "ItemPrototype.h"
 #include "SharedDefines.h"
 #include "LootMgr.h"
 #include "DBCEnums.h"
-#include "Database/DatabaseEnv.h"
 #include "Cell.h"
-
-#include <list>
 
 struct SpellEntry;
 

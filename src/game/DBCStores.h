@@ -26,11 +26,11 @@
 #ifndef MANGOS_DBCSTORES_H
 #define MANGOS_DBCSTORES_H
 
+#include <list>
+
 #include "Common.h"
 #include "Database/DBCStore.h"
 #include "DBCStructure.h"
-
-#include <list>
 
 bool IsAcceptableClientBuild(uint32 build);
 std::string AcceptableClientBuildsListStr();

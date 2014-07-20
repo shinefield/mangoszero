@@ -23,15 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "SocialMgr.h"
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
+#include "Util.h"
+#include "SocialMgr.h"
 #include "Opcodes.h"
 #include "WorldPacket.h"
 #include "Player.h"
 #include "ObjectMgr.h"
 #include "World.h"
-#include "Util.h"
 
 INSTANTIATE_SINGLETON_1(SocialMgr);
 

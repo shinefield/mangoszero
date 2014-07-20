@@ -26,11 +26,12 @@
 #ifndef MANGOS_WAYPOINTMANAGER_H
 #define MANGOS_WAYPOINTMANAGER_H
 
-#include "Common.h"
 #include <vector>
 #include <string>
-#include "Utilities/UnorderedMapSet.h"
+
 #include "Policies/Singleton.h"
+#include "Utilities/UnorderedMapSet.h"
+#include "Common.h"
 
 #define MAX_WAYPOINT_TEXT 5
 struct WaypointBehavior

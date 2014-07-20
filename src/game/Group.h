@@ -26,6 +26,9 @@
 #ifndef MANGOSSERVER_GROUP_H
 #define MANGOSSERVER_GROUP_H
 
+#include <map>
+#include <vector>
+
 #include "Common.h"
 #include "ObjectGuid.h"
 #include "GroupReference.h"
@@ -34,9 +37,6 @@
 #include "LootMgr.h"
 #include "DBCEnums.h"
 #include "SharedDefines.h"
-
-#include <map>
-#include <vector>
 
 class WorldSession;
 class Map;

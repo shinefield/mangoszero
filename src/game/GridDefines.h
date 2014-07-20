@@ -26,9 +26,10 @@
 #ifndef MANGOS_GRIDDEFINES_H
 #define MANGOS_GRIDDEFINES_H
 
-#include "Common.h"
-#include "GameSystem/NGrid.h"
 #include <cmath>
+
+#include "GameSystem/NGrid.h"
+#include "Common.h"
 
 // Forward class definitions
 class Corpse;

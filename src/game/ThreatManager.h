@@ -26,12 +26,13 @@
 #ifndef _THREATMANAGER
 #define _THREATMANAGER
 
+#include <list>
+
+#include "Utilities/LinkedReference/Reference.h"
 #include "Common.h"
 #include "SharedDefines.h"
-#include "Utilities/LinkedReference/Reference.h"
 #include "UnitEvents.h"
 #include "ObjectGuid.h"
-#include <list>
 
 //==============================================================
 

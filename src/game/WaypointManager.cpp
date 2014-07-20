@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "WaypointManager.h"
-#include "Database/DatabaseEnv.h"
-#include "GridDefines.h"
 #include "Policies/Singleton.h"
+#include "Database/DatabaseEnv.h"
 #include "ProgressBar.h"
+#include "WaypointManager.h"
+#include "GridDefines.h"
 #include "MapManager.h"
 #include "ObjectMgr.h"
 #include "ScriptMgr.h"

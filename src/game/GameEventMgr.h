@@ -26,10 +26,10 @@
 #ifndef MANGOS_GAMEEVENT_MGR_H
 #define MANGOS_GAMEEVENT_MGR_H
 
-#include "Common.h"
-#include "SharedDefines.h"
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
+#include "SharedDefines.h"
 
 #define max_ge_check_delay 86400                            // 1 day in seconds
 

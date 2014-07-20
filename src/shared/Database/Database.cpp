@@ -23,14 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "DatabaseEnv.h"
-#include "Config/Config.h"
-#include "Database/SqlOperations.h"
-
 #include <ctime>
 #include <iostream>
 #include <fstream>
 #include <memory>
+
+#include "DatabaseEnv.h"
+#include "Config/Config.h"
+#include "Database/SqlOperations.h"
 
 #define MIN_CONNECTION_POOL_SIZE 1
 #define MAX_CONNECTION_POOL_SIZE 16

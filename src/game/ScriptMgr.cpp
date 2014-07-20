@@ -23,10 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "ScriptMgr.h"
 #include "Policies/Singleton.h"
 #include "Log.h"
 #include "ProgressBar.h"
+#include "revision_nr.h"
+#include "ScriptMgr.h"
 #include "ObjectMgr.h"
 #include "WaypointManager.h"
 #include "World.h"
@@ -39,8 +40,6 @@
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "WaypointMovementGenerator.h"
 #include "LuaEngine.h"
-
-#include "revision_nr.h"
 
 ScriptMapMapName sQuestEndScripts;
 ScriptMapMapName sQuestStartScripts;

@@ -26,8 +26,9 @@
 #ifndef MANGOS_SHAREDDEFINES_H
 #define MANGOS_SHAREDDEFINES_H
 
-#include "Platform/Define.h"
 #include <cassert>
+
+#include "Platform/Define.h"
 
 #define CMANGOS
 #define CLASSIC

@@ -26,8 +26,8 @@
 #ifndef __ADDONHANDLER_H
 #define __ADDONHANDLER_H
 
-#include "Common.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
 #include "WorldPacket.h"
 
 class AddonHandler
@@ -40,4 +40,5 @@ class AddonHandler
         bool BuildAddonPacket(WorldPacket* Source, WorldPacket* Target);
 };
 #define sAddOnHandler MaNGOS::Singleton<AddonHandler>::Instance()
+
 #endif

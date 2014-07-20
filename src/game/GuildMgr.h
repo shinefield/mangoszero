@@ -26,8 +26,8 @@
 #ifndef _GUILDMGR_H
 #define _GUILDMGR_H
 
-#include "Common.h"
 #include "Policies/Singleton.h"
+#include "Common.h"
 
 class Guild;
 class ObjectGuid;

@@ -23,11 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Config/Config.h"
-#include "PosixDaemon.h"
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+
+#include "Config/Config.h"
+#include "PosixDaemon.h"
 
 pid_t parent_pid = 0, sid = 0;
 

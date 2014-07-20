@@ -42,10 +42,11 @@
 #ifndef CREATURE_LINKING_MGR_H
 #define CREATURE_LINKING_MGR_H
 
-#include "Common.h"
-#include "Policies/Singleton.h"
-#include "ObjectGuid.h"
 #include <functional>
+
+#include "Policies/Singleton.h"
+#include "Common.h"
+#include "ObjectGuid.h"
 
 class Unit;
 class Creature;

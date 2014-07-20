@@ -26,13 +26,14 @@
 #ifndef MANGOS_BYTECONVERTER_H
 #define MANGOS_BYTECONVERTER_H
 
-/** ByteConverter reverse your byte order.  This is use
-    for cross platform where they have different endians.
- */
-
-#include <Platform/Define.h>
 #include <algorithm>
 
+#include <Platform/Define.h>
+
+/**
+ * ByteConverter reverse your byte order. This is useful
+ * for cross platform where they have different endians.
+ */
 namespace ByteConverter
 {
     template<size_t T>

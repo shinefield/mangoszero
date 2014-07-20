@@ -26,9 +26,10 @@
 #ifndef _AUTH_SHA1_H
 #define _AUTH_SHA1_H
 
-#include "Common.h"
 #include <openssl/sha.h>
 #include <openssl/crypto.h>
+
+#include "Common.h"
 
 class BigNumber;
 

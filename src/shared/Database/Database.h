@@ -26,13 +26,14 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "Threading.h"
-#include "Utilities/UnorderedMapSet.h"
-#include "Database/SqlDelayThread.h"
 #include <ace/Recursive_Thread_Mutex.h>
-#include "Policies/ThreadingModel.h"
 #include <ace/TSS_T.h>
 #include <ace/Atomic_Op.h>
+
+#include "Utilities/UnorderedMapSet.h"
+#include "Policies/ThreadingModel.h"
+#include "Database/SqlDelayThread.h"
+#include "Threading.h"
 #include "SqlPreparedStatement.h"
 
 class SqlTransaction;

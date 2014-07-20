@@ -24,12 +24,12 @@
  */
 
 #include "Common.h"
+#include "Log.h"
 #include "DBCStores.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
-#include "Log.h"
 #include "Opcodes.h"
 #include "Spell.h"
 #include "ScriptMgr.h"

@@ -27,27 +27,27 @@
 /// @{
 /// \file
 
-#include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "RealmList.h"
-
-#include "Config/Config.h"
-#include "Log.h"
-#include "AuthSocket.h"
-#include "SystemConfig.h"
-#include "revision.h"
-#include "revision_nr.h"
-#include "revision_sql.h"
-#include "Util.h"
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
-
 #include <ace/Get_Opt.h>
 #include <ace/Dev_Poll_Reactor.h>
 #include <ace/TP_Reactor.h>
 #include <ace/ACE.h>
 #include <ace/Acceptor.h>
 #include <ace/SOCK_Acceptor.h>
+
+#include "Common.h"
+#include "Config/Config.h"
+#include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "Util.h"
+#include "revision.h"
+#include "revision_nr.h"
+#include "revision_sql.h"
+#include "SystemConfig.h"
+
+#include "RealmList.h"
+#include "AuthSocket.h"
 
 #ifdef WIN32
 #include "ServiceWin32.h"

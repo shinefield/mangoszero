@@ -26,15 +26,15 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
+#include <set>
+#include <string>
+
 #include "Common.h"
 #include "ByteBuffer.h"
 #include "UpdateFields.h"
 #include "UpdateData.h"
 #include "ObjectGuid.h"
 #include "Camera.h"
-
-#include <set>
-#include <string>
 
 #define CONTACT_DISTANCE            0.5f
 #define INTERACTION_DISTANCE        5.0f

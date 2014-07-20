@@ -26,10 +26,11 @@
 #ifndef WDTFILE_H
 #define WDTFILE_H
 
+#include <string>
+#include <stdlib.h>
+
 #include "mpq_libmpq.h"
 #include "wmo.h"
-#include <string>
-#include "stdlib.h"
 
 class ADTFile;
 

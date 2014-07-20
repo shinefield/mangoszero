@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
 #include "CreatureAISelector.h"
 #include "Creature.h"
 #include "CreatureAIImpl.h"
 #include "NullCreatureAI.h"
-#include "Policies/Singleton.h"
 #include "MovementGenerator.h"
 #include "ScriptMgr.h"
 #include "Pet.h"

@@ -26,11 +26,12 @@
 #ifndef ADT_H
 #define ADT_H
 
+#include <libmpq/mpq.h>
+
 #include "mpq_libmpq.h"
 #include "wmo.h"
 #include "vmapexport.h"
 #include "model.h"
-#include "libmpq/mpq.h"
 
 #define TILESIZE (533.33333f)
 #define CHUNKSIZE ((TILESIZE) / 16.0f)

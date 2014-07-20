@@ -27,8 +27,8 @@
     \ingroup u2w
 */
 
-#include "Opcodes.h"
 #include "Policies/Singleton.h"
+#include "Opcodes.h"
 
 INSTANTIATE_SINGLETON_1(Opcodes);
 

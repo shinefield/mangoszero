@@ -23,15 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "MapTree.h"
-#include "ModelInstance.h"
-#include "VMapManager2.h"
-#include "VMapDefinitions.h"
-
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <limits>
+
+#include "MapTree.h"
+#include "ModelInstance.h"
+#include "VMapManager2.h"
+#include "VMapDefinitions.h"
 
 using G3D::Vector3;
 

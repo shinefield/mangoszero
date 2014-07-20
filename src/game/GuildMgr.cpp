@@ -23,13 +23,13 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "Policies/Singleton.h"
+#include "Database/DatabaseEnv.h"
+#include "Log.h"
+#include "ProgressBar.h"
 #include "GuildMgr.h"
 #include "Guild.h"
-#include "Log.h"
 #include "ObjectGuid.h"
-#include "Database/DatabaseEnv.h"
-#include "Policies/Singleton.h"
-#include "ProgressBar.h"
 #include "World.h"
 
 INSTANTIATE_SINGLETON_1(GuildMgr);

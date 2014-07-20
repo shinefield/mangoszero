@@ -26,13 +26,12 @@
 #ifndef _IVMAPMANAGER_H
 #define _IVMAPMANAGER_H
 
-#include<string>
-#include <Platform/Define.h>
+#include <string>
 
-//===========================================================
+#include "Platform/Define.h"
 
 /**
-This is the minimum interface to the VMapMamager.
+This is the minimum interface to the VMapManager.
 */
 
 namespace VMAP

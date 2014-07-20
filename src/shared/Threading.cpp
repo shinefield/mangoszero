@@ -23,11 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Threading.h"
-#include "Errors.h"
+#include <vector>
 #include <ace/OS_NS_unistd.h>
 #include <ace/Sched_Params.h>
-#include <vector>
+
+#include "Errors.h"
+#include "Threading.h"
 
 using namespace ACE_Based;
 
