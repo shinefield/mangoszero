@@ -36,13 +36,15 @@
 #include "SystemConfig.h"
 #include "Config/Config.h"
 #include "Database/DatabaseEnv.h"
-#include "CliRunnable.h"
-#include "RASocket.h"
 #include "Util.h"
 #include "revision_sql.h"
-#include "MaNGOSsoap.h"
 #include "MassMailMgr.h"
 #include "DBCStores.h"
+#include "CliRunnable.h"
+#include "RASocket.h"
+#ifdef ENABLE_SOAP
+#include "MaNGOSsoap.h"
+#endif
 
 #include <ace/OS_NS_signal.h>
 #include <ace/TP_Reactor.h>
@@ -285,6 +287,7 @@ int Master::Run()
     }
 #endif
 
+#ifdef ENABLE_SOAP
     ///- Start soap serving thread
     ACE_Based::Thread* soap_thread = NULL;
 
@@ -295,6 +298,7 @@ int Master::Run()
         runnable->setListenArguments(sConfig.GetStringDefault("SOAP.IP", "127.0.0.1"), sConfig.GetIntDefault("SOAP.Port", 7878));
         soap_thread = new ACE_Based::Thread(runnable);
     }
+#endif
 
     ///- Start up freeze catcher thread
     ACE_Based::Thread* freeze_thread = NULL;
@@ -327,6 +331,7 @@ int Master::Run()
         delete freeze_thread;
     }
 
+#ifdef ENABLE_SOAP
     ///- Stop soap thread
     if (soap_thread)
     {
@@ -334,6 +339,7 @@ int Master::Run()
         soap_thread->destroy();
         delete soap_thread;
     }
+#endif
 
     ///- Set server offline in realmlist
     LoginDatabase.DirectPExecute("UPDATE realmlist SET realmflags = realmflags | %u WHERE id = '%u'", REALM_FLAG_OFFLINE, realmID);

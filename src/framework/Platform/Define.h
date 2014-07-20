@@ -39,9 +39,21 @@
 #  endif // ACE_BYTE_ORDER
 #endif // MANGOS_ENDIAN
 
+/**
+ * @brief
+ *
+ */
 typedef ACE_SHLIB_HANDLE MANGOS_LIBRARY_HANDLE;
 
-#define MANGOS_SCRIPT_NAME "mangosscript"
+#if PLATFORM == PLATFORM_WINDOWS
+#   ifdef DEBUG
+#       define MANGOS_SCRIPT_NAME "mangos-scriptsd"
+#   else
+#       define MANGOS_SCRIPT_NAME "mangos-scripts"
+#   endif
+#else
+#   define MANGOS_SCRIPT_NAME "mangos-scripts"
+#endif
 #define MANGOS_SCRIPT_SUFFIX ACE_DLL_SUFFIX
 #define MANGOS_SCRIPT_PREFIX ACE_DLL_PREFIX
 #define MANGOS_LOAD_LIBRARY(libname)    ACE_OS::dlopen(libname)
@@ -97,25 +109,75 @@ typedef ACE_SHLIB_HANDLE MANGOS_LIBRARY_HANDLE;
 #  define MANGOS_INLINE
 #endif //!DEBUG
 
-#if COMPILER == COMPILER_GNU
+#if COMPILER == COMPILER_GNU || COMPILER == COMPILER_CLANG
 #  define ATTR_NORETURN __attribute__((noreturn))
-#  define ATTR_PRINTF(F,V) __attribute__ ((format (printf, F, V)))
-#else // COMPILER != COMPILER_GNU
+#  define ATTR_PRINTF(F, V) __attribute__ ((format (printf, F, V)))
+#  define ATTR_DEPRECATED __attribute__((deprecated))
+#else //COMPILER != COMPILER_GNU
 #  define ATTR_NORETURN
-#  define ATTR_PRINTF(F,V)
-#endif // COMPILER == COMPILER_GNU
+#  define ATTR_PRINTF(F, V)
+#  define ATTR_DEPRECATED
+#endif //COMPILER == COMPILER_GNU
 
+#if COMPILER_HAS_CPP11_SUPPORT
+#  define OVERRIDE override
+#  define FINAL final
+#else
+#  define OVERRIDE
+#  define FINAL
+#endif //COMPILER_HAS_CPP11_SUPPORT
+
+/**
+ * @brief A signed integer of 64 bits
+ *
+ */
 typedef ACE_INT64 int64;
+/**
+ * @brief A signed integer of 32 bits
+ *
+ */
 typedef ACE_INT32 int32;
+/**
+ * @brief A signed integer of 16 bits
+ *
+ */
 typedef ACE_INT16 int16;
+/**
+ * @brief A signed integer of 8 bits
+ *
+ */
 typedef ACE_INT8 int8;
+/**
+ * @brief An unsigned integer of 64 bits
+ *
+ */
 typedef ACE_UINT64 uint64;
+/**
+ * @brief An unsigned integer of 32 bits
+ *
+ */
 typedef ACE_UINT32 uint32;
+/**
+ * @brief An unsigned integer of 16 bits
+ *
+ */
 typedef ACE_UINT16 uint16;
+/**
+ * @brief An unsigned integer of 8 bits
+ *
+ */
 typedef ACE_UINT8 uint8;
 
 #if COMPILER != COMPILER_MICROSOFT
+/**
+ * @brief An unsigned integer of 16 bits
+ *
+ */
 typedef uint16      WORD;
+/**
+ * @brief An unsigned integer of 32 bits
+ *
+ */
 typedef uint32      DWORD;
 #endif // COMPILER
 
@@ -128,12 +190,21 @@ typedef uint32      DWORD;
 #    define override
 #    define static_assert(a, b) STATIC_ASSERT_WORKAROUND(a, b)
 #  endif
+#elif COMPILER == COMPILER_CLANG
+#  ifndef __cxx_static_assert
+#    define override
+#    define static_assert(a, b) STATIC_ASSERT_WORKAROUND(a, b)
+#  endif
 #elif COMPILER == COMPILER_MICROSOFT
 #  if _MSC_VER < 1600
 #    define static_assert(a, b) STATIC_ASSERT_WORKAROUND(a, b)
 #  endif
 #endif
 
+/**
+ * @brief
+ *
+ */
 typedef uint64 OBJECT_HANDLE;
 
 #endif // MANGOS_DEFINE_H

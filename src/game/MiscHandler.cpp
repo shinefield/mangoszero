@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <zlib.h>
+
 #include "Common.h"
 #include "Language.h"
 #include "Database/DatabaseEnv.h"
@@ -34,7 +36,6 @@
 #include "LootMgr.h"
 #include "Chat.h"
 #include "ScriptMgr.h"
-#include <zlib/zlib.h>
 #include "ObjectAccessor.h"
 #include "Object.h"
 #include "BattleGround/BattleGround.h"

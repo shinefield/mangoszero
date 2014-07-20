@@ -16,13 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <DetourCommon.h>
+
 #include "MoveMap.h"
 #include "GridMap.h"
 #include "Creature.h"
 #include "PathFinder.h"
 #include "Log.h"
-
-#include "../recastnavigation/Detour/Include/DetourCommon.h"
 
 ////////////////// PathFinder //////////////////
 PathFinder::PathFinder(const Unit* owner) :
