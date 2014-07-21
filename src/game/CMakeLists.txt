@@ -108,6 +108,8 @@ set(sources
     Item.cpp
     ItemEnchantmentMgr.cpp
     ItemHandler.cpp
+    LFGHandler.cpp
+    LFGMgr.cpp
     Level0.cpp
     Level1.cpp
     Level2.cpp
@@ -233,6 +235,8 @@ set(headers
     ItemEnchantmentMgr.h
     Item.h
     ItemPrototype.h
+    LFGHandler.h
+    LFGMgr.h
     Language.h
     LootMgr.h
     Mail.h

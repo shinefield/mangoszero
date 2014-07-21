@@ -70,6 +70,7 @@
 #include "AuctionHouseBot/AuctionHouseBot.h"
 #include "CharacterDatabaseCleaner.h"
 #include "CreatureLinkingMgr.h"
+#include "LFGMgr.h"
 #include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(World);
@@ -1449,6 +1450,7 @@ void World::Update(uint32 diff)
     ///- Update objects (maps, transport, creatures,...)
     sMapMgr.Update(diff);
     sBattleGroundMgr.Update(diff);
+    sLFGMgr.Update(diff);
     sOutdoorPvPMgr.Update(diff);
 
     ///- used by eluna
