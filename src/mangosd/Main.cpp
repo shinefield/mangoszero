@@ -188,16 +188,16 @@ extern int main(int argc, char** argv)
 #endif
 
     sLog.outString("%s [world-daemon]", _FULLVERSION(REVISION_DATE, REVISION_TIME, REVISION_NR, REVISION_ID));
-    sLog.outString("<Ctrl-C> to stop.");
-    sLog.outString("\n\n"
-        "       _____     __  __       _   _  _____  ____   _____ \n"
-        "      / ____|   |  \\/  |     | \\ | |/ ____|/ __ \\ / ____|\n"
-        "     | |        | \\  / |     |  \\| | |  __  |  | | (___  \n"
-        "     | |ontinued| |\\/| | __ _| . ` | | |_ | |  | |\\___ \\ \n"
-        "     | |____    | |  | |/ _` | |\\  | |__| | |__| |____) |\n"
-        "      \\_____|   |_|  |_| (_| |_| \\_|\\_____|\\____/ \\____/ \n"
-        "      http://cmangos.net\\__,_|     Doing things right!\n\n");
-
+    sLog.outString("<Ctrl-C> to stop.\n"
+                   "  __  __      _  _  ___  ___  ___        \n"
+                   " |  \\/  |__ _| \\| |/ __|/ _ \\/ __|    \n"
+                   " | |\\/| / _` | .` | (_ | (_) \\__ \\    \n"
+                   " |_|  |_\\__,_|_|\\_|\\___|\\___/|___/   \n"
+                   "                                         \n"
+                   " World of Warcraft 1.12.x supported.     \n"
+                   "                                         \n"
+                   " Visit http://getmangos.com/ for support.\n"
+                  );
     sLog.outString("Using configuration file %s.", cfg_file);
 
     DETAIL_LOG("%s (Library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));

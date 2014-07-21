@@ -1,7 +1,13 @@
 #!/usr/bin/python
 
 """
-  This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+  mangos-zero is a full featured server for World of Warcraft in its vanilla
+  version, supporting clients for patch 1.12.x.
+
+  Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+  Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
+
+  ***** BEGIN GPL LICENSE BLOCK *****
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,14 +22,19 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+  ***** END GPL LICENSE BLOCK *****
+
+  World of Warcraft, and all World of Warcraft or Warcraft art, images,
+  and lore are copyrighted by Blizzard Entertainment, Inc.
 """
 
 import os, sys, threading, time, subprocess
 from multiprocessing import cpu_count
 from collections import deque
 
-mapList = deque([0,1,13,25,30,33,34,35,36,37,42,43,44,47,48,70,90,109,129,169,189,209,229,230,249,269,289,309,329,349,369,
-    389,409,429,449,450,451,469,489,509,529,531,533])
+mapList = deque([0,1,30,33,34,36,43,47,48,70,90,109,129,189,209,229,230,249,269,289,309,329,349,369,
+    389,409,429,449,450,469,489,509,529,531,533])
 
 class workerThread(threading.Thread):
     def __init__(self, mapID):

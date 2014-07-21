@@ -1,13 +1,5 @@
-= MaNGOS -- README =
-
-This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
-
-See the COPYING file for copying conditions.
-
-NOTE: This is file special addition for mangoszero fork (from mangos 0.12)
-      It describe work with backported sql updates
-
-== Database Updates ==
+Database Updates
+================
 
 This folder contains SQL files which will apply required updates to your MySQL
 database, whenever the MaNGOS database structure has been changed or extended.

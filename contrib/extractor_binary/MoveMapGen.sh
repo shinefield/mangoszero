@@ -66,7 +66,7 @@ LOG_FILE="MoveMapGen.log"
 ## Detailed log file
 DETAIL_LOG_FILE="MoveMapGen_detailed.log"
 
-## ! Use below only for finetuning or if you know what you are doing !
+## ! Use below only for fine tuning or if you know what you are doing !
 
 ## Continent Maps
 MAP_Continent1="0"    ## Eastern Kingdoms     340mb
@@ -127,10 +127,10 @@ badParam()
 {
   echo "ERROR! Bad arguments!"
   echo "You can (re)extract mmaps with this helper script,"
-  echo "or recreate only the tiles from the offmash file"
+  echo "or recreate only the tiles from the offmesh file"
   echo
   echo "Call with number of processes (1 - 4) to create mmaps"
-  echo "Call with 'offmesh' to reextract the tiles from offmash file"
+  echo "Call with 'offmesh' to reextract the tiles from offmesh file"
   echo
   echo "For further fine-tuning edit this helper script"
   echo
@@ -205,7 +205,7 @@ DisplayHeader
   echo "################################################################"
   echo "##                                                            ##"
   echo "##   There will also be periods where the display does not    ##"
-  echo "##   update, this is normal behavior for this process         ##"
+  echo "##   update, this is normal behaviour for this process        ##"
   echo "##                                                            ##"
   echo "##  Once you see the message 'creating MoveMaps' is finished  ##"
   echo "##  then the process is complete.                             ##"

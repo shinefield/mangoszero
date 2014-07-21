@@ -1,6 +1,10 @@
 <?php
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +19,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 /**
@@ -37,23 +44,23 @@ $host = "localhost";
 $soapport = 7878;
 $command = "server info";
 
-$client = new SoapClient(NULL,
-array(
-    "location" => "http://$host:$soapport/",
-    "uri" => "urn:MaNGOS",
-    "style" => SOAP_RPC,
-    'login' => $username,
-    'password' => $password
-));
+$client = new SoapClient(
+    null,
+    array(
+        "location" => "http://$host:$soapport/",
+        "uri"      => "urn:MaNGOS",
+        "style"    => SOAP_RPC,
+        'login'    => $username,
+        'password' => $password
+    )
+);
 
 try {
     $result = $client->executeCommand(new SoapParam($command, "command"));
 
     echo "Command succeeded! Output:<br />\n";
     echo $result;
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
     echo "Command failed! Reason:<br />\n";
     echo $e->getMessage();
 }

@@ -2,8 +2,6 @@
 ## Script processing
 -- --------------------------
 
-This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
-
 -- --------------------------
 ## id
 -- --------------------------
