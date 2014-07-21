@@ -9,7 +9,7 @@ ConfVersion=2010102201
 # AUCTION HOUSE BOT SETTINGS
 #
 #    AuctionHouseBot.Seller.Enabled
-#        General enable or disable AuctionHouseBot Seller fonctionality
+#        General enable or disable AuctionHouseBot Seller functionality
 #    Default 0 (Disabled)
 #
 #    AuctionHouseBot.DEBUG.Seller
@@ -62,12 +62,12 @@ ConfVersion=2010102201
 #
 #    AuctionHouseBot.ItemsPerCycle.Boost
 #        This value is used to fill DB faster than normal when there is more than this value missed items.
-#        Normaly this value is used only first start of the server with empty auction table.
+#        Normally this value is used only first start of the server with empty auction table.
 #    Default 75
 #
 #    AuctionHouseBot.ItemsPerCycle.Normal
 #        This value is used to fill DB normal way with less cpu/db using.
-#        Normaly this value is used always when auction table is already initialised.
+#        Normally this value is used always when auction table is already initialised.
 #    Default 20
 #
 #    AuctionHouseBot.BuyPrice.Seller
@@ -75,15 +75,15 @@ ConfVersion=2010102201
 #    Default 1 (use SellPrice)
 #
 #    AuctionHouseBot.Alliance.Price.Ratio
-#        Define the price of selled item here for the Alliance Auction House
+#        Define the price of sold item here for the Alliance Auction House
 #    Default 200
 #
 #    AuctionHouseBot.Horde.Price.Ratio
-#        Define the price of selled item here for the Horde Auction House
+#        Define the price of sold item here for the Horde Auction House
 #    Default 200
 #
 #    AuctionHouseBot.Neutral.Price.Ratio
-#        Define the price of selled item here for the Neutral Auction House
+#        Define the price of sold item here for the Neutral Auction House
 #    Default 200
 #
 #    AuctionHouseBot.Items.ItemLevel.*
@@ -99,7 +99,7 @@ ConfVersion=2010102201
 #    Default 0 (Disabled)
 #
 #    AuctionHouseBot.Items.Amount.*
-#        Define here for every items quality how many item you whant to be show in Auction House
+#        Define here for every items quality how many item you want to be show in Auction House
 #        This value will be adjusted by AuctionHouseBot.FACTION.Items.Amount.Ratio to define exact amount of
 #        items will be show on Auction House
 #    Default 0, 2000, 2500, 1500, 1000, 0, 0 (grey, white, green, blue, purple, orange, yellow)
@@ -112,7 +112,7 @@ ConfVersion=2010102201
 #
 #
 # ITEM FINE TUNING
-#    The following are usefull for limiting what character levels can
+#    The following are useful for limiting what character levels can
 #    benefit from the auction house
 #
 #    AuctionHouseBot.Class.Misc.Mount.ReqLevel.*
@@ -128,7 +128,7 @@ ConfVersion=2010102201
 #    Default 0
 #
 #    AuctionHouseBot.Class.Container.ItemLevel.*
-#        Prevent seller from listing contianers below/above this item level
+#        Prevent seller from listing containers below/above this item level
 #    Default 0
 #
 #    AuctionHouseBot.forceIncludeItems
@@ -217,7 +217,7 @@ AuctionHouseBot.forceExcludeItems = ""
 # Buyer config
 #
 #    AuctionHouseBot.Buyer.Enabled
-#        General enable or disable AuctionHouseBot Buyer fonctionality
+#        General enable or disable AuctionHouseBot Buyer functionality
 #    Default 0 (Disabled)
 #
 #    AuctionHouseBot.DEBUG.Buyer
@@ -232,17 +232,17 @@ AuctionHouseBot.forceExcludeItems = ""
 #    Default 0 (use SellPrice)
 #
 #    AuctionHouseBot.Buyer.Recheck.Interval
-#        This specify time interval (in minute) between two evaluation of the same selled item.
-#        The less this value is, the more you give chance for item to be buyed by ahbot.
+#        This specify time interval (in minute) between two evaluation of the same sold item.
+#        The less this value is, the more you give chance for item to be bought by ahbot.
 #    Default 20 (20min.)
 #
 #    AuctionHouseBot.Buyer.Alliance.Chance.Ratio
-#       When the evaluation of the entry is done you will have "x" chance for this entry to be buyed.
+#       When the evaluation of the entry is done you will have "x" chance for this entry to be bought.
 #       The chance ratio is simply (x/chance ratio)
 #       For ex : If the evaluation give you 5000(maximum chance) chance and ratio is set 3
 #       you will have 5000 chance on 15000(3*5000) random number
 #       This for every faction independently
-#    Default 3 (literaly 1 chance by 3)
+#    Default 3 (literally 1 chance by 3)
 #
 ###################################################################################################################
 

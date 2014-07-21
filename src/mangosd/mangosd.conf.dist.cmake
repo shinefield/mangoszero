@@ -9,7 +9,7 @@ ConfVersion=2013012201
 # CONNECTIONS AND DIRECTORIES
 #
 #    RealmID
-#        RealmID must match the realmlist inside the realmd database
+#        RealmID must match the realm list inside the realm database
 #
 #    DataDir
 #        Data directory setting.
@@ -18,7 +18,7 @@ ConfVersion=2013012201
 #
 #    LogsDir
 #        Logs directory setting.
-#        Important: Logs dir must exists, or all logs need to be disabled
+#        Important: Log directory must exists, or all logs need to be disabled
 #        Default: "${CMAKE_INSTALL_PREFIX}/logs/${APPLICATION_NAME}"
 #
 #
@@ -36,13 +36,13 @@ ConfVersion=2013012201
 #                    hostname;port;username;password;database
 #                    .;/path/to/unix_socket/DIRECTORY or . for default path;username;password;database - use Unix sockets at Unix/Linux
 #
-#	LoginDatabaseConnections
-#	WorldDatabaseConnections
-#	CharacterDatabaseConnections
-#		 Amount of connections to database which will be used for SELECT queries. Maximum 16 connections per database.
-#		 Please, note, for data consistency only one connection for each database is used for transactions and async SELECTs.
-#		 So formula to find out how many connections will be established: X = �_connections + 1
-#		 Default: 1 connection for SELECT statements
+#   LoginDatabaseConnections
+#   WorldDatabaseConnections
+#   CharacterDatabaseConnections
+#        Amount of connections to database which will be used for SELECT queries. Maximum 16 connections per database.
+#        Please, note, for data consistency only one connection for each database is used for transactions and async SELECTs.
+#        So formula to find out how many connections will be established: X = ¹_connections + 1
+#        Default: 1 connection for SELECT statements
 #
 #    MaxPingTime
 #        Settings for maximum database-ping interval (minutes between pings)
@@ -52,7 +52,7 @@ ConfVersion=2013012201
 #
 #    BindIP
 #        Bind World Server to IP/hostname
-#        This option is useful for running multiple worldd/realmd instances
+#        This option is useful for running multiple world/realm instances
 #        on different IP addresses using default ports.
 #        DO NOT CHANGE THIS UNLESS YOU _REALLY_ KNOW WHAT YOU'RE DOING
 #
@@ -156,7 +156,7 @@ BindIP = "0.0.0.0"
 #
 #
 #    DetectPosCollision
-#        Check final move position, summon position, etc for visible collision with other objects or
+#        Check final move position, summon position, etc. for visible collision with other objects or
 #        wall (wall only if vmaps are enabled)
 #        Default: 1 (enable, requires more CPU power)
 #                 0 (disable, not so nice position selection but will require less CPU power)
@@ -164,16 +164,16 @@ BindIP = "0.0.0.0"
 #    TargetPosRecalculateRange
 #        Max distance from movement target point (+moving unit size) and targeted object (+size)
 #        after that new target movement point calculated. Max: melee attack range (5), min: contact range (0.5)
-#        More distance let have better performence, less distance let have more sensitive reaction at target move.
+#        More distance let have better performance, less distance let have more sensitive reaction at target move.
 #        Default: 1.5
 #
 #    mmap.enabled
-#        Enable/Disable pathfinding using mmaps
+#        Enable/Disable path finding using mmaps
 #        Default: 1 (enable)
 #                 0 (disable)
 #
 #    mmap.ignoreMapIds
-#        Disable mmap pathfinding on the listed maps.
+#        Disable mmap path finding on the listed maps.
 #        List of map ids with delimiter ','
 #
 #    UpdateUptimeInterval
@@ -186,13 +186,13 @@ BindIP = "0.0.0.0"
 #        Default: 0 (Disabled)
 #
 #    AddonChannel
-#        Permit/disable the use of the addon channel through the server
-#        (some client side addons can stop work correctly with disabled addon channel)
-#        Default: 1 (permit addon channel)
-#                 0 (do not permit addon channel)
+#        Permit/disable the use of the add-on channel through the server
+#        (some client side add-ons can stop work correctly with disabled add-on channel)
+#        Default: 1 (permit add-on channel)
+#                 0 (do not permit add-on channel)
 #
 #    CleanCharacterDB
-#        Perform character db cleanups on start up
+#        Perform character database clean-ups on start up
 #        Default: 1 (Enable)
 #                 0 (Disabled)
 #
@@ -251,8 +251,8 @@ CleanCharacterDB = 1
 #
 #    LogFile
 #        Logfile name
-#        Default: "Server.log"
-#                 "" - Empty name disable creating log file
+#        Default: "world-server.log"
+#                 ""                 - Empty name disable creating log file
 #
 #    LogTimestamp
 #        Logfile with timestamp of server start in name
@@ -289,9 +289,9 @@ CleanCharacterDB = 1
 #                 1 - not include with any log level
 #
 #    WorldLogFile
-#        Packet logging file for the worldserver
-#        Default: ""          - no log file created
-#                 "world.log" - recommended name to create a log file
+#        Packet logging file for the world server
+#        Default: "world-packets.log" - recommended name to create a log file
+#                 ""                  - no log file created
 #
 #    WorldLogTimestamp
 #        Logfile with timestamp of server start in name
@@ -300,19 +300,19 @@ CleanCharacterDB = 1
 #
 #    DBErrorLogFile
 #        Log file of DB errors detected at server run
-#        Default: "DBErrors.log"
+#        Default: "database-errors.log"
 #
 #    ElunaErrorLogFile
 #        Log file of Eluna errors detected at server run
-#        Default: "ElunaErrors.log"
+#        Default: "eluna-errors.log"
 #
 #    EventAIErrorLogFile
 #        Log file of EventAI errors detected at server run
-#        Default: "EventAIErrors.log"
+#        Default: "eventai-errors.log"
 #
 #    CharLogFile
 #        Character operations logfile name
-#        Default: "Char.log"
+#        Default: "characters.log"
 #                 "" - Empty name disable creating log file
 #
 #    CharLogTimestamp
@@ -321,7 +321,7 @@ CleanCharacterDB = 1
 #                 1 - add timestamp in name in form Logname_YYYY-MM-DD_HH-MM-SS.Ext for Logname.Ext
 #
 #    CharLogDump
-#        Write character dump before deleting in Char.log
+#        Write character dump before deleting in characters.log
 #        For restoration, cut character data from log starting from
 #        line == START DUMP == to line == END DUMP == (without its) in file and load it using loadpdump command
 #        Default: 0 - don't include dumping chars to log
@@ -329,7 +329,7 @@ CleanCharacterDB = 1
 #
 #    GmLogFile
 #        GM Log file of gm commands
-#        Default: "" (Disable)
+#        Default: "gamemasters.log"
 #
 #    GmLogTimestamp
 #        GM Logfile with timestamp of server start in name
@@ -345,15 +345,15 @@ CleanCharacterDB = 1
 #
 #    RaLogFile
 #        Log file of RA commands
-#        Default: "Ra.log"
+#        Default: "remote-access.log"
 #                 "" - Empty name for disable
 #
 #    LogColors
 #        Color for messages (format "normal_color details_color debug_color error_color")
 #        Colors: 0 - BLACK, 1 - RED, 2 - GREEN,  3 - BROWN, 4 - BLUE, 5 - MAGENTA, 6 -  CYAN, 7 - GREY,
 #                8 - YELLOW, 9 - LRED, 10 - LGREEN, 11 - LBLUE, 12 - LMAGENTA, 13 - LCYAN, 14 - WHITE
-#        Default: "" - none colors
-#        Example: "13 7 11 9"
+#        Default: "13 7 11 9" - Coloured
+#        Example: ""          - no colours
 #
 ###################################################################################################################
 
@@ -361,7 +361,7 @@ LogSQL = 1
 PidFile = ""
 LogLevel = 3
 LogTime = 0
-LogFile = "Server.log"
+LogFile = "world-server.log"
 LogTimestamp = 0
 LogFileLevel = 0
 LogFilter_TransportMoves = 1
@@ -380,19 +380,19 @@ LogFilter_PlayerStats = 0
 LogFilter_Damage = 0
 LogFilter_Combat = 0
 LogFilter_SpellCast = 0
-WorldLogFile = ""
+WorldLogFile = "world-packets.log"
 WorldLogTimestamp = 0
-DBErrorLogFile = "DBErrors.log"
-ElunaErrorLogFile = "ElunaErrors.log"
-EventAIErrorLogFile = "EventAIErrors.log"
-CharLogFile = "Char.log"
+DBErrorLogFile = "database-errors.log"
+ElunaErrorLogFile = "eluna-errors.log"
+EventAIErrorLogFile = "eventai-errors.log"
+CharLogFile = "characters.log"
 CharLogTimestamp = 0
 CharLogDump = 0
-GmLogFile = ""
+GmLogFile = "gamemasters.log"
 GmLogTimestamp = 0
 GmLogPerAccount = 0
-RaLogFile = ""
-LogColors = ""
+RaLogFile = "remote-access.log"
+LogColors = "13 7 11 9"
 
 ###################################################################################################################
 # SERVER SETTINGS
@@ -400,11 +400,9 @@ LogColors = ""
 #    GameType
 #        Server realm style
 #        0 = NORMAL; 1 = PVP; 4 = NORMAL; 6 = RP; 8 = RPPVP
-#        also custom type: 16 FFA_PVP (free for all pvp mode like arena PvP in all zones except rest
-#        activated places and sanctuaries)
 #
 #    RealmZone
-#        Server realm zone (set allowed alphabet in character names/etc). See also Strict*Names options.
+#        Server realm zone (set allowed alphabet in character names, etc.). See also Strict*Names options.
 #
 #    1 Development    - any language (Default)
 #    2 United States  - extended-Latin
@@ -443,30 +441,30 @@ LogColors = ""
 #
 #    StrictPlayerNames
 #        Limit player name to language specific symbols set, not allow create characters, and set rename request and disconnect at not allowed symbols name
-#        Default: 0 disable (but limited server timezone dependent client check)
+#        Default: 0 disable (but limited server time zone dependent client check)
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
+#                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server timezone specific
+#                 3 basic latin characters + server time zone specific
 #
 #    StrictCharterNames
 #        Limit guild team charter names to language specific symbols set, not allow create charters with not allowed symbols in name
 #        Default: 0 disable
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
+#                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server timezone specific
+#                 3 basic latin characters + server time zone specific
 #
 #    StrictPetNames
 #        Limit pet names to language specific symbols set
 #        Default: 0 disable
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
+#                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server timezone specific
+#                 3 basic latin characters + server time zone specific
 #
 #    MinPlayerName
 #        Minimal name length (1..12)
@@ -532,11 +530,11 @@ LogColors = ""
 #
 #    MaintenanceDay
 #        The day of the week is performed server maintenance ( currently used for Honor distribution )
-#        range (0..6): 0 is the first day of the week (normally sunday), 6 is the latest
+#        range (0..6): 0 is the first day of the week (normally Sunday), 6 is the latest
 #        Default: 3 (Wednesday in EU)
 #
 #    InstantLogout
-#        Enable or disable instant logout for security level (0..4) or high (NOT in combat/while dueling/while falling)
+#        Enable or disable instant logout for security level (0..4) or high (NOT in combat/while duelling/while falling)
 #        Default: 1 (Mods/GMs/Admins)
 #
 #    AllFlightPaths
@@ -545,7 +543,7 @@ LogColors = ""
 #                 1 (false)
 #
 #    AlwaysMaxSkillForLevel
-#        Players will automatically gain max level dependent (weapon/defense) skill when logging in, leveling up etc.
+#        Players will automatically gain max level dependent (weapon/defence) skill when logging in, levelling up etc.
 #        Default: 0 (false)
 #                 1 (true)
 #
@@ -566,7 +564,7 @@ LogColors = ""
 #        Default: 20
 #
 #   RabbitDay
-#        Set to Rabbit Day (date in unix time), only the day and month are considered, the year is not important
+#        Set to Rabbit Day (date in Unix time), only the day and month are considered, the year is not important
 #        Default: 0 (off)
 #        Suggested: 954547200 (April 1st, 2000)
 #
@@ -586,7 +584,7 @@ LogColors = ""
 #
 #    Instance.UnloadDelay
 #        Unload the instance map from memory after some time if no players are inside.
-#        Default: 1800000 (miliseconds, i.e 30 minutes)
+#        Default: 1800000 (milliseconds, i.e 30 minutes)
 #                 0 (instance maps are kept in memory until they are reset)
 #
 #    Quests.LowLevelHideDiff
@@ -622,11 +620,11 @@ LogColors = ""
 #                  0 (instant death)
 #
 #    TimerBar.Breath.GMLevel
-#        Disable/enable waterbreathing for security level (0..4) or high
+#        Disable/enable water breathing for security level (0..4) or high
 #        Default: 4 (None)
 #
 #    TimerBar.Breath.Max
-#        Waterbreathing max timer value (in secs)
+#        Water breathing max timer value (in secs)
 #        Default: 180
 #                   0 (instant underwater breathing damage start)
 #
@@ -661,7 +659,7 @@ LogColors = ""
 #        Default: 9
 #
 #    MaxGroupXPDistance
-#        Max distance to creature for group memeber to get XP at creature death.
+#        Max distance to creature for group member to get XP at creature death.
 #        Default: 74
 #
 #    MailDeliveryDelay
@@ -669,12 +667,12 @@ LogColors = ""
 #        Default: 3600 sec (1 hour)
 #
 #    MassMailer.SendPerTick
-#        Max amount mail send each tick from mails list scheduled for mass mailer proccesing.
-#        More mails increase server load but speedup mass mail proccess. Normal tick length: 50 msecs, so 20 ticks in sec and 200 mails in sec by default.
+#        Max amount mail send each tick from mails list scheduled for mass mailer processing.
+#        More mails increase server load but speed-up mass mail process. Normal tick length: 50 msecs, so 20 ticks in sec and 200 mails in sec by default.
 #        Default: 10
 #
 #    PetUnsummonAtMount
-#        Persmanent pet will unsummoned at player mount
+#        Permanent pet will unsummoned at player mount
 #        Default: 0 - not unsummon
 #                 1 - unsummon for any mount
 #
@@ -688,18 +686,18 @@ LogColors = ""
 #                 0 (false)
 #
 #    ShowProgressBars
-#        Control show progress bars for load steps at server startup
+#        Control show progress bars for load steps at server start-up
 #        Default: 1 (true)
 #                 0 (false)
 #
 #    WaitAtStartupError
-#        After startup error report wait <Enter> or some time before continue (and possible close console window)
+#        After start-up error report wait <Enter> or some time before continue (and possible close console window)
 #                 -1 (wait until <Enter> press)
 #        Default:  0 (not wait)
 #                  N (>0, wait N secs)
 #
 #    Motd
-#        Message of the Day. Displayed at worldlogin for every user ('@' for a newline).
+#        Message of the Day. Displayed at world login for every user ('@' for a newline).
 #
 #    PlayerCommands
 #        Should player chat be parsed for GM commands.
@@ -763,7 +761,7 @@ Event.Announce = 0
 BeepAtStart = 1
 ShowProgressBars = 1
 WaitAtStartupError = 0
-Motd = "Welcome to the Massive Network Game Object Server."
+Motd = "Welcome to the World of Warcraft."
 PlayerCommands = 1
 
 ###################################################################################################################
@@ -797,7 +795,7 @@ PlayerCommands = 1
 #                 1 (Allowed)
 #
 #    TalentsInspecting
-#        Allow other players see character talents in inspect dialog (Characters in Gamemaster mode can
+#        Allow other players see character talents in inspect dialogue (Characters in Gamemaster mode can
 #        inspect talents always)
 #        Default: 1 (allow)
 #                 0 (not allow)
@@ -857,7 +855,7 @@ TalentsInspecting = 1
 #        Default: 3
 #
 #    Corpse.EmptyLootShow
-#        If target can have loot (or can be skining after loot) but no loot generated still show loot window
+#        If target can have loot (or can be skinning after loot) but no loot generated still show loot window
 #        Default: 1 (show)
 #                 0 (not show)
 #
@@ -894,7 +892,7 @@ TalentsInspecting = 1
 #    Rate.Creature.Elite.RAREELITE.HP
 #    Rate.Creature.Elite.WORLDBOSS.HP
 #    Rate.Creature.Elite.RARE.HP
-#        Creature Health Ammount Modifier.
+#        Creature Health Amount Modifier.
 #        Examples: 2 - creatures have 2x health, 1.7 - 1.7x.
 #
 #    ListenRange.Say
@@ -961,17 +959,17 @@ GuidReserveSize.GameObject = 100
 #
 #    ChatFakeMessagePreventing
 #        Chat protection from creating fake messages using a lot spaces (other invisible symbols),
-#        not applied to addon language messages, but can prevent working old addons
+#        not applied to add-on language messages, but can prevent working old add-ons
 #        that use normal languages for sending data to another clients.
 #        Default: 0 (disable fake messages preventing)
 #                 1 (enable fake messages preventing)
 #
 #    ChatStrictLinkChecking.Severity
-#        Check chat messages for ingame links to spells, items, quests, etc.
+#        Check chat messages for in-game links to spells, items, quests, achievements etc.
 #        Default: 0 (disable link checking)
 #                 1 (check if only valid pipe commands are used. This prevents posting pictures for example)
-#                 2 (verifiy that pipe commands are used in a correct order)
-#                 3 (check if color, entry and name don't contradict each other. For correct work, please assure
+#                 2 (verify that pipe commands are used in a correct order)
+#                 3 (check if colour, entry and name don't contradict each other. For correct work, please assure
 #                    that you have extracted locale DBCs of every language specific client playing on this server.)
 #
 #    ChatStrictLinkChecking.Kick
@@ -1099,7 +1097,7 @@ GM.InvisibleAura         = 31748
 #    Visibility.Distance.Continents
 #    Visibility.Distance.Instances
 #    Visibility.Distance.BG
-#        Visibility distance for different ingame object in different maps.
+#        Visibility distance for different in-game object in different maps.
 #        Visibility on continents on offy ~90 yards. In BG ~180. For instances default ~120.
 #        Max limited by active player zone: ~ 333
 #        Min limit is max aggro radius (45) * Rate.Creature.Aggro
@@ -1121,7 +1119,7 @@ GM.InvisibleAura         = 31748
 #
 #    Visibility.RelocationLowerLimit
 #        Object's visibility update called, when distance between current object's position and position,
-#        where visiblity was updated last time, reaches RelocationLoverLimit value
+#        where visibility was updated last time, reaches RelocationLowerLimit value
 #        Default: 10 (yards)
 #
 #    Visibility.AIRelocationNotifyDelay
@@ -1178,10 +1176,10 @@ Visibility.AIRelocationNotifyDelay = 1000
 #    Rate.Rest.InGame
 #    Rate.Rest.Offline.InTavernOrCity
 #    Rate.Rest.Offline.InWilderness
-#        Resting points grow rates (1 - normal, 2 - double rate, 0.5 - half rate, etc) from standard values
+#        Resting points grow rates (1 - normal, 2 - double rate, 0.5 - half rate, etc.) from standard values
 #
 #    Rate.Damage.Fall
-#        Damage after fall rate. (1 - standard, 2 - double damage, 0.5 - half damage, etc)
+#        Damage after fall rate. (1 - standard, 2 - double damage, 0.5 - half damage, etc.)
 #
 #    Rate.Auction.Time
 #    Rate.Auction.Deposit
@@ -1197,7 +1195,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #
 #    Rate.Mining.Amount
 #    Rate.Mining.Next
-#        Mining Rates (Mining.Amount changes minimum/maximum usetimes of a deposit,
+#        Mining Rates (Mining.Amount changes minimum/maximum use times of a deposit,
 #        Mining.Next changes chance to have next use of a deposit)
 #
 #    Rate.Talent
@@ -1209,7 +1207,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #         Default: 1
 #
 #    Rate.Reputation.LowLevel.Kill
-#         Reputation Gain form low level kill (grey creture)
+#         Reputation Gain form low level kill (grey creature)
 #         Default: 0.2
 #
 #    Rate.Reputation.LowLevel.Quest
@@ -1224,7 +1222,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #    SkillGain.Defense
 #    SkillGain.Gathering
 #    SkillGain.Weapon
-#         crafting/defense/gathering/weapon skills gain at skill grow (1,2,...)
+#         crafting/defence/gathering/weapon skills gain at skill grow (1,2,...)
 #         Default: 1
 #
 #    SkillChance.Orange
@@ -1256,25 +1254,25 @@ Visibility.AIRelocationNotifyDelay = 1000
 #                  0 (disabled)
 #
 #    DurabilityLossChance.Damage
-#         Chance lost one from equiped items durability point at damage apply or receive.
+#         Chance lost one from equipped items durability point at damage apply or receive.
 #         Default: 0.5 (100/0.5 = 200) Each 200 damage apply one from 19 possible equipped items
 #
 #    DurabilityLossChance.Absorb
-#         Chance lost one from armor items durability point at damage absorb.
-#         Default: 0.5 (100/0.5 = 200) Each 200 absorbs apply one from 15 possible armor equipped items
+#         Chance lost one from armour items durability point at damage absorb.
+#         Default: 0.5 (100/0.5 = 200) Each 200 absorbs apply one from 15 possible armour equipped items
 #
 #    DurabilityLossChance.Parry
 #         Chance lost weapon durability point at parry.
 #         Default: 0.05 (100/0.05 = 2000) Each 2000 parry attacks main weapon lost point
 #
 #    DurabilityLossChance.Block
-#         Chance lost sheild durability point at damage block.
+#         Chance lost shield durability point at damage block.
 #         Default: 0.05 (100/0.05 = 2000) Each 2000 partly or full blocked attacks shield lost point
 #
 #    Death.SicknessLevel
 #         Starting Character start gain sickness at spirit resurrection (1 min)
 #         Default: 11
-#                  -10 - character will have full time (10min) sickness at 1 level
+#                  -10 - character will have full time (10 min) sickness at 1 level
 #                  maxplayerlevel+1 - character will not have sickness at any level
 #
 #    Death.CorpseReclaimDelay.PvP
@@ -1285,7 +1283,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #
 #    Death.Bones.World
 #    Death.Bones.Battleground
-#         Enabled/disabled creating bones instead corpse at resurrection (in normal zones/instacnes, or battleground)
+#         Enabled/disabled creating bones instead corpse at resurrection (in normal zones/instances, or battleground)
 #         Default: 1 (enabled)
 #                  0 (disabled)
 #
@@ -1378,18 +1376,18 @@ Death.Ghost.RunSpeed.Battleground = 1.0
 #
 #    Battleground.InvitationType
 #        Set Battleground invitation type
-#        Default: 0 (normal - invite as much players to bg as possible, don't bother with ballance)
+#        Default: 0 (normal - invite as much players to BG as possible, don't bother with balance)
 #                 1 (Experimental - don't allow to invite much more players of one faction)
 #
 #    Battleground.PrematureFinishTimer
-#        The time to end the bg if there are less than MinPlayersPerTeam on one side in milliseconds
+#        The time to end the BG if there are less than MinPlayersPerTeam on one side in milliseconds
 #        Default: 300000 (5 minutes)
 #                 0 - disable (not recommended)
 #
 #    BattleGround.PremadeGroupWaitForMatch
-#        The time in which premade group of 1 faction waits in BG Queue for premade group of other faction
+#        The time in which pre-made group of 1 faction waits in BG Queue for pre-made group of other faction
+#        Default: 0 - disable pre-made group matches (group always added to BG team in normal way)
 #                 1800000 (30 minutes)
-#        Default: 0 - disable premade group matches (group always added to bg team in normal way)
 #
 ###################################################################################################################
 
@@ -1403,8 +1401,8 @@ BattleGround.PremadeGroupWaitForMatch = 0
 ###################################################################################################################
 # OUTDOOR PVP CONFIG
 #
-#    OutdoorPvp.SIEnabled               #Enable Silithus Outdoor pvp
-#    OutdoorPvp.EPEnabled               #Enable Eastern Plaguelands Outdoor pvp
+#    OutdoorPvp.SIEnabled               #Enable Silithus Outdoor PvP
+#    OutdoorPvp.EPEnabled               #Enable Eastern Plaguelands Outdoor PvP
 #        Default: 1 (enable)
 #                 0 (disable)
 #
@@ -1460,14 +1458,14 @@ Network.KickOnBadPacket = 0
 #                 1 - on
 #
 #    Ra.IP
-#        Default remote console ip address, use 0.0.0.0 for every address
+#        Default remote console IP address, use 0.0.0.0 for every address
 #
 #    Ra.Port
 #        Default remote console port
 #        Default: 3443
 #
 #    Ra.MinLevel
-#        Minimum level that's required to login,3 by default
+#        Minimum level that's required to login
 #        Default: 3 (Administrator)
 #
 #    Ra.Secure
@@ -1476,7 +1474,7 @@ Network.KickOnBadPacket = 0
 #        Default: 1 - on
 #
 #    Ra.Stricted
-#        Not allow execute console level only commands remotly by RA
+#        Not allow execute console level only commands remotely by RA
 #                 0 - off
 #        Default: 1 - on
 #
@@ -1487,7 +1485,7 @@ Network.KickOnBadPacket = 0
 #                 1 - on
 #
 #    SOAP.IP
-#        Bound SOAP service ip address, use 0.0.0.0 to access from everywhere
+#        Bound SOAP service IP address, use 0.0.0.0 to access from everywhere
 #        Default: 127.0.0.1
 #
 #    SOAP.Port
@@ -1510,10 +1508,10 @@ SOAP.Port = 7878
 
 ###################################################################################################################
 #    CharDelete.Method
-#        Character deletion behavior
+#        Character deletion behaviour
 #        Default: 0  - Completely remove the character from the database
 #                 1  - Unlinking, the character gets unlinked from the account,
-#                      the name gets freed up and appears as deleted ingame
+#                      the name gets freed up and appears as deleted in-game
 #
 #    CharDelete.MinLevel
 #        Character gets deleted by CharDelete.Method=0 when the character

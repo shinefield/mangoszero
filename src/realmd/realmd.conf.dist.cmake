@@ -50,7 +50,7 @@ ConfVersion=2010062001
 #
 #    LogFile
 #        Logfile name
-#        Default: "Realmd.log"
+#        Default: "realm-server.log"
 #                 "" - empty name disable creating log file
 #
 #    LogTimestamp
@@ -67,8 +67,8 @@ ConfVersion=2010062001
 #        Color for messages (format "normal_color details_color debug_color error_color)
 #        Colors: 0 - BLACK, 1 - RED, 2 - GREEN,  3 - BROWN, 4 - BLUE, 5 - MAGENTA, 6 -  CYAN, 7 - GREY,
 #                8 - YELLOW, 9 - LRED, 10 - LGREEN, 11 - LBLUE, 12 - LMAGENTA, 13 - LCYAN, 14 - WHITE
-#        Default: "" - none colors
-#                 "13 7 11 9" - for example :)
+#        Default: "13 7 11 9" - coloured
+#                 ""          - no colours
 #
 #    UseProcessors
 #        Used processors mask for multi-processors system (Used only at Windows)
@@ -114,10 +114,10 @@ BindIP = "0.0.0.0"
 PidFile = ""
 LogLevel = 0
 LogTime = 0
-LogFile = "Realmd.log"
+LogFile = "realm-server.log"
 LogTimestamp = 0
 LogFileLevel = 0
-LogColors = ""
+LogColors = "13 7 11 9"
 UseProcessors = 0
 ProcessPriority = 1
 WaitAtStartupError = 0
