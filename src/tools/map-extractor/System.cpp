@@ -127,71 +127,98 @@ bool FileExists(const char* FileName)
 
 void Usage(char* prg)
 {
-    printf(
-        "Usage:\n"\
-        "%s -[var] [value]\n"\
-        "-i set input path\n"\
-        "-o set output path\n"\
-        "-e extract only MAP(1)/DBC(2) - standard: both(3)\n"\
-        "-f height stored as int (less map size but lost some accuracy) 1 by default\n"\
-        "Example: %s -f 0 -i \"c:\\games\\game\"", prg, prg);
+    printf("Usage: %s [OPTION]\n\n", prg);
+    printf("Extract client database files and generate map files.\n");
+    printf("   -h, --help            show the usage\n");
+    printf("   -i, --input <path>    search path for game client archives\n");
+    printf("   -o, --output <path>   target path for generated files\n");
+    printf("   -f, --flat #          store height information as integers reducing map\n");
+    printf("                         size, but also accuracy\n");
+    printf("   -e, --extract #       extract specified client data. 1 = maps, 2 = DBCs,\n");
+    printf("                         3 = both. Defaults to extracting both.\n");
+    printf("\n");
+    printf("Example:\n");
+    printf("- use input path and do not flatten maps:\n");
+    printf("  %s -f 0 -i \"c:\\games\\world of warcraft\"\n", prg);
     exit(1);
 }
 
-void HandleArgs(int argc, char* arg[])
+bool HandleArgs(int argc, char** argv)
 {
-    for (int c = 1; c < argc; ++c)
-    {
-        // i - input path
-        // o - output path
-        // e - extract only MAP(1)/DBC(2) - standard both(3)
-        // f - use float to int conversion
-        // h - limit minimum height
-        if (arg[c][0] != '-')
-            Usage(arg[0]);
+    char* param = NULL;
 
-        switch (arg[c][1])
+    for (int i = 1; i < argc; ++i)
+    {
+        if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0 )
         {
-            case 'i':
-                if (c + 1 < argc)                           // all ok
-                    strcpy(input_path, arg[(c++) + 1]);
-                else
-                    Usage(arg[0]);
-                break;
-            case 'o':
-                if (c + 1 < argc)                           // all ok
-                    strcpy(output_path, arg[(c++) + 1]);
-                else
-                    Usage(arg[0]);
-                break;
-            case 'f':
-                if (c + 1 < argc)                           // all ok
-                    CONF_allow_float_to_int = atoi(arg[(c++) + 1]) != 0;
-                else
-                    Usage(arg[0]);
-                break;
-            case 'e':
-                if (c + 1 < argc)                           // all ok
-                {
-                    CONF_extract = atoi(arg[(c++) + 1]);
-                    if (!(CONF_extract > 0 && CONF_extract < 4))
-                        Usage(arg[0]);
-                }
-                else
-                    Usage(arg[0]);
-                break;
+            param = argv[++i];
+            if (!param)
+            {
+                return false;
+            }
+
+            strcpy(input_path, param);
+        }
+        else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0 )
+        {
+            param = argv[++i];
+            if (!param)
+            {
+                return false;
+            }
+
+            strcpy(output_path, param);
+        }
+        else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--flat") == 0 )
+        {
+            param = argv[++i];
+            if (!param)
+            {
+                return false;
+            }
+
+            int convertFloatToInt = atoi(param);
+            if (convertFloatToInt != 0)
+            {
+                CONF_allow_float_to_int = convertFloatToInt;
+            }
+        }
+        else if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--extract") == 0 )
+        {
+            param = argv[++i];
+            if (!param)
+            {
+                return false;
+            }
+
+            int convertExtract = atoi(param);
+            if (convertExtract > 0 && convertExtract < 4)
+            {
+                CONF_extract = convertExtract;
+            }
+            else
+            {
+                Usage(argv[0]);
+            }
+        }
+        else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0 )
+        {
+            Usage(argv[0]);
         }
     }
+
+    return true;
+
 }
 
 uint32 ReadMapDBC()
 {
-    printf("Read Map.dbc file... ");
+    printf("Reading maps from Map.dbc ... ");
     DBCFile dbc("DBFilesClient\\Map.dbc");
 
     if (!dbc.open())
     {
-        printf("Fatal error: Invalid Map.dbc file format!\n");
+        printf("Fatal error: Could not read Map.dbc!\n");
         exit(1);
     }
 
@@ -202,18 +229,18 @@ uint32 ReadMapDBC()
         map_ids[x].id = dbc.getRecord(x).getUInt(0);
         strcpy(map_ids[x].name, dbc.getRecord(x).getString(1));
     }
-    printf("Done! (%u maps loaded)\n", map_count);
+    printf("Success! %lu maps loaded.\n", map_count);
     return map_count;
 }
 
 void ReadAreaTableDBC()
 {
-    printf("Read AreaTable.dbc file...");
+    printf("Reading areas from AreaTable.dbc ...");
     DBCFile dbc("DBFilesClient\\AreaTable.dbc");
 
     if (!dbc.open())
     {
-        printf("Fatal error: Invalid AreaTable.dbc file format!\n");
+        printf("Fatal error: Could not read AreaTable.dbc!\n");
         exit(1);
     }
 
@@ -227,16 +254,16 @@ void ReadAreaTableDBC()
 
     maxAreaId = dbc.getMaxId();
 
-    printf("Done! (%u areas loaded)\n", area_count);
+    printf("Success! %lu areas loaded.\n", area_count);
 }
 
 void ReadLiquidTypeTableDBC()
 {
-    printf("Read LiquidType.dbc file...");
+    printf("Reading liquid types from LiquidType.dbc ...");
     DBCFile dbc("DBFilesClient\\LiquidType.dbc");
     if (!dbc.open())
     {
-        printf("Fatal error: Invalid LiquidType.dbc file format!\n");
+        printf("Fatal error: Could not read LiquidType.dbc!\n");
         exit(1);
     }
 
@@ -248,7 +275,7 @@ void ReadLiquidTypeTableDBC()
     for (uint32 x = 0; x < LiqType_count; ++x)
         LiqType[dbc.getRecord(x).getUInt(0)] = dbc.getRecord(x).getUInt(3);
 
-    printf("Done! (%u LiqTypes loaded)\n", LiqType_count);
+    printf("Success! %lu liquid types loaded.\n", LiqType_count);
 }
 
 //
@@ -356,7 +383,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
     adt_MCIN* cells = adt.a_grid->getMCIN();
     if (!cells)
     {
-        printf("Can't find cells in '%s'\n", filename);
+        printf("Can not find cells in '%s'\n", filename);
         return false;
     }
 
@@ -383,7 +410,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
                     area_flags[i][j] = areas[areaid];
                     continue;
                 }
-                printf("File: %s\nCan't find area flag for areaid %u [%d, %d].\n", filename, areaid, cell->ix, cell->iy);
+                printf("File: %s\nCan not find area flag for area %u [%d, %d].\n", filename, areaid, cell->ix, cell->iy);
             }
             area_flags[i][j] = 0xffff;
         }
@@ -694,7 +721,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
                     case LIQUID_TYPE_MAGMA: liquid_flags[i][j] |= MAP_LIQUID_TYPE_MAGMA; break;
                     case LIQUID_TYPE_SLIME: liquid_flags[i][j] |= MAP_LIQUID_TYPE_SLIME; break;
                     default:
-                        printf("\nCan't find Liquid type %u for map %s\nchunk %d,%d\n", h->liquidType, filename, i, j);
+                        printf("\nCan not find Liquid type %u for map %s\nchunk %d,%d\n", h->liquidType, filename, i, j);
                         break;
                 }
                 // Dark water detect
@@ -706,7 +733,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
                 }
 
                 if (!count && liquid_flags[i][j])
-                    printf("Wrong liquid detect in MH2O chunk");
+                    printf("Wrong liquid type detected in MH2O chunk");
 
                 float* height = h2o->getLiquidHeightMap(h);
                 int pos = 0;
@@ -833,7 +860,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
     FILE* output = fopen(filename2, "wb");
     if (!output)
     {
-        printf("Can't create the output file '%s'\n", filename2);
+        printf("Can not create the output file '%s'\n", filename2);
         return false;
     }
     fwrite(&map, sizeof(map), 1, output);
@@ -904,7 +931,7 @@ void ExtractMapsFromMpq()
     path += "/maps/";
     CreateDir(path);
 
-    printf("Convert map files\n");
+    printf("Converting map files\n");
     for (uint32 z = 0; z < map_count; ++z)
     {
         printf("Extract %s (%d/%d)                  \n", map_ids[z].name, z + 1, map_count);
@@ -913,7 +940,7 @@ void ExtractMapsFromMpq()
         WDT_file wdt;
         if (!wdt.loadFile(mpq_map_name, false))
         {
-//            printf("Error loading %s map wdt data\n", map_ids[z].name);
+            // printf("Error loading %s map WDT data\n", map_ids[z].name);
             continue;
         }
 
@@ -940,7 +967,7 @@ bool ExtractFile(char const* mpq_name, std::string const& filename)
     FILE* output = fopen(filename.c_str(), "wb");
     if (!output)
     {
-        printf("Can't create the output file '%s'\n", filename.c_str());
+        printf("Can not create the output file '%s'\n", filename.c_str());
         return false;
     }
     MPQFile m(mpq_name);
@@ -953,7 +980,7 @@ bool ExtractFile(char const* mpq_name, std::string const& filename)
 
 void ExtractDBCFiles()
 {
-    printf("Extracting dbc files...\n");
+    printf("Extracting client database files...\n");
 
     std::set<std::string> dbcfiles;
 
@@ -981,7 +1008,7 @@ void ExtractDBCFiles()
         if (ExtractFile(iter->c_str(), filename))
             ++count;
     }
-    printf("Extracted %u DBC files\n\n", count);
+    printf("Extracted %u client database files\n\n", count);
 }
 
 void LoadCommonMPQFiles()
@@ -1002,12 +1029,14 @@ inline void CloseMPQFiles()
     gOpenArchives.clear();
 }
 
-int main(int argc, char* arg[])
+int main(int argc, char** argv)
 {
-    printf("Map & DBC Extractor\n");
-    printf("===================\n\n");
+    printf("mangos-zero DBC & map (version %s) extractor\n\n", MAP_VERSION_MAGIC);
 
-    HandleArgs(argc, arg);
+    if (!HandleArgs(argc, argv))
+    {
+        return 1;
+    }
 
     // Open MPQs
     LoadCommonMPQFiles();
@@ -1015,7 +1044,7 @@ int main(int argc, char* arg[])
 
     // Extract dbc
     if (CONF_extract & EXTRACT_DBC)
-		ExtractDBCFiles();
+        ExtractDBCFiles();
 
     // Extract maps
     if (CONF_extract & EXTRACT_MAP)

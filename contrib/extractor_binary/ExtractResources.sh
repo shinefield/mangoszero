@@ -1,14 +1,31 @@
 #!/bin/bash
 
-# This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+# mangos-zero is a full featured server for World of Warcraft in its vanilla
+# version, supporting clients for patch 1.12.x.
 #
-# This file is free software; as a special exception the author gives
-# unlimited permission to copy and/or distribute it, with or without
-# modifications, as long as this notice is preserved.
+# Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+# Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
 #
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# ***** BEGIN GPL LICENSE BLOCK *****
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# ***** END GPL LICENSE BLOCK *****
+#
+# World of Warcraft, and all World of Warcraft or Warcraft art, images,
+# and lore are copyrighted by Blizzard Entertainment, Inc.
 
 ## Expected param 1 to be 'a' for all, else ask some questions
 
@@ -28,6 +45,15 @@ USE_MMAPS="0"
 USE_MMAPS_OFFMESH="0"
 USE_MMAPS_DELAY=""
 
+DisplayHeader()
+{
+  clear
+  echo "  __  __      _  _  ___  ___  ___            "
+  echo " |  \\/  |__ _| \\| |/ __|/ _ \\/ __|        "
+  echo " | |\\/| / _\` | .\` | (_ | (_) \\__ \\      "
+  echo " |_|  |_\\__,_|_|\\_|\\___|\\___/|___/       "
+}
+
 if [ "$1" = "a" ]
 then
   ## extract all
@@ -37,9 +63,12 @@ then
   USE_MMAPS_DELAY="no"
 else
   ## do some questioning!
-  echo
-  echo "Welcome to helper script to extract required dataz for MaNGOS!"
-  echo "Should all dataz (dbc, maps, vmaps and mmaps be extracted? (y/n)"
+    DisplayHeader
+  echo "  Welcome to the MaNGOS Zero Extraction helper script !"
+    echo "=========================================================="
+    echo
+  echo "Should all data (dbc, maps, vmaps and mmaps be extracted ?"
+  echo "(Selecting n will give you the option to pick each step) (y/n):"
   read line
   if [ "$line" = "y" ]
   then
@@ -48,24 +77,30 @@ else
     USE_VMAPS="1"
     USE_MMAPS="1"
   else
+        DisplayHeader
     echo
-    echo "Should dbc and maps be extracted? (y/n)"
+    echo "Should dbc and maps be extracted? (y/n):"
     read line
     if [ "$line" = "y" ]; then USE_AD="1"; fi
 
+        DisplayHeader
     echo
-    echo "Should vmaps be extracted? (y/n)"
+    echo "Should vmaps be extracted? (y/n):"
     read line
     if [ "$line" = "y" ]; then USE_VMAPS="1"; fi
 
+        DisplayHeader
     echo
-    echo "Should mmaps be extracted? (y/n)"
-    echo "WARNING! This will take several hours! (you can later tell to start delayed)"
+    echo "WARNING! Extracting mmaps will take several hours!"
+    echo "(you can later tell the extractor to delay starting)"
+    echo
+    echo "Should mmaps be extracted? (y/n):"
     read line
     if [ "$line" = "y" ]
     then
       USE_MMAPS="1";
     else
+      echo
       echo "Only reextract offmesh tiles for mmaps?"
       read line
       if [ "$line" = "y" ]
@@ -88,22 +123,32 @@ fi
 if [ "$USE_MMAPS" = "1" ]
 then
   ## Obtain number ob processes
+    DisplayHeader
+    echo
+##  echo "How many CPUs should be used for extracting mmaps? (1-8)"
   echo "How many CPUs should be used for extracting mmaps? (1-4)"
   read line
   echo
+##  if [ "$line" -ge "1" -a "$line" -le "8" ]
   if [ "$line" -ge "1" -a "$line" -le "4" ]
   then
     NUM_CPU=$line
   else
     echo "Only number between 1 and 4 supported!"
+##    echo "Only number between 1 and 8 supported!"
     exit 1
   fi
   ## Extract MMaps delayed?
   if [ "$USE_MMAPS_DELAY" != "no" ]; then
+        DisplayHeader
+        echo
     echo "MMap extraction can be started delayed"
-    echo "If you do _not_ want MMap Extraction to start delayed, just press return"
-    echo "Else enter number followed by s for seconds, m for minutes, h for hours"
+    echo
+    echo "If you *do not* want MMap Extraction to start delayed, just press return"
+    echo
+    echo "Otherwise enter a number followed by s for seconds, m for minutes, h for hours"
     echo "Example: \"3h\" - will start mmap extraction in 3 hours"
+    echo
     read -p"MMap Extraction Delay (leave blank for direct extraction): " USE_MMAPS_DELAY
     echo
   else
@@ -112,18 +157,25 @@ then
 fi
 
 ## Give some status
-echo "Current Settings: Extract DBCs/maps: $USE_AD, Extract vmaps: $USE_VMAPS, Extract mmaps: $USE_MMAPS on $NUM_CPU processes"
+DisplayHeader
+echo
+echo "Current Extraction Settings: DBCs/maps: $USE_AD"
+echo "                                 vmaps: $USE_VMAPS"
+echo "                                 mmaps: $USE_MMAPS using $NUM_CPU processes"
 if [ "$USE_MMAPS_DELAY" != "" ]; then
-  echo "MMap Extraction will be started delayed by $USE_MMAPS_DELAY"
+  echo
+  echo "MMap Extraction will be started delayed by: $USE_MMAPS_DELAY"
 fi
 echo
 if [ "$1" != "a" ]
 then
-  echo "If you don't like this settings, interrupt with CTRL+C"
+  echo "If you don't like these settings, interrupt with CTRL+C"
+  echo
+  echo "Press any key to proceed"
   read line
 fi
 
-echo "`date`: Start extracting dataz for MaNGOS" | tee $LOG_FILE
+echo "`date`: Start extracting data for MaNGOS" | tee $LOG_FILE
 
 ## Handle log messages
 if [ "$USE_AD" = "1" ];
@@ -146,14 +198,14 @@ else
 fi
 echo | tee -a $LOG_FILE
 
-echo "`date`: Start extracting dataz for MaNGOS, DBCs/maps $USE_AD, vmaps $USE_VMAPS, mmaps $USE_MMAPS on $NUM_CPU processes" | tee $DETAIL_LOG_FILE
+echo "`date`: Start extracting data for MaNGOS, DBCs/maps $USE_AD, vmaps $USE_VMAPS, mmaps $USE_MMAPS on $NUM_CPU processes" | tee $DETAIL_LOG_FILE
 echo | tee -a $DETAIL_LOG_FILE
 
 ## Extract dbcs and maps
 if [ "$USE_AD" = "1" ]
 then
  echo "`date`: Start extraction of DBCs and map files..." | tee -a $LOG_FILE
- ad | tee -a $DETAIL_LOG_FILE
+ map-extractor | tee -a $DETAIL_LOG_FILE
  echo "`date`: Extracting of DBCs and map files finished" | tee -a $LOG_FILE
  echo | tee -a $LOG_FILE
  echo | tee -a $DETAIL_LOG_FILE
@@ -163,11 +215,11 @@ fi
 if [ "$USE_VMAPS" = "1" ]
 then
   echo "`date`: Start extraction of vmaps..." | tee -a $LOG_FILE
-  vmapExtractor | tee -a $DETAIL_LOG_FILE
+  vmap-extractor | tee -a $DETAIL_LOG_FILE
   echo "`date`: Extracting of vmaps finished" | tee -a $LOG_FILE
   mkdir vmaps
   echo "`date`: Start assembling of vmaps..." | tee -a $LOG_FILE
-  vmap_assembler Buildings vmaps | tee -a $DETAIL_LOG_FILE
+  vmap-assembler Buildings vmaps | tee -a $DETAIL_LOG_FILE
   echo "`date`: Assembling of vmaps finished" | tee -a $LOG_FILE
 
   echo | tee -a $LOG_FILE

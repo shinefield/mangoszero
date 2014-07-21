@@ -116,7 +116,6 @@ bool local = false;
 bool do_fetch = false;
 bool do_sql = false;
 bool use_new_index = true;
-bool generate_makefile = false;                             // not need for cmake build systems
 // aux
 
 char origins[NUM_REMOTES][MAX_REMOTE];
@@ -636,105 +635,6 @@ bool convert_sql_updates()
     return true;
 }
 
-bool generate_sql_makefile()
-{
-    if (new_sql_updates.empty()) return true;
-
-    // find all files in the update dir
-    snprintf(cmd, MAX_CMD, "git show HEAD:%s", sql_update_dir);
-    if ((cmd_pipe = popen(cmd, "r")) == NULL)
-        return false;
-
-    // skip first two lines
-    if (!fgets(buffer, MAX_BUF, cmd_pipe)) { pclose(cmd_pipe); return false; }
-    if (!fgets(buffer, MAX_BUF, cmd_pipe)) { pclose(cmd_pipe); return false; }
-
-    char newname[MAX_PATH];
-    std::set<std::string> file_list;
-    sql_update_info info;
-
-    while (fgets(buffer, MAX_BUF, cmd_pipe))
-    {
-        buffer[strlen(buffer) - 1] = '\0';
-        if (buffer[strlen(buffer) - 1] != '/' &&
-                strncmp(buffer, "Makefile.am", MAX_BUF) != 0)
-        {
-            if (new_sql_updates.find(buffer) != new_sql_updates.end())
-            {
-                if (!get_sql_update_info(buffer, info)) return false;
-                snprintf(newname, MAX_PATH, REV_PRINT "_%s_%0*d_%s%s%s.sql", rev, info.parentRev, 2, info.nr, info.db, info.has_table ? "_" : "", info.table);
-                file_list.insert(newname);
-            }
-            else
-                file_list.insert(buffer);
-        }
-    }
-
-    pclose(cmd_pipe);
-
-    // write the makefile
-    char file_name[MAX_PATH];
-    snprintf(file_name, MAX_PATH, "%s%s/Makefile.am", path_prefix, sql_update_dir);
-    FILE* fout = fopen(file_name, "w");
-    if (!fout) { pclose(cmd_pipe); return false; }
-
-    fprintf(fout,
-        "# This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information\n"
-        "#\n"
-        "# This program is free software; you can redistribute it and/or modify\n"
-        "# it under the terms of the GNU General Public License as published by\n"
-        "# the Free Software Foundation; either version 2 of the License, or\n"
-        "# (at your option) any later version.\n"
-        "#\n"
-        "# This program is distributed in the hope that it will be useful,\n"
-        "# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-        "# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-        "# GNU General Public License for more details.\n"
-        "#\n"
-        "# You should have received a copy of the GNU General Public License\n"
-        "# along with this program; if not, write to the Free Software\n"
-        "# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
-        "\n"
-        "## Process this file with automake to produce Makefile.in\n"
-        "\n"
-        "## Sub-directories to parse\n"
-        "\n"
-        "## Change installation location\n"
-        "#  datadir = mangos/%s\n"
-        "pkgdatadir = $(datadir)/mangos/%s\n"
-        "\n"
-        "## Files to be installed\n"
-        "#  Install basic SQL files to datadir\n"
-        "pkgdata_DATA = \\\n",
-        sql_update_dir, sql_update_dir
-    );
-
-    for(std::set<std::string>::iterator itr = file_list.begin(), next; itr != file_list.end(); ++itr)
-    {
-        next = itr; ++next;
-        fprintf(fout, "\t%s%s\n", itr->c_str(), next == file_list.end() ? "" : " \\");
-    }
-
-    fprintf(fout,
-            "\n## Additional files to include when running 'make dist'\n"
-            "#  SQL update files, to upgrade database schema from older revisions\n"
-            "EXTRA_DIST = \\\n"
-           );
-
-    for (std::set<std::string>::iterator itr = file_list.begin(), next; itr != file_list.end(); ++itr)
-    {
-        next = itr; ++next;
-        fprintf(fout, "\t%s%s\n", itr->c_str(), next == file_list.end() ? "" : " \\");
-    }
-
-    fclose(fout);
-
-    snprintf(cmd, MAX_CMD, "git add %s%s/Makefile.am", path_prefix, sql_update_dir);
-    system_switch_index(cmd);
-
-    return true;
-}
-
 bool change_sql_database()
 {
     if (new_sql_updates.empty()) return true;
@@ -920,9 +820,9 @@ int main(int argc, char* argv[])
             snprintf(remote_branch, MAX_REMOTE, "%s", argv[i] + 9);
         else if (strncmp(argv[i], "-h", 2) == 0 || strncmp(argv[i], "--help", 6) == 0)
         {
-            printf("Usage: git_id [OPTION]\n");
-            printf("Generates a new rev number and updates revision_nr.h and the commit message.\n");
-            printf("Should be used just before push.\n");
+            printf("Usage: %s [OPTION]\n\n", argv[0]);
+            printf("Generate a new revision number, update revision_nr.h and alter commit message.\n");
+            printf("Should be used before push.\n");
             printf("   -h, --help            show the usage\n");
             printf("   -r, --replace         replace the rev number if it was already applied\n");
             printf("                         to the last commit\n");
@@ -959,8 +859,6 @@ int main(int argc, char* argv[])
     if (do_sql)
     {
         DO(convert_sql_updates());
-        if (generate_makefile)
-            DO(generate_sql_makefile());
         DO(change_sql_database());
         DO(write_rev_sql());
     }

@@ -23,26 +23,41 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cstdio>
+
 #include "dbcfile.h"
 #include "mpq_libmpq.h"
+#undef min
+#undef max
 
 DBCFile::DBCFile(const std::string& filename):
-    filename(filename),
-    data(0)
+    filename(filename), recordSize(0), recordCount(0), fieldCount(0), stringSize(0), data(NULL), stringTable(NULL)
 {
 
 }
+
 bool DBCFile::open()
 {
     MPQFile f(filename.c_str());
     char header[4];
     unsigned int na, nb, es, ss;
 
+    // Need some error checking, otherwise an unhandled exception error occurs
+    // if people screw with the data path.
+    if (f.isEof() == true)
+        return false;
+
     if (f.read(header, 4) != 4)                             // Number of records
         return false;
 
     if (header[0] != 'W' || header[1] != 'D' || header[2] != 'B' || header[3] != 'C')
+    {
+        f.close();
+        data = NULL;
+        printf("Critical Error: An error occurred while trying to read the DBCFile %s.", filename.c_str());
         return false;
+    }
+
 
     if (f.read(&na, 4) != 4)                                // Number of records
         return false;
@@ -98,6 +113,7 @@ DBCFile::Iterator DBCFile::begin()
     assert(data);
     return Iterator(*this, data);
 }
+
 DBCFile::Iterator DBCFile::end()
 {
     assert(data);

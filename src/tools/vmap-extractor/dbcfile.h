@@ -35,10 +35,8 @@ class DBCFile
         DBCFile(const std::string& filename);
         ~DBCFile();
 
-        // Open database. It must be openened before it can be used.
+        // Open database. It must be opened before it can be used.
         bool open();
-
-        // TODO: Add a close function?
 
         // Database exceptions
         class Exception
@@ -53,7 +51,6 @@ class DBCFile
                 std::string message;
         };
 
-        //
         class NotFound: public Exception
         {
             public:
@@ -75,7 +72,7 @@ class DBCFile
                 float getFloat(size_t field) const
                 {
                     assert(field < file.fieldCount);
-                    return *reinterpret_cast<float*>(offset + field * 4);
+                    return *reinterpret_cast<float*>(offset + (field * 4));
                 }
                 unsigned int getUInt(size_t field) const
                 {
@@ -85,20 +82,13 @@ class DBCFile
                 int getInt(size_t field) const
                 {
                     assert(field < file.fieldCount);
-                    return *reinterpret_cast<int*>(offset + field * 4);
-                }
-                unsigned char getByte(size_t ofs) const
-                {
-                    assert(ofs < file.recordSize);
-                    return *reinterpret_cast<unsigned char*>(offset + ofs);
+                    return *reinterpret_cast<int*>(offset + (field * 4));
                 }
                 const char* getString(size_t field) const
                 {
                     assert(field < file.fieldCount);
                     size_t stringOffset = getUInt(field);
                     assert(stringOffset < file.stringSize);
-                    //char * tmp = (char*)file.stringTable + stringOffset;
-                    //unsigned char * tmp2 = file.stringTable + stringOffset;
                     return reinterpret_cast<char*>(file.stringTable + stringOffset);
                 }
             private:
@@ -107,10 +97,12 @@ class DBCFile
                 unsigned char* offset;
 
                 friend class DBCFile;
-                friend class Iterator;
+                friend class DBCFile::Iterator;
         };
 
-        /* Iterator that iterates over records */
+        /**
+         * Iterator that iterates over records
+         */
         class Iterator
         {
             public:
@@ -150,6 +142,7 @@ class DBCFile
         /// Trivial
         size_t getRecordCount() const { return recordCount;}
         size_t getFieldCount() const { return fieldCount; }
+        size_t getMaxId();
 
     private:
         std::string filename;
