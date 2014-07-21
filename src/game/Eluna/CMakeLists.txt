@@ -62,3 +62,4 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extensions DESTINATION ${DATA_DIR}/lua_scripts)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/master.lua DESTINATION ${DATA_DIR}/lua_scripts)
