@@ -789,7 +789,10 @@ namespace MMAP
                 case 13:    // test.wdt
                 case 25:    // ScottTest.wdt
                 case 29:    // Test.wdt
+                case 35:    // StormwindPrison.wdt
+                case 37:    // PVPZone02.wdt
                 case 42:    // Colin.wdt
+                case 44:    // Monastery.wdt
                 case 169:   // EmeraldDream.wdt (unused, and very large)
                 case 451:   // development.wdt
                     return true;
@@ -803,7 +806,6 @@ namespace MMAP
             switch (mapID)
             {
                 case 30:    // AV
-                case 37:    // ?
                 case 489:   // WSG
                 case 529:   // AB
                     return true;

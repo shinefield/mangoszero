@@ -48,10 +48,14 @@ USE_MMAPS_DELAY=""
 DisplayHeader()
 {
   clear
-  echo "  __  __      _  _  ___  ___  ___            "
-  echo " |  \\/  |__ _| \\| |/ __|/ _ \\/ __|        "
-  echo " | |\\/| / _\` | .\` | (_ | (_) \\__ \\      "
-  echo " |_|  |_\\__,_|_|\\_|\\___|\\___/|___/       "
+  echo "  __  __      _  _  ___  ___  ___        "
+  echo " |  \\/  |__ _| \\| |/ __|/ _ \\/ __|    "
+  echo " | |\\/| / _` | .` | (_ | (_) \\__ \\    "
+  echo " |_|  |_\\__,_|_|\\_|\\___|\\___/|___/   "
+  echo "                                         "
+  echo " World of Warcraft 1.12.x supported.     "
+  echo "                                         "
+  echo " Visit http://getmangos.com/ for support."
 }
 
 if [ "$1" = "a" ]
