@@ -27,17 +27,13 @@
 #define MANGOS_SYSTEMCONFIG_H
 
 #ifndef _PACKAGENAME
-#define _PACKAGENAME "MaNGOS Zero"
+#define _PACKAGENAME "mangos-zero"
 #endif
 
 #include "Platform/Define.h"
 
 #ifndef _VERSION
-#if PLATFORM == PLATFORM_WINDOWS
-# define _VERSION(REVD,REVT,REVN,REVH) "0.12.2" " (" REVD " " REVT " Revision " REVN " - " REVH ")"
-#else
-# define _VERSION(REVD,REVT,REVN,REVH) "@VERSION@" " (" REVD " " REVT " Revision " REVN " - " REVH ")"
-#endif
+# define _VERSION(REVD,REVT,REVN,REVH) "${APPLICATION_VERSION}" " (" REVD " " REVT " Revision " REVN " - " REVH ")"
 #endif
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
@@ -79,10 +75,10 @@
 # else
 #  define _ENDIAN_PLATFORM "Win32 (" _ENDIAN_STRING ")"
 # endif
-# define _MANGOSD_CONFIG  SYSCONFDIR"mangosd.conf"
-# define _REALMD_CONFIG   SYSCONFDIR"realmd.conf"
-# define _MODS_CONFIG     SYSCONFDIR"mods.conf"
-# define _AUCTIONHOUSEBOT_CONFIG   SYSCONFDIR"ahbot.conf"
+# define _MANGOSD_CONFIG            SYSCONFDIR"mangosd.conf"
+# define _REALMD_CONFIG             SYSCONFDIR"realmd.conf"
+# define _MODS_CONFIG               SYSCONFDIR"mods.conf"
+# define _AUCTIONHOUSEBOT_CONFIG    SYSCONFDIR"ahbot.conf"
 #else
 # if defined  (__FreeBSD__)
 #  define _ENDIAN_PLATFORM "FreeBSD_" ARCHITECTURE " (" _ENDIAN_STRING ")"
@@ -99,10 +95,10 @@
 # else
 #  define _ENDIAN_PLATFORM "Unix_" ARCHITECTURE " (" _ENDIAN_STRING ")"
 # endif
-# define _MANGOSD_CONFIG  SYSCONFDIR"mangosd.conf"
-# define _REALMD_CONFIG  SYSCONFDIR"realmd.conf"
-# define _MODS_CONFIG  SYSCONFDIR"mods.conf"
-# define _AUCTIONHOUSEBOT_CONFIG   SYSCONFDIR"ahbot.conf"
+# define _MANGOSD_CONFIG            SYSCONFDIR"mangosd.conf"
+# define _REALMD_CONFIG             SYSCONFDIR"realmd.conf"
+# define _MODS_CONFIG               SYSCONFDIR"mods.conf"
+# define _AUCTIONHOUSEBOT_CONFIG    SYSCONFDIR"ahbot.conf"
 #endif
 
 #define _FULLVERSION(REVD,REVT,REVN,REVH) _PACKAGENAME "/" _VERSION(REVD,REVT,REVN,REVH) " for " _ENDIAN_PLATFORM

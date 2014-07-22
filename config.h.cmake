@@ -30,6 +30,7 @@
 
 #cmakedefine USE_MULTI_THREAD_MAP
 
+#define _PACKAGENAME "${PROJECT_NAME}"
 #define VERSION      "${APPLICATION_VERSION}"
 #define SYSCONFDIR   "${CONF_DIR}/"
 
