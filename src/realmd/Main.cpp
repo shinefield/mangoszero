@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup realmd Realm Daemon
-/// @{
-/// \file
-
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
 #include <ace/Get_Opt.h>
@@ -432,5 +428,3 @@ void UnhookSignals()
     signal(SIGBREAK, 0);
 #endif
 }
-
-/// @}

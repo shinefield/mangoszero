@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup world
-*/
-
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"
 #include "Config/Config.h"

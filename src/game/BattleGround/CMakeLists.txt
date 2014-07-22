@@ -60,9 +60,14 @@ endif()
 add_library(mangos-battleground STATIC ${battleground_LIB_SRCS})
 target_link_libraries(mangos-battleground mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
+add_dependencies(mangos-battleground revision.h)
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "-DMANGOS_DEBUG")
-    set_target_properties(mangos-battleground PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
 
-add_dependencies(mangos-battleground revision.h)
+set_target_properties(mangos-battleground PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

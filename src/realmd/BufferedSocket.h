@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-  \ingroup realmd
-  */
-
 #ifndef MANGOS_H_BUFFEREDSOCKET
 #define MANGOS_H_BUFFEREDSOCKET
 
@@ -81,4 +77,3 @@ class BufferedSocket: public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
 };
 
 #endif /* _BUFFEREDSOCKET_H_ */
-

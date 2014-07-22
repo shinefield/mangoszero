@@ -26,7 +26,7 @@
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
 #-----------------------------------------------------------------------------
-# Build the ScriptDev2 scripting library
+# Add the ScriptDev2 scripting library - if enabled
 if(WITH_MOD_SCRIPTDEV2)
     add_subdirectory(scripts)
 endif()

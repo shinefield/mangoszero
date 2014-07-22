@@ -60,7 +60,16 @@ endif()
 add_library(mangos-vmap STATIC ${vmap_LIB_SRCS})
 target_link_libraries(mangos-vmap mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "-DMANGOS_DEBUG -DVMAP_DEBUG")
-    set_target_properties(mangos-vmap PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
+
+if(WITH_DEBUG_OUTPUT)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DVMAP_DEBUG")
+endif()
+
+set_target_properties(mangos-vmap PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

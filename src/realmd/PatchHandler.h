@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-  \ingroup realmd
-  */
-
 #ifndef MANGOS_H_PATCHHANDLER
 #define MANGOS_H_PATCHHANDLER
 

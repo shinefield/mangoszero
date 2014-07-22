@@ -23,22 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup npc_linking
- * @{
- *
- * @file CreatureLinkingMgr.cpp
- * This file contains the code needed for MaNGOS to link npcs together
- * Currently implemented
- * - Aggro on boss aggro, also reversed
- * - Despawning/ Selfkill on death of mob if the NPC it is linked to dies
- * - Respawning on leaving combat if the linked to NPC evades, also reversed
- * - Respawning on death of the linked to NPC
- * - (Re)Spawning dependend on boss Alive/ Dead
- * - Following NPCs
- *
- */
-
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "ProgressBar.h"
@@ -678,5 +662,3 @@ bool CreatureLinkingHolder::TryFollowMaster(Creature* pCreature)
 
     return false;
 }
-
-/*! @} */

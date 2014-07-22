@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup realmd
-/// @{
-/// \file
-
 #ifndef MANGOS_H_REALMLIST
 #define MANGOS_H_REALMLIST
 
@@ -89,4 +85,3 @@ class RealmList
 #define sRealmList RealmList::Instance()
 
 #endif
-/// @}

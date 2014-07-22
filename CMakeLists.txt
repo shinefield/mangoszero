@@ -128,27 +128,29 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 # Set default config options
 
 # mangos-zero internal features
-option(WITH_DEBUG_OUTPUT    "Enable ${CMAKE_PROJECT_NAME} debug output (only enable for development)"                 OFF)
-option(WITH_GIT_ID          "Build git database update helper"                                              OFF)
+option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
+option(WITH_GIT_ID                  "Build git database update helper"                      OFF)
 mark_as_advanced(WITH_GIT_ID)
 
 # dont want people disabling this unless they really know what they are doing.
-option(WITH_MAP_TOOLS       "Build map extractors and generators"                                            ON)
+option(WITH_MAP_TOOLS               "Build map extractors and generators"                    ON)
 mark_as_advanced(WITH_MAP_TOOLS)
 
 # mangos-zero database bindings
-option(WITH_MYSQL           "Enable MySQL database backend"                                                  ON)
-option(WITH_POSTGRESQL      "Enable PostgreSQL database backend"                                            OFF)
+option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
+option(WITH_POSTGRESQL              "Enable PostgreSQL database backend"                    OFF)
 
 # mangos-zero language bindings
-option(WITH_MOD_LUA         "Enable Lua scripting"                                                          OFF)
-option(WITH_MOD_SCRIPTDEV2  "Enable C++ scripting library"                                                  OFF)
+option(WITH_MOD_LUA                 "Enable Lua scripting"                                   ON)
+option(WITH_MOD_SCRIPTDEV2          "Enable C++ scripting library"                          OFF)
+option(WITH_MOD_SCRIPTDEV2_DIR      "Define the SD2 drectory"                         "scripts")
+mark_as_advanced(WITH_MOD_SCRIPTDEV2_DIR)
 
 # Modifiers
-option(WITH_MOD_SOAP        "Enable SOAP bindings (export data e.g. for a website)"                         OFF)
-option(WITH_MOD_CLI         "Enable command line interface"                                                 OFF)
-option(WITH_MOD_REMOTE      "Enable remote access (remote administration)"                                  OFF)
-option(WITH_RECAST_DEMO     "Build the Recast movement map viewer application"                              OFF)
+option(WITH_MOD_SOAP                "Enable SOAP bindings (export data e.g. for a website)" OFF)
+option(WITH_MOD_CLI                 "Enable command line interface"                         OFF)
+option(WITH_MOD_REMOTE              "Enable remote access (remote administration)"          OFF)
+option(WITH_RECAST_DEMO             "Build the Recast movement map viewer application"      OFF)
 mark_as_advanced(WITH_RECAST_DEMO)
 
 #-----------------------------------------------------------------------------

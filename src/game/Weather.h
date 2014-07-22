@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup world
-/// @{
-/// \file
-
 #ifndef MANGOS_H_WEATHER
 #define MANGOS_H_WEATHER
 
@@ -76,4 +72,5 @@ class Weather
         ShortIntervalTimer m_timer;
         WeatherZoneChances const* m_weatherChances;
 };
+
 #endif

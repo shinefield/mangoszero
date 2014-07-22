@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd
-/// @{
-/// \file
-
 #ifndef MANGOS_H_WORLDRUNNABLE
 #define MANGOS_H_WORLDRUNNABLE
 
@@ -39,5 +35,5 @@ class WorldRunnable : public ACE_Based::Runnable
     public:
         void run() override;
 };
+
 #endif
-/// @}

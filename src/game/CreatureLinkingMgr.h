@@ -23,22 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup npc_linking System to link groups of NPCs together
- * This NPC-linking system in MaNGOS consists of 2 files:
- * - CreatureLinkingMgr.h
- * - CreatureLinkingMgr.cpp
- * as well of
- * - hooks in Creature.cpp, to trigger actions
- * - holder of the linked npcs for every map
- *
- * @{
- *
- * @file CreatureLinkingMgr.h
- * This file contains the the headers needed for MaNGOS to link NPCs together
- *
- */
-
 #ifndef MANGOS_H_CREATURE_LINKING_MGR
 #define MANGOS_H_CREATURE_LINKING_MGR
 
@@ -207,4 +191,3 @@ class CreatureLinkingHolder
 #define sCreatureLinkingMgr MaNGOS::Singleton<CreatureLinkingMgr>::Instance()
 
 #endif
-/*! @} */

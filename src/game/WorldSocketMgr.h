@@ -23,12 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \addtogroup u2w User to World Communication
- *  @{
- *  \file WorldSocketMgr.h
- *  \author Derex <derex101@gmail.com>
- */
-
 #ifndef MANGOS_H_WORLDSOCKETMGR
 #define MANGOS_H_WORLDSOCKETMGR
 
@@ -83,4 +77,3 @@ class WorldSocketMgr
 #define sWorldSocketMgr WorldSocketMgr::Instance()
 
 #endif
-/// @}

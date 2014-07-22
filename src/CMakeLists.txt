@@ -26,33 +26,33 @@
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
 #-----------------------------------------------------------------------------
-# Build the mangos framework library
+# Add the mangos framework library
 add_subdirectory(framework)
 
 #-----------------------------------------------------------------------------
-# Build the mangos shared library
+# Add the mangos shared library
 add_subdirectory(shared)
 
 #-----------------------------------------------------------------------------
-# Build command line tools
+# Add command line tools
 if(WITH_MAP_TOOLS)
     add_subdirectory(tools)
 endif()
 
 #-----------------------------------------------------------------------------
-# Build the mangos game library
+# Add the mangos game library
 add_subdirectory(game)
 
 #-----------------------------------------------------------------------------
-# Build the mangos realm authentication server
+# Add the mangos realm authentication server
 add_subdirectory(realmd)
 
 #-----------------------------------------------------------------------------
-# Build the mangos world server
+# Add the mangos world server
 add_subdirectory(mangosd)
 
 #-----------------------------------------------------------------------------
-# Build the mangos script library
+# Add the mangos script library
 if(WITH_MOD_SCRIPTDEV2)
     add_subdirectory(bindings)
 endif()

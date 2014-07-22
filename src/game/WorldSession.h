@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup u2w
-/// @{
-/// \file
-
 #ifndef MANGOS_H_WORLDSESSION
 #define MANGOS_H_WORLDSESSION
 
@@ -696,5 +692,5 @@ class MANGOS_DLL_SPEC WorldSession
         TutorialDataState m_tutorialState;
         ACE_Based::LockedQueue<WorldPacket*, ACE_Thread_Mutex> _recvQueue;
 };
+
 #endif
-/// @}

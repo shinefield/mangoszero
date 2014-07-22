@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd
-/// @{
-/// \file
-
 #include "Common.h"
 #include "Config/Config.h"
 #include "Language.h"

@@ -25,23 +25,21 @@
 # World of Warcraft, and all World of Warcraft or Warcraft art, images,
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
-cmake_minimum_required (VERSION 2.8)
+include(cmake/FindMySQL.cmake)
+include(cmake/FindPostgreSQL.cmake)
 
-INCLUDE(cmake/FindMySQL.cmake)
-INCLUDE(cmake/FindPostgreSQL.cmake)
-
-MESSAGE("-- Check PostgreSQL")
+message("-- Check PostgreSQL")
 FIND_PGSQL()
-ADD_DEFINITIONS(-DDO_POSTGRESQL)
+add_definitions(-DDO_POSTGRESQL)
 
-MESSAGE("-- Check MySQL")
+message("-- Check MySQL")
 FIND_MYSQL()
-ADD_DEFINITIONS(-DDO_MYSQL)
+add_definitions(-DDO_MYSQL)
 
-INCLUDE_DIRECTORIES(${MYSQL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${PGSQL_INCLUDE_DIR})
+include_directories(${MYSQL_INCLUDE_DIR})
+include_directories(${PGSQL_INCLUDE_DIR})
 
-ADD_EXECUTABLE (mysql2pgsql src/main.cpp)
+add_executable (mysql2pgsql src/main.cpp)
 
-TARGET_LINK_LIBRARIES(mysql2pgsql ${PGSQL_LIBRARIES})
-TARGET_LINK_LIBRARIES(mysql2pgsql ${MYSQL_LIBRARIES})
+target_link_libraries(mysql2pgsql ${PGSQL_LIBRARIES})
+target_link_libraries(mysql2pgsql ${MYSQL_LIBRARIES})

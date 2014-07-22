@@ -66,7 +66,6 @@ if(NOT ACE_FOUND)
     # ACE package doesn't specify that pthread and rt are needed, which is
     # a problem for users of GoLD.  Link pthread (just on Linux for now).
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        message(STATUS "ACE: we will link against pthread and rt.")
         list(APPEND ACE_LIBRARIES pthread rt)
     endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 

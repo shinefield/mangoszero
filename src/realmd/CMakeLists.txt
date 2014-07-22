@@ -49,6 +49,10 @@ include_directories(
 )
 
 #-----------------------------------------------------------------------------
+# Configure the auctionhouse-bot library
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/realmd.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/realmd.conf.dist)
+
+#-----------------------------------------------------------------------------
 # Build the realmd application
 if(WIN32 AND MSVC)
     add_executable(realmd "realmd.rc" ${realmd_LIB_SRCS})
@@ -57,18 +61,19 @@ else()
 endif()
 target_link_libraries(realmd mangos-framework mangos-shared ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
 
-set(BUILD_PROPERTIES "")
-if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
-    set_target_properties(realmd PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
-endif()
-
-install(TARGETS realmd DESTINATION ${BIN_DIR})
-
 add_dependencies(realmd revision.h)
 
 #-----------------------------------------------------------------------------
-# Build and install the realmd configuration
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/realmd.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/realmd.conf.dist)
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
 
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
+endif()
+
+set_target_properties(realmd PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+
+#-----------------------------------------------------------------------------
+# Install realmd
+install(TARGETS realmd DESTINATION ${BIN_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/realmd.conf.dist DESTINATION ${CONF_DIR})

@@ -335,20 +335,7 @@ endif()
 add_library(mangos-game STATIC ${game_LIB_SRCS})
 target_link_libraries(mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-shared mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
-set(BUILD_PROPERTIES "")
-if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG -DVMAP_DEBUG")
-endif()
-
-if(WITH_MOD_LUA)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_LUA" )
-    set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
-    target_link_libraries(mangos-game mangos-eluna)
-elseif(WITH_MOD_SCRIPTDEV2)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_SCRIPTDEV2" )
-    set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
-endif()
-
+# Special case for SD2 library builds
 if(UNIX AND WITH_MOD_SCRIPTDEV2)
   # Both systems don't have libdl and don't need them
   if (NOT (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD"))
@@ -357,3 +344,24 @@ if(UNIX AND WITH_MOD_SCRIPTDEV2)
 endif()
 
 add_dependencies(mangos-game revision.h)
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
+
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
+endif()
+
+if(WITH_DEBUG_OUTPUT)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DVMAP_DEBUG")
+endif()
+
+if(WITH_MOD_LUA)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_LUA" )
+    target_link_libraries(mangos-game mangos-eluna)
+elseif(WITH_MOD_SCRIPTDEV2)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_SCRIPTDEV2" )
+endif()
+
+set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

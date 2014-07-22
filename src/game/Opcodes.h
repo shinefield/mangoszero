@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup u2w
-/// @{
-/// \file
-
 #ifndef MANGOS_H_OPCODES
 #define MANGOS_H_OPCODES
 
@@ -1033,4 +1029,3 @@ inline char const* LookupOpcodeName(uint16 id)
     return "Received unknown opcode, it's more than max!";
 }
 #endif
-/// @}

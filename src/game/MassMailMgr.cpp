@@ -23,15 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing
- * @{
- *
- * @file MassMailMgr.cpp
- * This file contains the the code needed for MaNGOS to handle mass mails send in safe and perfomence not affecting way.
- *
- */
-
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Database/DatabaseImpl.h"
@@ -138,6 +129,3 @@ void MassMailMgr::GetStatistic(uint32& tasks, uint32& mails, uint32& needTime) c
     // 50 msecs is tick length
     needTime = 50 * mailsCount / sWorld.getConfig(CONFIG_UINT32_MASS_MAILER_SEND_PER_TICK) / IN_MILLISECONDS;
 }
-
-
-/*! @} */

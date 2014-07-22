@@ -23,15 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing
- * @{
- *
- * @file Mail.cpp
- * This file contains the code needed for MaNGOS to handle mails.
- *
- */
-
 #include "Log.h"
 #include "Mail.h"
 #include "WorldPacket.h"
@@ -421,5 +412,3 @@ void Mail::prepareTemplateItems(Player* receiver)
 
     CharacterDatabase.CommitTransaction();
 }
-
-/*! @} */

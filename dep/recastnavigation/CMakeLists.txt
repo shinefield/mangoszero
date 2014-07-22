@@ -39,6 +39,7 @@ endif()
 # Add sources
 add_subdirectory(Detour)
 add_subdirectory(Recast)
+
 if(WITH_RECAST_DEMO)
     add_subdirectory(DebugUtils)
     add_subdirectory(RecastDemo)

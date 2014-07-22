@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup realmd
-*/
-
 #include "Policies/Singleton.h"
 #include "Common.h"
 #include "Database/DatabaseEnv.h"

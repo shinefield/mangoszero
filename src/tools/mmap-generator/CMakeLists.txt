@@ -58,10 +58,15 @@ include_directories(
 add_executable(mmap-generator ${mmap_generator_LIB_SRCS})
 target_link_libraries(mmap-generator mangos-vmap mangos-shared mangos-framework g3dlite Detour Recast ${ACE_LIBRARIES} ${ZLIB_LIBRARIES})
 
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
 set(BUILD_PROPERTIES "-DMMAP_GENERATOR -DNO_CORE_FUNCS")
+
 if(WIN32)
     # Disabled for now. GnuWin32-zlib does not need this
     # set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DZLIB_WINAPI" )
 endif()
+
 set_target_properties(mmap-generator PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+
 install(TARGETS mmap-generator DESTINATION ${BIN_DIR})

@@ -23,11 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file WorldSocketMgr.cpp
-*  \ingroup u2w
-*  \author Derex <derex101@gmail.com>
-*/
-
 #include <set>
 #include <ace/ACE.h>
 #include <ace/Log_Msg.h>

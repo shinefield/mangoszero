@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup u2w
-*/
-
 #include "Policies/Singleton.h"
 #include "Opcodes.h"
 

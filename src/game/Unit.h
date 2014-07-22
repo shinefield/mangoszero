@@ -23,12 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * \addtogroup game
- * @{
- * \file
- */
-
 #ifndef MANGOS_H_UNIT
 #define MANGOS_H_UNIT
 
@@ -2045,7 +2039,5 @@ bool Unit::CheckAllControlledUnits(Func const& func, uint32 controlledMask) cons
 
     return false;
 }
-
-/** @} */
 
 #endif

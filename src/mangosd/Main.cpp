@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd Mangos Daemon
-/// @{
-/// \file
-
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
 #include <ace/Version.h>
@@ -221,5 +217,3 @@ extern int main(int argc, char** argv)
     // 1 - shutdown at error
     // 2 - restart command used, this code can be used by restarter for restart mangosd
 }
-
-/// @}

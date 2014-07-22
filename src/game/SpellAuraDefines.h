@@ -23,12 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * \addtogroup game
- * @{
- * \file
- */
-
 #ifndef MANGOS_H_SPELLAURADEFINES
 #define MANGOS_H_SPELLAURADEFINES
 
@@ -339,5 +333,5 @@ enum AreaAuraType
     AREA_AURA_PARTY,
     AREA_AURA_PET
 };
-/** @} */
+
 #endif

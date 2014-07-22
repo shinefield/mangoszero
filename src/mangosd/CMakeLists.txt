@@ -78,6 +78,11 @@ if(WITH_MOD_SOAP)
 endif()
 
 #-----------------------------------------------------------------------------
+# Configure the mangosd application
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mangosd.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/mangosd.conf.dist)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mods.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/mods.conf.dist)
+
+#-----------------------------------------------------------------------------
 # Build the mangosd application
 if(WIN32 AND MSVC)
     add_executable(mangosd "mangosd.rc" ${mangosd_LIB_SRCS})
@@ -87,7 +92,12 @@ endif()
 target_link_libraries(mangosd ${ACE_LIBRARIES} mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-shared mangos-framework Detour g3dlite ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
 install(TARGETS mangosd DESTINATION ${BIN_DIR})
 
+add_dependencies(mangosd revision.h)
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
 set(BUILD_PROPERTIES "-DHAVE_CONFIG_H")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
@@ -100,6 +110,7 @@ elseif(WITH_MOD_CLI)
 elseif(WITH_MOD_REMOTE)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_RA")
 endif()
+
 set_target_properties(mangosd PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 
 if(WIN32 AND WITH_MOD_SCRIPTDEV2)
@@ -109,12 +120,8 @@ if(WIN32 AND WITH_MOD_SCRIPTDEV2)
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
     )
 endif()
-add_dependencies(mangosd revision.h)
 
 #-----------------------------------------------------------------------------
-# Build and install the mangosd / mods configuration
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mangosd.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/mangosd.conf.dist)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mods.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/mods.conf.dist)
-
+# Install the mangosd / mods configuration
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mangosd.conf.dist DESTINATION ${CONF_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mods.conf.dist DESTINATION ${CONF_DIR})

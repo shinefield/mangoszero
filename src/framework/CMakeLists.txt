@@ -79,8 +79,12 @@ include_directories(
 add_library(mangos-framework STATIC ${framework_LIB_SRCS})
 target_link_libraries(mangos-framework ${ACE_LIBRARIES})
 
-set(BUILD_PROPERTIES "")
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
-    set_target_properties(mangos-framework PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 endif()
+
+set_target_properties(mangos-framework PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

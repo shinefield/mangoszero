@@ -23,21 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing The mail system
- * The mailing system in MaNGOS consists of mostly 4 files:
- * - Mail.h
- * - Mail.cpp
- * - MassMailMgr.h
- * - MassMailMgr.cpp
- *
- * @{
- *
- * @file MassMailMgr.h
- * This file contains the the headers needed for MaNGOS to handle mass mails send in safe and perfomence not affecting way.
- *
- */
-
 #ifndef MANGOS_H_MASS_MAIL_MGR
 #define MANGOS_H_MASS_MAIL_MGR
 
@@ -134,4 +119,3 @@ class MassMailMgr
 #define sMassMailMgr MaNGOS::Singleton<MassMailMgr>::Instance()
 
 #endif
-/*! @} */

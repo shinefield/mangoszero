@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup world The World
-/// @{
-/// \file
-
 #ifndef MANGOS_H_WORLD
 #define MANGOS_H_WORLD
 
@@ -644,5 +640,5 @@ class World
 extern uint32 realmID;
 
 #define sWorld MaNGOS::Singleton<World>::Instance()
+
 #endif
-/// @}

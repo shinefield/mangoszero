@@ -54,6 +54,8 @@ include_directories(
 add_executable(vmap-assembler ${vmap_assembler_LIB_SRCS})
 target_link_libraries(vmap-assembler mangos-vmap mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${ZLIB_LIBRARIES})
 
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
 set(BUILD_PROPERTIES "-DNO_CORE_FUNCS")
 set_target_properties(mangos-loadlib PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 

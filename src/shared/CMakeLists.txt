@@ -154,7 +154,7 @@ include_directories(
 )
 
 #-----------------------------------------------------------------------------
-# Generate SystemConfig.h
+# Configure the shared library
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/SystemConfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/SystemConfig.h)
 
 #-----------------------------------------------------------------------------
@@ -162,10 +162,16 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/SystemConfig.h.cmake ${CMAKE_CURRENT_
 add_library(mangos-shared STATIC ${shared_LIB_SRCS})
 target_link_libraries(mangos-shared mangos-framework ${ACE_LIBRARIES} ${OPENSSL_LIBRARIES})
 
+add_dependencies(mangos-shared revision.h)
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
 set(BUILD_PROPERTIES "-DHAVE_CONFIG_H")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
+
 if(WITH_MYSQL AND MYSQL_FOUND)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_MYSQL")
     target_link_libraries(mangos-shared ${MYSQL_LIBRARIES})
@@ -173,9 +179,10 @@ elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_POSTGRESQL")
     target_link_libraries(mangos-shared ${PostgreSQL_LIBRARIES})
 endif()
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
+
 set_target_properties(mangos-shared PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 
-add_dependencies(mangos-shared revision.h)

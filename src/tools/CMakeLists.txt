@@ -26,25 +26,25 @@
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
 #-----------------------------------------------------------------------------
-# Build command line git id generator
+# Add command line git id generator
 if(WITH_GIT_ID)
     add_subdirectory(git_id)
 endif()
 
 if(WITH_MAP_TOOLS)
     #-------------------------------------------------------------------------
-    # Build command line map extractor
+    # Add command line map extractor
     add_subdirectory(map-extractor)
 
     #-------------------------------------------------------------------------
-    # Build command line vmap extractor
+    # Add command line vmap extractor
     add_subdirectory(vmap-extractor)
 
     #-------------------------------------------------------------------------
-    # Build command line vmap assembler
+    # Add command line vmap assembler
     add_subdirectory(vmap-assembler)
 
     #-------------------------------------------------------------------------
-    # Build command line movement map generator
+    # Add command line movement map generator
     add_subdirectory(mmap-generator)
 endif()

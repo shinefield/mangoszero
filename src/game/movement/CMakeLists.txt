@@ -61,7 +61,12 @@ endif()
 add_library(mangos-movement STATIC ${movement_LIB_SRCS})
 target_link_libraries(mangos-movement mangos-shared mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES " ")
+
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    set(BUILD_PROPERTIES "-DMANGOS_DEBUG")
-    set_target_properties(mangos-movement PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
+
+set_target_properties(mangos-movement PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

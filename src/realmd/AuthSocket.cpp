@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup realmd
-*/
-
 #include <openssl/md5.h>
 #include <ace/OS_NS_unistd.h>
 #include <ace/OS_NS_fcntl.h>

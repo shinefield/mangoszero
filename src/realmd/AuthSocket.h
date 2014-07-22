@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup realmd
-/// @{
-/// \file
-
 #ifndef MANGOS_H_AUTHSOCKET
 #define MANGOS_H_AUTHSOCKET
 
@@ -86,5 +82,5 @@ class AuthSocket: public BufferedSocket
 
         void InitPatch();
 };
+
 #endif
-/// @}

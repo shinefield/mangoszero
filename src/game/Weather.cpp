@@ -23,10 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup world
-*/
-
 #include "Log.h"
 #include "Util.h"
 #include "Weather.h"

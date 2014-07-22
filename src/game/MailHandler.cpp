@@ -23,15 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing
- * @{
- *
- * @file MailHandler.cpp
- * This file contains handlers for mail opcodes.
- *
- */
-
 #include "Log.h"
 #include "Mail.h"
 #include "Language.h"
@@ -760,5 +751,3 @@ void WorldSession::HandleQueryNextMailTime(WorldPacket& /**recv_data*/)
     }
     SendPacket(&data);
 }
-
-/*! @} */
