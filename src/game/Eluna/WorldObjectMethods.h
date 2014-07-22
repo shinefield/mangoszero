@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef WORLDOBJECTMETHODS_H
-#define WORLDOBJECTMETHODS_H
+#ifndef ELUNA_H_WORLDOBJECTMETHODS
+#define ELUNA_H_WORLDOBJECTMETHODS
 
 namespace LuaWorldObject
 {
@@ -427,4 +427,5 @@ namespace LuaWorldObject
         return 1;
     }
 };
+
 #endif

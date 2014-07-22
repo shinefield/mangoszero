@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef TRANSPORTS_H
-#define TRANSPORTS_H
+#ifndef MANGOS_H_TRANSPORTS
+#define MANGOS_H_TRANSPORTS
 
 #include <map>
 #include <set>

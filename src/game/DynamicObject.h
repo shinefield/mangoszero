@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_DYNAMICOBJECT_H
-#define MANGOSSERVER_DYNAMICOBJECT_H
+#ifndef MANGOS_H_DYNAMICOBJECT
+#define MANGOS_H_DYNAMICOBJECT
 
 #include "Object.h"
 #include "DBCEnums.h"

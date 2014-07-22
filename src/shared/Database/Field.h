@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef FIELD_H
-#define FIELD_H
+#ifndef MANGOS_H_FIELD
+#define MANGOS_H_FIELD
 
 #include "Common.h"
 

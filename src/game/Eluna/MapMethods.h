@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef MAPMETHODS_H
-#define MAPMETHODS_H
+#ifndef ELUNA_H_MAPMETHODS
+#define ELUNA_H_MAPMETHODS
 
 namespace LuaMap
 {
@@ -155,4 +155,5 @@ namespace LuaMap
         return 1;
     }
 };
+
 #endif

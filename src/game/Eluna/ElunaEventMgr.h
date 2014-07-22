@@ -4,15 +4,15 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _ELUNA_EVENT_MGR_H
-#define _ELUNA_EVENT_MGR_H
+#ifndef ELUNA_H_EVENT_MGR
+#define ELUNA_H_EVENT_MGR
 
-#include "Common.h"
 #ifdef TRINITY
 #include "EventProcessor.h"
 #else
 #include "Utilities/EventProcessor.h"
 #endif
+#include "Common.h"
 
 class Eluna;
 class EventMgr;

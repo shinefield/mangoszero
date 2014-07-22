@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef AURAMETHODS_H
-#define AURAMETHODS_H
+#ifndef ELUNA_H_AURAMETHODS
+#define ELUNA_H_AURAMETHODS
 
 namespace LuaAura
 {
@@ -122,4 +122,5 @@ namespace LuaAura
         return 0;
     }
 };
+
 #endif

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#if !defined(QUERYRESULTPOSTGRE_H)
-#define QUERYRESULTPOSTGRE_H
+#ifndef MANGOS_H_QUERYRESULTPOSTGRE
+#define MANGOS_H_QUERYRESULTPOSTGRE
 
 #ifdef WIN32
 #define FD_SETSIZE 1024

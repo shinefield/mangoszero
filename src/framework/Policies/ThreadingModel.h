@@ -23,15 +23,15 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_THREADINGMODEL_H
-#define MANGOS_THREADINGMODEL_H
+#ifndef MANGOS_H_THREADINGMODEL
+#define MANGOS_H_THREADINGMODEL
+
+#include "Platform/Define.h"
 
 /**
  * @class ThreadingModel<T>
  *
  */
-
-#include "Platform/Define.h"
 
 namespace MaNGOS
 {

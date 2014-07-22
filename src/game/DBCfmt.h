@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_DBCSFRM_H
-#define MANGOS_DBCSFRM_H
+#ifndef MANGOS_H_DBCSFRM
+#define MANGOS_H_DBCSFRM
 
 const char AreaTableEntryfmt[] = "niiiixxxxxissssssssxixxxi";
 const char AreaTriggerEntryfmt[] = "niffffffff";

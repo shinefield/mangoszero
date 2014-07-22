@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MPQ_H
-#define MPQ_H
+#ifndef MANGOS_H_MPQ
+#define MANGOS_H_MPQ
 
 #include <string.h>
 #include <ctype.h>

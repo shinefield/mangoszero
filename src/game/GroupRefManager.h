@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _GROUPREFMANAGER
-#define _GROUPREFMANAGER
+#ifndef MANGOS_H_GROUPREFMANAGER
+#define MANGOS_H_GROUPREFMANAGER
 
 #include "Utilities/LinkedReference/RefManager.h"
 

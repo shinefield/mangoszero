@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef CREATURE_LINKING_MGR_H
-#define CREATURE_LINKING_MGR_H
+#ifndef MANGOS_H_CREATURE_LINKING_MGR
+#define MANGOS_H_CREATURE_LINKING_MGR
 
 #include <functional>
 

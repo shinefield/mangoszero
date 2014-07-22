@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __MANGOS_REPUTATION_MGR_H
-#define __MANGOS_REPUTATION_MGR_H
+#ifndef MANGOS_H_REPUTATION_MGR
+#define MANGOS_H_REPUTATION_MGR
 
 #include <map>
 

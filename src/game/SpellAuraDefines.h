@@ -29,8 +29,8 @@
  * \file
  */
 
-#ifndef MANGOS_SPELLAURADEFINES_H
-#define MANGOS_SPELLAURADEFINES_H
+#ifndef MANGOS_H_SPELLAURADEFINES
+#define MANGOS_H_SPELLAURADEFINES
 
 #define MAX_AURAS 48                                        // 12*4 (byte per aura) slots in UNIT_FIELD_AURA*
 #define MAX_POSITIVE_AURAS 32

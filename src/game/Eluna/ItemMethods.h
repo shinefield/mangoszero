@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ITEMMETHODS_H
-#define ITEMMETHODS_H
+#ifndef ELUNA_H_ITEMMETHODS
+#define ELUNA_H_ITEMMETHODS
 
 namespace LuaItem
 {
@@ -492,4 +492,5 @@ namespace LuaItem
         return 0;
     }
 };
+
 #endif

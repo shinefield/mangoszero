@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _ITEMPROTOTYPE_H
-#define _ITEMPROTOTYPE_H
+#ifndef MANGOS_H_ITEMPROTOTYPE
+#define MANGOS_H_ITEMPROTOTYPE
 
 #include "Common.h"
 

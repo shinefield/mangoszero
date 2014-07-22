@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_COMPILERDEFS_H
-#define MANGOS_COMPILERDEFS_H
+#ifndef MANGOS_H_COMPILERDEFS
+#define MANGOS_H_COMPILERDEFS
 
 #define PLATFORM_WINDOWS 0
 #define PLATFORM_UNIX    1

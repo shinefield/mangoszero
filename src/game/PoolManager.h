@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_POOLHANDLER_H
-#define MANGOS_POOLHANDLER_H
+#ifndef MANGOS_H_POOLHANDLER
+#define MANGOS_H_POOLHANDLER
 
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"

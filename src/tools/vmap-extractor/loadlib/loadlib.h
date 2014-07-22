@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef LOAD_LIB_H
-#define LOAD_LIB_H
+#ifndef MANGOS_H_LOADLIB
+#define MANGOS_H_LOADLIB
 
 #ifdef WIN32
 typedef __int64            int64;

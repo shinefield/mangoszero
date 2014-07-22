@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef MANGOS_MAIL_H
-#define MANGOS_MAIL_H
+#ifndef MANGOS_H_MAIL
+#define MANGOS_H_MAIL
 
 #include <map>
 

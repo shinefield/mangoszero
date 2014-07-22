@@ -23,9 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#ifndef MANGOS_H_POSIXDAEMON
+#define MANGOS_H_POSIXDAEMON
+
 #include "Common.h"
 #include "Log.h"
 
 void startDaemon(uint32_t timeout = 10);
 void stopDaemon();
 void detachDaemon();
+
+#endif

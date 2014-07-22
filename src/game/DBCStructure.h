@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_DBCSTRUCTURE_H
-#define MANGOS_DBCSTRUCTURE_H
+#ifndef MANGOS_H_DBCSTRUCTURE
+#define MANGOS_H_DBCSTRUCTURE
 
 #include <map>
 #include <set>

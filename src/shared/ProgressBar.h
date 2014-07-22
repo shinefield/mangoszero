@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_PROGRESSBAR_H
-#define MANGOSSERVER_PROGRESSBAR_H
+#ifndef MANGOS_H_PROGRESSBAR
+#define MANGOS_H_PROGRESSBAR
 
 #include "Platform/Define.h"
 

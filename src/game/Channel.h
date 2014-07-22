@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _CHANNEL_H
-#define _CHANNEL_H
+#ifndef MANGOS_H_CHANNEL
+#define MANGOS_H_CHANNEL
 
 #include <list>
 #include <map>

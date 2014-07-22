@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Common.h"
+#ifndef MANGOS_H_UPDATEFIELDS_AUTO
+#define MANGOS_H_UPDATEFIELDS_AUTO
 
-#ifndef _UPDATEFIELDS_AUTO_H
-#define _UPDATEFIELDS_AUTO_H
+#include "Common.h"
 
 enum EObjectFields
 {

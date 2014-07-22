@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CALLBACK_H
-#define MANGOS_CALLBACK_H
+#ifndef MANGOS_H_CALLBACK
+#define MANGOS_H_CALLBACK
 
 // defines to simplify multi param templates code and readablity
 #define TYPENAMES_1 typename T1

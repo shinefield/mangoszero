@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _AUTH_SHA1_H
-#define _AUTH_SHA1_H
+#ifndef MANGOS_H_AUTH_SHA1
+#define MANGOS_H_AUTH_SHA1
 
 #include <openssl/sha.h>
 #include <openssl/crypto.h>

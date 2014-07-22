@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CREATURE_EAI_MGR_H
-#define MANGOS_CREATURE_EAI_MGR_H
+#ifndef MANGOS_H_CREATURE_EAI_MGR
+#define MANGOS_H_CREATURE_EAI_MGR
 
 #include "Common.h"
 #include "CreatureEventAI.h"

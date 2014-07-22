@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CREATUREAIREGISTRY_H
-#define MANGOS_CREATUREAIREGISTRY_H
+#ifndef MANGOS_H_CREATUREAIREGISTRY
+#define MANGOS_H_CREATUREAIREGISTRY
 
 namespace AIRegistry
 {

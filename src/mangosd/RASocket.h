@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _RASOCKET_H
-#define _RASOCKET_H
+#ifndef MANGOS_H_RASOCKET
+#define MANGOS_H_RASOCKET
 
 #include <ace/Synch_Traits.h>
 #include <ace/Svc_Handler.h>

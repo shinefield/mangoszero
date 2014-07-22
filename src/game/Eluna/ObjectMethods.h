@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef OBJECTMETHODS_H
-#define OBJECTMETHODS_H
+#ifndef ELUNA_H_OBJECTMETHODS
+#define ELUNA_H_OBJECTMETHODS
 
 namespace LuaObject
 {
@@ -226,4 +226,5 @@ namespace LuaObject
         return 1;
     }
 };
+
 #endif

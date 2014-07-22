@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef MANGOS_MASS_MAIL_MGR_H
-#define MANGOS_MASS_MAIL_MGR_H
+#ifndef MANGOS_H_MASS_MAIL_MGR
+#define MANGOS_H_MASS_MAIL_MGR
 
 #include <memory>
 

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_NGRID_H
-#define MANGOS_NGRID_H
+#ifndef MANGOS_H_NGRID
+#define MANGOS_H_NGRID
 
 #include <cassert>
 

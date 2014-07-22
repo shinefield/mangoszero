@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRIDNOTIFIERS_H
-#define MANGOS_GRIDNOTIFIERS_H
+#ifndef MANGOS_H_GRIDNOTIFIERS
+#define MANGOS_H_GRIDNOTIFIERS
 
 #include <iostream>
 

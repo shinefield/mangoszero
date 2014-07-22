@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_BYTECONVERTER_H
-#define MANGOS_BYTECONVERTER_H
+#ifndef MANGOS_H_BYTECONVERTER
+#define MANGOS_H_BYTECONVERTER
 
 #include <algorithm>
 

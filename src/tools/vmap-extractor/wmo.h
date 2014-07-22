@@ -23,8 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef WMO_H
-#define WMO_H
+#ifndef MANGOS_H_WMO
+#define MANGOS_H_WMO
+
 #define TILESIZE (533.33333f)
 #define CHUNKSIZE ((TILESIZE) / 16.0f)
 

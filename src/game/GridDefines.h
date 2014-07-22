@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRIDDEFINES_H
-#define MANGOS_GRIDDEFINES_H
+#ifndef MANGOS_H_GRIDDEFINES
+#define MANGOS_H_GRIDDEFINES
 
 #include <cmath>
 

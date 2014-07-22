@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_WAYPOINTMOVEMENTGENERATOR_H
-#define MANGOS_WAYPOINTMOVEMENTGENERATOR_H
+#ifndef MANGOS_H_WAYPOINTMOVEMENTGENERATOR
+#define MANGOS_H_WAYPOINTMOVEMENTGENERATOR
 
 /** @page PathMovementGenerator is used to generate movements
  * of waypoints and flight paths.  Each serves the purpose

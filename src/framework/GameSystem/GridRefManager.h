@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _GRIDREFMANAGER
-#define _GRIDREFMANAGER
+#ifndef MANGOS_H_GRIDREFMANAGER
+#define MANGOS_H_GRIDREFMANAGER
 
 #include "Utilities/LinkedReference/RefManager.h"
 

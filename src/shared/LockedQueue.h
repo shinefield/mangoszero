@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef LOCKEDQUEUE_H
-#define LOCKEDQUEUE_H
+#ifndef MANGOS_H_LOCKEDQUEUE
+#define MANGOS_H_LOCKEDQUEUE
 
 #include <deque>
 #include <assert.h>

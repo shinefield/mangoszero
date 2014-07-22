@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_CORPSE_H
-#define MANGOSSERVER_CORPSE_H
+#ifndef MANGOS_H_CORPSE
+#define MANGOS_H_CORPSE
 
 #include "Common.h"
 #include "Database/DatabaseEnv.h"

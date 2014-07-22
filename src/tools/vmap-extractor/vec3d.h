@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef VEC3D_H
-#define VEC3D_H
+#ifndef MANGOS_H_VEC3D
+#define MANGOS_H_VEC3D
 
 #include <iostream>
 #include <cmath>

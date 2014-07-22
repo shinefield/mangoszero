@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_GAMEOBJECTMODEL_H
-#define MANGOSSERVER_GAMEOBJECTMODEL_H
+#ifndef MANGOS_H_GAMEOBJECTMODEL
+#define MANGOS_H_GAMEOBJECTMODEL
 
 #include <G3D/Matrix3.h>
 #include <G3D/Vector3.h>

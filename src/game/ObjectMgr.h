@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _OBJECTMGR_H
-#define _OBJECTMGR_H
+#ifndef MANGOS_H_OBJECTMGR
+#define MANGOS_H_OBJECTMGR
 
 #include <string>
 #include <map>

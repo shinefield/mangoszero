@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef WEATHERMETHODS_H
-#define WEATHERMETHODS_H
+#ifndef ELUNA_H_WEATHERMETHODS
+#define ELUNA_H_WEATHERMETHODS
 
 namespace LuaWeather
 {

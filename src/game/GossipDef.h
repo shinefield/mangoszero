@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_GOSSIP_H
-#define MANGOSSERVER_GOSSIP_H
+#ifndef MANGOS_H_GOSSIP
+#define MANGOS_H_GOSSIP
 
 #include "Common.h"
 #include "QuestDef.h"

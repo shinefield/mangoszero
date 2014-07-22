@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_SPELLAURAS_H
-#define MANGOS_SPELLAURAS_H
+#ifndef MANGOS_H_SPELLAURAS
+#define MANGOS_H_SPELLAURAS
 
 #include "SpellAuraDefines.h"
 #include "DBCEnums.h"

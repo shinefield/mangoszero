@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _MMAP_TERRAIN_BUILDER_H
-#define _MMAP_TERRAIN_BUILDER_H
+#ifndef MANGOS_H_MMAP_TERRAIN_BUILDER
+#define MANGOS_H_MMAP_TERRAIN_BUILDER
 
 #include <G3D/Array.h>
 #include <G3D/Vector3.h>

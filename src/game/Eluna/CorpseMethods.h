@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef CORPSEMETHODS_H
-#define CORPSEMETHODS_H
+#ifndef ELUNA_H_CORPSEMETHODS
+#define ELUNA_H_CORPSEMETHODS
 
 namespace LuaCorpse
 {
@@ -49,4 +49,5 @@ namespace LuaCorpse
         return 0;
     }
 };
+
 #endif

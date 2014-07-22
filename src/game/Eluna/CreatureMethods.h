@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef CREATUREMETHODS_H
-#define CREATUREMETHODS_H
+#ifndef ELUNA_H_CREATUREMETHODS
+#define ELUNA_H_CREATUREMETHODS
 
 namespace LuaCreature
 {
@@ -419,7 +419,7 @@ namespace LuaCreature
         lua_newtable(L);
         int tbl = lua_gettop(L);
         uint32 i = 0;
-        
+
 #ifdef MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #else
@@ -711,4 +711,5 @@ namespace LuaCreature
     return 0;
     }*/
 };
+
 #endif

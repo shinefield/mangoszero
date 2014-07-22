@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_FACTORY_HOLDER
-#define MANGOS_FACTORY_HOLDER
+#ifndef MANGOS_H_FACTORY_HOLDER
+#define MANGOS_H_FACTORY_HOLDER
 
 #include "Platform/Define.h"
 #include "Utilities/TypeList.h"

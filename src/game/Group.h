@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_GROUP_H
-#define MANGOSSERVER_GROUP_H
+#ifndef MANGOS_H_GROUP
+#define MANGOS_H_GROUP
 
 #include <map>
 #include <vector>

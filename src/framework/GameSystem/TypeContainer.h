@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TYPECONTAINER_H
-#define MANGOS_TYPECONTAINER_H
+#ifndef MANGOS_H_TYPECONTAINER
+#define MANGOS_H_TYPECONTAINER
 
 #include <cassert>
 #include <map>

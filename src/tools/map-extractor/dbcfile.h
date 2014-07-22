@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DBCFILE_H
-#define DBCFILE_H
+#ifndef MANGOS_H_DBCFILE
+#define MANGOS_H_DBCFILE
 
 #include <cassert>
 #include <string>

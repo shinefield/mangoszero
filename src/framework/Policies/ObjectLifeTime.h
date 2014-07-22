@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_OBJECTLIFETIME_H
-#define MANGOS_OBJECTLIFETIME_H
+#ifndef MANGOS_H_OBJECTLIFETIME
+#define MANGOS_H_OBJECTLIFETIME
 
 #include <stdexcept>
 

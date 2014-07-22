@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _WORLDMODEL_H
-#define _WORLDMODEL_H
+#ifndef MANGOS_H_WORLDMODEL
+#define MANGOS_H_WORLDMODEL
 
 #include <G3D/HashTrait.h>
 #include <G3D/Vector3.h>

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef SQLSTORAGE_IMPL_H
-#define SQLSTORAGE_IMPL_H
+#ifndef MANGOS_H_SQLSTORAGE_IMPL
+#define MANGOS_H_SQLSTORAGE_IMPL
 
 #include "Log.h"
 #include "ProgressBar.h"

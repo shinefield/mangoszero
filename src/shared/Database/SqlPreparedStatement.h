@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef SQLPREPAREDSTATEMENTS_H
-#define SQLPREPAREDSTATEMENTS_H
+#ifndef MANGOS_H_SQLPREPAREDSTATEMENTS
+#define MANGOS_H_SQLPREPAREDSTATEMENTS
 
 #include <vector>
 #include <stdexcept>

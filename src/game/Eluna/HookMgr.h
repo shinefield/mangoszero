@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef LUAHOOKS_H
-#define LUAHOOKS_H
+#ifndef ELUNA_H_LUAHOOKS
+#define ELUNA_H_LUAHOOKS
 
 namespace HookMgr
 {
@@ -85,7 +85,7 @@ namespace HookMgr
 
 	    // AddOns
         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
-        
+
         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
 
@@ -273,4 +273,5 @@ namespace HookMgr
         GOSSIP_EVENT_COUNT
     };
 };
+
 #endif

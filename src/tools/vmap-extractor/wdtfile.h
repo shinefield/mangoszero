@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef WDTFILE_H
-#define WDTFILE_H
+#ifndef MANGOS_H_WDTFILE
+#define MANGOS_H_WDTFILE
 
 #include <string>
 #include <stdlib.h>

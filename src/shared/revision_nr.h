@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __REVISION_NR_H__
-#define __REVISION_NR_H__
+#ifndef MANGOS_H_REVISION_NR
+#define MANGOS_H_REVISION_NR
 
 #define REVISION_NR "2480"
 

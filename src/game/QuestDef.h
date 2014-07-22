@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_QUEST_H
-#define MANGOSSERVER_QUEST_H
+#ifndef MANGOS_H_QUEST
+#define MANGOS_H_QUEST
 
 #include <string>
 #include <vector>

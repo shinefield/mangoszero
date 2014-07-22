@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _THREATMANAGER
-#define _THREATMANAGER
+#ifndef MANGOS_H_THREATMANAGER
+#define MANGOS_H_THREATMANAGER
 
 #include <list>
 

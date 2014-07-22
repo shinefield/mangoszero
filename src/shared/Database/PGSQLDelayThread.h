@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __PGSQLDELAYTHREAD_H
-#define __PGSQLDELAYTHREAD_H
+#ifndef MANGOS_H_PGSQLDELAYTHREAD
+#define MANGOS_H_PGSQLDELAYTHREAD
 
 #include "Database/SqlDelayThread.h"
 

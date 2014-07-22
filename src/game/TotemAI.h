@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TOTEMAI_H
-#define MANGOS_TOTEMAI_H
+#ifndef MANGOS_H_TOTEMAI
+#define MANGOS_H_TOTEMAI
 
 #include "Timer.h"
 #include "CreatureAI.h"

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _UNITEVENTS
-#define _UNITEVENTS
+#ifndef MANGOS_H_UNITEVENTS
+#define MANGOS_H_UNITEVENTS
 
 #include "Common.h"
 

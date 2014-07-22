@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _VMAPMANAGER2_H
-#define _VMAPMANAGER2_H
+#ifndef MANGOS_H_VMAPMANAGER2
+#define MANGOS_H_VMAPMANAGER2
 
 #include <G3D/Vector3.h>
 

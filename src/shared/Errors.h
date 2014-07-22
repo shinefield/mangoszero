@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_ERRORS_H
-#define MANGOSSERVER_ERRORS_H
+#ifndef MANGOS_H_ERRORS
+#define MANGOS_H_ERRORS
 
 #include "Common.h"
 

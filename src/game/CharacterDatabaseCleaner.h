@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef CHARACTERDATABASECLEANER_H
-#define CHARACTERDATABASECLEANER_H
+#ifndef MANGOS_H_CHARACTERDATABASECLEANER
+#define MANGOS_H_CHARACTERDATABASECLEANER
 
 namespace CharacterDatabaseCleaner
 {

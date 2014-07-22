@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_DBCSTORES_H
-#define MANGOS_DBCSTORES_H
+#ifndef MANGOS_H_DBCSTORES
+#define MANGOS_H_DBCSTORES
 
 #include <list>
 

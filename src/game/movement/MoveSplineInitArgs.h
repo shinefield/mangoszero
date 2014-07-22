@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_MOVESPLINEINIT_ARGS_H
-#define MANGOSSERVER_MOVESPLINEINIT_ARGS_H
+#ifndef MANGOS_H_MOVESPLINEINIT_ARGS
+#define MANGOS_H_MOVESPLINEINIT_ARGS
 
 #include <G3D/Vector3.h>
 

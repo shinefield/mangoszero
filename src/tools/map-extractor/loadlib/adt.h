@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef ADT_H
-#define ADT_H
+#ifndef MANGOS_H_ADT
+#define MANGOS_H_ADT
 
 #include "loadlib.h"
 

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _LINKEDLIST
-#define _LINKEDLIST
+#ifndef MANGOS_H_LINKEDLIST
+#define MANGOS_H_LINKEDLIST
 
 #include "Common.h"
 

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __ADDONHANDLER_H
-#define __ADDONHANDLER_H
+#ifndef MANGOS_H_ADDONHANDLER
+#define MANGOS_H_ADDONHANDLER
 
 #include "Policies/Singleton.h"
 #include "Common.h"

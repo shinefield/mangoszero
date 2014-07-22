@@ -23,6 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#ifndef MANGOS_H_SPLINE_IMPL
+#define MANGOS_H_SPLINE_IMPL
+
 namespace Movement
 {
     template<typename length_type> void Spline<length_type>::evaluate_percent(float t, Vector3& c) const
@@ -43,7 +46,7 @@ namespace Movement
 
     template<typename length_type> SplineBase::index_type Spline<length_type>::computeIndexInBounds(length_type length_) const
     {
-// Temporary disabled: causes infinite loop with t = 1.f
+        // Temporary disabled: causes infinite loop with t = 1.f
         /*
             index_type hi = index_hi;
             index_type lo = index_lo;
@@ -101,3 +104,5 @@ namespace Movement
         lengths.clear();
     }
 }
+
+#endif

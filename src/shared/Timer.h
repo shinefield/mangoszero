@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TIMER_H
-#define MANGOS_TIMER_H
+#ifndef MANGOS_H_TIMER
+#define MANGOS_H_TIMER
 
 #include <ace/OS_NS_sys_time.h>
 

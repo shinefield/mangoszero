@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _HOSTILEREFMANAGER
-#define _HOSTILEREFMANAGER
+#ifndef MANGOS_H_HOSTILEREFMANAGER
+#define MANGOS_H_HOSTILEREFMANAGER
 
 #include "Utilities/LinkedReference/RefManager.h"
 #include "Common.h"

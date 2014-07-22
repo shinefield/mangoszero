@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef OUTDOOR_PVP_H
-#define OUTDOOR_PVP_H
+#ifndef MANGOS_H_OUTDOOR_PVP
+#define MANGOS_H_OUTDOOR_PVP
 
 #include "Common.h"
 #include "ObjectGuid.h"

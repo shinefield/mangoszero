@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _GMTICKETMGR_H
-#define _GMTICKETMGR_H
+#ifndef MANGOS_H_GMTICKETMGR
+#define MANGOS_H_GMTICKETMGR
 
 #include <map>
 

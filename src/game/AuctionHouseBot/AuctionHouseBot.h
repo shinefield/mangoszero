@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef AUCTION_HOUSE_BOT_H
-#define AUCTION_HOUSE_BOT_H
+#ifndef MANGOS_H_AUCTION_HOUSE_BOT
+#define MANGOS_H_AUCTION_HOUSE_BOT
 
 #include "Config/Config.h"
 #include "World.h"

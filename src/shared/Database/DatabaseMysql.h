@@ -25,8 +25,8 @@
 
 #ifndef DO_POSTGRESQL
 
-#ifndef _DATABASEMYSQL_H
-#define _DATABASEMYSQL_H
+#ifndef MANGOS_H_DATABASEMYSQL
+#define MANGOS_H_DATABASEMYSQL
 
 #include <ace/Thread_Mutex.h>
 #include <ace/Guard_T.h>

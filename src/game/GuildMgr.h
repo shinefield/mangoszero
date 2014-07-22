@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _GUILDMGR_H
-#define _GUILDMGR_H
+#ifndef MANGOS_H_GUILDMGR
+#define MANGOS_H_GUILDMGR
 
 #include "Policies/Singleton.h"
 #include "Common.h"

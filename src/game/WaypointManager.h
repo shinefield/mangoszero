@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_WAYPOINTMANAGER_H
-#define MANGOS_WAYPOINTMANAGER_H
+#ifndef MANGOS_H_WAYPOINTMANAGER
+#define MANGOS_H_WAYPOINTMANAGER
 
 #include <vector>
 #include <string>

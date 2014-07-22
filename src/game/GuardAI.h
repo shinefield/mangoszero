@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GUARDAI_H
-#define MANGOS_GUARDAI_H
+#ifndef MANGOS_H_GUARDAI
+#define MANGOS_H_GUARDAI
 
 #include "Timer.h"
 #include "CreatureAI.h"

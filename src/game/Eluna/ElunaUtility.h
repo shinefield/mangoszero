@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _ELUNA_UTIL_H
-#define _ELUNA_UTIL_H
+#ifndef ELUNA_H_UTIL
+#define ELUNA_H_UTIL
 
 #include "Common.h"
 #include "SharedDefines.h"

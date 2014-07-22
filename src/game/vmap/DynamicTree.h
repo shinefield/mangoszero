@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DYNAMICMAP_TREE_H
-#define DYNAMICMAP_TREE_H
+#ifndef MANGOS_H_DYNAMICMAP_TREE
+#define MANGOS_H_DYNAMICMAP_TREE
 
 #include "Platform/Define.h"
 

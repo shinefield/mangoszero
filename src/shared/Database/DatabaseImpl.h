@@ -23,6 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#ifndef MANGOS_H_DATABASE_IMPL
+#define MANGOS_H_DATABASE_IMPL
+
 #include "Database/Database.h"
 #include "Database/SqlOperations.h"
 
@@ -191,3 +194,5 @@ Database::DelayQueryHolder(Class* object, void (Class::*method)(QueryResult*, Sq
 #undef ASYNC_QUERY_BODY
 #undef ASYNC_PQUERY_BODY
 #undef ASYNC_DELAYHOLDER_BODY
+
+#endif

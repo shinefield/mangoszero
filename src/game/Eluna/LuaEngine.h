@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _LUA_ENGINE_H
-#define _LUA_ENGINE_H
+#ifndef ELUNA_H_LUA_ENGINE
+#define ELUNA_H_LUA_ENGINE
 
 #include "Common.h"
 #include "SharedDefines.h"

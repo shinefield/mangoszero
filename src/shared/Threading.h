@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef THREADING_H
-#define THREADING_H
+#ifndef MANGOS_H_THREADING
+#define MANGOS_H_THREADING
 
 #include <assert.h>
 #include <ace/Thread.h>

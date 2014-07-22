@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef SPELLMETHODS_H
-#define SPELLMETHODS_H
+#ifndef ELUNA_H_SPELLMETHODS
+#define ELUNA_H_SPELLMETHODS
 
 namespace LuaSpell
 {
@@ -124,4 +124,5 @@ namespace LuaSpell
         return 0;
     }
 };
+
 #endif

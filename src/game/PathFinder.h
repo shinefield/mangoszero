@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_PATH_FINDER_H
-#define MANGOS_PATH_FINDER_H
+#ifndef MANGOS_H_PATH_FINDER
+#define MANGOS_H_PATH_FINDER
 
 #include <DetourNavMesh.h>
 #include <DetourNavMeshQuery.h>

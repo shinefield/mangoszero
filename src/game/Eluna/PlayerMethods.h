@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef PLAYERMETHODS_H
-#define PLAYERMETHODS_H
+#ifndef ELUNA_H_PLAYERMETHODS
+#define ELUNA_H_PLAYERMETHODS
 
 namespace LuaPlayer
 {
@@ -2336,4 +2336,5 @@ namespace LuaPlayer
     return 0;
     }*/
 };
+
 #endif

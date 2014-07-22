@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_SINGLETON_H
-#define MANGOS_SINGLETON_H
+#ifndef MANGOS_H_SINGLETON
+#define MANGOS_H_SINGLETON
 
 /**
  * @brief class Singleton

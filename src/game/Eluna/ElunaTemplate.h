@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _ELUNA_TEMPLATE_H
-#define _ELUNA_TEMPLATE_H
+#ifndef ELUNA_H_TEMPLATE
+#define ELUNA_H_TEMPLATE
 
 extern "C"
 {

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_PATH_H
-#define MANGOSSERVER_PATH_H
+#ifndef MANGOS_H_PATH
+#define MANGOS_H_PATH
 
 #include <deque>
 

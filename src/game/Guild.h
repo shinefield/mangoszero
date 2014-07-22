@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_GUILD_H
-#define MANGOSSERVER_GUILD_H
+#ifndef MANGOS_H_GUILD
+#define MANGOS_H_GUILD
 
 #include "Common.h"
 #include "Item.h"

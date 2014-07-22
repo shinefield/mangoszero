@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _AUCTION_HOUSE_MGR_H
-#define _AUCTION_HOUSE_MGR_H
+#ifndef MANGOS_H_AUCTION_HOUSE_MGR
+#define MANGOS_H_AUCTION_HOUSE_MGR
 
 #include "Policies/Singleton.h"
 #include "Common.h"

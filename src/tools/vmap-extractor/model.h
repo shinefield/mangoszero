@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef MANGOS_H_MODEL
+#define MANGOS_H_MODEL
 
 #include <vector>
 

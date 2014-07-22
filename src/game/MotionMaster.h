@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MOTIONMASTER_H
-#define MANGOS_MOTIONMASTER_H
+#ifndef MANGOS_H_MOTIONMASTER
+#define MANGOS_H_MOTIONMASTER
 
 #include <stack>
 #include <vector>

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_SQLSTORAGES_H
-#define MANGOS_SQLSTORAGES_H
+#ifndef MANGOS_H_SQLSTORAGES
+#define MANGOS_H_SQLSTORAGES
 
 #include "Common.h"
 #include "Database/SQLStorage.h"

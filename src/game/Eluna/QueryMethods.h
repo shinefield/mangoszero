@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef QUERYMETHODS_H
-#define QUERYMETHODS_H
+#ifndef ELUNA_H_QUERYMETHODS
+#define ELUNA_H_QUERYMETHODS
 
 #ifndef TRINITY
 #define RESULT  result

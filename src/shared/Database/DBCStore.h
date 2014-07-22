@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DBCSTORE_H
-#define DBCSTORE_H
+#ifndef MANGOS_H_DBCSTORE
+#define MANGOS_H_DBCSTORE
 
 #include "DBCFileLoader.h"
 

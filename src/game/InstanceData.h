@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_INSTANCE_DATA_H
-#define MANGOS_INSTANCE_DATA_H
+#ifndef MANGOS_H_INSTANCE_DATA
+#define MANGOS_H_INSTANCE_DATA
 
 #include "Common.h"
 #include "ObjectGuid.h"

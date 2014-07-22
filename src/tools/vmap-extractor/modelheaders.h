@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MODELHEADERS_H
-#define MODELHEADERS_H
+#ifndef MANGOS_H_MODELHEADERS
+#define MANGOS_H_MODELHEADERS
 
 /* typedef unsigned char uint8;
 typedef char int8;

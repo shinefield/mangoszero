@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TYPELIST_H
-#define MANGOS_TYPELIST_H
+#ifndef MANGOS_H_TYPELIST
+#define MANGOS_H_TYPELIST
 
 /*
   @struct TypeList

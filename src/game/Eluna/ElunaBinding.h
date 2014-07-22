@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _ELUNA_BINDING_H
-#define _ELUNA_BINDING_H
+#ifndef ELUNA_H_BINDING
+#define ELUNA_H_BINDING
 
 #include "Common.h"
 #include "LuaEngine.h"

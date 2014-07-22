@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_SPLINE_H
-#define MANGOSSERVER_SPLINE_H
+#ifndef MANGOS_H_SPLINE
+#define MANGOS_H_SPLINE
 
 #include <G3D/Vector3.h>
 

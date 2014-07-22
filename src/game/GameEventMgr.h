@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GAMEEVENT_MGR_H
-#define MANGOS_GAMEEVENT_MGR_H
+#ifndef MANGOS_H_GAMEEVENT_MGR
+#define MANGOS_H_GAMEEVENT_MGR
 
 #include "Platform/Define.h"
 #include "Policies/Singleton.h"

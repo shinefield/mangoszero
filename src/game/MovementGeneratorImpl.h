@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MOVEMENTGENERATOR_IMPL_H
-#define MANGOS_MOVEMENTGENERATOR_IMPL_H
+#ifndef MANGOS_H_MOVEMENTGENERATOR_IMPL
+#define MANGOS_H_MOVEMENTGENERATOR_IMPL
 
 #include "MovementGenerator.h"
 

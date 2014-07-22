@@ -23,14 +23,14 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#ifndef MANGOS_H_LFGMGR
+#define MANGOS_H_LFGMGR
+
 #include <list>
 #include <map>
 
 #include "Policies/Singleton.h"
 #include "Common.h"
-
-#ifndef MANGOSSERVER_LFGMGR_H
-#define MANGOSSERVER_LFGMGR_H
 
 enum ClassRoles
 {

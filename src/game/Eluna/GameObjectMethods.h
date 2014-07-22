@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef GAMEOBJECTMETHODS_H
-#define GAMEOBJECTMETHODS_H
+#ifndef ELUNA_H_GAMEOBJECTMETHODS
+#define ELUNA_H_GAMEOBJECTMETHODS
 
 namespace LuaGameObject
 {
@@ -169,4 +169,5 @@ namespace LuaGameObject
         return 0;
     }
 };
+
 #endif

@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef GLOBALMETHODS_H
-#define GLOBALMETHODS_H
+#ifndef ELUNA_H_GLOBALMETHODS
+#define ELUNA_H_GLOBALMETHODS
 
 namespace LuaGlobalFunctions
 {
@@ -1286,4 +1286,5 @@ namespace LuaGlobalFunctions
         return 0;
     }
 }
+
 #endif

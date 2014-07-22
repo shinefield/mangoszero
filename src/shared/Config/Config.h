@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef MANGOS_H_CONFIG
+#define MANGOS_H_CONFIG
 
 #include "Common.h"
 #include <Policies/Singleton.h>

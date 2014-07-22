@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CREATUREAISELECTOR_H
-#define MANGOS_CREATUREAISELECTOR_H
+#ifndef MANGOS_H_CREATUREAISELECTOR
+#define MANGOS_H_CREATUREAISELECTOR
 
 class CreatureAI;
 class Creature;

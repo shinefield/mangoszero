@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_MOVESPLINEINIT_H
-#define MANGOSSERVER_MOVESPLINEINIT_H
+#ifndef MANGOS_H_MOVESPLINEINIT
+#define MANGOS_H_MOVESPLINEINIT
 
 #include "MoveSplineInitArgs.h"
 #include "PathFinder.h"

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _MASTER_H
-#define _MASTER_H
+#ifndef MANGOS_H_MASTER
+#define MANGOS_H_MASTER
 
 #include "Policies/Singleton.h"
 #include "Common.h"

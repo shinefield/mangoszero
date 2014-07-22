@@ -27,8 +27,8 @@
 /// @{
 /// \file
 
-#ifndef _REALMLIST_H
-#define _REALMLIST_H
+#ifndef MANGOS_H_REALMLIST
+#define MANGOS_H_REALMLIST
 
 #include "Common.h"
 

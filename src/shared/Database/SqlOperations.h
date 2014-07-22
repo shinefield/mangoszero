@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __SQLOPERATIONS_H
-#define __SQLOPERATIONS_H
+#ifndef MANGOS_H_SQLOPERATIONS
+#define MANGOS_H_SQLOPERATIONS
 
 #include <queue>
 #include <ace/Thread_Mutex.h>

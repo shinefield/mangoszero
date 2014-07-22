@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TYPECONTAINERVISITOR_H
-#define MANGOS_TYPECONTAINERVISITOR_H
+#ifndef MANGOS_H_TYPECONTAINERVISITOR
+#define MANGOS_H_TYPECONTAINERVISITOR
 
 /*
  * @class TypeContainerVisitor is implemented as a visitor pattern.  It is

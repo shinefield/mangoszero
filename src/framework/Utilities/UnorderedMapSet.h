@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_UNORDERED_MAP_H
-#define MANGOS_UNORDERED_MAP_H
+#ifndef MANGOS_H_UNORDERED_MAP
+#define MANGOS_H_UNORDERED_MAP
 
 #include "Platform/CompilerDefs.h"
 #include "Platform/Define.h"

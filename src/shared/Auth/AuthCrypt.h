@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _AUTHCRYPT_H
-#define _AUTHCRYPT_H
+#ifndef MANGOS_H_AUTHCRYPT
+#define MANGOS_H_AUTHCRYPT
 
 #include <vector>
 

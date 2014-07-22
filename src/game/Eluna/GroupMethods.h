@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef GROUPMETHODS_H
-#define GROUPMETHODS_H
+#ifndef ELUNA_H_GROUPMETHODS
+#define ELUNA_H_GROUPMETHODS
 
 namespace LuaGroup
 {
@@ -245,4 +245,5 @@ namespace LuaGroup
     return 0;
     }*/
 };
+
 #endif

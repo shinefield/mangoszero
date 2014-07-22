@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_PET_H
-#define MANGOSSERVER_PET_H
+#ifndef MANGOS_H_PET
+#define MANGOS_H_PET
 
 #include "Common.h"
 #include "ObjectGuid.h"

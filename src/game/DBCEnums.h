@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DBCENUMS_H
-#define DBCENUMS_H
+#ifndef MANGOS_H_DBCENUMS
+#define MANGOS_H_DBCENUMS
 
 // Client expected level limitation, like as used in DBC item max levels for "until max player level"
 // use as default max player level, must be fit max level for used client

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_OBJECTREGISTRY_H
-#define MANGOS_OBJECTREGISTRY_H
+#ifndef MANGOS_H_OBJECTREGISTRY
+#define MANGOS_H_OBJECTREGISTRY
 
 #include <string>
 #include <vector>

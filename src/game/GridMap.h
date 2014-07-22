@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRIDMAP_H
-#define MANGOS_GRIDMAP_H
+#ifndef MANGOS_H_GRIDMAP
+#define MANGOS_H_GRIDMAP
 
 #include <bitset>
 #include <list>

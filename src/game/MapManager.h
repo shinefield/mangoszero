@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MAPMANAGER_H
-#define MANGOS_MAPMANAGER_H
+#ifndef MANGOS_H_MAPMANAGER
+#define MANGOS_H_MAPMANAGER
 
 #include <ace/Recursive_Thread_Mutex.h>
 

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _DatabasePostgre_H
-#define _DatabasePostgre_H
+#ifndef MANGOS_H_DATABASEPOSTGRE
+#define MANGOS_H_DATABASEPOSTGRE
 
 #include <stdarg.h>
 #include <ace/Thread_Mutex.h>

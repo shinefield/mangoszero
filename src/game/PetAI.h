@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_PETAI_H
-#define MANGOS_PETAI_H
+#ifndef MANGOS_H_PETAI
+#define MANGOS_H_PETAI
 
 #include "Timer.h"
 #include "CreatureAI.h"

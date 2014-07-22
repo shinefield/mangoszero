@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DBC_FILE_LOADER_H
-#define DBC_FILE_LOADER_H
+#ifndef MANGOS_H_DBC_FILE_LOADER
+#define MANGOS_H_DBC_FILE_LOADER
 
 #include <cassert>
 #include "Platform/Define.h"

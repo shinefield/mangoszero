@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#if !defined(DATABASEENV_H)
-#define DATABASEENV_H
+#ifndef MANGOS_H_DATABASEENV
+#define MANGOS_H_DATABASEENV
 
 #include "Common.h"
 #include "Log.h"

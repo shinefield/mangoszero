@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_TOTEM_H
-#define MANGOSSERVER_TOTEM_H
+#ifndef MANGOS_H_TOTEM
+#define MANGOS_H_TOTEM
 
 #include "Creature.h"
 

@@ -25,8 +25,8 @@
 
 #ifndef DO_POSTGRESQL
 
-#if !defined(QUERYRESULTMYSQL_H)
-#define QUERYRESULTMYSQL_H
+#ifndef MANGOS_H_QUERYRESULTMYSQL
+#define MANGOS_H_QUERYRESULTMYSQL
 
 #include "Common.h"
 
@@ -53,4 +53,5 @@ class QueryResultMysql : public QueryResult
         MYSQL_RES* mResult;
 };
 #endif
+
 #endif

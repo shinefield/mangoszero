@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef MANGOS_H_DATABASE
+#define MANGOS_H_DATABASE
 
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/TSS_T.h>

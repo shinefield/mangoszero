@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef QUERYRESULT_H
-#define QUERYRESULT_H
+#ifndef MANGOS_H_QUERYRESULT
+#define MANGOS_H_QUERYRESULT
 
 #include "Common.h"
 #include "Errors.h"

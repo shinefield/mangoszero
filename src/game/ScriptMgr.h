@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _SCRIPTMGR_H
-#define _SCRIPTMGR_H
+#ifndef MANGOS_H_SCRIPTMGR
+#define MANGOS_H_SCRIPTMGR
 
 #include <ace/Atomic_Op.h>
 

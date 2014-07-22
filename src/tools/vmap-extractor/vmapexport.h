@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef VMAPEXPORT_H
-#define VMAPEXPORT_H
+#ifndef MANGOS_H_VMAPEXPORT
+#define MANGOS_H_VMAPEXPORT
 
 #include <string>
 #include <set>

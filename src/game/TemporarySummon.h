@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_TEMPSUMMON_H
-#define MANGOSSERVER_TEMPSUMMON_H
+#ifndef MANGOS_H_TEMPSUMMON
+#define MANGOS_H_TEMPSUMMON
 
 #include "Creature.h"
 #include "ObjectAccessor.h"

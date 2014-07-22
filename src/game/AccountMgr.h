@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _ACCMGR_H
-#define _ACCMGR_H
+#ifndef MANGOS_H_ACCMGR
+#define MANGOS_H_ACCMGR
 
 #include <string>
 

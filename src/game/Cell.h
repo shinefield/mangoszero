@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CELL_H
-#define MANGOS_CELL_H
+#ifndef MANGOS_H_CELL
+#define MANGOS_H_CELL
 
 #include <cmath>
 

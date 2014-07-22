@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef UNITMETHODS_H
-#define UNITMETHODS_H
+#ifndef ELUNA_H_UNITMETHODS
+#define ELUNA_H_UNITMETHODS
 
 namespace LuaUnit
 {
@@ -1693,4 +1693,5 @@ namespace LuaUnit
     return 1;
     }*/
 };
+
 #endif

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __InstanceSaveMgr_H
-#define __InstanceSaveMgr_H
+#ifndef MANGOS_H_INSTANCESAVEMGR
+#define MANGOS_H_INSTANCESAVEMGR
 
 #include <list>
 #include <map>

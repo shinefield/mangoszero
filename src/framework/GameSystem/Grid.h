@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRID_H
-#define MANGOS_GRID_H
+#ifndef MANGOS_H_GRID
+#define MANGOS_H_GRID
 
 #include "Platform/Define.h"
 #include "Policies/ThreadingModel.h"

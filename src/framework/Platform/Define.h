@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_DEFINE_H
-#define MANGOS_DEFINE_H
+#ifndef MANGOS_H_DEFINE
+#define MANGOS_H_DEFINE
 
 #include <sys/types.h>
 

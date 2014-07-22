@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef QUESTMETHODS_H
-#define QUESTMETHODS_H
+#ifndef ELUNA_H_QUESTMETHODS
+#define ELUNA_H_QUESTMETHODS
 
 namespace LuaQuest
 {
@@ -94,4 +94,5 @@ namespace LuaQuest
     return 1;
     }*/
 };
+
 #endif

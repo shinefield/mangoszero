@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_OBJECTACCESSOR_H
-#define MANGOS_OBJECTACCESSOR_H
+#ifndef MANGOS_H_OBJECTACCESSOR
+#define MANGOS_H_OBJECTACCESSOR
 
 #include <set>
 #include <list>

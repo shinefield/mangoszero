@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_LOG_H
-#define MANGOSSERVER_LOG_H
+#ifndef MANGOS_H_LOG
+#define MANGOS_H_LOG
 
 #include "Policies/Singleton.h"
 #include "Common.h"

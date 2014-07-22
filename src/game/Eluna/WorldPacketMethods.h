@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef WORLDPACKETMETHODS_H
-#define WORLDPACKETMETHODS_H
+#ifndef ELUNA_H_WORLDPACKETMETHODS
+#define ELUNA_H_WORLDPACKETMETHODS
 
 namespace LuaPacket
 {
