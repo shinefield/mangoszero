@@ -115,14 +115,6 @@ ConfVersion=2010102201
 #    The following are useful for limiting what character levels can
 #    benefit from the auction house
 #
-#    AuctionHouseBot.Class.Misc.Mount.ReqLevel.*
-#        Prevent seller from listing mounts below/above this required level
-#    Default 0
-#
-#    AuctionHouseBot.Class.Misc.Mount.ReqSkill.*
-#        Prevent seller from listing mounts below/above this skill level
-#    Default 0
-#
 #    AuctionHouseBot.Class.TradeGood.ItemLevel.*
 #        Prevent seller from listing trade good items below/above this item level
 #    Default 0
@@ -189,22 +181,16 @@ AuctionHouseBot.Items.Amount.Yellow = 0
 AuctionHouseBot.Class.Consumable = 6
 AuctionHouseBot.Class.Container = 4
 AuctionHouseBot.Class.Weapon = 8
-AuctionHouseBot.Class.Gem = 3
 AuctionHouseBot.Class.Armor = 8
 AuctionHouseBot.Class.Reagent = 1
 AuctionHouseBot.Class.Projectile = 2
 AuctionHouseBot.Class.TradeGood = 10
-AuctionHouseBot.Class.Generic = 1
 AuctionHouseBot.Class.Recipe = 6
 AuctionHouseBot.Class.Quiver = 1
 AuctionHouseBot.Class.Quest = 1
 AuctionHouseBot.Class.Key = 1
 AuctionHouseBot.Class.Misc = 5
 
-AuctionHouseBot.Class.Misc.Mount.ReqLevel.Min = 0
-AuctionHouseBot.Class.Misc.Mount.ReqLevel.Max = 0
-AuctionHouseBot.Class.Misc.Mount.ReqSkill.Min = 0
-AuctionHouseBot.Class.Misc.Mount.ReqSkill.Max = 0
 AuctionHouseBot.Class.TradeGood.ItemLevel.Min = 0
 AuctionHouseBot.Class.TradeGood.ItemLevel.Max = 0
 AuctionHouseBot.Class.Container.ItemLevel.Min = 0

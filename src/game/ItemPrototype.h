@@ -73,22 +73,22 @@ enum ItemBondingType
 // Mask for ItemPrototype.Flags field
 enum ItemPrototypeFlags
 {
-    ITEM_FLAG_UNK0                            = 0x00000001, // not used
-    ITEM_FLAG_CONJURED                        = 0x00000002,
+    ITEM_FLAG_RESERVED_0                      = 0x00000001, // Reserved for later usage
+    ITEM_FLAG_CONJURED                        = 0x00000002, // items created by spells with SPELL_EFFECT_CREATE_ITEM
     ITEM_FLAG_LOOTABLE                        = 0x00000004, // affect only non container items that can be "open" for loot. It or lockid set enable for client show "Right click to open". See also ITEM_DYNFLAG_UNLOCKED
-    ITEM_FLAG_UNK3                            = 0x00000008, // not used in pre-3.x
-    ITEM_FLAG_UNK4                            = 0x00000010, // can't repeat old note: appears red icon (like when item durability==0)
+    ITEM_FLAG_WRAPPED                         = 0x00000008, // not used in pre-3.x
+    ITEM_FLAG_DEPRECATED                      = 0x00000010, // items is deprecated and no longer equipable
     ITEM_FLAG_INDESTRUCTIBLE                  = 0x00000020, // used for totem. Item can not be destroyed, except by using spell (item can be reagent for spell and then allowed)
-    ITEM_FLAG_UNK6                            = 0x00000040, // ? old note: usable
-    ITEM_FLAG_NO_EQUIP_COOLDOWN               = 0x00000080,
-    ITEM_FLAG_UNK8                            = 0x00000100,
+    ITEM_FLAG_USABLE                          = 0x00000040, // items that can be used via right-click
+    ITEM_FLAG_NO_EQUIP_COOLDOWN               = 0x00000080, // items without an equip cooldown (and usually a _USABLE flag)
+    ITEM_FLAG_RESERVED_1                      = 0x00000100, // reserved for later usage
     ITEM_FLAG_WRAPPER                         = 0x00000200, // used or not used wrapper
-    ITEM_FLAG_IGNORE_BAG_SPACE                = 0x00000400, // ignore bag space at new item creation?
-    ITEM_FLAG_PARTY_LOOT                      = 0x00000800, // determines if item is party loot or not
-    ITEM_FLAG_UNK12                           = 0x00001000, // not used in pre-3.x
+    ITEM_FLAG_STACKABLE                       = 0x00000400, // items which can be stacked
+    ITEM_FLAG_PARTY_LOOT                      = 0x00000800, // items which can be looted by all party members
+    ITEM_FLAG_RESEVERD_2                      = 0x00001000, // reserved for later usage
     ITEM_FLAG_CHARTER                         = 0x00002000, // guild charter
-    ITEM_FLAG_UNK14                           = 0x00004000,
-    ITEM_FLAG_UNK15                           = 0x00008000, // a lot of items have this
+    ITEM_FLAG_LETTER                          = 0x00004000, // readable letter items
+    ITEM_FLAG_PVP_REWARD                      = 0x00008000, // items rewarded for PvP ranks and/or honor standing
     ITEM_FLAG_UNK16                           = 0x00010000, // a lot of items have this
     ITEM_FLAG_UNK17                           = 0x00020000, // last used flag in 1.12.1
 
@@ -149,18 +149,18 @@ enum ItemClass
     ITEM_CLASS_CONSUMABLE                       = 0,
     ITEM_CLASS_CONTAINER                        = 1,
     ITEM_CLASS_WEAPON                           = 2,
-    ITEM_CLASS_GEM                              = 3,
+    ITEM_CLASS_RESERVED_1                       = 3,
     ITEM_CLASS_ARMOR                            = 4,
     ITEM_CLASS_REAGENT                          = 5,
     ITEM_CLASS_PROJECTILE                       = 6,
     ITEM_CLASS_TRADE_GOODS                      = 7,
-    ITEM_CLASS_GENERIC                          = 8,
+    ITEM_CLASS_RESERVED_2                       = 8,
     ITEM_CLASS_RECIPE                           = 9,
-    ITEM_CLASS_MONEY                            = 10,
+    ITEM_CLASS_RESERVED_3                       = 10,
     ITEM_CLASS_QUIVER                           = 11,
     ITEM_CLASS_QUEST                            = 12,
     ITEM_CLASS_KEY                              = 13,
-    ITEM_CLASS_PERMANENT                        = 14,
+    ITEM_CLASS_RESERVED_4                       = 14,
     ITEM_CLASS_MISC                             = 15
 };
 
@@ -187,13 +187,10 @@ enum ItemSubclassContainer
     ITEM_SUBCLASS_SOUL_CONTAINER                = 1,
     ITEM_SUBCLASS_HERB_CONTAINER                = 2,
     ITEM_SUBCLASS_ENCHANTING_CONTAINER          = 3,
-    ITEM_SUBCLASS_ENGINEERING_CONTAINER         = 4,
-    ITEM_SUBCLASS_GEM_CONTAINER                 = 5,
-    ITEM_SUBCLASS_MINING_CONTAINER              = 6,
-    ITEM_SUBCLASS_LEATHERWORKING_CONTAINER      = 7
+    ITEM_SUBCLASS_ENGINEERING_CONTAINER         = 4
 };
 
-#define MAX_ITEM_SUBCLASS_CONTAINER               8
+#define MAX_ITEM_SUBCLASS_CONTAINER               5
 
 enum ItemSubclassWeapon
 {
@@ -206,10 +203,10 @@ enum ItemSubclassWeapon
     ITEM_SUBCLASS_WEAPON_POLEARM                = 6,
     ITEM_SUBCLASS_WEAPON_SWORD                  = 7,
     ITEM_SUBCLASS_WEAPON_SWORD2                 = 8,
-    ITEM_SUBCLASS_WEAPON_obsolete               = 9,
+    ITEM_SUBCLASS_WEAPON_RESERVED_1             = 9,
     ITEM_SUBCLASS_WEAPON_STAFF                  = 10,
-    ITEM_SUBCLASS_WEAPON_EXOTIC                 = 11,
-    ITEM_SUBCLASS_WEAPON_EXOTIC2                = 12,
+    ITEM_SUBCLASS_WEAPON_RESERVED_2             = 11,
+    ITEM_SUBCLASS_WEAPON_RESERVED_3             = 12,
     ITEM_SUBCLASS_WEAPON_FIST                   = 13,
     ITEM_SUBCLASS_WEAPON_MISC                   = 14,
     ITEM_SUBCLASS_WEAPON_DAGGER                 = 15,
@@ -222,21 +219,7 @@ enum ItemSubclassWeapon
 
 #define MAX_ITEM_SUBCLASS_WEAPON                  21
 
-/* enum ItemSubclassGem [-ZERO] not used in pre-bc
-{
-  ITEM_SUBCLASS_GEM_RED                       = 0,
-    ITEM_SUBCLASS_GEM_BLUE                      = 1,
-    ITEM_SUBCLASS_GEM_YELLOW                    = 2,
-    ITEM_SUBCLASS_GEM_PURPLE                    = 3,
-    ITEM_SUBCLASS_GEM_GREEN                     = 4,
-    ITEM_SUBCLASS_GEM_ORANGE                    = 5,
-    ITEM_SUBCLASS_GEM_META                      = 6,
-    ITEM_SUBCLASS_GEM_SIMPLE                    = 7,
-    ITEM_SUBCLASS_GEM_PRISMATIC                 = 8
-};
-*/
-
-#define MAX_ITEM_SUBCLASS_GEM                     1
+#define MAX_ITEM_SUBCLASS_RESERVED_1              1
 
 enum ItemSubclassArmor
 {
@@ -263,11 +246,11 @@ enum ItemSubclassReagent
 
 enum ItemSubclassProjectile
 {
-    ITEM_SUBCLASS_WAND                          = 0,        // ABS
-    ITEM_SUBCLASS_BOLT                          = 1,        // ABS
+    ITEM_SUBCLASS_PROJ_RESERVED_1               = 0,
+    ITEM_SUBCLASS_PROJ_RESERVED_2               = 1,
     ITEM_SUBCLASS_ARROW                         = 2,
     ITEM_SUBCLASS_BULLET                        = 3,
-    ITEM_SUBCLASS_THROWN                        = 4         // ABS
+    ITEM_SUBCLASS_PROJ_RESERVED_3               = 4
 };
 
 #define MAX_ITEM_SUBCLASS_PROJECTILE              5
@@ -277,26 +260,12 @@ enum ItemSubclassTradeGoods
     ITEM_SUBCLASS_TRADE_GOODS                   = 0,
     ITEM_SUBCLASS_PARTS                         = 1,
     ITEM_SUBCLASS_EXPLOSIVES                    = 2,
-    ITEM_SUBCLASS_DEVICES                       = 3,
-    // ITEM_SUBCLASS_JEWELCRAFTING                 = 4,
-    ITEM_SUBCLASS_CLOTH                         = 5,
-    ITEM_SUBCLASS_LEATHER                       = 6,
-    ITEM_SUBCLASS_METAL_STONE                   = 7,
-    ITEM_SUBCLASS_MEAT                          = 8,
-    ITEM_SUBCLASS_HERB                          = 9,
-    ITEM_SUBCLASS_ELEMENTAL                     = 10,
-    ITEM_SUBCLASS_TRADE_GOODS_OTHER             = 11,
-    ITEM_SUBCLASS_ENCHANTING                    = 12
+    ITEM_SUBCLASS_DEVICES                       = 3
 };
 
-#define MAX_ITEM_SUBCLASS_TRADE_GOODS             14
+#define MAX_ITEM_SUBCLASS_TRADE_GOODS             4
 
-enum ItemSubclassGeneric
-{
-    ITEM_SUBCLASS_GENERIC                       = 0
-};
-
-#define MAX_ITEM_SUBCLASS_GENERIC                 1
+#define MAX_ITEM_CLASS_RESERVED_2                  1
 
 enum ItemSubclassRecipe
 {
@@ -309,22 +278,17 @@ enum ItemSubclassRecipe
     ITEM_SUBCLASS_ALCHEMY_RECIPE                = 6,
     ITEM_SUBCLASS_FIRST_AID_MANUAL              = 7,
     ITEM_SUBCLASS_ENCHANTING_FORMULA            = 8,
-    ITEM_SUBCLASS_FISHING_MANUAL                = 9,
+    ITEM_SUBCLASS_FISHING_MANUAL                = 9
 };
 
 #define MAX_ITEM_SUBCLASS_RECIPE                  11
 
-enum ItemSubclassMoney
-{
-    ITEM_SUBCLASS_MONEY                         = 0
-};
-
-#define MAX_ITEM_SUBCLASS_MONEY                   1
+#define MAX_ITEM_CLASS_RESERVED_3                 1
 
 enum ItemSubclassQuiver
 {
-    ITEM_SUBCLASS_QUIVER0                       = 0,        // ABS
-    ITEM_SUBCLASS_QUIVER1                       = 1,        // ABS
+    ITEM_SUBCLASS_QUIV_RESERVED_1               = 0,
+    ITEM_SUBCLASS_QUIV_RESERVED_2               = 1,
     ITEM_SUBCLASS_QUIVER                        = 2,
     ITEM_SUBCLASS_AMMO_POUCH                    = 3
 };
@@ -355,29 +319,25 @@ enum ItemSubclassPermanent
 
 enum ItemSubclassJunk
 {
-    ITEM_SUBCLASS_JUNK                          = 0,
-    ITEM_SUBCLASS_JUNK_REAGENT                  = 1,
-    ITEM_SUBCLASS_JUNK_PET                      = 2,
-    ITEM_SUBCLASS_JUNK_HOLIDAY                  = 3,
-    ITEM_SUBCLASS_JUNK_OTHER                    = 4,
-    ITEM_SUBCLASS_JUNK_MOUNT                    = 5
+    ITEM_SUBCLASS_JUNK                          = 0
+
 };
 
-#define MAX_ITEM_SUBCLASS_JUNK                    6
+#define MAX_ITEM_SUBCLASS_JUNK                    1
 
 const uint32 MaxItemSubclassValues[MAX_ITEM_CLASS] =
 {
     MAX_ITEM_SUBCLASS_CONSUMABLE,
     MAX_ITEM_SUBCLASS_CONTAINER,
     MAX_ITEM_SUBCLASS_WEAPON,
-    MAX_ITEM_SUBCLASS_GEM,
+    MAX_ITEM_SUBCLASS_RESERVED_1,
     MAX_ITEM_SUBCLASS_ARMOR,
     MAX_ITEM_SUBCLASS_REAGENT,
     MAX_ITEM_SUBCLASS_PROJECTILE,
     MAX_ITEM_SUBCLASS_TRADE_GOODS,
-    MAX_ITEM_SUBCLASS_GENERIC,
+    MAX_ITEM_CLASS_RESERVED_2,
     MAX_ITEM_SUBCLASS_RECIPE,
-    MAX_ITEM_SUBCLASS_MONEY,
+    MAX_ITEM_CLASS_RESERVED_3,
     MAX_ITEM_SUBCLASS_QUIVER,
     MAX_ITEM_SUBCLASS_QUEST,
     MAX_ITEM_SUBCLASS_KEY,
