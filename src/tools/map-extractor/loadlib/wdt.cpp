@@ -27,21 +27,21 @@
 
 bool wdt_MWMO::prepareLoadedData()
 {
-    if (fcc != 'MWMO')
+    if (fcc != 0x4D574D4F)              // 'MWMO'
         return false;
     return true;
 }
 
 bool wdt_MPHD::prepareLoadedData()
 {
-    if (fcc != 'MPHD')
+    if (fcc != 0x4D504844)              // 'MPHD'
         return false;
     return true;
 }
 
 bool wdt_MAIN::prepareLoadedData()
 {
-    if (fcc != 'MAIN')
+    if (fcc != 0x4D41494E)              // 'MAIN'
         return false;
     return true;
 }

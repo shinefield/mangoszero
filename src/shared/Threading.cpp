@@ -70,7 +70,7 @@ ThreadPriority::ThreadPriority()
         // since we have only 7(seven) values in enum Priority
         // and 3 we know already (Idle, Normal, Realtime) so
         // we need to split each list [Idle...Normal] and [Normal...Realtime]
-        // into ¹ piesces
+        // into pieces
         const size_t _divider = 4;
         size_t _div = (norm_pos - min_pos) / _divider;
         if (_div == 0)
@@ -115,7 +115,7 @@ Thread::Thread() : m_iThreadId(0), m_hThreadHandle(0), m_task(0)
 
 Thread::Thread(Runnable* instance) : m_iThreadId(0), m_hThreadHandle(0), m_task(instance)
 {
-    // register reference to m_task to prevent it deeltion until destructor
+    // register reference to m_task to prevent it deletion until destructor
     if (m_task)
         m_task->incReference();
 
@@ -141,10 +141,13 @@ bool Thread::start()
     if (m_task == 0 || m_iThreadId != 0)
         return false;
 
+    // incRef before spawning the thread, otherwise Thread::ThreadTask() might call decRef and delete m_task
+    m_task->incReference();
+
     bool res = (ACE_Thread::spawn(&Thread::ThreadTask, (void*)m_task, THREADFLAG, &m_iThreadId, &m_hThreadHandle) == 0);
 
     if (res)
-        m_task->incReference();
+        m_task->decReference();
 
     return res;
 }
@@ -193,7 +196,7 @@ ACE_THR_FUNC_RETURN Thread::ThreadTask(void* param)
     Runnable* _task = (Runnable*)param;
     _task->run();
 
-    // task execution complete, free referecne added at
+    // task execution complete, free reference added at
     _task->decReference();
 
     return (ACE_THR_FUNC_RETURN)0;

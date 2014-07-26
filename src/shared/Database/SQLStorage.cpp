@@ -83,10 +83,10 @@ void SQLStorageBase::Free()
     {
         switch (m_dst_format[x])
         {
-            case FT_LOGIC:
+            case DB_FT_LOGIC:
                 offset += sizeof(bool);
                 break;
-            case FT_STRING:
+            case DB_FT_STRING:
             {
                 for (uint32 recordItr = 0; recordItr < m_recordCount; ++recordItr)
                     delete[] *(char**)((char*)(m_data + (recordItr * m_recordSize)) + offset);
@@ -94,24 +94,24 @@ void SQLStorageBase::Free()
                 offset += sizeof(char*);
                 break;
             }
-            case FT_NA:
-            case FT_INT:
+            case DB_FT_NA:
+            case DB_FT_INT:
                 offset += sizeof(uint32);
                 break;
-            case FT_BYTE:
-            case FT_NA_BYTE:
+            case DB_FT_BYTE:
+            case DB_FT_NA_BYTE:
                 offset += sizeof(char);
                 break;
-            case FT_FLOAT:
-            case FT_NA_FLOAT:
+            case DB_FT_FLOAT:
+            case DB_FT_NA_FLOAT:
                 offset += sizeof(float);
                 break;
-            case FT_NA_POINTER:
+            case DB_FT_NA_POINTER:
                 // TODO- possible (and small) memleak here possible
                 offset += sizeof(char*);
                 break;
-            case FT_IND:
-            case FT_SORT:
+            case DB_FT_IND:
+            case DB_FT_SORT:
                 assert(false && "SQL storage not have sort field types");
                 break;
             default:
@@ -163,7 +163,7 @@ void SQLStorage::prepareToLoad(uint32 maxRecordId, uint32 recordCount, uint32 re
 
     // Set index array
     m_Index = new char*[maxRecordId];
-    memset(m_Index, NULL, maxRecordId * sizeof(char*));
+    memset(m_Index, 0, maxRecordId * sizeof(char*));
 
     SQLStorageBase::prepareToLoad(maxRecordId, recordCount, recordSize);
 }

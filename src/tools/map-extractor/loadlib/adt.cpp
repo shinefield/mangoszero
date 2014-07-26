@@ -76,7 +76,7 @@ bool ADT_file::prepareLoadedData()
 
 bool adt_MHDR::prepareLoadedData()
 {
-    if (fcc != 'MHDR')
+    if (fcc != 0x4D484452)              // 'MHDR'
         return false;
 
     if (size != sizeof(adt_MHDR) - 8)
@@ -95,7 +95,7 @@ bool adt_MHDR::prepareLoadedData()
 
 bool adt_MCIN::prepareLoadedData()
 {
-    if (fcc != 'MCIN')
+    if (fcc != 0x4D43494E)              // 'MCIN'
         return false;
 
     // Check cells data
@@ -109,19 +109,19 @@ bool adt_MCIN::prepareLoadedData()
 
 bool adt_MH2O::prepareLoadedData()
 {
-    if (fcc != 'MH2O')
+    if (fcc != 0x4D483230)              // 'MH2O'
         return false;
 
     // Check liquid data
-//    for (int i=0; i<ADT_CELLS_PER_GRID;i++)
-//        for (int j=0; j<ADT_CELLS_PER_GRID;j++)
+    // for (int i=0; i<ADT_CELLS_PER_GRID;i++)
+    //     for (int j=0; j<ADT_CELLS_PER_GRID;j++)
 
     return true;
 }
 
 bool adt_MCNK::prepareLoadedData()
 {
-    if (fcc != 'MCNK')
+    if (fcc != 0x4D434E4B)              // 'MCNK'
         return false;
 
     // Check height map
@@ -136,7 +136,7 @@ bool adt_MCNK::prepareLoadedData()
 
 bool adt_MCVT::prepareLoadedData()
 {
-    if (fcc != 'MCVT')
+    if (fcc != 0x4D435654)              // 'MCVT'
         return false;
 
     if (size != sizeof(adt_MCVT) - 8)
@@ -147,7 +147,7 @@ bool adt_MCVT::prepareLoadedData()
 
 bool adt_MCLQ::prepareLoadedData()
 {
-    if (fcc != 'MCLQ')
+    if (fcc != 0x4D434C51)              // 'MCLQ'
         return false;
 
     return true;

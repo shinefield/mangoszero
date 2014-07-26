@@ -117,7 +117,7 @@ bool GridMap::loadData(char* filename)
         return true;
     }
 
-    sLog.outError("Map file '%s' is non-compatible version (outdated?). Please, create new using ad.exe program.", filename);
+    sLog.outError("Map file '%s' was created for non-compatible version. Please re-extract using map-extractor version %s.", filename, MAP_VERSION_MAGIC);
     fclose(in);
     return false;
 }

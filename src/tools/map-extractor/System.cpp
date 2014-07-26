@@ -72,9 +72,9 @@ char output_path[128] = ".";
 char input_path[128] = ".";
 uint32 maxAreaId = 0;
 
-//**************************************************
+// *************************************************
 // Extractor options
-//**************************************************
+// *************************************************
 enum Extract
 {
     EXTRACT_MAP = 1,
@@ -580,7 +580,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
     // Try store as packed in uint16 or uint8 values
     if (!(heightHeader.flags & MAP_HEIGHT_NO_HEIGHT))
     {
-        float step;
+        float step = 0;
         // Try Store as uint values
         if (CONF_allow_float_to_int)
         {

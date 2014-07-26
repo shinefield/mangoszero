@@ -89,40 +89,40 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::storeValue(V value, Stor
     DerivedLoader* subclass = (static_cast<DerivedLoader*>(this));
     switch (store.GetDstFormat(x))
     {
-        case FT_LOGIC:
+        case DB_FT_LOGIC:
             subclass->convert(x, value, *((bool*)(&p[offset])));
             offset += sizeof(bool);
             break;
-        case FT_BYTE:
+        case DB_FT_BYTE:
             subclass->convert(x, value, *((char*)(&p[offset])));
             offset += sizeof(char);
             break;
-        case FT_INT:
+        case DB_FT_INT:
             subclass->convert(x, value, *((uint32*)(&p[offset])));
             offset += sizeof(uint32);
             break;
-        case FT_FLOAT:
+        case DB_FT_FLOAT:
             subclass->convert(x, value, *((float*)(&p[offset])));
             offset += sizeof(float);
             break;
-        case FT_STRING:
+        case DB_FT_STRING:
             subclass->convert_to_str(x, value, *((char**)(&p[offset])));
             offset += sizeof(char*);
             break;
-        case FT_NA:
+        case DB_FT_NA:
             subclass->default_fill(x, value, *((uint32*)(&p[offset])));
             offset += sizeof(uint32);
             break;
-        case FT_NA_BYTE:
+        case DB_FT_NA_BYTE:
             subclass->default_fill(x, value, *((char*)(&p[offset])));
             offset += sizeof(char);
             break;
-        case FT_NA_FLOAT:
+        case DB_FT_NA_FLOAT:
             subclass->default_fill(x, value, *((float*)(&p[offset])));
             offset += sizeof(float);
             break;
-        case FT_IND:
-        case FT_SORT:
+        case DB_FT_IND:
+        case DB_FT_SORT:
             assert(false && "SQL storage not have sort field types");
             break;
         default:
@@ -137,32 +137,32 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::storeValue(char const* v
     DerivedLoader* subclass = (static_cast<DerivedLoader*>(this));
     switch (store.GetDstFormat(x))
     {
-        case FT_LOGIC:
+        case DB_FT_LOGIC:
             subclass->convert_from_str(x, value, *((bool*)(&p[offset])));
             offset += sizeof(bool);
             break;
-        case FT_BYTE:
+        case DB_FT_BYTE:
             subclass->convert_from_str(x, value, *((char*)(&p[offset])));
             offset += sizeof(char);
             break;
-        case FT_INT:
+        case DB_FT_INT:
             subclass->convert_from_str(x, value, *((uint32*)(&p[offset])));
             offset += sizeof(uint32);
             break;
-        case FT_FLOAT:
+        case DB_FT_FLOAT:
             subclass->convert_from_str(x, value, *((float*)(&p[offset])));
             offset += sizeof(float);
             break;
-        case FT_STRING:
+        case DB_FT_STRING:
             subclass->convert_str_to_str(x, value, *((char**)(&p[offset])));
             offset += sizeof(char*);
             break;
-        case FT_NA_POINTER:
+        case DB_FT_NA_POINTER:
             subclass->default_fill_to_str(x, value, *((char**)(&p[offset])));
             offset += sizeof(char*);
             break;
-        case FT_IND:
-        case FT_SORT:
+        case DB_FT_IND:
+        case DB_FT_SORT:
             assert(false && "SQL storage not have sort field types");
             break;
         default:
@@ -224,26 +224,26 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
     {
         switch (store.GetDstFormat(x))
         {
-            case FT_LOGIC:
+            case DB_FT_LOGIC:
                 recordsize += sizeof(bool);   break;
-            case FT_BYTE:
+            case DB_FT_BYTE:
                 recordsize += sizeof(char);   break;
-            case FT_INT:
+            case DB_FT_INT:
                 recordsize += sizeof(uint32); break;
-            case FT_FLOAT:
+            case DB_FT_FLOAT:
                 recordsize += sizeof(float);  break;
-            case FT_STRING:
+            case DB_FT_STRING:
                 recordsize += sizeof(char*);  break;
-            case FT_NA:
+            case DB_FT_NA:
                 recordsize += sizeof(uint32); break;
-            case FT_NA_BYTE:
+            case DB_FT_NA_BYTE:
                 recordsize += sizeof(char);   break;
-            case FT_NA_FLOAT:
+            case DB_FT_NA_FLOAT:
                 recordsize += sizeof(float);  break;
-            case FT_NA_POINTER:
+            case DB_FT_NA_POINTER:
                 recordsize += sizeof(char*);  break;
-            case FT_IND:
-            case FT_SORT:
+            case DB_FT_IND:
+            case DB_FT_SORT:
                 assert(false && "SQL storage not have sort field types");
                 break;
             default:
@@ -273,10 +273,10 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
             switch (store.GetDstFormat(x))
             {
                     // For default fill continue and do not increase y
-                case FT_NA:         storeValue((uint32)0, store, record, x, offset);         ++x; continue;
-                case FT_NA_BYTE:    storeValue((char)0, store, record, x, offset);           ++x; continue;
-                case FT_NA_FLOAT:   storeValue((float)0.0f, store, record, x, offset);       ++x; continue;
-                case FT_NA_POINTER: storeValue((char const*)NULL, store, record, x, offset); ++x; continue;
+                case DB_FT_NA:         storeValue((uint32)0, store, record, x, offset);         ++x; continue;
+                case DB_FT_NA_BYTE:    storeValue((char)0, store, record, x, offset);           ++x; continue;
+                case DB_FT_NA_FLOAT:   storeValue((float)0.0f, store, record, x, offset);       ++x; continue;
+                case DB_FT_NA_POINTER: storeValue((char const*)NULL, store, record, x, offset); ++x; continue;
                 default:
                     break;
             }
@@ -287,19 +287,19 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
 
             switch (store.GetSrcFormat(y))
             {
-                case FT_LOGIC:  storeValue((bool)(fields[y].GetUInt32() > 0), store, record, x, offset);  ++x; break;
-                case FT_BYTE:   storeValue((char)fields[y].GetUInt8(), store, record, x, offset);         ++x; break;
-                case FT_INT:    storeValue((uint32)fields[y].GetUInt32(), store, record, x, offset);      ++x; break;
-                case FT_FLOAT:  storeValue((float)fields[y].GetFloat(), store, record, x, offset);        ++x; break;
-                case FT_STRING: storeValue((char const*)fields[y].GetString(), store, record, x, offset); ++x; break;
-                case FT_NA:
-                case FT_NA_BYTE:
-                case FT_NA_FLOAT:
+                case DB_FT_LOGIC:  storeValue((bool)(fields[y].GetUInt32() > 0), store, record, x, offset);  ++x; break;
+                case DB_FT_BYTE:   storeValue((char)fields[y].GetUInt8(), store, record, x, offset);         ++x; break;
+                case DB_FT_INT:    storeValue((uint32)fields[y].GetUInt32(), store, record, x, offset);      ++x; break;
+                case DB_FT_FLOAT:  storeValue((float)fields[y].GetFloat(), store, record, x, offset);        ++x; break;
+                case DB_FT_STRING: storeValue((char const*)fields[y].GetString(), store, record, x, offset); ++x; break;
+                case DB_FT_NA:
+                case DB_FT_NA_BYTE:
+                case DB_FT_NA_FLOAT:
                     // Do Not increase x
                     break;
-                case FT_IND:
-                case FT_SORT:
-                case FT_NA_POINTER:
+                case DB_FT_IND:
+                case DB_FT_SORT:
+                case DB_FT_NA_POINTER:
                     assert(false && "SQL storage not have sort or pointer field types");
                     break;
                 default:

@@ -29,6 +29,10 @@
 #include <windows.h>
 #include <winsvc.h>
 
+// stupid ACE define
+#ifdef main
+#undef main
+#endif
 #include "Common.h"
 #include "Log.h"
 

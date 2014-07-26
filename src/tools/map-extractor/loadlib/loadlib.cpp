@@ -63,7 +63,7 @@ bool FileLoader::loadFile(char* filename, bool log)
         if (prepareLoadedData())
             return true;
     }
-    printf("Error loading %s", filename);
+    printf("Error loading %s\n", filename);
     mf.close();
     free();
     return false;
@@ -73,7 +73,7 @@ bool FileLoader::prepareLoadedData()
 {
     // Check version
     version = (file_MVER*) data;
-    if (version->fcc != 'MVER')
+    if (version->fcc != 0x4D564552)             // 'MVER'
         return false;
     if (version->ver != FILE_FORMAT_VERSION)
         return false;

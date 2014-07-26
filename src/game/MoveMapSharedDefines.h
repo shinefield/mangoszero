@@ -30,7 +30,7 @@
 
 #include "Platform/Define.h"
 
-#define MMAP_MAGIC 0x4d4d4150   // 'MMAP'
+#define MMAP_MAGIC 0x4D4D4150   // 'MMAP'
 #define MMAP_VERSION 3
 
 struct MmapTileHeader
