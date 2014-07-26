@@ -47,30 +47,22 @@ or to DB with already applied this or later SQL update will generate an error an
 
 === For Commiters ====
 
-IMPORTANT: Need use git_id tool from MaNGOSZero sources.
-
 ===== For backporting sql updates =====
 
 1. Rename sql update from mangos-0.12 form (s0070_7932_01_characters_character_pet.sql) to mangoszero form (z9999_s0070_01_characters_character_pet.sql)
-   using any free order_number in sql/updates files list (it will replaced by proper at git_id -s use).
+   using any free order_number in sql/updates files list.
 
    For realmd sql update you need use master revision instead mangos-0.12 (realmd revisons master based):
    (s0070_10008_01_realmd.sql) to mangoszero form (z9999_10008_01_realmd.sql)
 
-2. You can ignore sql order guards in sql update file. It will fixed at git_id -s use.
-   You can ignore content and changes/conflicts in sql/update/Makefile.am. It will regenerated at git_id -s use.
+2. You can ignore sql order guards in sql update file.
    For make possible test code part build you can resolve revision_sql.h conflicts in any way.
-   Work test better do after apply git_id -s to comit when revision_sql.h will regenerated.
-   You also need resolve conflicts in DB sql file before git_id tool use (used revison in DB version not important and will replaced by git_id -s)
-
-3. Now use git_id -s
+   Work test better do to comit when revision_sql.h will regenerated.
+   You also need resolve conflicts in DB sql file (used revison in DB version not important)
 
 ===== For new sql updates =====
 
 1. Name sql update in mangoszero form (z9999_xxxxxx_01_characters_character_pet.sql)
-   using any free order_number in sql/updates files list (it will replaced by proper at git_id -s use).
+   using any free order_number in sql/updates files list.
 
 2. Add sql update to commit and manually include sql update changes in to related DB sql file.
-
-3. Now use git_id -s (sql update revison will updates in name, sql guards will added to sql update,
-   required revision data will update in related DB sql file and in revision_sql.h)

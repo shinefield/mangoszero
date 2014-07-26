@@ -125,14 +125,12 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "" FORCE)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 
 #-----------------------------------------------------------------------------
-# Set default config options
+# Set default configuration options
 
 # mangos-zero internal features
 option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
-option(WITH_GIT_ID                  "Build git database update helper"                      OFF)
-mark_as_advanced(WITH_GIT_ID)
 
-# dont want people disabling this unless they really know what they are doing.
+# don't want people disabling this unless they really know what they are doing.
 option(WITH_MAP_TOOLS               "Build map extractors and generators"                    ON)
 mark_as_advanced(WITH_MAP_TOOLS)
 

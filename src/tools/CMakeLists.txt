@@ -25,12 +25,6 @@
 # World of Warcraft, and all World of Warcraft or Warcraft art, images,
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
-#-----------------------------------------------------------------------------
-# Add command line git id generator
-if(WITH_GIT_ID)
-    add_subdirectory(git_id)
-endif()
-
 if(WITH_MAP_TOOLS)
     #-------------------------------------------------------------------------
     # Add command line map extractor
