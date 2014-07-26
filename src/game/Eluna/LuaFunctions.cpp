@@ -609,7 +609,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },                     // :SendAreaTriggerMessage(message) - Sends a yellow message in the middle of your screen
     { "SendNotification", &LuaPlayer::SendNotification },                                 // :SendNotification(message) - Sends a red message in the middle of your screen
     { "SendPacket", &LuaPlayer::SendPacket },                                             // :SendPacket(packet, selfOnly) - Sends a packet to player or everyone around also if selfOnly is false
-    { "SendAddonMessage", &LuaPlayer::SendAddonMessage },                                 // :SendAddonMessage(prefix, message, channel, receiver) - Sends an addon message to the player. 
+    { "SendAddonMessage", &LuaPlayer::SendAddonMessage },                                 // :SendAddonMessage(prefix, message, channel, receiver) - Sends an addon message to the player.
     { "SendVendorWindow", &LuaPlayer::SendVendorWindow },                                 // :SendVendorWindow(unit) - Sends the unit's vendor window to the player
     { "ModifyMoney", &LuaPlayer::ModifyMoney },                                           // :ModifyMoney(amount[, sendError]) - Modifies (does not set) money (copper count) of the player. Amount can be negative to remove copper
     { "LearnSpell", &LuaPlayer::LearnSpell },                                             // :LearnSpell(id) - learns the given spell
@@ -763,7 +763,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsTappedBy", &LuaCreature::IsTappedBy },                                                   // :IsTappedBy(player)
     { "HasLootRecipient", &LuaCreature::HasLootRecipient },                                       // :HasLootRecipient() - Returns true if the creature has a loot recipient
     { "CanAssistTo", &LuaCreature::CanAssistTo },                                                 // :CanAssistTo(unit, enemy[, checkfaction]) - Returns true if the creature can assist unit with enemy
-    { "IsTargetAcceptable", &LuaCreature::IsTargetAcceptable },                                   // :IsTargetAcceptable(unit) - Returns true if the creature can target unit
+    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },                             // :IsTargetableForAttack([inversAlive]) - Returns true if the creature can be attacked
     { "HasInvolvedQuest", &LuaCreature::HasInvolvedQuest },                                       // :HasInvolvedQuest(questId) - Returns true if the creature can finish the quest for players
     { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },                               // :IsRegeneratingHealth() - Returns true if the creature is regenerating health
     { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },                       // :IsReputationGainDisabled() - Returns true if the creature has reputation gain disabled
