@@ -26,9 +26,9 @@
 #ifndef MANGOS_H_ADDONHANDLER
 #define MANGOS_H_ADDONHANDLER
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 
 class AddonHandler
 {

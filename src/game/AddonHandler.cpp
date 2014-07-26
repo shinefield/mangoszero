@@ -25,9 +25,9 @@
 
 #include <zlib.h>
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "AddonHandler.h"
 #include "Opcodes.h"
 

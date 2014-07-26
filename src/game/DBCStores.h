@@ -29,7 +29,7 @@
 #include <list>
 
 #include "Common.h"
-#include "Database/DBCStore.h"
+#include "database/DBCStore.h"
 #include "DBCStructure.h"
 
 bool IsAcceptableClientBuild(uint32 build);

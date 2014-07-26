@@ -27,9 +27,9 @@
 #define MANGOS_H_AUTHSOCKET
 
 #include "Common.h"
-#include "Auth/BigNumber.h"
-#include "Auth/Sha1.h"
-#include "ByteBuffer.h"
+#include "cryptography/BigNumber.h"
+#include "cryptography/Sha1.h"
+#include "network/ByteBuffer.h"
 
 #include "BufferedSocket.h"
 

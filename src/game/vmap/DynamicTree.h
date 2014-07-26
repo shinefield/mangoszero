@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_DYNAMICMAP_TREE
 #define MANGOS_H_DYNAMICMAP_TREE
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 namespace G3D
 {

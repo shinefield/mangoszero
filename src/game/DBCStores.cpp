@@ -25,9 +25,9 @@
 
 #include <map>
 
-#include "Policies/Singleton.h"
-#include "Log.h"
-#include "ProgressBar.h"
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
 #include "DBCStores.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"

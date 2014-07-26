@@ -29,7 +29,7 @@
 #include <functional>
 
 #include "Common.h"
-#include "ByteBuffer.h"
+#include "network/ByteBuffer.h"
 
 enum TypeID
 {

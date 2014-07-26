@@ -24,7 +24,7 @@
  */
 
 #include "GridMap.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "World.h"
 
 #include "MoveMap.h"

@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Log.h"
-#include "ProgressBar.h"
-#include "Timer.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
+#include "utilities/Timer.h"
 #include "MapPersistentStateMgr.h"
 #include "SQLStorages.h"
 #include "Player.h"

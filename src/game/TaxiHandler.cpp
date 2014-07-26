@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "WorldPacket.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
 #include "ObjectMgr.h"

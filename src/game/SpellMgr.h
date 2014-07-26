@@ -31,7 +31,7 @@
 
 #include <map>
 
-#include "Utilities/UnorderedMapSet.h"
+#include "utilities/UnorderedMapSet.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "SpellAuraDefines.h"

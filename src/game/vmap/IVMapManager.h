@@ -28,7 +28,7 @@
 
 #include <string>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 /**
 This is the minimum interface to the VMapManager.

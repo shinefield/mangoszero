@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_MASTER
 #define MANGOS_H_MASTER
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 
 /// Start the server

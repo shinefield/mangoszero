@@ -25,7 +25,7 @@
 
 #include <DetourCommon.h>
 
-#include "Log.h"
+#include "log/Log.h"
 #include "MoveMap.h"
 #include "GridMap.h"
 #include "Creature.h"

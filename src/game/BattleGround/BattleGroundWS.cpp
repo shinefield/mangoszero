@@ -31,7 +31,7 @@
 #include "GameObject.h"
 #include "ObjectMgr.h"
 #include "BattleGroundMgr.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Language.h"
 #include "MapManager.h"
 

@@ -30,9 +30,9 @@
 #include <set>
 #include <list>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "SharedDefines.h"
 
 class Object;

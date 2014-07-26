@@ -30,8 +30,8 @@
 #include <vector>
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"                                           // for Tokens typedef
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"                                           // for Tokens typedef
 #include "ItemPrototype.h"
 #include "Unit.h"
 #include "Item.h"

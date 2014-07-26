@@ -29,18 +29,18 @@
 #include <ace/Get_Opt.h>
 
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "ProgressBar.h"
-#include "SystemConfig.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
+#include "system/SystemConfig.h"
 #include "revision.h"
 #include "revision_nr.h"
 #include "Master.h"
 #include "AuctionHouseBot/AuctionHouseBot.h"
 
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 char serviceName[] = "mangosd";
 char serviceLongName[] = "MaNGOS world service";
 char serviceDescription[] = "Massive Network Game Object Server";
@@ -52,7 +52,7 @@ char serviceDescription[] = "Massive Network Game Object Server";
  */
 int m_ServiceStatus = -1;
 #else
-#include "PosixDaemon.h"
+#include "system/PosixDaemon.h"
 #endif
 
 DatabaseType WorldDatabase;                                 ///< Accessor to the world database

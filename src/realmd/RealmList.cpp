@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"                                           // for Tokens typedef
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"                                           // for Tokens typedef
 #include "RealmList.h"
 #include "AuthCodes.h"
 

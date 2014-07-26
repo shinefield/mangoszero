@@ -26,12 +26,12 @@
 #ifndef MANGOS_H_MOVEMENTGENERATOR
 #define MANGOS_H_MOVEMENTGENERATOR
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Dynamic/ObjectRegistry.h"
-#include "Dynamic/FactoryHolder.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "dynamic/ObjectRegistry.h"
+#include "dynamic/FactoryHolder.h"
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "MotionMaster.h"
 
 class Unit;

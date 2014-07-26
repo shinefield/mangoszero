@@ -30,10 +30,10 @@
 #include <map>
 #include <limits>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "Object.h"
 #include "Bag.h"
 #include "Creature.h"

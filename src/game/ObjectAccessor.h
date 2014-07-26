@@ -31,10 +31,10 @@
 #include <ace/Thread_Mutex.h>
 #include <ace/RW_Thread_Mutex.h>
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Utilities/UnorderedMapSet.h"
-#include "Policies/ThreadingModel.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "utilities/UnorderedMapSet.h"
+#include "policies/ThreadingModel.h"
 #include "Common.h"
 #include "UpdateData.h"
 #include "GridDefines.h"

@@ -63,12 +63,11 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 if(WITH_MOD_SOAP)
@@ -89,7 +88,7 @@ if(WIN32 AND MSVC)
 else()
     add_executable(mangosd ${mangosd_LIB_SRCS})
 endif()
-target_link_libraries(mangosd ${ACE_LIBRARIES} mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-shared mangos-framework Detour g3dlite ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
+target_link_libraries(mangosd ${ACE_LIBRARIES} mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
 install(TARGETS mangosd DESTINATION ${BIN_DIR})
 
 add_dependencies(mangosd revision.h)

@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Log.h"
-#include "Util.h"
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "MapManager.h"
 #include "GridStates.h"
 #include "CellImpl.h"

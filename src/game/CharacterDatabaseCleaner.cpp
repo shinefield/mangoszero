@@ -24,8 +24,8 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "ProgressBar.h"
+#include "database/DatabaseEnv.h"
+#include "system/ProgressBar.h"
 #include "CharacterDatabaseCleaner.h"
 #include "World.h"
 #include "DBCStores.h"

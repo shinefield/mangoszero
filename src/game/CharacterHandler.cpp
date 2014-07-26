@@ -24,12 +24,12 @@
  */
 
 #include "Common.h"
-#include "Auth/md5.h"
-#include "Database/DatabaseEnv.h"
-#include "Database/DatabaseImpl.h"
-#include "Log.h"
-#include "Util.h"
-#include "WorldPacket.h"
+#include "cryptography/md5.h"
+#include "database/DatabaseEnv.h"
+#include "database/DatabaseImpl.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "SharedDefines.h"
 #include "WorldSession.h"
 #include "Opcodes.h"

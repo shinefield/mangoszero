@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_FOLLOWERREFMANAGER
 #define MANGOS_H_FOLLOWERREFMANAGER
 
-#include "Utilities/LinkedReference/RefManager.h"
+#include "utilities/LinkedReference/RefManager.h"
 
 class Unit;
 class TargetedMovementGeneratorBase;

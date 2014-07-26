@@ -32,7 +32,7 @@
 #include "Creature.h"
 #include "CreatureAI.h"
 #include "WaypointManager.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ScriptMgr.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"

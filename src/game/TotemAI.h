@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_TOTEMAI
 #define MANGOS_H_TOTEMAI
 
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "CreatureAI.h"
 #include "ObjectGuid.h"
 

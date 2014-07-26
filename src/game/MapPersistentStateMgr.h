@@ -30,11 +30,11 @@
 #include <map>
 #include <ace/Thread_Mutex.h>
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Utilities/UnorderedMapSet.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "utilities/UnorderedMapSet.h"
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "DBCEnums.h"
 #include "DBCStores.h"
 #include "ObjectGuid.h"

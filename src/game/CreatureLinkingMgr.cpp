@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "ProgressBar.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "system/ProgressBar.h"
 #include "CreatureLinkingMgr.h"
 #include "ObjectMgr.h"
 #include "SharedDefines.h"

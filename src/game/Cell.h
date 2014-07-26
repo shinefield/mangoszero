@@ -28,8 +28,8 @@
 
 #include <cmath>
 
-#include "GameSystem/TypeContainer.h"
-#include "GameSystem/TypeContainerVisitor.h"
+#include "game_system/TypeContainer.h"
+#include "game_system/TypeContainerVisitor.h"
 #include "GridDefines.h"
 
 class Map;

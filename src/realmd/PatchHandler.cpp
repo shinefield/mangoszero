@@ -30,7 +30,7 @@
 #include <ace/os_include/netinet/os_tcp.h>
 
 #include "Common.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "PatchHandler.h"
 #include "AuthCodes.h"
 

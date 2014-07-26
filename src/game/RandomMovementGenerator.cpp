@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Util.h"
+#include "utilities/Util.h"
 #include "Creature.h"
 #include "MapManager.h"
 #include "RandomMovementGenerator.h"

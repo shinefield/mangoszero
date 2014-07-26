@@ -30,7 +30,7 @@
 #include <string>
 
 #include "Common.h"
-#include "ByteBuffer.h"
+#include "network/ByteBuffer.h"
 #include "UpdateFields.h"
 #include "UpdateData.h"
 #include "ObjectGuid.h"

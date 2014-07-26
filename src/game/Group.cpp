@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Util.h"
+#include "utilities/Util.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "World.h"

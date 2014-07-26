@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "ProgressBar.h"
-#include "Log.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "system/ProgressBar.h"
+#include "log/Log.h"
 #include "AuctionHouseMgr.h"
 #include "SQLStorages.h"
 #include "DBCStores.h"
@@ -37,7 +37,7 @@
 #include "ObjectGuid.h"
 #include "Player.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Mail.h"
 #include "LuaEngine.h"

@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_FOLLOWERREFERENCE
 #define MANGOS_H_FOLLOWERREFERENCE
 
-#include "Utilities/LinkedReference/Reference.h"
+#include "utilities/LinkedReference/Reference.h"
 
 class TargetedMovementGeneratorBase;
 class Unit;

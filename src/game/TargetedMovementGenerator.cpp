@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "ByteBuffer.h"
-#include "Errors.h"
+#include "network/ByteBuffer.h"
+#include "debugging/Errors.h"
 #include "TargetedMovementGenerator.h"
 #include "PathFinder.h"
 #include "Unit.h"

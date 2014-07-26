@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "MapManager.h"
 #include "MapPersistentStateMgr.h"
 #include "Transports.h"

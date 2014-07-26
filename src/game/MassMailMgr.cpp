@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "Database/DatabaseImpl.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "database/DatabaseImpl.h"
 #include "MassMailMgr.h"
 #include "SharedDefines.h"
 #include "World.h"

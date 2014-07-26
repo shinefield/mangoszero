@@ -33,20 +33,20 @@
 #include <ace/SOCK_Acceptor.h>
 
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "Util.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "revision.h"
 #include "revision_nr.h"
 #include "revision_sql.h"
-#include "SystemConfig.h"
+#include "system/SystemConfig.h"
 
 #include "RealmList.h"
 #include "AuthSocket.h"
 
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 char serviceName[] = "realmd";
 char serviceLongName[] = "MaNGOS realmd service";
 char serviceDescription[] = "Massive Network Game Object Server";
@@ -58,7 +58,7 @@ char serviceDescription[] = "Massive Network Game Object Server";
  */
 int m_ServiceStatus = -1;
 #else
-#include "PosixDaemon.h"
+#include "system/PosixDaemon.h"
 #endif
 
 bool StartDB();

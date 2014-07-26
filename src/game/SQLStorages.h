@@ -27,7 +27,7 @@
 #define MANGOS_H_SQLSTORAGES
 
 #include "Common.h"
-#include "Database/SQLStorage.h"
+#include "database/SQLStorage.h"
 
 extern SQLStorage sCreatureStorage;
 extern SQLStorage sCreatureDataAddonStorage;

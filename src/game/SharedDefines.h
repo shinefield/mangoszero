@@ -28,7 +28,7 @@
 
 #include <cassert>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 #define CMANGOS
 #define CLASSIC

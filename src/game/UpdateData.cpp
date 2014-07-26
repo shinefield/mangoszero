@@ -26,10 +26,10 @@
 #include <zlib.h>
 
 #include "Common.h"
-#include "ByteBuffer.h"
-#include "Log.h"
+#include "network/ByteBuffer.h"
+#include "log/Log.h"
 #include "UpdateData.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Opcodes.h"
 #include "World.h"
 #include "ObjectGuid.h"

@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Log.h"
+#include "log/Log.h"
 #include "Totem.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Group.h"
 #include "Player.h"
 #include "ObjectMgr.h"

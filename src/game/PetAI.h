@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_PETAI
 #define MANGOS_H_PETAI
 
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "CreatureAI.h"
 #include "ObjectGuid.h"
 

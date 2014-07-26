@@ -27,7 +27,7 @@
 #define MANGOS_H_BATTLEGROUND
 
 #include "Common.h"
-#include "ByteBuffer.h"
+#include "network/ByteBuffer.h"
 #include "SharedDefines.h"
 #include "Map.h"
 #include "ObjectGuid.h"

@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
-#include "WorldPacket.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "Opcodes.h"

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Log.h"
+#include "policies/Singleton.h"
+#include "log/Log.h"
 #include "OutdoorPvPMgr.h"
 #include "OutdoorPvP.h"
 #include "World.h"

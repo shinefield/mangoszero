@@ -28,7 +28,7 @@
 
 #include <ace/Recursive_Thread_Mutex.h>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "BattleGround.h"
 

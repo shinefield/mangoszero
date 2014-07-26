@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-#include "Platform/Define.h"
-#include "Database/DatabaseEnv.h"
+#include "platform/Define.h"
+#include "database/DatabaseEnv.h"
 
 class Player;
 

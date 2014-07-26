@@ -41,12 +41,11 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 if(WITH_MOD_LUA)
@@ -58,7 +57,7 @@ endif()
 #-----------------------------------------------------------------------------
 # Build the outdoor-pvp library
 add_library(mangos-outdoor-pvp STATIC ${outdoor-pvp_LIB_SRCS})
-target_link_libraries(mangos-outdoor-pvp mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
+target_link_libraries(mangos-outdoor-pvp mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
 add_dependencies(mangos-outdoor-pvp revision.h)
 

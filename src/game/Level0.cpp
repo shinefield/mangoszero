@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
-#include "SystemConfig.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
+#include "system/SystemConfig.h"
 #include "revision.h"
 #include "revision_nr.h"
 #include "World.h"

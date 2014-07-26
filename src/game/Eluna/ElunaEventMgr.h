@@ -10,7 +10,7 @@
 #ifdef TRINITY
 #include "EventProcessor.h"
 #else
-#include "Utilities/EventProcessor.h"
+#include "utilities/EventProcessor.h"
 #endif
 #include "Common.h"
 

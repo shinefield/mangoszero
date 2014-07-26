@@ -27,7 +27,7 @@
 #define MANGOS_H_CLIRUNNABLE
 
 #include "Common.h"
-#include "Threading.h"
+#include "threading/Threading.h"
 
 /// Command Line Interface handling thread
 class CliRunnable : public ACE_Based::Runnable

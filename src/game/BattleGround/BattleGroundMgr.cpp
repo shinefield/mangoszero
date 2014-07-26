@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "Player.h"
@@ -34,10 +34,10 @@
 #include "MapManager.h"
 #include "Map.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
+#include "system/ProgressBar.h"
 #include "Chat.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Language.h"
 #include "GameEventMgr.h"
 

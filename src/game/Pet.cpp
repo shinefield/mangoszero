@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Pet.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Formulas.h"

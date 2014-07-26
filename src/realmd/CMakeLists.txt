@@ -41,11 +41,10 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 #-----------------------------------------------------------------------------
@@ -59,7 +58,7 @@ if(WIN32 AND MSVC)
 else()
     add_executable(realmd ${realmd_LIB_SRCS})
 endif()
-target_link_libraries(realmd mangos-framework mangos-shared ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
+target_link_libraries(realmd mangos-framework ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
 
 add_dependencies(realmd revision.h)
 

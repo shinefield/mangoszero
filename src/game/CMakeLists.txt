@@ -312,7 +312,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour/Include/
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vmap/
     ${CMAKE_CURRENT_SOURCE_DIR}/AuctionHouseBot/
@@ -320,7 +319,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/
     ${CMAKE_CURRENT_SOURCE_DIR}/movement/
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 if(WITH_MOD_LUA)
@@ -333,7 +332,7 @@ endif()
 #-----------------------------------------------------------------------------
 # Build the game library
 add_library(mangos-game STATIC ${game_LIB_SRCS})
-target_link_libraries(mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-shared mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
 # Special case for SD2 library builds
 if(UNIX AND WITH_MOD_SCRIPTDEV2)

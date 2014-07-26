@@ -23,12 +23,12 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "SocialMgr.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Player.h"
 #include "ObjectMgr.h"
 #include "World.h"

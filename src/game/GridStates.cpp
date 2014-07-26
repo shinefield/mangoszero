@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "GameSystem/Grid.h"
-#include "Log.h"
+#include "game_system/Grid.h"
+#include "log/Log.h"
 #include "GridStates.h"
 #include "GridNotifiers.h"
 

@@ -38,9 +38,9 @@
 #include <ace/os_include/sys/os_socket.h>
 
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "WorldSocketMgr.h"
 #include "WorldSocket.h"
 

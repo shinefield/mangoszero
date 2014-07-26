@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Util.h"
+#include "utilities/Util.h"
 #include "Object.h"
 #include "Player.h"
 #include "BattleGround.h"
@@ -32,7 +32,7 @@
 #include "GameObject.h"
 #include "BattleGroundMgr.h"
 #include "Language.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "MapManager.h"
 #include "DBCStores.h"                                   // TODO REMOVE this when graveyard handling for pvp is updated
 

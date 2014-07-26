@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Errors.h"
-#include "Log.h"
+#include "debugging/Errors.h"
+#include "log/Log.h"
 #include "Camera.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"

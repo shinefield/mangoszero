@@ -24,8 +24,8 @@
  */
 
 #include "Common.h"
-#include "Log.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "CreatureAI.h"
 #include "ObjectGuid.h"

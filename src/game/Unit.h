@@ -28,9 +28,9 @@
 
 #include <list>
 
-#include "Utilities/EventProcessor.h"
+#include "utilities/EventProcessor.h"
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "Object.h"
 #include "Opcodes.h"
 #include "SpellAuraDefines.h"
@@ -43,7 +43,7 @@
 #include "MotionMaster.h"
 #include "DBCStructure.h"
 #include "Path.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 
 enum SpellInterruptFlags
 {

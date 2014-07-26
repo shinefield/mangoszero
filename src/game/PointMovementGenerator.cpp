@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Errors.h"
+#include "debugging/Errors.h"
 #include "PointMovementGenerator.h"
 #include "Creature.h"
 #include "CreatureAI.h"

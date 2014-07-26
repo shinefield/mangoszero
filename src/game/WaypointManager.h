@@ -29,8 +29,8 @@
 #include <vector>
 #include <string>
 
-#include "Policies/Singleton.h"
-#include "Utilities/UnorderedMapSet.h"
+#include "policies/Singleton.h"
+#include "utilities/UnorderedMapSet.h"
 #include "Common.h"
 
 #define MAX_WAYPOINT_TEXT 5

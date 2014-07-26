@@ -29,8 +29,8 @@
 #include <bitset>
 #include <list>
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "DBCStructure.h"
 #include "GridDefines.h"
 #include "Object.h"

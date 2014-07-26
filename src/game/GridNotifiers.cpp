@@ -24,7 +24,7 @@
  */
 
 #include "GridNotifiers.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "UpdateData.h"
 #include "Item.h"

@@ -25,11 +25,11 @@
 
 #include <cmath>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Player.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Item.h"
 #include "Corpse.h"
 #include "GridNotifiers.h"

@@ -24,10 +24,10 @@
  */
 
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "Util.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "RASocket.h"
 #include "World.h"
 #include "AccountMgr.h"

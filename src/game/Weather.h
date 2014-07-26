@@ -27,7 +27,7 @@
 #define MANGOS_H_WEATHER
 
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "SharedDefines.h"
 
 class Player;

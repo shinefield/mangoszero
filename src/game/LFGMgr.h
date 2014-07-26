@@ -29,7 +29,7 @@
 #include <list>
 #include <map>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 
 enum ClassRoles

@@ -26,10 +26,10 @@
 #include <fstream>
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "DBCStores.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Player.h"
 #include "Opcodes.h"
 #include "Chat.h"

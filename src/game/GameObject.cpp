@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "GameObject.h"
 #include "QuestDef.h"
 #include "ObjectMgr.h"
@@ -33,7 +33,7 @@
 #include "Spell.h"
 #include "UpdateMask.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "World.h"
 #include "LootMgr.h"
 #include "GridNotifiers.h"

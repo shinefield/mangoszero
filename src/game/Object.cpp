@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Log.h"
-#include "Util.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Object.h"
 #include "SharedDefines.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Opcodes.h"
 #include "World.h"
 #include "Creature.h"

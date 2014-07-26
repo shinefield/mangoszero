@@ -27,7 +27,7 @@
 #define MANGOS_H_WORLDRUNNABLE
 
 #include "Common.h"
-#include "Threading.h"
+#include "threading/Threading.h"
 
 /// Heartbeat thread for the World
 class WorldRunnable : public ACE_Based::Runnable

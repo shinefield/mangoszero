@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_GROUPREFERENCE
 #define MANGOS_H_GROUPREFERENCE
 
-#include "Utilities/LinkedReference/Reference.h"
+#include "utilities/LinkedReference/Reference.h"
 
 class Group;
 class Player;

@@ -24,10 +24,10 @@
  */
 
 #include "Common.h"
-#include "Config/Config.h"
+#include "configuration/Config.h"
 #include "Language.h"
-#include "Log.h"
-#include "Util.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "WorldSession.h"

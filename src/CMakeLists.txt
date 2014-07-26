@@ -30,10 +30,6 @@
 add_subdirectory(framework)
 
 #-----------------------------------------------------------------------------
-# Add the mangos shared library
-add_subdirectory(shared)
-
-#-----------------------------------------------------------------------------
 # Add command line tools
 if(WITH_MAP_TOOLS)
     add_subdirectory(tools)

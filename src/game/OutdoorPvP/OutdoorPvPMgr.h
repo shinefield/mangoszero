@@ -26,9 +26,9 @@
 #ifndef MANGOS_H_WORLD_PVP_MGR
 #define MANGOS_H_WORLD_PVP_MGR
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 
 enum
 {

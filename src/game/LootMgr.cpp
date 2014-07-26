@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Log.h"
-#include "ProgressBar.h"
-#include "Util.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
+#include "utilities/Util.h"
 #include "LootMgr.h"
 #include "ObjectMgr.h"
 #include "World.h"

@@ -24,7 +24,7 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "UpdateMask.h"
 #include "Opcodes.h"
 #include "World.h"

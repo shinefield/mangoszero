@@ -26,11 +26,11 @@
 #include <math.h>
 #include <stdarg.h>
 
-#include "Log.h"
-#include "Util.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Unit.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
 #include "ObjectMgr.h"

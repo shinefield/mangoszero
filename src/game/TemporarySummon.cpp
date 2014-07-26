@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Log.h"
+#include "log/Log.h"
 #include "TemporarySummon.h"
 #include "CreatureAI.h"
 

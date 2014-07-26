@@ -28,7 +28,7 @@
 
 #include <functional>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "ObjectGuid.h"
 

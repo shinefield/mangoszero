@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Log.h"
-#include "Util.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "Corpse.h"
 #include "GameObject.h"
 #include "Player.h"

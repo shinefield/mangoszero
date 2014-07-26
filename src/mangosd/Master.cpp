@@ -28,22 +28,22 @@
 #include <ace/Dev_Poll_Reactor.h>
 
 #ifndef WIN32
-#include "PosixDaemon.h"
+#include "system/PosixDaemon.h"
 #endif
 
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 extern int m_ServiceStatus;
 #endif
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "SystemConfig.h"
-#include "Timer.h"
-#include "Util.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "system/SystemConfig.h"
+#include "utilities/Timer.h"
+#include "utilities/Util.h"
 #include "revision_sql.h"
 #include "WorldSocketMgr.h"
 #include "Master.h"

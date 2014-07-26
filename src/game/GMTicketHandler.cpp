@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "Language.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "GMTicketMgr.h"
 #include "ObjectAccessor.h"
 #include "Player.h"

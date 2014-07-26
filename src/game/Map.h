@@ -31,12 +31,12 @@
 #include <ace/RW_Thread_Mutex.h>
 #include <ace/Thread_Mutex.h>
 
-#include "Platform/Define.h"
-#include "Policies/ThreadingModel.h"
-#include "Utilities/TypeList.h"
-#include "GameSystem/GridRefManager.h"
+#include "platform/Define.h"
+#include "policies/ThreadingModel.h"
+#include "utilities/TypeList.h"
+#include "game_system/GridRefManager.h"
 #include "Common.h"
-#include "Timer.h"
+#include "utilities/Timer.h"
 #include "DBCStructure.h"
 #include "GridDefines.h"
 #include "Cell.h"

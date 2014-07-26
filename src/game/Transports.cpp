@@ -24,7 +24,7 @@
  */
 
 #include "Common.h"
-#include "ProgressBar.h"
+#include "system/ProgressBar.h"
 
 #include "Transports.h"
 #include "MapManager.h"
@@ -32,7 +32,7 @@
 #include "ObjectGuid.h"
 #include "Path.h"
 
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "DBCStores.h"
 
 void MapManager::LoadTransports()

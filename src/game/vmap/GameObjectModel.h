@@ -31,7 +31,7 @@
 #include <G3D/AABox.h>
 #include <G3D/Ray.h>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 #include "DBCStructure.h"
 #include "GameObject.h"
 

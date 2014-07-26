@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_AUCTION_HOUSE_MGR
 #define MANGOS_H_AUCTION_HOUSE_MGR
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "DBCStructure.h"

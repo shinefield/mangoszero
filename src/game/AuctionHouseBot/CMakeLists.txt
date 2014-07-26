@@ -41,12 +41,11 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 if(WITH_MOD_LUA)
@@ -62,7 +61,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ahbot.conf.dist.cmake ${CMAKE_CURRENT
 #-----------------------------------------------------------------------------
 # Build the auctionhouse-bot library
 add_library(mangos-auctionhouse-bot STATIC ${auctionhouse-bot_LIB_SRCS})
-target_link_libraries(mangos-auctionhouse-bot mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
+target_link_libraries(mangos-auctionhouse-bot mangos-framework g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
 add_dependencies(mangos-auctionhouse-bot revision.h)
 

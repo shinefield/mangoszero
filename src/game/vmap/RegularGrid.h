@@ -32,7 +32,7 @@
 #include <G3D/BoundsTrait.h>
 #include <G3D/PositionTrait.h>
 
-#include "Errors.h"
+#include "debugging/Errors.h"
 
 using G3D::Vector2;
 using G3D::Vector3;

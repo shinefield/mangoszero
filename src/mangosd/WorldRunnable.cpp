@@ -24,8 +24,8 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Timer.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Timer.h"
 #include "WorldSocketMgr.h"
 #include "World.h"
 #include "WorldRunnable.h"
@@ -35,7 +35,7 @@
 #define WORLD_SLEEP_CONST 50
 
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 extern int m_ServiceStatus;
 #endif
 

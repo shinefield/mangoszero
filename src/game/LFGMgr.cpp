@@ -24,14 +24,14 @@
  */
 
 #include "Common.h"
-#include "ProgressBar.h"
+#include "system/ProgressBar.h"
 #include "SharedDefines.h"
 #include "Player.h"
 #include "Map.h"
 #include "ObjectMgr.h"
 #include "Chat.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Language.h"
 #include "Group.h"

@@ -24,11 +24,11 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "Opcodes.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "Player.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "UpdateMask.h"
 

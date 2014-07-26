@@ -30,7 +30,7 @@
 #include "Creature.h"
 #include "GameObject.h"
 #include "Language.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "DBCStores.h"                                   // TODO REMOVE this when graveyard handling for pvp is updated
 
 BattleGroundAV::BattleGroundAV()

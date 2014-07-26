@@ -29,7 +29,7 @@
 #include <list>
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "Unit.h"
 #include "UpdateMask.h"
 #include "ItemPrototype.h"

@@ -30,8 +30,8 @@
 #include <typeinfo>
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "Item.h"

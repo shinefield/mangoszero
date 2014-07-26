@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_MAPREFERENCE
 #define MANGOS_H_MAPREFERENCE
 
-#include "Utilities/LinkedReference/Reference.h"
+#include "utilities/LinkedReference/Reference.h"
 #include "Map.h"
 
 class MANGOS_DLL_SPEC MapReference : public Reference<Map, Player>

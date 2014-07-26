@@ -26,8 +26,8 @@
 #ifndef MANGOS_H_GAMEOBJECT
 #define MANGOS_H_GAMEOBJECT
 
-#include "Utilities/EventProcessor.h"
-#include "Database/DatabaseEnv.h"
+#include "utilities/EventProcessor.h"
+#include "database/DatabaseEnv.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "Object.h"

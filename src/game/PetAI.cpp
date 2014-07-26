@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Errors.h"
-#include "Util.h"
+#include "debugging/Errors.h"
+#include "utilities/Util.h"
 #include "PetAI.h"
 #include "Pet.h"
 #include "Player.h"

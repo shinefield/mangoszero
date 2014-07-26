@@ -30,7 +30,7 @@
 #include <ace/Task.h>
 
 #include "Common.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "World.h"
 #include "AccountMgr.h"
 

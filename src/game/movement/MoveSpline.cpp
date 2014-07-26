@@ -25,7 +25,7 @@
 
 #include <sstream>
 
-#include "Log.h"
+#include "log/Log.h"
 #include "MoveSpline.h"
 #include "Unit.h"
 

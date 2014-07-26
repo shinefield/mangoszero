@@ -26,8 +26,8 @@
 #ifndef MANGOS_H_MAPTREE
 #define MANGOS_H_MAPTREE
 
-#include "Platform/Define.h"
-#include "Utilities/UnorderedMapSet.h"
+#include "platform/Define.h"
+#include "utilities/UnorderedMapSet.h"
 #include "BIH.h"
 
 namespace VMAP

@@ -26,8 +26,8 @@
 #ifndef MANGOS_H_POOLHANDLER
 #define MANGOS_H_POOLHANDLER
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "Creature.h"
 #include "GameObject.h"

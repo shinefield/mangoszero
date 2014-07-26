@@ -29,8 +29,8 @@
 #include <map>
 #include <vector>
 
-#include "Utilities/LinkedReference/RefManager.h"
-#include "ByteBuffer.h"
+#include "utilities/LinkedReference/RefManager.h"
+#include "network/ByteBuffer.h"
 #include "ItemEnchantmentMgr.h"
 #include "ObjectGuid.h"
 

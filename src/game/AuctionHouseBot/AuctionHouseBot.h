@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_AUCTION_HOUSE_BOT
 #define MANGOS_H_AUCTION_HOUSE_BOT
 
-#include "Config/Config.h"
+#include "configuration/Config.h"
 #include "World.h"
 #include "AuctionHouseMgr.h"
 #include "SharedDefines.h"

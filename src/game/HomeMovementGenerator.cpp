@@ -27,7 +27,7 @@
 #include "Creature.h"
 #include "CreatureAI.h"
 #include "ObjectMgr.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"
 

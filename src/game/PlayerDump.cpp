@@ -24,7 +24,7 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "PlayerDump.h"
 #include "SQLStorages.h"
 #include "UpdateFields.h"

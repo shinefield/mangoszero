@@ -29,7 +29,7 @@
 #include <map>
 #include <string>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "Channel.h"
 

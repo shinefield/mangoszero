@@ -26,7 +26,7 @@
 #include "ReputationMgr.h"
 #include "DBCStores.h"
 #include "Player.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ObjectMgr.h"
 #include "LuaEngine.h"
 

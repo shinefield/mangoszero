@@ -24,9 +24,9 @@
  */
 
 #include "Common.h"
-#include "Log.h"
+#include "log/Log.h"
 #include "Language.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
 #include "ObjectMgr.h"

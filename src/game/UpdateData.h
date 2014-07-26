@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_UPDATEDATA
 #define MANGOS_H_UPDATEDATA
 
-#include "ByteBuffer.h"
+#include "network/ByteBuffer.h"
 #include "ObjectGuid.h"
 
 class WorldPacket;

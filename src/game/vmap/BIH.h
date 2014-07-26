@@ -35,7 +35,7 @@
 #include <G3D/Ray.h>
 #include <G3D/AABox.h>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 #define MAX_STACK_SIZE 64
 

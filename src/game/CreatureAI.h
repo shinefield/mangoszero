@@ -26,10 +26,10 @@
 #ifndef MANGOS_H_CREATUREAI
 #define MANGOS_H_CREATUREAI
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Dynamic/ObjectRegistry.h"
-#include "Dynamic/FactoryHolder.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "dynamic/ObjectRegistry.h"
+#include "dynamic/FactoryHolder.h"
 #include "Common.h"
 #include "ObjectGuid.h"
 

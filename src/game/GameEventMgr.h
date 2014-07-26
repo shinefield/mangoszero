@@ -26,8 +26,8 @@
 #ifndef MANGOS_H_GAMEEVENT_MGR
 #define MANGOS_H_GAMEEVENT_MGR
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
 

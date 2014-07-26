@@ -27,7 +27,7 @@
 #define MANGOS_H_CORPSE
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "Object.h"
 #include "GridDefines.h"
 #include "LootMgr.h"

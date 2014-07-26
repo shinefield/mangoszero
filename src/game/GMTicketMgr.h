@@ -28,9 +28,9 @@
 
 #include <map>
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "ObjectGuid.h"
 
 class GMTicket

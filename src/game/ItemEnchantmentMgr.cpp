@@ -28,10 +28,10 @@
 #include <list>
 #include <vector>
 
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "ProgressBar.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
+#include "utilities/Util.h"
 #include "ItemEnchantmentMgr.h"
 #include "ObjectMgr.h"
 

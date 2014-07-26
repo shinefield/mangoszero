@@ -28,8 +28,8 @@
 
 #include <G3D/Vector3.h>
 
-#include "Platform/Define.h"
-#include "Utilities/UnorderedMapSet.h"
+#include "platform/Define.h"
+#include "utilities/UnorderedMapSet.h"
 #include "IVMapManager.h"
 
 //===========================================================

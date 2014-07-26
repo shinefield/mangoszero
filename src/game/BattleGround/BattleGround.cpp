@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Util.h"
+#include "utilities/Util.h"
 #include "Object.h"
 #include "Player.h"
 #include "BattleGround.h"
@@ -37,7 +37,7 @@
 #include "ObjectGuid.h"
 #include "ObjectMgr.h"
 #include "Mail.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Formulas.h"
 #include "GridNotifiersImpl.h"
 #include "Chat.h"

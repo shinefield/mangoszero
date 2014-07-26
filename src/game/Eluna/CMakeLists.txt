@@ -43,18 +43,17 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour/Include/
     ${CMAKE_SOURCE_DIR}/dep/lua/src/
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 #-----------------------------------------------------------------------------
 # Build the Eluna library
 add_library(mangos-eluna STATIC ${eluna_LIB_SRCS})
-target_link_libraries(mangos-eluna mangos-shared mangos-framework Detour g3dlite liblua ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
+target_link_libraries(mangos-eluna mangos-framework Detour g3dlite liblua ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition

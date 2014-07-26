@@ -23,10 +23,10 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
-#include "Auth/Sha1.h"
-#include "Database/DatabaseEnv.h"
-#include "Util.h"
+#include "policies/Singleton.h"
+#include "cryptography/Sha1.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "AccountMgr.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"

@@ -30,7 +30,7 @@
 #include <DetourNavMesh.h>
 #include <DetourNavMeshQuery.h>
 
-#include "Utilities/UnorderedMapSet.h"
+#include "utilities/UnorderedMapSet.h"
 
 //  memory management
 inline void* dtCustomAlloc(int size, dtAllocHint /*hint*/)

@@ -41,18 +41,17 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
     ${CMAKE_SOURCE_DIR}/src/framework/
-    ${CMAKE_SOURCE_DIR}/src/shared/
     ${CMAKE_SOURCE_DIR}/src/game/vmap/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src/shared/
+    ${CMAKE_BINARY_DIR}/src/framework/
 )
 
 #-----------------------------------------------------------------------------
 # Build the vmap-assembler application
 add_executable(vmap-assembler ${vmap_assembler_LIB_SRCS})
-target_link_libraries(vmap-assembler mangos-vmap mangos-shared mangos-framework g3dlite ${ACE_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(vmap-assembler mangos-vmap mangos-framework g3dlite ${ACE_LIBRARIES} ${ZLIB_LIBRARIES})
 
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition

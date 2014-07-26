@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "CreatureAISelector.h"
 #include "Creature.h"
 #include "CreatureAIImpl.h"

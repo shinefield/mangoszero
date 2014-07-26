@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_GROUPREFMANAGER
 #define MANGOS_H_GROUPREFMANAGER
 
-#include "Utilities/LinkedReference/RefManager.h"
+#include "utilities/LinkedReference/RefManager.h"
 
 class Group;
 class Player;

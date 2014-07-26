@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_HOSTILEREFMANAGER
 #define MANGOS_H_HOSTILEREFMANAGER
 
-#include "Utilities/LinkedReference/RefManager.h"
+#include "utilities/LinkedReference/RefManager.h"
 #include "Common.h"
 
 class Unit;

@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_GUILDMGR
 #define MANGOS_H_GUILDMGR
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 
 class Guild;

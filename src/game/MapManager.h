@@ -28,8 +28,8 @@
 
 #include <ace/Recursive_Thread_Mutex.h>
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "Map.h"
 #include "GridStates.h"

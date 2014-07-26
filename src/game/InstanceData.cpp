@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "InstanceData.h"
 #include "Map.h"
 

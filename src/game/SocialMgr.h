@@ -26,8 +26,8 @@
 #ifndef MANGOS_H_SOCIALMGR
 #define MANGOS_H_SOCIALMGR
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
 #include "ObjectGuid.h"
 
 class SocialMgr;

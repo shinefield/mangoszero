@@ -25,7 +25,7 @@
 
 #include <list>
 
-#include "Errors.h"
+#include "debugging/Errors.h"
 #include "AggressorAI.h"
 #include "Creature.h"
 #include "SharedDefines.h"

@@ -28,7 +28,7 @@
 
 #include <memory>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "Mail.h"
 

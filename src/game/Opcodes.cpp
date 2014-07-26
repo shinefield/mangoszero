@@ -23,7 +23,7 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Opcodes.h"
 
 INSTANTIATE_SINGLETON_1(Opcodes);

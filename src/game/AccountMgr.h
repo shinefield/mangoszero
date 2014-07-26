@@ -28,7 +28,7 @@
 
 #include <string>
 
-#include "Policies/Singleton.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 
 enum AccountOpResult

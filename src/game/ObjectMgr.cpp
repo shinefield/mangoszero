@@ -25,11 +25,11 @@
 
 #include <limits>
 
-#include "Database/DatabaseEnv.h"
-#include "Policies/Singleton.h"
-#include "Log.h"
-#include "ProgressBar.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
+#include "utilities/Util.h"
 #include "ObjectMgr.h"
 #include "SQLStorages.h"
 #include "MapManager.h"

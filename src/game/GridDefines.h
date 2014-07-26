@@ -28,7 +28,7 @@
 
 #include <cmath>
 
-#include "GameSystem/NGrid.h"
+#include "game_system/NGrid.h"
 #include "Common.h"
 
 // Forward class definitions

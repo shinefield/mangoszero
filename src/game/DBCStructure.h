@@ -30,7 +30,7 @@
 #include <set>
 #include <vector>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 #include "Common.h"
 #include "DBCEnums.h"
 #include "Path.h"

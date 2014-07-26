@@ -30,40 +30,155 @@ include(MacroMangosSourceGroup)
 #-----------------------------------------------------------------------------
 # Define the framework library
 set(sources
-    Policies/ObjectLifeTime.cpp
+    Common.cpp
 
-    Utilities/EventProcessor.cpp
+    configuration/Config.cpp
+
+    cryptography/AuthCrypt.cpp
+    cryptography/BigNumber.cpp
+    cryptography/Hmac.cpp
+    cryptography/md5.c
+    cryptography/Sha1.cpp
+
+    database/Database.cpp
+    database/DBCFileLoader.cpp
+    database/Field.cpp
+    database/SqlDelayThread.cpp
+    database/SqlOperations.cpp
+    database/SqlPreparedStatement.cpp
+    database/SQLStorage.cpp
+
+    log/Log.cpp
+
+    network/ByteBuffer.cpp
+
+    policies/ObjectLifeTime.cpp
+
+    system/ProgressBar.cpp
+
+    threading/Threading.cpp
+
+    utilities/EventProcessor.cpp
+    utilities/Util.cpp
 )
 set(headers
-    Dynamic/FactoryHolder.h
-    Dynamic/ObjectRegistry.h
+    Common.h
+    revision_nr.h
+    revision_sql.h
 
-    GameSystem/Grid.h
-    GameSystem/GridLoader.h
-    GameSystem/GridReference.h
-    GameSystem/GridRefManager.h
-    GameSystem/NGrid.h
-    GameSystem/TypeContainer.h
-    GameSystem/TypeContainerFunctions.h
-    GameSystem/TypeContainerVisitor.h
+    configuration/Config.h
 
-    Platform/CompilerDefs.h
-    Platform/Define.h
+    cryptography/AuthCrypt.h
+    cryptography/BigNumber.h
+    cryptography/Hmac.h
+    cryptography/md5.h
+    cryptography/Sha1.h
 
-    Policies/CreationPolicy.h
-    Policies/ObjectLifeTime.h
-    Policies/Singleton.h
-    Policies/ThreadingModel.h
+    database/Database.h
+    database/DatabaseEnv.h
+    database/DatabaseImpl.h
+    database/DBCFileLoader.h
+    database/DBCStore.h
+    database/Field.h
+    database/QueryResult.h
+    database/SqlDelayThread.h
+    database/SqlOperations.h
+    database/SqlPreparedStatement.h
+    database/SQLStorage.h
+    database/SQLStorageImpl.h
 
-    Utilities/ByteConverter.h
-    Utilities/Callback.h
-    Utilities/EventProcessor.h
-    Utilities/LinkedList.h
-    Utilities/LinkedReference/Reference.h
-    Utilities/LinkedReference/RefManager.h
-    Utilities/TypeList.h
-    Utilities/UnorderedMapSet.h
+    debugging/Errors.h
+
+    dynamic/FactoryHolder.h
+    dynamic/ObjectRegistry.h
+
+    game_system/Grid.h
+    game_system/GridLoader.h
+    game_system/GridReference.h
+    game_system/GridRefManager.h
+    game_system/NGrid.h
+    game_system/TypeContainer.h
+    game_system/TypeContainerFunctions.h
+    game_system/TypeContainerVisitor.h
+
+    log/Log.h
+
+    network/ByteBuffer.h
+    network/WorldPacket.h
+
+    platform/CompilerDefs.h
+    platform/Define.h
+
+    policies/CreationPolicy.h
+    policies/ObjectLifeTime.h
+    policies/Singleton.h
+    policies/ThreadingModel.h
+
+    system/ProgressBar.h
+
+    threading/LockedQueue.h
+    threading/Threading.h
+
+    utilities/ByteConverter.h
+    utilities/Callback.h
+    utilities/EventProcessor.h
+    utilities/LinkedList.h
+    utilities/LinkedReference/Reference.h
+    utilities/LinkedReference/RefManager.h
+    utilities/Timer.h
+    utilities/TypeList.h
+    utilities/UnorderedMapSet.h
+    utilities/Util.h
 )
+
+#-----------------------------------------------------------------------------
+# Add platform specific sources
+if(WIN32)
+    list(APPEND sources
+        debugging/WheatyExceptionReport.cpp
+        system/ServiceWin32.cpp
+     )
+    list(APPEND headers
+        debugging/WheatyExceptionReport.h
+        system/ServiceWin32.h
+    )
+else()
+    list(APPEND sources
+        system/PosixDaemon.cpp
+    )
+    list(APPEND headers
+        system/PosixDaemon.h
+    )
+endif()
+
+#-----------------------------------------------------------------------------
+# Add database library specific sources
+if(WITH_MYSQL AND MYSQL_FOUND)
+    include_directories(
+        ${MYSQL_INCLUDE_DIR}
+    )
+    list(APPEND sources
+        database/DatabaseMysql.cpp
+        database/QueryResultMysql.cpp
+    )
+    list(APPEND headers
+        database/DatabaseMysql.h
+        database/QueryResultMysql.h
+    )
+elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
+    include_directories(
+        ${PostgreSQL_INCLUDE_DIRS}
+    )
+    list(APPEND sources
+        database/DatabasePostgre.cpp
+        database/QueryResultPostgre.cpp
+    )
+    list(APPEND headers
+        database/DatabasePostgre.h
+        database/PGSQLDelayThread.h
+        database/QueryResultPostgre.h
+    )
+endif()
 
 set(framework_LIB_SRCS ${sources} ${headers})
 
@@ -71,20 +186,40 @@ mangos_source_group(${framework_LIB_SRCS})
 
 include_directories(
     ${ACE_INCLUDE_DIRS}
+    ${OPENSSL_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/dep/include/mersennetwister/
+    ${CMAKE_SOURCE_DIR}/dep/include/utf8cpp/
+    ${CMAKE_SOURCE_DIR}/src/framework/
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}
 )
+
+#-----------------------------------------------------------------------------
+# Configure the framework library
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/system/SystemConfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/system/SystemConfig.h)
 
 #-----------------------------------------------------------------------------
 # Build the framework library
 add_library(mangos-framework STATIC ${framework_LIB_SRCS})
 target_link_libraries(mangos-framework ${ACE_LIBRARIES})
 
+add_dependencies(mangos-framework revision.h)
+
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition
-set(BUILD_PROPERTIES " ")
+set(BUILD_PROPERTIES "-DHAVE_CONFIG_H")
 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
+endif()
+
+if(WITH_MYSQL AND MYSQL_FOUND)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_MYSQL")
+    target_link_libraries(mangos-framework ${MYSQL_LIBRARIES})
+elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_POSTGRESQL")
+    target_link_libraries(mangos-framework ${PostgreSQL_LIBRARIES})
 endif()
 
 set_target_properties(mangos-framework PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

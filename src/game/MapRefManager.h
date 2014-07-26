@@ -26,7 +26,7 @@
 #ifndef MANGOS_H_MAPREFMANAGER
 #define MANGOS_H_MAPREFMANAGER
 
-#include "Utilities/LinkedReference/RefManager.h"
+#include "utilities/LinkedReference/RefManager.h"
 
 class MapReference;
 

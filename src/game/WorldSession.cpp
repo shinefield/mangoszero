@@ -24,11 +24,11 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "WorldSocket.h"                                    // must be first to make ACE happy with ACE includes in it
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "ObjectMgr.h"

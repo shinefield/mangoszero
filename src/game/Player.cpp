@@ -25,15 +25,15 @@
 
 #include <cmath>
 
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "Util.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Player.h"
 #include "Language.h"
 #include "Opcodes.h"
 #include "SpellMgr.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "UpdateMask.h"
 #include "QuestDef.h"
@@ -62,7 +62,7 @@
 #include "BattleGround/BattleGroundAV.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "Chat.h"
-#include "Database/DatabaseImpl.h"
+#include "database/DatabaseImpl.h"
 #include "Spell.h"
 #include "ScriptMgr.h"
 #include "SocialMgr.h"

@@ -27,7 +27,7 @@
 #define MANGOS_H_GRIDNOTIFIERSIMPL
 
 #include "GridNotifiers.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Corpse.h"
 #include "Player.h"
 #include "UpdateData.h"

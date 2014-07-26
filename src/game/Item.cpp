@@ -23,11 +23,11 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
 #include "Item.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ItemEnchantmentMgr.h"
 #include "SQLStorages.h"
 #include "LuaEngine.h"

@@ -23,8 +23,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "Bag.h"
 #include "ObjectMgr.h"
 #include "UpdateData.h"

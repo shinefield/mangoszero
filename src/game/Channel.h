@@ -32,7 +32,7 @@
 
 #include "Common.h"
 #include "ObjectGuid.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Opcodes.h"
 #include "Player.h"
 

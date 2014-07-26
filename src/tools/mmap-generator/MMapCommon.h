@@ -39,7 +39,7 @@
 #include <dirent.h>
 #endif
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 using namespace std;
 
