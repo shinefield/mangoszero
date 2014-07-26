@@ -28,6 +28,12 @@
 include(MacroMangosSourceGroup)
 
 #-----------------------------------------------------------------------------
+# Options
+option(WITH_MOD_SOAP   "Enable SOAP bindings"                             OFF)
+option(WITH_MOD_CLI    "Enable command line interface"                    OFF)
+option(WITH_MOD_REMOTE "Enable remote access"                             OFF)
+
+#-----------------------------------------------------------------------------
 # Define the mangosd application
 set(sources
     Main.cpp
