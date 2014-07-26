@@ -168,7 +168,7 @@ if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND WITH_DEBUG_OUTPUT)
 endif()
 
 #-----------------------------------------------------------------------------
-# Initialize un-cached vars, avoid unused warning
+# Initialize uncached variables, avoid unused warning
 # Linux only, not cached
 set(WITH_BINRELOC OFF)
 
@@ -365,7 +365,7 @@ elseif(WIN32)
         set(PLATFORM_LINKFLAGS "-Xlinker --stack=2097152")
 
         ## DISABLE - causes linking errors
-        ## for re-distribution, so users dont need mingw installed
+        ## for re-distribution, so users don't need mingw installed
         # set(PLATFORM_LINKFLAGS "${PLATFORM_LINKFLAGS} -static-libgcc -static-libstdc++")
 
     endif()
