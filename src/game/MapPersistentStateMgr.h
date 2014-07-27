@@ -261,7 +261,7 @@ class BattleGroundPersistentState : public MapPersistentState
 enum ResetEventType
 {
     RESET_EVENT_NORMAL_DUNGEON = 0,                         // no fixed reset time
-    RESET_EVENT_INFORM_1       = 1,                         // raid/heroic warnings
+    RESET_EVENT_INFORM_1       = 1,                         // raid warnings
     RESET_EVENT_INFORM_2       = 2,
     RESET_EVENT_INFORM_3       = 3,
     RESET_EVENT_INFORM_LAST    = 4,
@@ -269,7 +269,7 @@ enum ResetEventType
 
 #define MAX_RESET_EVENT_TYPE   5
 
-/* resetTime is a global propery of each (raid/heroic) map
+/* resetTime is a global property of each (raid) map
     all instances of that map reset at the same time */
 struct DungeonResetEvent
 {
@@ -330,7 +330,7 @@ class MANGOS_DLL_DECL MapPersistentStateManager : public MaNGOS::Singleton<MapPe
         void LoadCreatureRespawnTimes();
         void LoadGameobjectRespawnTimes();
 
-        // auto select appropriate MapPersistentState (sub)class by MapEntry, and autoselect appropriate way store (by instance/map id)
+        // auto select appropriate MapPersistentState (sub)class by MapEntry, and auto select appropriate way store (by instance/map id)
         // always return != NULL
         MapPersistentState* AddPersistentState(MapEntry const* mapEntry, uint32 instanceId, time_t resetTime, bool canReset, bool load = false, bool initPools = true);
 

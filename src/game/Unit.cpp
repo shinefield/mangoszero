@@ -996,7 +996,7 @@ void Unit::JustKilledCreature(Creature* victim, Player* responsiblePlayer)
     victim->m_deathState = DEAD;                            // so that isAlive, isDead return expected results in the called hooks of JustKilledCreature
                                                             // must be used only shortly before SetDeathState(JUST_DIED) and only for Creatures or Pets
 
-    // some critters required for quests (need normal entry instead possible heroic in any cases)
+    // some critters required for quests
     if (victim->GetCreatureType() == CREATURE_TYPE_CRITTER && GetTypeId() == TYPEID_PLAYER)
     {
         if (CreatureInfo const* normalInfo = ObjectMgr::GetCreatureTemplate(victim->GetEntry()))

@@ -55,18 +55,18 @@ namespace Movement
         MoveSpline& move_spline = *unit.movespline;
 
         Vector3 real_position(unit.GetPositionX(), unit.GetPositionY(), unit.GetPositionZ());
-        // there is a big chane that current position is unknown if current state is not finalized, need compute it
+        // there is a big chance that current position is unknown if current state is not finalized, need compute it
         // this also allows calculate spline position and update map position in much greater intervals
         if (!move_spline.Finalized())
             real_position = move_spline.ComputePosition();
 
         if (args.path.empty())
         {
-            // should i do the things that user should do?
+            // should I do the things that user should do?
             MoveTo(real_position);
         }
 
-        // corrent first vertex
+        // current first vertex
         args.path[0] = real_position;
         uint32 moveFlags = unit.m_movementInfo.GetMovementFlags();
         if (args.flags.runmode)

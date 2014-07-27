@@ -344,7 +344,7 @@ enum ConditionType
 enum ConditionSource                                        // From where was the condition called?
 {
     CONDITION_FROM_LOOT             = 0,                    // Used to check a *_loot_template entry
-    CONDITION_FROM_REFERING_LOOT    = 1,                    // Used to check a entry refering to a reference_loot_template entry
+    CONDITION_FROM_REFERING_LOOT    = 1,                    // Used to check a entry referring to a reference_loot_template entry
     CONDITION_FROM_GOSSIP_MENU      = 2,                    // Used to check a gossip menu menu-text
     CONDITION_FROM_GOSSIP_OPTION    = 3,                    // Used to check a gossip menu option-item
     CONDITION_FROM_EVENTAI          = 4,                    // Used to check EventAI Event "On Receive Emote"
@@ -358,7 +358,7 @@ enum ConditionSource                                        // From where was th
 class PlayerCondition
 {
     public:
-        // Default constructor, required for SQL Storage (Will give errors if used elsewise)
+        // Default constructor, required for SQL Storage (Will give errors if used else wise)
         PlayerCondition() : m_entry(0), m_condition(CONDITION_AND), m_value1(0), m_value2(0) {}
 
         PlayerCondition(uint16 _entry, int16 _condition, uint32 _value1, uint32 _value2)
@@ -901,13 +901,13 @@ class ObjectMgr
         int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
         void SetDBCLocaleIndex(uint32 lang) { DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang)); }
 
-        // global grid objects state (static DB spawns, global spawn mods from gameevent system)
+        // global grid objects state (static DB spawns, global spawn mods from game event system)
         CellObjectGuids const& GetCellObjectGuids(uint16 mapid, uint32 cell_id)
         {
             return mMapObjectGuids[mapid][cell_id];
         }
 
-        // modifiers for global grid objects state (static DB spawns, global spawn mods from gameevent system)
+        // modifiers for global grid objects state (static DB spawns, global spawn mods from game event system)
         // Don't must be used for modify instance specific spawn state modifications
         void AddCreatureToGrid(uint32 guid, CreatureData const* data);
         void RemoveCreatureFromGrid(uint32 guid, CreatureData const* data);
@@ -1166,7 +1166,7 @@ class ObjectMgr
         HalfNameMap PetHalfName0;
         HalfNameMap PetHalfName1;
 
-        // Array to store creature stats, Max creature level + 1 (for data alignement with in game level)
+        // Array to store creature stats, max creature level + 1 (for data alignment with in game level)
         CreatureClassLvlStats m_creatureClassLvlStats[DEFAULT_MAX_CREATURE_LEVEL + 1][MAX_CREATURE_CLASS];
 
         MapObjectGuids mMapObjectGuids;

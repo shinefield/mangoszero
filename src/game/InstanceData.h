@@ -85,7 +85,7 @@ class MANGOS_DLL_SPEC InstanceData
         // Called when a player leaves the instance (before really removed from map (or possibly world))
         virtual void OnPlayerLeave(Player*) {}
 
-        // Called when a gameobject is created
+        // Called when a game object is created
         virtual void OnObjectCreate(GameObject*) {}
 
         // called on creature creation
@@ -113,7 +113,6 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void SetData(uint32 /*Type*/, uint32 /*Data*/) {}
 
         // Condition criteria additional requirements check
-        // This is used for such things are heroic loot
         // See ObjectMgr.h enum ConditionSource for possible values of conditionSourceType
         virtual bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const;
 };
