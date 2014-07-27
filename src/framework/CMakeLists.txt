@@ -135,11 +135,9 @@ set(headers
 # Add platform specific sources
 if(WIN32)
     list(APPEND sources
-        debugging/WheatyExceptionReport.cpp
         system/ServiceWin32.cpp
      )
     list(APPEND headers
-        debugging/WheatyExceptionReport.h
         system/ServiceWin32.h
     )
 else()
