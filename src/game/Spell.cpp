@@ -2675,6 +2675,13 @@ void Spell::cast(bool skipCheck)
                 AddPrecastSpell(25771);                     // Forbearance
             break;
         }
+        case SPELLFAMILY_MAGE:
+            // As of patch 1.10.0, Arcane Power will replace Power Infusion
+            if (m_spellInfo->Id == 12042)
+            {
+                m_targets.getUnitTarget()->RemoveAurasDueToSpell(10060);
+            }
+            break;
         case SPELLFAMILY_WARRIOR:
             break;
         case SPELLFAMILY_PRIEST:
@@ -3961,6 +3968,16 @@ SpellCastResult Spell::CheckCast(bool strict)
             && target->GetTypeId() == TYPEID_UNIT
             && ((Creature*)target)->IsTotem())
             return SPELL_FAILED_IMMUNE;
+
+        // Power Infusion: As of patch 1.10, this is no longer usable if the target
+        // has Arcane Power aura from mage.
+        if (m_spellInfo->Id == 10060)   // 10060 = Power Infusion
+        {
+            if (target->HasAura(12042)) // 12042 = Arcane Power
+            {
+                return SPELL_FAILED_MORE_POWERFUL_SPELL_ACTIVE;
+            }
+        }
 
         bool non_caster_target = target != m_caster && !IsSpellWithCasterSourceTargetsOnly(m_spellInfo);
 
