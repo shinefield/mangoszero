@@ -108,6 +108,7 @@ namespace MMAP
             if (MMapFactory::IsPathfindingEnabled(mapId))
                 sLog.outError("MMAP:loadMapData: Error: Could not open mmap file '%s'", fileName);
             delete[] fileName;
+            fclose(file);
             return false;
         }
 
@@ -176,7 +177,14 @@ namespace MMAP
 
         // read header
         MmapTileHeader fileHeader;
-        fread(&fileHeader, sizeof(MmapTileHeader), 1, file);
+        size_t file_read = fread(&fileHeader, sizeof(MmapTileHeader), 1, file);
+
+        if (file_read <= 0)
+        {
+            sLog.outError("MMAP:loadMap: Could not load mmap %03u%02i%02i.mmtile", mapId, x, y);
+            fclose(file);
+            return false;
+        }
 
         if (fileHeader.mmapMagic != MMAP_MAGIC)
         {

@@ -283,14 +283,18 @@ bool FileSystem::_isZipfile(const std::string& filename) {
     if (FilePath::ext(filename).empty()) {
         return false;
     }
-    
+
     FILE* f = fopen(FilePath::removeTrailingSlash(filename).c_str(), "r");
     if (f == NULL) {
         return false;
     }
     uint8 header[4];
-    fread(header, 4, 1, f);
-    
+    size_t file_read = fread(header, 4, 1, f);
+    if (file_read <= 0)
+    {
+        fclose(f);
+        return false;
+    }
     const uint8 zipHeader[4] = {0x50, 0x4b, 0x03, 0x04};
     for (int i = 0; i < 4; ++i) {
         if (header[i] != zipHeader[i]) {

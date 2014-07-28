@@ -94,7 +94,14 @@ namespace MMAP
             return false;
 
         GridMapFileHeader fheader;
-        fread(&fheader, sizeof(GridMapFileHeader), 1, mapFile);
+        size_t file_read = fread(&fheader, sizeof(GridMapFileHeader), 1, mapFile);
+
+        if (file_read <= 0)
+        {
+            fclose(mapFile);
+            printf("Could not read map data from %s.\n", mapFileName);
+            return false;
+        }
 
         if (fheader.versionMagic != *((uint32 const*)(MAP_VERSION_MAGIC)))
         {
@@ -105,7 +112,14 @@ namespace MMAP
 
         GridMapHeightHeader hheader;
         fseek(mapFile, fheader.heightMapOffset, SEEK_SET);
-        fread(&hheader, sizeof(GridMapHeightHeader), 1, mapFile);
+        file_read = fread(&hheader, sizeof(GridMapHeightHeader), 1, mapFile);
+
+        if (file_read <= 0)
+        {
+            fclose(mapFile);
+            printf("Could not read map data from %s.\n", mapFileName);
+            return false;
+        }
 
         bool haveTerrain = !(hheader.flags & MAP_HEIGHT_NO_HEIGHT);
         bool haveLiquid = fheader.liquidMapOffset && !m_skipLiquid;
