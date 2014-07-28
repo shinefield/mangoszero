@@ -205,7 +205,7 @@ inline bool IsPassiveSpellStackableWithRanks(SpellEntry const* spellProto)
 
 inline bool IsDeathOnlySpell(SpellEntry const* spellInfo)
 {
-    return spellInfo->HasAttribute(SPELL_ATTR_EX3_CAST_ON_DEAD) || spellInfo->Id == 2584;
+    return spellInfo->HasAttribute(SPELL_ATTR_EX3_ONLY_TARGET_GHOSTS) || spellInfo->Id == 2584;
 }
 
 inline bool IsDeathPersistentSpell(SpellEntry const* spellInfo)
@@ -233,20 +233,20 @@ inline bool IsCasterSourceTarget(uint32 target)
 {
     switch (target)
     {
-        case TARGET_SELF:
-        case TARGET_PET:
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_MASTER:
-        case TARGET_MINION:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
-        case TARGET_SELF_FISHING:
+        case TARGET_UNIT_CASTER:
+        case TARGET_UNIT_PET:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_UNIT_MASTER:
+        case TARGET_DEST_CASTER_SUMMON:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
+        case TARGET_DEST_CASTER_FISHING:
         case TARGET_TOTEM_EARTH:
         case TARGET_TOTEM_WATER:
         case TARGET_TOTEM_AIR:
         case TARGET_TOTEM_FIRE:
-        case TARGET_AREAEFFECT_GO_AROUND_DEST:
+        case TARGET_GAMEOBJECT_DEST_AREA:
             return true;
         default:
             break;
@@ -279,11 +279,11 @@ inline bool IsPointEffectTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_INNKEEPER_COORDINATES:
-        case TARGET_TABLE_X_Y_Z_COORDINATES:
-        case TARGET_CASTER_COORDINATES:
+        case TARGET_DEST_HOME:
+        case TARGET_DEST_DB:
+        case TARGET_SRC_CASTER:
         case TARGET_SCRIPT_COORDINATES:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_DEST_TARGET_ENEMY:
         case TARGET_DUELVSPLAYER_COORDINATES:
             return true;
         default:
@@ -296,14 +296,14 @@ inline bool IsAreaEffectPossitiveTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_IN_AREA:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_SRC_AREA_ALLY:
+        case TARGET_UNIT_DEST_AREA_ALLY:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
         case TARGET_AREAEFFECT_PARTY:
-        case TARGET_ALL_RAID_AROUND_CASTER:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_UNIT_CASTER_AREA_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -315,21 +315,21 @@ inline bool IsAreaEffectTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_AREAEFFECT_INSTANT:
-        case TARGET_AREAEFFECT_CUSTOM:
-        case TARGET_ALL_ENEMY_IN_AREA:
-        case TARGET_ALL_ENEMY_IN_AREA_INSTANT:
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_ALL_ENEMY_IN_AREA_CHANNELED:
-        case TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_IN_AREA:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
+        case TARGET_UNIT_SRC_AREA_ENTRY:
+        case TARGET_UNIT_DEST_AREA_ENTRY:
+        case TARGET_UNIT_SRC_AREA_ENEMY:
+        case TARGET_UNIT_DEST_AREA_ENEMY:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_DEST_DYNOBJ_ENEMY:
+        case TARGET_UNIT_SRC_AREA_ALLY:
+        case TARGET_UNIT_DEST_AREA_ALLY:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
         case TARGET_AREAEFFECT_PARTY:
-        case TARGET_AREAEFFECT_GO_AROUND_DEST:
-        case TARGET_ALL_RAID_AROUND_CASTER:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_GAMEOBJECT_DEST_AREA:
+        case TARGET_UNIT_CASTER_AREA_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -388,14 +388,14 @@ inline bool IsOnlySelfTargeting(SpellEntry const* spellInfo)
 
         switch (spellInfo->EffectImplicitTargetA[i])
         {
-            case TARGET_SELF:
+            case TARGET_UNIT_CASTER:
                 break;
             default:
                 return false;
         }
         switch (spellInfo->EffectImplicitTargetB[i])
         {
-            case TARGET_SELF:
+            case TARGET_UNIT_CASTER:
             case TARGET_NONE:
                 break;
             default:
@@ -417,7 +417,7 @@ inline bool isSpellBreakStealth(SpellEntry const* spellInfo)
 
 inline bool IsAutoRepeatRangedSpell(SpellEntry const* spellInfo)
 {
-    return spellInfo->HasAttribute(SPELL_ATTR_RANGED) && spellInfo->HasAttribute(SPELL_ATTR_EX2_AUTOREPEAT_FLAG);
+    return spellInfo->HasAttribute(SPELL_ATTR_REQ_AMMO) && spellInfo->HasAttribute(SPELL_ATTR_EX2_AUTOREPEAT_FLAG);
 }
 
 inline bool IsSpellRequiresRangedAP(SpellEntry const* spellInfo)
@@ -434,7 +434,7 @@ inline bool IsChanneledSpell(SpellEntry const* spellInfo)
 
 inline bool IsNeedCastSpellAtFormApply(SpellEntry const* spellInfo, ShapeshiftForm form)
 {
-    if ((!spellInfo->HasAttribute(SPELL_ATTR_PASSIVE) && !spellInfo->HasAttribute(SPELL_ATTR_UNK7)) || !form)
+    if ((!spellInfo->HasAttribute(SPELL_ATTR_PASSIVE) && !spellInfo->HasAttribute(SPELL_ATTR_HIDE_SPELL)) || !form)
         return false;
 
     // passive spells with SPELL_ATTR_EX2_NOT_NEED_SHAPESHIFT are already active without shapeshift, do no recast!

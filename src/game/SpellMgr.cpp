@@ -134,7 +134,7 @@ uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell)
         if (Player* modOwner = spell->GetCaster()->GetSpellModOwner())
             modOwner->ApplySpellMod(spellInfo->Id, SPELLMOD_CASTING_TIME, castTime, spell);
 
-        if (!spellInfo->HasAttribute(SPELL_ATTR_UNK4) && !spellInfo->HasAttribute(SPELL_ATTR_TRADESPELL))
+        if (!spellInfo->HasAttribute(SPELL_ATTR_ABILITY) && !spellInfo->HasAttribute(SPELL_ATTR_TRADESPELL))
             castTime = int32(castTime * spell->GetCaster()->GetFloatValue(UNIT_MOD_CAST_SPEED));
         else
         {
@@ -143,7 +143,7 @@ uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell)
         }
     }
 
-    if (spellInfo->HasAttribute(SPELL_ATTR_RANGED) && (!spell || !spell->IsAutoRepeat()))
+    if (spellInfo->HasAttribute(SPELL_ATTR_REQ_AMMO) && (!spell || !spell->IsAutoRepeat()))
         castTime += 500;
 
     // [workaround] holy light need script effect, but 19968 spell for it have 2.5 cast time sec
@@ -537,7 +537,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
     if ((IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_CREATURES) ||
             IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_RESOURCES)  ||
             IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_STEALTHED)) &&
-            (spellInfo->HasAttribute(SPELL_ATTR_EX_UNK17) || spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_MOUNTED)))
+            (spellInfo->HasAttribute(SPELL_ATTR_EX_UNAUTOCASTABLE_BY_PET) || spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_MOUNTED)))
         return SPELL_TRACKER;
 
     // elixirs can have different families, but potion most ofc.
@@ -623,16 +623,16 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
     switch (targetA)
     {
             // non-positive targets
-        case TARGET_CHAIN_DAMAGE:
-        case TARGET_ALL_ENEMY_IN_AREA:
-        case TARGET_ALL_ENEMY_IN_AREA_INSTANT:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_ALL_ENEMY_IN_AREA_CHANNELED:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_UNIT_TARGET_ENEMY:
+        case TARGET_UNIT_SRC_AREA_ENEMY:
+        case TARGET_UNIT_DEST_AREA_ENEMY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_DEST_DYNOBJ_ENEMY:
+        case TARGET_DEST_TARGET_ENEMY:
             return false;
             // positive or dependent
-        case TARGET_CASTER_COORDINATES:
-            return (targetB == TARGET_ALL_PARTY || targetB == TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER);
+        case TARGET_SRC_CASTER:
+            return (targetB == TARGET_UNIT_SRC_AREA_PARTY || targetB == TARGET_UNIT_SRC_AREA_ALLY);
         default:
             break;
     }
@@ -646,11 +646,11 @@ bool IsExplicitPositiveTarget(uint32 targetA)
     // positive targets that in target selection code expect target in m_targers, so not that auto-select target by spell data by m_caster and etc
     switch (targetA)
     {
-        case TARGET_SINGLE_FRIEND:
-        case TARGET_SINGLE_PARTY:
-        case TARGET_CHAIN_HEAL:
-        case TARGET_SINGLE_FRIEND_2:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_UNIT_TARGET_ALLY:
+        case TARGET_UNIT_TARGET_PARTY:
+        case TARGET_UNIT_TARGET_CHAINHEAL_ALLY:
+        case TARGET_UNIT_TARGET_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -663,8 +663,8 @@ bool IsExplicitNegativeTarget(uint32 targetA)
     // non-positive targets that in target selection code expect target in m_targers, so not that auto-select target by spell data by m_caster and etc
     switch (targetA)
     {
-        case TARGET_CHAIN_DAMAGE:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_UNIT_TARGET_ENEMY:
+        case TARGET_DEST_TARGET_ENEMY:
             return true;
         default:
             break;
@@ -789,16 +789,16 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                     return false;
                 case SPELL_AURA_PERIODIC_DAMAGE:            // used in positive spells also.
                     // part of negative spell if casted at self (prevent cancel)
-                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_SELF)
+                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_UNIT_CASTER)
                         return false;
                     break;
                 case SPELL_AURA_MOD_DECREASE_SPEED:         // used in positive spells also
                     // part of positive spell if casted at self
-                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_SELF &&
+                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_UNIT_CASTER &&
                             spellproto->SpellFamilyName == SPELLFAMILY_GENERIC)
                         return false;
                     // but not this if this first effect (don't found better check)
-                    if (spellproto->HasAttribute(SPELL_ATTR_UNK26) && effIndex == EFFECT_INDEX_0)
+                    if (spellproto->HasAttribute(SPELL_ATTR_NEGATIVE_1) && effIndex == EFFECT_INDEX_0)
                         return false;
                     break;
 //                case SPELL_AURA_TRANSFORM:
@@ -859,7 +859,7 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
         return false;
 
     // AttributesEx check
-    if (spellproto->HasAttribute(SPELL_ATTR_EX_NEGATIVE))
+    if (spellproto->HasAttribute(SPELL_ATTR_EX_CANT_BE_REFLECTED))
         return false;
 
     // ok, positive
@@ -1073,7 +1073,7 @@ void SpellMgr::LoadSpellTargetPositions()
         bool found = false;
         for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
-            if (spellInfo->EffectImplicitTargetA[i] == TARGET_TABLE_X_Y_Z_COORDINATES || spellInfo->EffectImplicitTargetB[i] == TARGET_TABLE_X_Y_Z_COORDINATES)
+            if (spellInfo->EffectImplicitTargetA[i] == TARGET_DEST_DB || spellInfo->EffectImplicitTargetB[i] == TARGET_DEST_DB)
             {
                 found = true;
                 break;
@@ -2816,7 +2816,7 @@ void SpellMgr::LoadSpellLearnSpells()
                 // talent or passive spells or skill-step spells auto-casted and not need dependent learning,
                 // pet teaching spells don't must be dependent learning (casted)
                 // other required explicit dependent learning
-                dbc_node.autoLearned = entry->EffectImplicitTargetA[i] == TARGET_PET || GetTalentSpellCost(spell) > 0 || IsPassiveSpell(entry) || IsSpellHaveEffect(entry, SPELL_EFFECT_SKILL_STEP);
+                dbc_node.autoLearned = entry->EffectImplicitTargetA[i] == TARGET_UNIT_PET || GetTalentSpellCost(spell) > 0 || IsPassiveSpell(entry) || IsSpellHaveEffect(entry, SPELL_EFFECT_SKILL_STEP);
 
                 SpellLearnSpellMapBounds db_node_bounds = GetSpellLearnSpellMapBounds(spell);
 
@@ -2867,16 +2867,16 @@ void SpellMgr::LoadSpellScriptTarget()
                     spellProto->EffectImplicitTargetB[i] == TARGET_SCRIPT ||
                     spellProto->EffectImplicitTargetA[i] == TARGET_SCRIPT_COORDINATES ||
                     spellProto->EffectImplicitTargetB[i] == TARGET_SCRIPT_COORDINATES ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_FOCUS_OR_SCRIPTED_GAMEOBJECT ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_FOCUS_OR_SCRIPTED_GAMEOBJECT ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_INSTANT ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_INSTANT ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_CUSTOM ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_CUSTOM ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_GO_AROUND_SOURCE ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_GO_AROUND_SOURCE ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_GO_AROUND_DEST ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_GO_AROUND_DEST)
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_NEARBY_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_NEARBY_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_SRC_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_SRC_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_DEST_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_DEST_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_SRC_AREA ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_SRC_AREA ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_DEST_AREA ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_DEST_AREA)
             {
                 targetfound = true;
                 break;
@@ -2950,7 +2950,7 @@ void SpellMgr::LoadSpellScriptTarget()
             for (int j = 0; j < MAX_EFFECT_INDEX; ++j)
             {
                 if (spellInfo->Effect[j] && (spellInfo->EffectImplicitTargetA[j] == TARGET_SCRIPT ||
-                                             (spellInfo->EffectImplicitTargetA[j] != TARGET_SELF && spellInfo->EffectImplicitTargetB[j] == TARGET_SCRIPT)))
+                                             (spellInfo->EffectImplicitTargetA[j] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetB[j] == TARGET_SCRIPT)))
                 {
                     SQLMultiStorage::SQLMSIteratorBounds<SpellTargetEntry> bounds = sSpellScriptTargetStorage.getBounds<SpellTargetEntry>(i);
                     if (bounds.first == bounds.second)
@@ -3028,7 +3028,7 @@ void SpellMgr::LoadSpellPetAuras()
                 continue;
             }
 
-            PetAura pa(pet, aura, spellInfo->EffectImplicitTargetA[i] == TARGET_PET, spellInfo->CalculateSimpleValue(SpellEffectIndex(i)));
+            PetAura pa(pet, aura, spellInfo->EffectImplicitTargetA[i] == TARGET_UNIT_PET, spellInfo->CalculateSimpleValue(SpellEffectIndex(i)));
             mSpellPetAuraMap[spell] = pa;
         }
 

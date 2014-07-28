@@ -1431,7 +1431,7 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
 
     switch (targetType)
     {
-        case TARGET_INNKEEPER_COORDINATES:
+        case TARGET_DEST_HOME:
         {
             // Only players can teleport to innkeeper
             if (unitTarget->GetTypeId() != TYPEID_PLAYER)
@@ -1440,8 +1440,8 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
             ((Player*)unitTarget)->TeleportToHomebind(unitTarget == m_caster ? TELE_TO_SPELL : 0);
             return;
         }
-        case TARGET_AREAEFFECT_INSTANT:                     // in all cases first TARGET_TABLE_X_Y_Z_COORDINATES
-        case TARGET_TABLE_X_Y_Z_COORDINATES:
+        case TARGET_UNIT_SRC_AREA_ENTRY:                     // in all cases first TARGET_TABLE_X_Y_Z_COORDINATES
+        case TARGET_DEST_DB:
         {
             SpellTargetPosition const* st = sSpellMgr.GetSpellTargetPosition(m_spellInfo->Id);
             if (!st)
@@ -1456,7 +1456,7 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
                 ((Player*)unitTarget)->TeleportTo(st->target_mapId, st->target_X, st->target_Y, st->target_Z, st->target_Orientation, unitTarget == m_caster ? TELE_TO_SPELL : 0);
             break;
         }
-        case TARGET_EFFECT_SELECT:
+        case TARGET_DEST_CASTER:
         {
             // m_destN filled, but sometimes for wrong dest and does not have TARGET_FLAG_DEST_LOCATION
 
@@ -2232,7 +2232,7 @@ void Spell::EffectDispel(SpellEffectIndex eff_idx)
                 if (!holder->IsPositive())
                     positive = false;
                 else
-                    positive = (holder->GetSpellProto()->AttributesEx & SPELL_ATTR_EX_NEGATIVE) == 0;
+                    positive = (holder->GetSpellProto()->AttributesEx & SPELL_ATTR_EX_CANT_BE_REFLECTED) == 0;
 
                 // do not remove positive auras if friendly target
                 //               negative auras if non-friendly target
@@ -2755,7 +2755,7 @@ void Spell::EffectEnchantItemTmp(SpellEffectIndex eff_idx)
     uint32 duration;
 
     // shaman family enchantments
-    if (m_spellInfo->Attributes == (SPELL_ATTR_UNK9 | SPELL_ATTR_NOT_SHAPESHIFT | SPELL_ATTR_UNK18))
+    if (m_spellInfo->Attributes == (SPELL_ATTR_TARGET_MAINHAND_ITEM | SPELL_ATTR_NOT_SHAPESHIFT | SPELL_ATTR_DONT_AFFECT_SHEATH_STATE))
         duration = 300;                                     // 5 mins
     // imbue enchantments except Imbue Weapon - Beastslayer
     else if (m_spellInfo->SpellIconID == 241 && m_spellInfo->Id != 7434)
@@ -2764,7 +2764,7 @@ void Spell::EffectEnchantItemTmp(SpellEffectIndex eff_idx)
     else if (m_spellInfo->Id == 28891 && m_spellInfo->Id == 28898)
         duration = 3600;                                    // 1 hour
     // some fishing pole bonuses
-    else if (m_spellInfo->HasAttribute(SPELL_ATTR_UNK7))
+    else if (m_spellInfo->HasAttribute(SPELL_ATTR_HIDE_SPELL))
         duration = 600;                                     // 10 mins
     // default case
     else
@@ -3782,14 +3782,14 @@ void Spell::EffectDuel(SpellEffectIndex eff_idx)
 
     // Players can only fight a duel with each other outside (=not inside dungeons and not in capital cities)
     AreaTableEntry const* casterAreaEntry = GetAreaEntryByAreaID(caster->GetAreaId());
-    if (casterAreaEntry && !(casterAreaEntry->flags & AREA_FLAG_DUEL))
+    if (casterAreaEntry && !(casterAreaEntry->flags & AREA_FLAG_ALOW_DUELS))
     {
         SendCastResult(SPELL_FAILED_NO_DUELING);            // Dueling isn't allowed here
         return;
     }
 
     AreaTableEntry const* targetAreaEntry = GetAreaEntryByAreaID(target->GetAreaId());
-    if (targetAreaEntry && !(targetAreaEntry->flags & AREA_FLAG_DUEL))
+    if (targetAreaEntry && !(targetAreaEntry->flags & AREA_FLAG_ALOW_DUELS))
     {
         SendCastResult(SPELL_FAILED_NO_DUELING);            // Dueling isn't allowed here
         return;

@@ -2483,7 +2483,7 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* pVictim, SpellEntry const* spell)
 
     uint32 missChance = uint32(MeleeSpellMissChance(pVictim, attType, fullSkillDiff, spell) * 100.0f);
     // Roll miss
-    uint32 tmp = spell->HasAttribute(SPELL_ATTR_EX3_CANT_MISS) ? 0 : missChance;
+    uint32 tmp = spell->HasAttribute(SPELL_ATTR_EX3_IGNORE_HIT_RESULT) ? 0 : missChance;
     if (roll < tmp)
         return SPELL_MISS_MISS;
 
@@ -2617,7 +2617,7 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* pVictim, SpellEntry const* spell)
     if (HitChance <  100) HitChance =  100;
     if (HitChance > 9900) HitChance = 9900;
 
-    int32 tmp = spell->HasAttribute(SPELL_ATTR_EX3_CANT_MISS) ? 0 : (10000 - HitChance);
+    int32 tmp = spell->HasAttribute(SPELL_ATTR_EX3_IGNORE_HIT_RESULT) ? 0 : (10000 - HitChance);
 
     int32 rand = irand(0, 10000);
 
@@ -7992,7 +7992,7 @@ void CharmInfo::InitCharmCreateSpells()
             if (!spellInfo) onlyselfcast = false;
             for (uint32 i = 0; i < 3 && onlyselfcast; ++i)  // nonexistent spell will not make any problems as onlyselfcast would be false -> break right away
             {
-                if (spellInfo->EffectImplicitTargetA[i] != TARGET_SELF && spellInfo->EffectImplicitTargetA[i] != 0)
+                if (spellInfo->EffectImplicitTargetA[i] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetA[i] != 0)
                     onlyselfcast = false;
             }
 
