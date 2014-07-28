@@ -293,7 +293,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, uint8 updateFlags) const
 
         *data << (float)0;
 
-        if (moveFlags & 0x2000)                             // update self
+        if (moveFlags & MOVEFLAG_FALLING)                             // update self
         {
             *data << (float)0;
             *data << (float)1.0;
@@ -312,7 +312,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, uint8 updateFlags) const
         if (m_objectTypeId == TYPEID_UNIT)
         {
             uint8 PosCount = 0;
-            if (moveFlags & 0x400000)
+            if (moveFlags & MOVEFLAG_SPLINE_ENABLED)
             {
                 *data << (uint32)0x0;
                 *data << (uint32)0x659;
