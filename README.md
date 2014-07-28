@@ -23,7 +23,7 @@ Installation
 
 Contributing
 ------------
-All informations about contributing to **mangos-zero** can be found in our
+All information about contributing to **mangos-zero** can be found in our
 [documentation for contributors][mangos-zero-contribute].
 
 Bug Tracking

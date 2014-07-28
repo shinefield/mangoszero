@@ -3,7 +3,7 @@ Recast & Detour Version 1.4
 
 ## Recast
 
-Recast is state of the art navigation mesh construction toolset for games.
+Recast is state of the art navigation mesh construction tool-set for games.
 
 * It is automatic, which means that you can throw any level geometry at it and
   you will get robust mesh out

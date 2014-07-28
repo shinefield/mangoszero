@@ -15,7 +15,7 @@ You can chose from the following:
 * Update mmaps with data from offmesh.txt (suggested after updates of this file)
 
 In case you want to extract movement maps, you will be asked how many processes should
-be used for extraction; Recommended is to use the number of CPUs
+be used for extraction; Recommended is to use the number of CPU's
 
 By default the scripts will create log files
 

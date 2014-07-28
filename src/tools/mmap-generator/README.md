@@ -1,6 +1,6 @@
 mmap generator
 ==============
-The *movement map generator* will extract pathfinding information from the
+The *movement map generator* will extract path finding information from the
 game client in order to enable the *mangos-zero server* to let creatures walk
 on the terrain as naturally as possible.
 
@@ -44,7 +44,7 @@ process of movement map generation.
 * `--debugOutput [true|false]`: create debugging files for use with RecastDemo. If you
   are only creating movement maps for use with MaNGOS, you do not need debugging
   files built. By default, debugging files are not created.
-* `--tile [#,#]`: Build the specified tile seperate number with a comma ','.
+* `--tile [#,#]`: Build the specified tile separate number with a comma ','.
   Must specify a map number (see below). If this option is not used, all tiles are
   built. If only one number is specified, builds the map specified by it.
   This command will build the map regardless of --skip* option settings. If you do
@@ -58,7 +58,7 @@ Examples
 * `mmap-generator`: builds maps using the default settings (see above for defaults)
 * `mmap-generator --skipContinents true`: builds the default maps, except continents
 * `mmap-generator 0`: builds all tiles of map 0
-* `mmap-generator 0 --tile 34,46`: builds only tile 34,46 of map 0 (this is the southern face of blackrock mountain)
+* `mmap-generator 0 --tile 34,46`: builds only tile 34,46 of map 0 (this is the southern face of Blackrock Mountain)
 
 
 [1]: http://blizzard.com/games/wow/ "World of Warcraft"
