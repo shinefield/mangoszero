@@ -47,7 +47,7 @@ bool WDTFile::init(char* map_id, unsigned int mapID)
 {
     if (WDT.isEof())
     {
-        //printf("Can't find WDT file.\n");
+        // printf("Can't find WDT file.\n");
         return false;
     }
 

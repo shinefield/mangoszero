@@ -21,18 +21,15 @@ Usage
 The `mmap-generator` command can be used with a set of parameters to fine-tune the
 process of movement map generation.
 
-* `--offMeshInput [file.*]`: Path to file containing off mesh connections data,
-  with a single mesh connection per line. Format must be:
-
-  `map_id tile_x,tile_y (start_x start_y start_z) (end_x end_y end_z) size  //optional comments`
-
-* `--silent`: Make us script friendly. Do not wait for user input on error or
-  completion.
-* `--bigBaseUnit [true|false]`: Generate tile/map using bigger basic unit. Use this
-  option only if you have unexpected gaps. If set to `false`, we will use normal
-  metrics.
+* `-h`, `--help`: show usage information.
 * `--maxAngle [#]`: the maximum walkable inclination angle. By default this is set
   to `60`. Float values between 45 and 90 degrees are allowed.
+* `--tile [#,#]`: Build the specified tile separate number with a comma ','.
+  Must specify a map number (see below). If this option is not used, all tiles are
+  built. If only one number is specified, builds the map specified by it.
+  This command will build the map regardless of --skip* option settings. If you do
+  not specify a map number, builds all maps that pass the filters specified by
+  `--skip*` options.
 * `--skipLiquid`: skip liquid data for maps. Skipping liquid maps is disabled by
   default.
 * `--skipContinents [true|false]`: skip building continents. Disabled by default.
@@ -41,16 +38,20 @@ process of movement map generation.
   transport maps, and some other maps. Junk maps are skipped by default.
 * `--skipBattlegrounds [true|false]`: skip battleground maps. By default battleground
   maps are included.
+* `--bigBaseUnit [true|false]`: Generate tile/map using bigger basic unit. Use this
+  option only if you have unexpected gaps. If set to `false`, we will use normal
+  metrics.
+* `--offMeshInput [file.*]`: Path to file containing off mesh connections data,
+  with a single mesh connection per line. Format must be:
+
+  `map_id tile_x,tile_y (start_x start_y start_z) (end_x end_y end_z) size  //optional comments`
+
+* `--silent`: Make us script friendly. Do not wait for user input on error or
+  completion.
 * `--debugOutput [true|false]`: create debugging files for use with RecastDemo. If you
   are only creating movement maps for use with MaNGOS, you do not need debugging
   files built. By default, debugging files are not created.
-* `--tile [#,#]`: Build the specified tile separate number with a comma ','.
-  Must specify a map number (see below). If this option is not used, all tiles are
-  built. If only one number is specified, builds the map specified by it.
-  This command will build the map regardless of --skip* option settings. If you do
-  not specify a map number, builds all maps that pass the filters specified by
-  `--skip*` options.
-* `-h`, `--help`: show usage information.
+* `--silent`: no questions asked. Just working.
 
 Examples
 --------

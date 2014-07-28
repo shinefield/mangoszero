@@ -33,7 +33,7 @@ const char* szVMAPMagic = "VMAP_4.0";
 //=======================================================
 void Usage(char* prg)
 {
-    printf("Usage: %s [OPTION]\n\n", prg);
+    printf("Usage: %s [OPTIONS]\n\n", prg);
     printf("Assemble vmaps from extracted client model information.\n");
     printf("\n");
     printf("Example:\n");

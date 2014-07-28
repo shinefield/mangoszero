@@ -84,14 +84,16 @@ enum Extract
 // Select data for extract
 int   CONF_extract = EXTRACT_MAP | EXTRACT_DBC;
 // This option allow limit minimum height to some value (Allow save some memory)
-// see contrib/mmap/src/Tilebuilder.h, INVALID_MAP_LIQ_HEIGHT
 bool  CONF_allow_height_limit = true;
-float CONF_use_minHeight = -500.0f;
+float CONF_use_minHeight      = -500.0f;
 
-// This option allow use float to int conversion
-bool  CONF_allow_float_to_int   = true;
-float CONF_float_to_int8_limit  = 2.0f;      // Max accuracy = val/256
-float CONF_float_to_int16_limit = 2048.0f;   // Max accuracy = val/65536
+// This option avoids extracting test and development maps.
+bool  CONF_skip_junkMaps      = true;
+
+// This option allow use float to integer conversion
+bool  CONF_allow_float_to_int      = true;
+float CONF_float_to_int8_limit     = 2.0f;      // Max accuracy = val/256
+float CONF_float_to_int16_limit    = 2048.0f;   // Max accuracy = val/65536
 float CONF_flat_height_delta_limit = 0.005f; // If max - min less this value - surface is flat
 float CONF_flat_liquid_delta_limit = 0.001f; // If max - min less this value - liquid surface is flat
 
@@ -127,15 +129,16 @@ bool FileExists(const char* FileName)
 
 void Usage(char* prg)
 {
-    printf("Usage: %s [OPTION]\n\n", prg);
+    printf("Usage: %s [OPTIONS]\n\n", prg);
     printf("Extract client database files and generate map files.\n");
-    printf("   -h, --help            show the usage\n");
-    printf("   -i, --input <path>    search path for game client archives\n");
-    printf("   -o, --output <path>   target path for generated files\n");
-    printf("   -f, --flat #          store height information as integers reducing map\n");
-    printf("                         size, but also accuracy\n");
-    printf("   -e, --extract #       extract specified client data. 1 = maps, 2 = DBCs,\n");
-    printf("                         3 = both. Defaults to extracting both.\n");
+    printf("   -h, --help                  show the usage\n");
+    printf("   -i, --input <path>          search path for game client archives\n");
+    printf("   -o, --output <path>         target path for generated files\n");
+    printf("   -f, --flat #                store height information as integers reducing map\n");
+    printf("                               size, but also accuracy\n");
+    printf("   --skipJunkMaps [true|false] skip unused junk maps.\n");
+    printf("   -e, --extract #             extract specified client data. 1 = maps, 2 = DBCs,\n");
+    printf("                               3 = both. Defaults to extracting both.\n");
     printf("\n");
     printf("Example:\n");
     printf("- use input path and do not flatten maps:\n");
@@ -158,6 +161,11 @@ bool HandleArgs(int argc, char** argv)
             }
 
             strcpy(input_path, param);
+
+            if (input_path[strlen(input_path) - 1] != '\\' || input_path[strlen(input_path) - 1] != '/')
+            {
+                strcat(input_path, "/");
+            }
         }
         else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0 )
         {
@@ -182,6 +190,19 @@ bool HandleArgs(int argc, char** argv)
             {
                 CONF_allow_float_to_int = convertFloatToInt;
             }
+        }
+        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0 )
+        {
+            param = argv[++i];
+            if (!param)
+                return false;
+
+            if (strcmp(param, "true") == 0)
+                CONF_skip_junkMaps = true;
+            else if (strcmp(param, "false") == 0)
+                CONF_skip_junkMaps = false;
+            else
+                printf("invalid option for '--skipJunkMaps', using default\n");
         }
         else if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--extract") == 0 )
         {
@@ -211,6 +232,28 @@ bool HandleArgs(int argc, char** argv)
 
 }
 
+bool shouldSkipMap(uint32 mapID)
+{
+    if (CONF_skip_junkMaps)
+        switch (mapID)
+        {
+            case 13:    // test.wdt
+            case 25:    // ScottTest.wdt
+            case 29:    // Test.wdt
+            case 35:    // StormwindPrison.wdt
+            case 37:    // PVPZone02.wdt
+            case 42:    // Colin.wdt
+            case 44:    // Monastery.wdt
+            case 169:   // EmeraldDream.wdt (unused, and very large)
+            case 451:   // development.wdt
+                return true;
+            default:
+                break;
+        }
+
+    return false;
+}
+
 uint32 ReadMapDBC()
 {
     printf("Reading maps from Map.dbc ... ");
@@ -229,7 +272,7 @@ uint32 ReadMapDBC()
         map_ids[x].id = dbc.getRecord(x).getUInt(0);
         strcpy(map_ids[x].name, dbc.getRecord(x).getString(1));
     }
-    printf("Success! %lu maps loaded.\n", map_count);
+    printf("%lu maps loaded.\n", map_count);
     return map_count;
 }
 
@@ -254,13 +297,14 @@ void ReadAreaTableDBC()
 
     maxAreaId = dbc.getMaxId();
 
-    printf("Success! %lu areas loaded.\n", area_count);
+    printf("%lu areas loaded.\n", area_count);
 }
 
 void ReadLiquidTypeTableDBC()
 {
-    printf("Reading liquid types from LiquidType.dbc ...");
+    printf("Reading liquid types from LiquidType.dbc ... ");
     DBCFile dbc("DBFilesClient\\LiquidType.dbc");
+
     if (!dbc.open())
     {
         printf("Fatal error: Could not read LiquidType.dbc!\n");
@@ -275,11 +319,11 @@ void ReadLiquidTypeTableDBC()
     for (uint32 x = 0; x < LiqType_count; ++x)
         LiqType[dbc.getRecord(x).getUInt(0)] = dbc.getRecord(x).getUInt(3);
 
-    printf("Success! %lu liquid types loaded.\n", LiqType_count);
+    printf("%lu liquid types loaded.\n", LiqType_count);
 }
 
 //
-// Adt file convertor function and data
+// Adt file converter function and data
 //
 
 // Map file format data
@@ -358,6 +402,7 @@ float selectUInt16StepStore(float maxDiff)
 {
     return 65535 / maxDiff;
 }
+
 // Temporary grid data store
 uint16 area_flags[ADT_CELLS_PER_GRID][ADT_CELLS_PER_GRID];
 
@@ -410,7 +455,7 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
                     area_flags[i][j] = areas[areaid];
                     continue;
                 }
-                printf("File: %s\nCan not find area flag for area %u [%d, %d].\n", filename, areaid, cell->ix, cell->iy);
+                printf("File: %s\nCan't find area flag for area %u [%d, %d].\n", filename, areaid, cell->ix, cell->iy);
             }
             area_flags[i][j] = 0xffff;
         }
@@ -931,18 +976,26 @@ void ExtractMapsFromMpq()
     path += "/maps/";
     CreateDir(path);
 
-    printf("Converting map files\n");
+    printf("\nConverting map files ...\n");
     for (uint32 z = 0; z < map_count; ++z)
     {
-        printf("Extract %s (%d/%d)                  \n", map_ids[z].name, z + 1, map_count);
-        // Loadup map grid data
+        // Load map grid data
         sprintf(mpq_map_name, "World\\Maps\\%s\\%s.wdt", map_ids[z].name, map_ids[z].name);
         WDT_file wdt;
+
+        if (shouldSkipMap(map_ids[z].id))
+        {
+            printf("Skipping   map %u - %s (%d/%d)                    \n", map_ids[z].id, map_ids[z].name, z + 1, map_count);
+            continue;
+        }
+
         if (!wdt.loadFile(mpq_map_name, false))
         {
             // printf("Error loading %s map WDT data\n", map_ids[z].name);
             continue;
         }
+
+        printf("Extracting map %u - %s (%d/%d)                    \n", map_ids[z].id, map_ids[z].name, z + 1, map_count);
 
         for (uint32 y = 0; y < WDT_MAP_SIZE; ++y)
         {
@@ -950,12 +1003,14 @@ void ExtractMapsFromMpq()
             {
                 if (!wdt.main->adt_list[y][x].exist)
                     continue;
+
                 sprintf(mpq_filename, "World\\Maps\\%s\\%s_%u_%u.adt", map_ids[z].name, map_ids[z].name, x, y);
                 sprintf(output_filename, "%s/maps/%03u%02u%02u.map", output_path, map_ids[z].id, y, x);
                 ConvertADT(mpq_filename, output_filename, y, x);
             }
+
             // draw progress bar
-            printf("Processing........................%d%%\r", (100 * (y + 1)) / WDT_MAP_SIZE);
+            printf("Processing .......... %d%%\r", (100 * (y + 1)) / WDT_MAP_SIZE);
         }
     }
     delete [] areas;
@@ -980,7 +1035,7 @@ bool ExtractFile(char const* mpq_name, std::string const& filename)
 
 void ExtractDBCFiles()
 {
-    printf("Extracting client database files...\n");
+    printf("\nExtracting client database files... ");
 
     std::set<std::string> dbcfiles;
 
@@ -998,7 +1053,7 @@ void ExtractDBCFiles()
     path += "/dbc/";
     CreateDir(path);
 
-    // extract DBCs
+    // extract client database files
     int count = 0;
     for (set<string>::iterator iter = dbcfiles.begin(); iter != dbcfiles.end(); ++iter)
     {
@@ -1008,7 +1063,8 @@ void ExtractDBCFiles()
         if (ExtractFile(iter->c_str(), filename))
             ++count;
     }
-    printf("Extracted %u client database files\n\n", count);
+
+    printf("%u files extracted.\n\n", count);
 }
 
 void LoadCommonMPQFiles()
@@ -1017,7 +1073,7 @@ void LoadCommonMPQFiles()
     int count = sizeof(CONF_mpq_list) / sizeof(char*);
     for (int i = 0; i < count; ++i)
     {
-        sprintf(filename, "%s/Data/%s", input_path, CONF_mpq_list[i]);
+        sprintf(filename, "%sData/%s", input_path, CONF_mpq_list[i]);
         if (FileExists(filename))
             new MPQArchive(filename);
     }
@@ -1041,8 +1097,7 @@ int main(int argc, char** argv)
     // Open MPQs
     LoadCommonMPQFiles();
 
-
-    // Extract dbc
+    // Extract client database files
     if (CONF_extract & EXTRACT_DBC)
         ExtractDBCFiles();
 

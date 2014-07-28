@@ -126,11 +126,8 @@ void ExtractGameobjectModels()
 
     if (!failedPaths.empty())
     {
-        printf("Warning: Some models could not be extracted, see below\n");
+        printf("Warning: some models could not be extracted.\n");
         for (StringSet::const_iterator itr = failedPaths.begin(); itr != failedPaths.end(); ++itr)
-            printf("Could not find file of model %s\n", itr->c_str());
-        printf("A few of these warnings are expected to happen, so be not alarmed!\n");
+            printf("Couldn't find model %s\n", itr->c_str());
     }
-
-    printf("Done!\n");
 }

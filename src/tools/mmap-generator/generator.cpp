@@ -67,7 +67,7 @@ bool checkDirectories(bool debugOutput)
 
 void printUsage(char* prg)
 {
-    printf("Usage: %s [OPTION]\n\n", prg);
+    printf("Usage: %s [OPTIONS]\n\n", prg);
     printf("Generate movement maps from extracted client maps.\n");
     printf("   -h, --help                        show the usage\n");
     printf("   --maxAngle [#]                    max walkable inclination angle.\n");
@@ -291,7 +291,7 @@ int main(int argc, char** argv)
         if (silent)
             return -2;
 
-        printf("You have specifed debug output, but didn't specify a map to generate.\n");
+        printf("You have specified debug output, but didn't specify a map to generate.\n");
         printf("This will generate debug output for ALL maps.\n");
         printf("Are you sure you want to continue? (y/n) ");
         if (getchar() != 'y')

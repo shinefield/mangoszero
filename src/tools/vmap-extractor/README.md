@@ -12,7 +12,7 @@ Instructions - Linux
 Use the created executable to extract model information. Change the data path if
 needed.
 
-    $ vmap-extractor -d /mnt/windows/games/world of warcraft/
+    $ vmap-extractor -i /mnt/windows/games/world of warcraft/
 
 Resulting files will be in `./Buildings`.
 
@@ -29,12 +29,14 @@ Parameters
 The *vmap extractor* can be used with a few parameters to customize input, output
 and generated output.
 
-* `-d PATH`, `--data PATH`: set the path for reading the client's MPQ archives to the given
+* `-h`, `--help`: display the usage message, and an example call.
+* `-i PATH`, `--input PATH`: set the path for reading the client's MPQ archives to the given
   path.
 * `-s`, `--small`: small size (data size optimization), ~500MB less vmap data. This is the
   default setting.
 * `-l`, `--large`: large size, ~500MB more vmap data. Stores additional details in vmap data.
-* `-h`, `--help`: display the usage message, and an example call.
+* `--skipJunkMaps [true|false]`: skip junk maps, including some unused maps,
+  transport maps, and some other maps. Junk maps are skipped by default.
 
 
 [1]: http://blizzard.com/games/wow/ "World of Warcraft"

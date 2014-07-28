@@ -674,7 +674,7 @@ namespace MMAP
                 // loaded but those models don't span into this tile
 
                 // message is an annoyance
-                //printf("%sNo vertices to build tile!              \n", tileString);
+                // printf("%sNo vertices to build tile!              \n", tileString);
                 continue;
             }
             if (!params.polyCount || !params.polys ||

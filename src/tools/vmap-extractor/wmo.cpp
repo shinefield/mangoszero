@@ -48,7 +48,7 @@ bool WMORoot::open()
     MPQFile f(filename.c_str());
     if (f.isEof())
     {
-        printf("No such file %s.\n", filename.c_str());
+        // printf("No such file: %s.\n", filename.c_str());
         return false;
     }
 
@@ -130,7 +130,7 @@ bool WMORoot::open()
 
 bool WMORoot::ConvertToVMAPRootWmo(FILE* pOutfile)
 {
-    //printf("Convert RootWmo...\n");
+    // printf("Convert RootWmo...\n");
 
     fwrite(szRawVMAPMagic, 1, 8, pOutfile);
     unsigned int nVectors = 0;
@@ -154,7 +154,7 @@ bool WMOGroup::open()
     MPQFile f(filename.c_str());
     if (f.isEof())
     {
-        printf("No such file.\n");
+        // printf("No such file: %s.\n", filename.c_str());
         return false;
     }
     uint32 size;

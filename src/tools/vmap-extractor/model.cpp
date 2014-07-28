@@ -77,7 +77,7 @@ bool Model::open(StringSet& failedPaths)
     }
     else
     {
-        //printf("not included %s\n", filename.c_str());
+        // printf("not included %s\n", filename.c_str());
         f.close();
         return false;
     }
@@ -166,7 +166,7 @@ ModelInstance::ModelInstance(MPQFile& f, const char* ModelInstName, uint32 mapID
 
     if (!input)
     {
-        //printf("ModelInstance::ModelInstance couldn't open %s\n", tempname);
+        // printf("ModelInstance::ModelInstance couldn't open %s\n", tempname);
         return;
     }
 
