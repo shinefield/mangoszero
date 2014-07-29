@@ -125,6 +125,7 @@ enum EventAI_ActionType
     ACTION_T_THROW_AI_EVENT             = 45,               // EventType, Radius, unused
     ACTION_T_SET_THROW_MASK             = 46,               // EventTypeMask, unused, unused
     ACTION_T_SET_STAND_STATE            = 47,               // StandState, unused, unused
+    ACTION_T_SUMMON_UNIQUE              = 48,               // CreatureId, Target, SpawnId
 
     ACTION_T_END,
 };
@@ -411,6 +412,13 @@ struct CreatureEventAI_Action
             uint32 unused1;
             uint32 unused2;
         } setStandState;
+        // ACTION_T_SUMMON_ID                               = 48
+        struct
+        {
+            uint32 creatureId;
+            uint32 target;
+            uint32 spawnId;
+        } summon_unique;
         // RAW
         struct
         {
