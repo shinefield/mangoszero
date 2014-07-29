@@ -27,6 +27,10 @@ awesome things such as these:
   to cast with no mana cost if no effects are to be dispelled,
 * core: creature linking has a new flag to despawn linked creatures on master
   despawn,
+* core: vmap extraction will now use bounding geometry when extracting model
+  geometry which fixes various LOS issues,
+* EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
+* scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
 * database: the commands `goname`/`namego` have been renamed to `appear`/`summon`,
 * documentation has been moved to [Read The Docs](http://readthedocs.org/) and
   the latest version is available on [docs.getmangos.com](http://docs.getmangos.com),
