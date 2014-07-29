@@ -108,6 +108,7 @@ enum ScriptCommand                                          // resSource, resTar
     SCRIPT_COMMAND_JOIN_LFG                 = 33,           // datalong = zoneId;
     SCRIPT_COMMAND_TERMINATE_COND           = 34,           // datalong = condition_id, datalong2 = if != 0 then quest_id of quest that will be failed for player's group if the script is terminated
                                                             // data_flags & SCRIPT_FLAG_COMMAND_ADDITIONAL terminate when condition is false ELSE terminate when condition is true
+    SCRIPT_COMMAND_TURN_TO                  = 35,           // resSource = Unit, resTarget = Unit/none
 };
 
 #define MAX_TEXT_ID 4                                       // used for SCRIPT_COMMAND_TALK
@@ -334,6 +335,12 @@ struct ScriptInfo
         {
             uint32 data[2];
         } raw;
+
+        struct                                              // SCRIPT_COMMAND_TURN_TO (35)
+        {
+            uint32 targetId;                                // datalong
+            uint32 empty1;                                  // datalong2
+        } turnTo;
     };
 
     // Buddy system (entry can be npc or go entry, depending on command)
