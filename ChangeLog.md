@@ -31,6 +31,7 @@ awesome things such as these:
   geometry which fixes various LOS issues,
 * EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
 * scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
+* quest: when quests reward spell casts, they will now display the correct spell,
 * database: the commands `goname`/`namego` have been renamed to `appear`/`summon`,
 * documentation has been moved to [Read The Docs](http://readthedocs.org/) and
   the latest version is available on [docs.getmangos.com](http://docs.getmangos.com),
