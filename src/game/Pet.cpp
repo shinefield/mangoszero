@@ -1627,11 +1627,11 @@ bool Pet::addSpell(uint32 spell_id, ActiveStates active /*= ACT_DECIDE*/, PetSpe
         // do pet spell book cleanup
         if (state == PETSPELL_UNCHANGED)                    // spell load case
         {
-            sLog.outError("Pet::addSpell: nonexistent in SpellStore spell #%u request, deleting for all pets in `pet_spell`.", spell_id);
+            sLog.outError("Pet::addSpell: non-existent in SpellStore spell #%u request, deleting for all pets in `pet_spell`.", spell_id);
             CharacterDatabase.PExecute("DELETE FROM pet_spell WHERE spell = '%u'", spell_id);
         }
         else
-            sLog.outError("Pet::addSpell: nonexistent in SpellStore spell #%u request.", spell_id);
+            sLog.outError("Pet::addSpell: non-existent in SpellStore spell #%u request.", spell_id);
 
         return false;
     }

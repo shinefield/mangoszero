@@ -407,13 +407,13 @@ void GameEventMgr::LoadFromDB()
 
             if (newData.spell_id_start && !sSpellStore.LookupEntry(newData.spell_id_start))
             {
-                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with nonexistent spell_start %u, set to no start spell.", guid, newData.spell_id_start);
+                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with non-existent spell_start %u, set to no start spell.", guid, newData.spell_id_start);
                 newData.spell_id_start = 0;
             }
 
             if (newData.spell_id_end && !sSpellStore.LookupEntry(newData.spell_id_end))
             {
-                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with nonexistent spell_end %u, set to no end spell.", guid, newData.spell_id_end);
+                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with non-existent spell_end %u, set to no end spell.", guid, newData.spell_id_end);
                 newData.spell_id_end = 0;
             }
 
@@ -537,7 +537,7 @@ void GameEventMgr::LoadFromDB()
 
             if (mail.questId && !sObjectMgr.GetQuestTemplate(mail.questId))
             {
-                sLog.outErrorDb("Table `game_event_mail` have nonexistent quest (%u) requirement for game event %i, ignoring.", mail.questId, event_id);
+                sLog.outErrorDb("Table `game_event_mail` have non-existent quest (%u) requirement for game event %i, ignoring.", mail.questId, event_id);
                 continue;
             }
 
@@ -549,7 +549,7 @@ void GameEventMgr::LoadFromDB()
 
             if (!ObjectMgr::GetCreatureTemplate(mail.senderEntry))
             {
-                sLog.outErrorDb("Table `game_event_mail` have nonexistent sender creature entry (%u) for game event %i that invalid not include any player races, ignoring.", mail.senderEntry, event_id);
+                sLog.outErrorDb("Table `game_event_mail` have non-existent sender creature entry (%u) for game event %i that invalid not include any player races, ignoring.", mail.senderEntry, event_id);
                 continue;
             }
 

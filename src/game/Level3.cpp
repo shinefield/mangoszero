@@ -5864,7 +5864,7 @@ bool ChatHandler::HandleInstanceListBindsCommand(char* /*args*/)
                             state->CanReset() ? "yes" : "no", timeleft.c_str());
         }
         else
-            PSendSysMessage("bound for a nonexistent map %u", itr->first);
+            PSendSysMessage("bound for a non-existent map %u", itr->first);
         counter++;
     }
 
@@ -5886,7 +5886,7 @@ bool ChatHandler::HandleInstanceListBindsCommand(char* /*args*/)
                                 state->CanReset() ? "yes" : "no", timeleft.c_str());
             }
             else
-                PSendSysMessage("bound for a nonexistent map %u", itr->first);
+                PSendSysMessage("bound for a non-existent map %u", itr->first);
             counter++;
         }
     }
@@ -5936,7 +5936,7 @@ bool ChatHandler::HandleInstanceUnbindCommand(char* args)
                                 save->CanReset() ? "yes" : "no", timeleft.c_str());
             }
             else
-                PSendSysMessage("bound for a nonexistent map %u", itr->first);
+                PSendSysMessage("bound for a non-existent map %u", itr->first);
             player->UnbindInstance(itr);
             counter++;
         }
@@ -6156,7 +6156,7 @@ bool ChatHandler::HandleSendMassMailCommand(char* args)
         return false;
     }
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     sMassMailMgr.AddMassMailTask(draft, sender, raceMask);
@@ -6261,7 +6261,7 @@ bool ChatHandler::HandleSendItemsCommand(char* args)
     if (!HandleSendItemsHelper(draft, args))
         return false;
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     draft.SendMailTo(MailReceiver(receiver, receiver_guid), sender);
@@ -6292,7 +6292,7 @@ bool ChatHandler::HandleSendMassItemsCommand(char* args)
         return false;
     }
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     sMassMailMgr.AddMassMailTask(draft, sender, raceMask);
@@ -6342,7 +6342,7 @@ bool ChatHandler::HandleSendMoneyCommand(char* args)
     if (!HandleSendMoneyHelper(draft, args))
         return false;
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     draft.SendMailTo(MailReceiver(receiver, receiver_guid), sender);
@@ -6372,7 +6372,7 @@ bool ChatHandler::HandleSendMassMoneyCommand(char* args)
         return false;
     }
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     sMassMailMgr.AddMassMailTask(draft, sender, raceMask);

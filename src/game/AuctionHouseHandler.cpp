@@ -451,7 +451,7 @@ void WorldSession::HandleAuctionRemoveItem(WorldPacket& recv_data)
     Item* pItem = sAuctionMgr.GetAItem(auction->itemGuidLow);
     if (!pItem)
     {
-        sLog.outError("Auction id: %u has nonexistent item (item guid : %u)!!!", auction->Id, auction->itemGuidLow);
+        sLog.outError("Auction id: %u has non-existent item (item guid : %u)!!!", auction->Id, auction->itemGuidLow);
         SendAuctionCommandResult(NULL, AUCTION_REMOVED, AUCTION_ERR_INVENTORY, EQUIP_ERR_ITEM_NOT_FOUND);
         return;
     }

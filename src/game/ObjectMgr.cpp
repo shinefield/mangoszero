@@ -303,7 +303,7 @@ void ObjectMgr::LoadGossipMenuItemsLocales()
 
         if (!found)
         {
-            ERROR_DB_STRICT_LOG("Table `locales_gossip_menu_option` has data for nonexistent gossip menu %u item %u, skipped.", menuId, id);
+            ERROR_DB_STRICT_LOG("Table `locales_gossip_menu_option` has data for non-existent gossip menu %u item %u, skipped.", menuId, id);
             continue;
         }
 
@@ -373,7 +373,7 @@ void ObjectMgr::LoadPointOfInterestLocales()
 
         if (!GetPointOfInterest(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_points_of_interest` has data for nonexistent POI entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_points_of_interest` has data for non-existent POI entry %u, skipped.", entry);
             continue;
         }
 
@@ -429,11 +429,11 @@ void ObjectMgr::LoadCreatureTemplates()
 
         FactionTemplateEntry const* factionTemplate = sFactionTemplateStore.LookupEntry(cInfo->FactionAlliance);
         if (!factionTemplate)
-            sLog.outErrorDb("Creature (Entry: %u) has nonexistent faction_A template (%u)", cInfo->Entry, cInfo->FactionAlliance);
+            sLog.outErrorDb("Creature (Entry: %u) has non-existent faction_A template (%u)", cInfo->Entry, cInfo->FactionAlliance);
 
         factionTemplate = sFactionTemplateStore.LookupEntry(cInfo->FactionHorde);
         if (!factionTemplate)
-            sLog.outErrorDb("Creature (Entry: %u) has nonexistent faction_H template (%u)", cInfo->Entry, cInfo->FactionHorde);
+            sLog.outErrorDb("Creature (Entry: %u) has non-existent faction_H template (%u)", cInfo->Entry, cInfo->FactionHorde);
 
         for (int k = 0; k < MAX_KILL_CREDIT; ++k)
         {
@@ -441,7 +441,7 @@ void ObjectMgr::LoadCreatureTemplates()
             {
                 if (!GetCreatureTemplate(cInfo->KillCredit[k]))
                 {
-                    sLog.outErrorDb("Creature (Entry: %u) has nonexistent creature entry in `KillCredit%d` (%u)", cInfo->Entry, k + 1, cInfo->KillCredit[k]);
+                    sLog.outErrorDb("Creature (Entry: %u) has non-existent creature entry in `KillCredit%d` (%u)", cInfo->Entry, k + 1, cInfo->KillCredit[k]);
                     const_cast<CreatureInfo*>(cInfo)->KillCredit[k] = 0;
                 }
             }
@@ -457,7 +457,7 @@ void ObjectMgr::LoadCreatureTemplates()
                 CreatureDisplayInfoEntry const* displayEntry = sCreatureDisplayInfoStore.LookupEntry(cInfo->ModelId[i]);
                 if (!displayEntry)
                 {
-                    sLog.outErrorDb("Creature (Entry: %u) has nonexistent modelid_%d (%u), can crash client", cInfo->Entry, i + 1, cInfo->ModelId[i]);
+                    sLog.outErrorDb("Creature (Entry: %u) has non-existent modelid_%d (%u), can crash client", cInfo->Entry, i + 1, cInfo->ModelId[i]);
                     const_cast<CreatureInfo*>(cInfo)->ModelId[i] = 0;
                 }
                 else if (!displayScaleEntry)
@@ -470,7 +470,7 @@ void ObjectMgr::LoadCreatureTemplates()
         }
 
         if (!displayScaleEntry)
-            sLog.outErrorDb("Creature (Entry: %u) has nonexistent modelid in modelid_1/modelid_2", cInfo->Entry);
+            sLog.outErrorDb("Creature (Entry: %u) has non-existent modelid in modelid_1/modelid_2", cInfo->Entry);
 
         if (!cInfo->MinLevel)
         {
@@ -884,7 +884,7 @@ void ObjectMgr::LoadCreatureModelInfo()
             continue;
 
         if (!sCreatureDisplayInfoStore.LookupEntry(minfo->modelid))
-            sLog.outErrorDb("Table `creature_model_info` has model for nonexistent model id (%u).", minfo->modelid);
+            sLog.outErrorDb("Table `creature_model_info` has model for non-existent model id (%u).", minfo->modelid);
 
         if (minfo->gender >= MAX_GENDER)
         {
@@ -901,7 +901,7 @@ void ObjectMgr::LoadCreatureModelInfo()
             }
             else if (!sCreatureDisplayInfoStore.LookupEntry(minfo->modelid_other_gender))
             {
-                sLog.outErrorDb("Table `creature_model_info` has nonexistent modelid_other_gender model (%u) defined for model id %u.", minfo->modelid_other_gender, minfo->modelid);
+                sLog.outErrorDb("Table `creature_model_info` has non-existent modelid_other_gender model (%u) defined for model id %u.", minfo->modelid_other_gender, minfo->modelid);
                 const_cast<CreatureModelInfo*>(minfo)->modelid_other_gender = 0;
             }
         }
@@ -915,7 +915,7 @@ void ObjectMgr::LoadCreatureModelInfo()
             }
             else if (!sCreatureDisplayInfoStore.LookupEntry(minfo->modelid_other_team))
             {
-                sLog.outErrorDb("Table `creature_model_info` has nonexistent modelid_other_team model (%u) defined for model id %u.", minfo->modelid_other_team, minfo->modelid);
+                sLog.outErrorDb("Table `creature_model_info` has non-existent modelid_other_team model (%u) defined for model id %u.", minfo->modelid_other_team, minfo->modelid);
                 const_cast<CreatureModelInfo*>(minfo)->modelid_other_team = 0;
             }
         }
@@ -1052,13 +1052,13 @@ void ObjectMgr::LoadCreatures()
         MapEntry const* mapEntry = sMapStore.LookupEntry(data.mapid);
         if (!mapEntry)
         {
-            sLog.outErrorDb("Table `creature` have creature (GUID: %u) that spawned at nonexistent map (Id: %u), skipped.", guid, data.mapid);
+            sLog.outErrorDb("Table `creature` have creature (GUID: %u) that spawned at non-existent map (Id: %u), skipped.", guid, data.mapid);
             continue;
         }
 
         if (data.modelid_override > 0 && !sCreatureDisplayInfoStore.LookupEntry(data.modelid_override))
         {
-            sLog.outErrorDb("Table `creature` GUID %u (entry %u) has model for nonexistent model id (%u), set to 0.", guid, data.id, data.modelid_override);
+            sLog.outErrorDb("Table `creature` GUID %u (entry %u) has model for non-existent model id (%u), set to 0.", guid, data.id, data.modelid_override);
             data.modelid_override = 0;
         }
 
@@ -1221,7 +1221,7 @@ void ObjectMgr::LoadGameObjects()
         MapEntry const* mapEntry = sMapStore.LookupEntry(data.mapid);
         if (!mapEntry)
         {
-            sLog.outErrorDb("Table `gameobject` have gameobject (GUID: %u Entry: %u) that spawned at nonexistent map (Id: %u), skip", guid, data.id, data.mapid);
+            sLog.outErrorDb("Table `gameobject` have gameobject (GUID: %u Entry: %u) that spawned at non-existent map (Id: %u), skip", guid, data.id, data.mapid);
             continue;
         }
 
@@ -1447,7 +1447,7 @@ void ObjectMgr::LoadItemLocales()
 
         if (!GetItemPrototype(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_item` has data for nonexistent item entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_item` has data for non-existent item entry %u, skipped.", entry);
             continue;
         }
 
@@ -1593,7 +1593,7 @@ void ObjectMgr::LoadItemPrototypes()
 
         if (proto->RequiredSpell && !sSpellStore.LookupEntry(proto->RequiredSpell))
         {
-            sLog.outErrorDb("Item (Entry: %u) have wrong (nonexistent) spell in RequiredSpell (%u)", i, proto->RequiredSpell);
+            sLog.outErrorDb("Item (Entry: %u) have wrong (non-existent) spell in RequiredSpell (%u)", i, proto->RequiredSpell);
             const_cast<ItemPrototype*>(proto)->RequiredSpell = 0;
         }
 
@@ -2382,7 +2382,7 @@ void ObjectMgr::LoadPlayerInfo()
     // Fill gaps and check integrity
     for (int class_ = 0; class_ < MAX_CLASSES; ++class_)
     {
-        // skip nonexistent classes
+        // skip non-existent classes
         if (!sChrClassesStore.LookupEntry(class_))
             continue;
 
@@ -2485,13 +2485,13 @@ void ObjectMgr::LoadPlayerInfo()
     // Fill gaps and check integrity
     for (int race = 0; race < MAX_RACES; ++race)
     {
-        // skip nonexistent races
+        // skip non-existent races
         if (!((1 << (race - 1)) & RACEMASK_ALL_PLAYABLE) || !sChrRacesStore.LookupEntry(race))
             continue;
 
         for (int class_ = 0; class_ < MAX_CLASSES; ++class_)
         {
-            // skip nonexistent classes
+            // skip non-existent classes
             if (!((1 << (class_ - 1)) & CLASSMASK_ALL_PLAYABLE) || !sChrClassesStore.LookupEntry(class_))
                 continue;
 
@@ -3791,7 +3791,7 @@ void ObjectMgr::LoadQuestLocales()
 
         if (!GetQuestTemplate(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_quest` has data for nonexistent quest entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_quest` has data for non-existent quest entry %u, skipped.", entry);
             continue;
         }
 
@@ -4141,7 +4141,7 @@ void ObjectMgr::LoadPageTextLocales()
 
         if (!sPageTextStore.LookupEntry<PageText>(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_page_text` has data for nonexistent page text entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_page_text` has data for non-existent page text entry %u, skipped.", entry);
             continue;
         }
 
@@ -4429,7 +4429,7 @@ void ObjectMgr::LoadGossipTextLocales()
 
         if (!GetGossipText(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_npc_text` has data for nonexistent gossip text entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_npc_text` has data for non-existent gossip text entry %u, skipped.", entry);
             continue;
         }
 
@@ -5087,7 +5087,7 @@ void ObjectMgr::LoadAreaTriggerTeleports()
             ItemPrototype const* pProto = GetItemPrototype(at.requiredItem);
             if (!pProto)
             {
-                sLog.outError("Table `areatrigger_teleport` has nonexistent key item %u for trigger %u, removing key requirement.", at.requiredItem, Trigger_ID);
+                sLog.outError("Table `areatrigger_teleport` has non-existent key item %u for trigger %u, removing key requirement.", at.requiredItem, Trigger_ID);
                 at.requiredItem = 0;
             }
         }
@@ -5097,7 +5097,7 @@ void ObjectMgr::LoadAreaTriggerTeleports()
             ItemPrototype const* pProto = GetItemPrototype(at.requiredItem2);
             if (!pProto)
             {
-                sLog.outError("Table `areatrigger_teleport` has nonexistent second key item %u for trigger %u, remove key requirement.", at.requiredItem2, Trigger_ID);
+                sLog.outError("Table `areatrigger_teleport` has non-existent second key item %u for trigger %u, remove key requirement.", at.requiredItem2, Trigger_ID);
                 at.requiredItem2 = 0;
             }
         }
@@ -5107,7 +5107,7 @@ void ObjectMgr::LoadAreaTriggerTeleports()
             QuestMap::iterator qReqItr = mQuestTemplates.find(at.requiredQuest);
             if (qReqItr == mQuestTemplates.end())
             {
-                sLog.outErrorDb("Table `areatrigger_teleport` has nonexistent required quest %u for trigger %u, remove quest done requirement.", at.requiredQuest, Trigger_ID);
+                sLog.outErrorDb("Table `areatrigger_teleport` has non-existent required quest %u for trigger %u, remove quest done requirement.", at.requiredQuest, Trigger_ID);
                 at.requiredQuest = 0;
             }
         }
@@ -5115,7 +5115,7 @@ void ObjectMgr::LoadAreaTriggerTeleports()
         MapEntry const* mapEntry = sMapStore.LookupEntry(at.target_mapId);
         if (!mapEntry)
         {
-            sLog.outErrorDb("Table `areatrigger_teleport` has nonexistent target map (ID: %u) for Area trigger (ID:%u).", at.target_mapId, Trigger_ID);
+            sLog.outErrorDb("Table `areatrigger_teleport` has non-existent target map (ID: %u) for Area trigger (ID:%u).", at.target_mapId, Trigger_ID);
             continue;
         }
 
@@ -5295,7 +5295,7 @@ void ObjectMgr::SetHighestGuids()
         delete result;
     }
 
-    // Cleanup other tables from nonexistent guids (>=m_hiItemGuid)
+    // Cleanup other tables from non-existent guids (>=m_hiItemGuid)
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM character_inventory WHERE item >= '%u'", m_ItemGuids.GetNextAfterMaxUsed());
     CharacterDatabase.PExecute("DELETE FROM mail_items WHERE item_guid >= '%u'", m_ItemGuids.GetNextAfterMaxUsed());
@@ -5402,7 +5402,7 @@ void ObjectMgr::LoadGameObjectLocales()
 
         if (!GetGameObjectInfo(entry))
         {
-            ERROR_DB_STRICT_LOG("Table `locales_gameobject` has data for nonexistent gameobject entry %u, skipped.", entry);
+            ERROR_DB_STRICT_LOG("Table `locales_gameobject` has data for non-existent gameobject entry %u, skipped.", entry);
             continue;
         }
 
@@ -5459,7 +5459,7 @@ inline void CheckGOLinkedTrapId(GameObjectInfo const* goInfo, uint32 dataN, uint
                             goInfo->id, goInfo->type, N, dataN, dataN, GAMEOBJECT_TYPE_TRAP);
     }
     else
-        // too many error reports about nonexistent trap templates
+        // too many error reports about non-existent trap templates
         ERROR_DB_STRICT_LOG("Gameobject (Entry: %u GoType: %u) have data%d=%u but trap GO (Entry %u) not exist in `gameobject_template`.",
                             goInfo->id, goInfo->type, N, dataN, dataN);
 }
@@ -5576,7 +5576,7 @@ void ObjectMgr::LoadGameobjectInfo()
             {
                 if (goInfo->trap.lockId)
                     CheckGOLockId(goInfo, goInfo->trap.lockId, 0);
-                /* disable check for while, too many nonexistent spells
+                /* disable check for while, too many non-existent spells
                 if (goInfo->trap.spellId)                   // spell
                     CheckGOSpellId(goInfo,goInfo->trap.spellId,3);
                 */
@@ -5611,7 +5611,7 @@ void ObjectMgr::LoadGameobjectInfo()
                         sLog.outErrorDb("Gameobject (Entry: %u GoType: %u) have data7=%u but PageText (Entry %u) not exist.",
                                         goInfo->id, goInfo->type, goInfo->goober.pageId, goInfo->goober.pageId);
                 }
-                /* disable check for while, too many nonexistent spells
+                /* disable check for while, too many non-existent spells
                 if (goInfo->goober.spellId)                 // spell
                     CheckGOSpellId(goInfo,goInfo->goober.spellId,10);
                 */
@@ -5644,7 +5644,7 @@ void ObjectMgr::LoadGameobjectInfo()
             }
             case GAMEOBJECT_TYPE_SUMMONING_RITUAL:          // 18
             {
-                /* disable check for while, too many nonexistent spells
+                /* disable check for while, too many non-existent spells
                 // always must have spell
                 CheckGOSpellId(goInfo,goInfo->summoningRitual.spellId,1);
                 */
@@ -5973,7 +5973,7 @@ void ObjectMgr::LoadReputationOnKill()
 
         if (!GetCreatureTemplate(creature_id))
         {
-            sLog.outErrorDb("Table `creature_onkill_reputation` have data for nonexistent creature entry (%u), skipped", creature_id);
+            sLog.outErrorDb("Table `creature_onkill_reputation` have data for non-existent creature entry (%u), skipped", creature_id);
             continue;
         }
 
@@ -6337,7 +6337,7 @@ void ObjectMgr::LoadGameobjectQuestRelations()
     {
         GameObjectInfo const* goInfo = GetGameObjectInfo(itr->first);
         if (!goInfo)
-            sLog.outErrorDb("Table `gameobject_questrelation` have data for nonexistent gameobject entry (%u) and existing quest %u", itr->first, itr->second);
+            sLog.outErrorDb("Table `gameobject_questrelation` have data for non-existent gameobject entry (%u) and existing quest %u", itr->first, itr->second);
         else if (goInfo->type != GAMEOBJECT_TYPE_QUESTGIVER)
             sLog.outErrorDb("Table `gameobject_questrelation` have data gameobject entry (%u) for quest %u, but GO is not GAMEOBJECT_TYPE_QUESTGIVER", itr->first, itr->second);
     }
@@ -6351,7 +6351,7 @@ void ObjectMgr::LoadGameobjectInvolvedRelations()
     {
         GameObjectInfo const* goInfo = GetGameObjectInfo(itr->first);
         if (!goInfo)
-            sLog.outErrorDb("Table `gameobject_involvedrelation` have data for nonexistent gameobject entry (%u) and existing quest %u", itr->first, itr->second);
+            sLog.outErrorDb("Table `gameobject_involvedrelation` have data for non-existent gameobject entry (%u) and existing quest %u", itr->first, itr->second);
         else if (goInfo->type != GAMEOBJECT_TYPE_QUESTGIVER)
             sLog.outErrorDb("Table `gameobject_involvedrelation` have data gameobject entry (%u) for quest %u, but GO is not GAMEOBJECT_TYPE_QUESTGIVER", itr->first, itr->second);
     }
@@ -6365,7 +6365,7 @@ void ObjectMgr::LoadCreatureQuestRelations()
     {
         CreatureInfo const* cInfo = GetCreatureTemplate(itr->first);
         if (!cInfo)
-            sLog.outErrorDb("Table `creature_questrelation` have data for nonexistent creature entry (%u) and existing quest %u", itr->first, itr->second);
+            sLog.outErrorDb("Table `creature_questrelation` have data for non-existent creature entry (%u) and existing quest %u", itr->first, itr->second);
         else if (!(cInfo->NpcFlags & UNIT_NPC_FLAG_QUESTGIVER))
             sLog.outErrorDb("Table `creature_questrelation` has creature entry (%u) for quest %u, but npcflag does not include UNIT_NPC_FLAG_QUESTGIVER", itr->first, itr->second);
     }
@@ -6379,7 +6379,7 @@ void ObjectMgr::LoadCreatureInvolvedRelations()
     {
         CreatureInfo const* cInfo = GetCreatureTemplate(itr->first);
         if (!cInfo)
-            sLog.outErrorDb("Table `creature_involvedrelation` have data for nonexistent creature entry (%u) and existing quest %u", itr->first, itr->second);
+            sLog.outErrorDb("Table `creature_involvedrelation` have data for non-existent creature entry (%u) and existing quest %u", itr->first, itr->second);
         else if (!(cInfo->NpcFlags & UNIT_NPC_FLAG_QUESTGIVER))
             sLog.outErrorDb("Table `creature_involvedrelation` has creature entry (%u) for quest %u, but npcflag does not include UNIT_NPC_FLAG_QUESTGIVER", itr->first, itr->second);
     }
@@ -7893,7 +7893,7 @@ void ObjectMgr::LoadTrainers(char const* tableName, bool isTemplates)
 
             if (!cInfo)
             {
-                sLog.outErrorDb("Table `%s` have entry for nonexistent creature template (Entry: %u), ignore", tableName, entry);
+                sLog.outErrorDb("Table `%s` have entry for non-existent creature template (Entry: %u), ignore", tableName, entry);
                 continue;
             }
 
@@ -7967,7 +7967,7 @@ void ObjectMgr::LoadTrainerTemplates()
                 if (m_mCacheTrainerTemplateSpellMap.find(cInfo->TrainerTemplateId) != m_mCacheTrainerTemplateSpellMap.end())
                     trainer_ids.erase(cInfo->TrainerTemplateId);
                 else
-                    sLog.outErrorDb("Creature (Entry: %u) has trainer_id = %u for nonexistent trainer template", cInfo->Entry, cInfo->TrainerTemplateId);
+                    sLog.outErrorDb("Creature (Entry: %u) has trainer_id = %u for non-existent trainer template", cInfo->Entry, cInfo->TrainerTemplateId);
             }
         }
     }
@@ -8048,7 +8048,7 @@ void ObjectMgr::LoadVendorTemplates()
                 if (m_mCacheVendorTemplateItemMap.find(cInfo->VendorTemplateId) !=  m_mCacheVendorTemplateItemMap.end())
                     vendor_ids.erase(cInfo->VendorTemplateId);
                 else
-                    sLog.outErrorDb("Creature (Entry: %u) has vendor_id = %u for nonexistent vendor template", cInfo->Entry, cInfo->VendorTemplateId);
+                    sLog.outErrorDb("Creature (Entry: %u) has vendor_id = %u for non-existent vendor template", cInfo->Entry, cInfo->VendorTemplateId);
             }
         }
     }
@@ -8089,7 +8089,7 @@ void ObjectMgr::LoadNpcGossips()
 
         if (!GetCreatureData(guid))
         {
-            sLog.outErrorDb("Table `npc_gossip` have nonexistent creature (GUID: %u) entry, ignore. ", guid);
+            sLog.outErrorDb("Table `npc_gossip` have non-existent creature (GUID: %u) entry, ignore. ", guid);
             continue;
         }
         if (!GetGossipText(textid))
@@ -8190,12 +8190,12 @@ void ObjectMgr::LoadGossipMenu(std::set<uint32>& gossipScriptSet)
         if (CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i))
             if (cInfo->GossipMenuId)
                 if (m_mGossipMenusMap.find(cInfo->GossipMenuId) == m_mGossipMenusMap.end())
-                    sLog.outErrorDb("Creature (Entry: %u) has gossip_menu_id = %u for nonexistent menu", cInfo->Entry, cInfo->GossipMenuId);
+                    sLog.outErrorDb("Creature (Entry: %u) has gossip_menu_id = %u for non-existent menu", cInfo->Entry, cInfo->GossipMenuId);
 
     for (SQLStorageBase::SQLSIterator<GameObjectInfo> itr = sGOStorage.getDataBegin<GameObjectInfo>(); itr < sGOStorage.getDataEnd<GameObjectInfo>(); ++itr)
         if (uint32 menuid = itr->GetGossipMenuId())
             if (m_mGossipMenusMap.find(menuid) == m_mGossipMenusMap.end())
-                ERROR_DB_STRICT_LOG("Gameobject (Entry: %u) has gossip_menu_id = %u for nonexistent menu", itr->id, menuid);
+                ERROR_DB_STRICT_LOG("Gameobject (Entry: %u) has gossip_menu_id = %u for non-existent menu", itr->id, menuid);
 }
 
 void ObjectMgr::LoadGossipMenuItems(std::set<uint32>& gossipScriptSet)
@@ -8278,7 +8278,7 @@ void ObjectMgr::LoadGossipMenuItems(std::set<uint32>& gossipScriptSet)
         {
             if (m_mGossipMenusMap.find(gMenuItem.menu_id) == m_mGossipMenusMap.end())
             {
-                sLog.outErrorDb("Gossip menu option (MenuId: %u) for nonexistent menu", gMenuItem.menu_id);
+                sLog.outErrorDb("Gossip menu option (MenuId: %u) for non-existent menu", gMenuItem.menu_id);
                 continue;
             }
         }
@@ -8286,7 +8286,7 @@ void ObjectMgr::LoadGossipMenuItems(std::set<uint32>& gossipScriptSet)
         if (gMenuItem.action_menu_id > 0)
         {
             if (m_mGossipMenusMap.find(gMenuItem.action_menu_id) == m_mGossipMenusMap.end())
-                sLog.outErrorDb("Gossip menu option (MenuId: %u Id: %u) have action_menu_id = %u for nonexistent menu", gMenuItem.menu_id, gMenuItem.id, gMenuItem.action_menu_id);
+                sLog.outErrorDb("Gossip menu option (MenuId: %u Id: %u) have action_menu_id = %u for non-existent menu", gMenuItem.menu_id, gMenuItem.id, gMenuItem.action_menu_id);
             else if (!sLog.HasLogFilter(LOG_FILTER_DB_STRICTED_CHECK))
                 menu_ids.erase(gMenuItem.action_menu_id);
         }
@@ -8421,7 +8421,7 @@ bool ObjectMgr::IsVendorItemValid(bool isTemplate, char const* tableName, uint32
             if (pl)
                 ChatHandler(pl).SendSysMessage(LANG_COMMAND_VENDORSELECTION);
             else
-                sLog.outErrorDb("Table `%s` has data for nonexistent creature (Entry: %u), ignoring", tableName, vendor_entry);
+                sLog.outErrorDb("Table `%s` has data for non-existent creature (Entry: %u), ignoring", tableName, vendor_entry);
             return false;
         }
 
@@ -8446,7 +8446,7 @@ bool ObjectMgr::IsVendorItemValid(bool isTemplate, char const* tableName, uint32
         if (pl)
             ChatHandler(pl).PSendSysMessage(LANG_ITEM_NOT_FOUND, item_id);
         else
-            sLog.outErrorDb("Table `%s` for %s %u contain nonexistent item (%u), ignoring",
+            sLog.outErrorDb("Table `%s` for %s %u contain non-existent item (%u), ignoring",
                             tableName, idStr, vendor_entry, item_id);
         return false;
     }

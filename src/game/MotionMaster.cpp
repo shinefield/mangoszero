@@ -410,7 +410,7 @@ void MotionMaster::MoveTaxiFlight(uint32 path, uint32 pathnode)
         }
         else
         {
-            sLog.outError("%s attempt taxi to (nonexistent Path %u node %u)",
+            sLog.outError("%s attempt taxi to (non-existent Path %u node %u)",
                           m_owner->GetGuidStr().c_str(), path, pathnode);
         }
     }

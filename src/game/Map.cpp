@@ -1905,7 +1905,7 @@ void Map::MonsterYellToMap(ObjectGuid guid, int32 textId, Language language, Uni
         CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(guid.GetEntry());
         if (!cInfo)
         {
-            sLog.outError("Map::MonsterYellToMap: Called for nonexistent creature entry in guid: %s", guid.GetString().c_str());
+            sLog.outError("Map::MonsterYellToMap: Called for non-existent creature entry in guid: %s", guid.GetString().c_str());
             return;
         }
 

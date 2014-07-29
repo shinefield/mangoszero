@@ -1662,7 +1662,7 @@ bool ChatHandler::HandleSendMailCommand(char* args)
     if (!HandleSendMailHelper(draft, args))
         return false;
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     draft.SendMailTo(MailReceiver(target, target_guid), sender);

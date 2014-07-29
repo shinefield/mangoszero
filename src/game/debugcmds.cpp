@@ -682,7 +682,7 @@ bool ChatHandler::HandleSetValueHelper(Object* target, uint32 field, char* typeS
 {
     ObjectGuid guid = target->GetObjectGuid();
 
-    // not allow access to nonexistent or critical for work field
+    // not allow access to non-existent or critical for work field
     if (field >= target->GetValuesCount() || field <= OBJECT_FIELD_ENTRY)
     {
         PSendSysMessage(LANG_TOO_BIG_INDEX, field, guid.GetString().c_str(), target->GetValuesCount());
@@ -885,7 +885,7 @@ bool ChatHandler::HandlerDebugModValueHelper(Object* target, uint32 field, char*
 {
     ObjectGuid guid = target->GetObjectGuid();
 
-    // not allow access to nonexistent or critical for work field
+    // not allow access to non-existent or critical for work field
     if (field >= target->GetValuesCount() || field <= OBJECT_FIELD_ENTRY)
     {
         PSendSysMessage(LANG_TOO_BIG_INDEX, field, guid.GetString().c_str(), target->GetValuesCount());

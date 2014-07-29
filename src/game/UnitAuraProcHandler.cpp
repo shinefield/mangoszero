@@ -354,7 +354,7 @@ SpellAuraProcResult Unit::HandleHasteAuraProc(Unit* pVictim, uint32 damage, Aura
 
     if (!triggerEntry)
     {
-        sLog.outError("Unit::HandleHasteAuraProc: Spell %u have nonexistent triggered spell %u", hasteSpell->Id, triggered_spell_id);
+        sLog.outError("Unit::HandleHasteAuraProc: Spell %u have non-existent triggered spell %u", hasteSpell->Id, triggered_spell_id);
         return SPELL_AURA_PROC_FAILED;
     }
 
@@ -827,7 +827,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
 
     if (!triggerEntry)
     {
-        sLog.outError("Unit::HandleDummyAuraProc: Spell %u have nonexistent triggered spell %u", dummySpell->Id, triggered_spell_id);
+        sLog.outError("Unit::HandleDummyAuraProc: Spell %u have non-existent triggered spell %u", dummySpell->Id, triggered_spell_id);
         return SPELL_AURA_PROC_FAILED;
     }
 

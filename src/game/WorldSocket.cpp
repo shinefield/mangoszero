@@ -562,7 +562,7 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
 
     if (opcode >= NUM_MSG_TYPES)
     {
-        sLog.outError("SESSION: received nonexistent opcode 0x%.4X", opcode);
+        sLog.outError("SESSION: received non-existent opcode 0x%.4X", opcode);
         return -1;
     }
 

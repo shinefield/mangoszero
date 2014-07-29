@@ -139,7 +139,7 @@ bool ChatHandler::GetDeletedCharacterInfoList(DeletedInfoList& foundList, std::s
             info.name       = fields[1].GetCppString();
             info.accountId  = fields[2].GetUInt32();
 
-            // account name will be empty for nonexistent account
+            // account name will be empty for non-existent account
             sAccountMgr.GetName(info.accountId, info.accountName);
 
             info.deleteDate = time_t(fields[3].GetUInt64());
@@ -208,11 +208,11 @@ void ChatHandler::HandleCharacterDeletedListHelper(DeletedInfoList const& foundL
 
         if (!m_session)
             PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CONSOLE,
-                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<nonexistent>" : itr->accountName.c_str(),
+                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<non-existent>" : itr->accountName.c_str(),
                             itr->accountId, dateStr.c_str());
         else
             PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CHAT,
-                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<nonexistent>" : itr->accountName.c_str(),
+                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<non-existent>" : itr->accountName.c_str(),
                             itr->accountId, dateStr.c_str());
     }
 
@@ -323,7 +323,7 @@ bool ChatHandler::HandleCharacterDeletedRestoreCommand(char* args)
 
     if (newCharName.empty())
     {
-        // Drop nonexistent account cases
+        // Drop non-existent account cases
         for (DeletedInfoList::iterator itr = foundList.begin(); itr != foundList.end(); ++itr)
             HandleCharacterDeletedRestoreHelper(*itr);
     }

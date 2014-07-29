@@ -69,7 +69,7 @@ MailSender::MailSender(Object* sender, MailStationery stationery) : m_stationery
             break;
         default:
             m_messageType = MAIL_NORMAL;
-            m_senderId = 0;                                 // will show mail from nonexistent player
+            m_senderId = 0;                                 // will show mail from non-existent player
             sLog.outError("MailSender::MailSender - Mail have unexpected sender typeid (%u)", sender->GetTypeId());
             break;
     }

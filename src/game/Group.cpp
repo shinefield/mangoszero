@@ -182,7 +182,7 @@ bool Group::LoadMemberFromDB(uint32 guidLow, uint8 subgroup, bool assistant)
     MemberSlot member;
     member.guid      = ObjectGuid(HIGHGUID_PLAYER, guidLow);
 
-    // skip nonexistent member
+    // skip non-existent member
     if (!sObjectMgr.GetPlayerNameByGUID(member.guid, member.name))
         return false;
 
