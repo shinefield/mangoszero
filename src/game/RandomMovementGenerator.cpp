@@ -70,7 +70,15 @@ void RandomMovementGenerator<Creature>::_setRandomLocation(Creature& creature)
         if (roll_chance_i(MOVEMENT_RANDOM_MMGEN_CHANCE_NO_BREAK))
             i_nextMoveTime.Reset(50);
         else
-            i_nextMoveTime.Reset(urand(3000, 10000));       // keep a short wait time
+        switch (urand (0 , 2))
+        {
+        case 0:
+            i_nextMoveTime.Reset(urand(3000, 10000));
+            break;
+        default:
+            i_nextMoveTime.Reset(urand(50, 400));
+            break;
+        }
     }
 }
 

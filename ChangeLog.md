@@ -29,6 +29,7 @@ awesome things such as these:
   despawn,
 * core: vmap extraction will now use bounding geometry when extracting model
   geometry which fixes various LOS issues,
+* core: random movement will now switch between short and long reset timers,
 * EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
 * scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
 * quest: when quests reward spell casts, they will now display the correct spell,
