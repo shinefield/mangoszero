@@ -73,7 +73,8 @@ Also numerous minor fixes and improvements have been added, such as:
 * core: CMSG_PAGE_TEXT_QUERY parsing,
 * core: fixed reconnecting to the world,
 * core: fixed SMSG_LOGOUT_RESPONSE,
-* core: SMSG_AUTH_RESPONSE for full queue
+* core: SMSG_AUTH_RESPONSE for full queue,
+* core: spell family max corrected to 13 (aka potions),
 * database: the honor commands had their access levels reset,
 * database: the flying command has been removed (lacking support in vanilla WoW),
 * tools: the list of contributed tools has been slimmed, as we killed of

@@ -152,11 +152,11 @@ enum SpellFamily
     SPELLFAMILY_PALADIN     = 10,
     SPELLFAMILY_SHAMAN      = 11,
     // 12 - unused
-    SPELLFAMILY_POTION      = 13,
+    SPELLFAMILY_POTION      = 13,                           // max in vanilla
     // 14 - unused
-    SPELLFAMILY_DEATHKNIGHT = 15,
+    // 15 - unused
     // 16 - unused
-    SPELLFAMILY_UNK3        = 17
+    // 17 - unused
 };
 
 #endif
