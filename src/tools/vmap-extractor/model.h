@@ -42,7 +42,7 @@ class Model
 {
     public:
         ModelHeader header;
-        ModelVertex* origVertices;
+        ModelBoundingVertex* boundingVertices;
         Vec3D* vertices;
         uint16* indices;
         size_t nIndices;
