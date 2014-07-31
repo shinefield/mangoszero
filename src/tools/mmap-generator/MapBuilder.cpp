@@ -313,8 +313,7 @@ namespace MMAP
         //if (tileBits < 1) tileBits = 1;                                     // need at least one bit!
         //int polyBits = sizeof(dtPolyRef)*8 - SALT_MIN_BITS - tileBits;
 
-        int tileBits = STATIC_TILE_BITS;
-        int polyBits = STATIC_POLY_BITS;
+        int polyBits = DT_POLY_BITS;
 
         int maxTiles = tiles->size();
         int maxPolysPerTile = 1 << polyBits;
@@ -602,14 +601,6 @@ namespace MMAP
 
         delete [] tiles;
 
-        // remove padding for extraction
-        for (int i = 0; i < iv.polyMesh->nverts; ++i)
-        {
-            unsigned short* v = &iv.polyMesh->verts[i * 3];
-            v[0] -= (unsigned short)config.borderSize;
-            v[2] -= (unsigned short)config.borderSize;
-        }
-
         // set polygons as walkable
         // TODO: special flags for DYNAMIC polygons, ie surfaces that can be turned on and off
         for (int i = 0; i < iv.polyMesh->npolys; ++i)
@@ -648,7 +639,8 @@ namespace MMAP
         rcVcopy(params.bmax, bmax);
         params.cs = config.cs;
         params.ch = config.ch;
-        params.tileSize = VERTEX_PER_MAP;
+        params.tileLayer = 0;
+        params.buildBvTree = true;
 
         // will hold final navmesh
         unsigned char* navData = NULL;

@@ -59,7 +59,7 @@ target_link_libraries(mmap-generator mangos-vmap mangos-framework g3dlite Detour
 
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition
-set(BUILD_PROPERTIES "-DMMAP_GENERATOR -DNO_CORE_FUNCS")
+set(BUILD_PROPERTIES "-DMMAP_GENERATOR -DDT_POLYREF64 -DNO_CORE_FUNCS")
 
 if(WIN32)
     # Disabled for now. GnuWin32-zlib does not need this

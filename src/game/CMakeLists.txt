@@ -346,7 +346,7 @@ add_dependencies(mangos-game revision.h)
 
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition
-set(BUILD_PROPERTIES " ")
+set(BUILD_PROPERTIES "-DDT_POLYREF64")
 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
