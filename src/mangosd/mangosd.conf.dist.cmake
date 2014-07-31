@@ -687,8 +687,8 @@ LogColors = "13 7 11 9"
 #
 #    ShowProgressBars
 #        Control show progress bars for load steps at server start-up
-#        Default: 1 (true)
-#                 0 (false)
+#        Default: 0 (false)
+#                 1 (true)
 #
 #    WaitAtStartupError
 #        After start-up error report wait <Enter> or some time before continue (and possible close console window)
@@ -759,7 +759,7 @@ MassMailer.SendPerTick = 10
 PetUnsummonAtMount = 0
 Event.Announce = 0
 BeepAtStart = 1
-ShowProgressBars = 1
+ShowProgressBars = 0
 WaitAtStartupError = 0
 Motd = "Welcome to the World of Warcraft."
 PlayerCommands = 1
