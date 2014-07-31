@@ -130,10 +130,6 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 # mangos-zero internal features
 option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
 
-# don't want people disabling this unless they really know what they are doing.
-option(WITH_MAP_TOOLS               "Build map extractors and generators"                    ON)
-mark_as_advanced(WITH_MAP_TOOLS)
-
 # mangos-zero database bindings
 option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
 option(WITH_POSTGRESQL              "Enable PostgreSQL database backend"                    OFF)
@@ -155,10 +151,6 @@ if(NOT WITH_MYSQL AND NOT WITH_POSTGRESQL)
 elseif(WITH_MYSQL AND WITH_POSTGRESQL)
     message(FATAL_ERROR "Only WITH_MYSQL or WITH_POSTGRESQL can be enabled!")
 endif()
-
-if(NOT WITH_MAP_TOOLS AND WITH_RECAST_DEMO)
-    message(FATAL_ERROR "WITH_MAP_TOOLS must be enabled to build WITH_RECAST_DEMO!")
-endif(NOT WITH_MAP_TOOLS AND WITH_RECAST_DEMO)
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND WITH_DEBUG_OUTPUT)
     message(FATAL_ERROR "It is not recommeded to build ${CMAKE_PROJECT_NAME} with debug output in a non-development release.")

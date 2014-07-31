@@ -31,9 +31,7 @@ add_subdirectory(framework)
 
 #-----------------------------------------------------------------------------
 # Add command line tools
-if(WITH_MAP_TOOLS)
-    add_subdirectory(tools)
-endif()
+add_subdirectory(tools)
 
 #-----------------------------------------------------------------------------
 # Add the mangos game library

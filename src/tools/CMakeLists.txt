@@ -25,20 +25,18 @@
 # World of Warcraft, and all World of Warcraft or Warcraft art, images,
 # and lore are copyrighted by Blizzard Entertainment, Inc.
 
-if(WITH_MAP_TOOLS)
-    #-------------------------------------------------------------------------
-    # Add command line map extractor
-    add_subdirectory(map-extractor)
+#-------------------------------------------------------------------------
+# Add command line map extractor
+add_subdirectory(map-extractor)
 
-    #-------------------------------------------------------------------------
-    # Add command line vmap extractor
-    add_subdirectory(vmap-extractor)
+#-------------------------------------------------------------------------
+# Add command line vmap extractor
+add_subdirectory(vmap-extractor)
 
-    #-------------------------------------------------------------------------
-    # Add command line vmap assembler
-    add_subdirectory(vmap-assembler)
+#-------------------------------------------------------------------------
+# Add command line vmap assembler
+add_subdirectory(vmap-assembler)
 
-    #-------------------------------------------------------------------------
-    # Add command line movement map generator
-    add_subdirectory(mmap-generator)
-endif()
+#-------------------------------------------------------------------------
+# Add command line movement map generator
+add_subdirectory(mmap-generator)

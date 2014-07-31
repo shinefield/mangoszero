@@ -27,9 +27,7 @@
 
 #-----------------------------------------------------------------------------
 # Build internal libmpq
-if(WITH_MAP_TOOLS)
-    add_subdirectory(libmpq)
-endif()
+add_subdirectory(libmpq)
 
 #-----------------------------------------------------------------------------
 # Build internal Lua library
