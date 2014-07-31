@@ -39,6 +39,7 @@ mangos_source_group(${DebugUtils_LIB_SRCS})
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../Detour/Include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../DetourTileCache/Include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../Recast/Include/
 )
 

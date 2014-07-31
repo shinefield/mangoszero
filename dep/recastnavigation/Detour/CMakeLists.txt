@@ -43,3 +43,9 @@ include_directories(
 #-----------------------------------------------------------------------------
 # Build the Detour library
 add_library(Detour STATIC ${Detour_LIB_SRCS})
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES "-DDT_POLYREF64")
+
+set_target_properties(Detour PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

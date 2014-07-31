@@ -45,9 +45,12 @@ include_directories(
     ${SDL_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Contrib
+    ${CMAKE_CURRENT_SOURCE_DIR}/Contrib/fastlz
     ${CMAKE_CURRENT_SOURCE_DIR}/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../DebugUtils/Include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../Detour/Include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../DetourCrowd/Include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../DetourTileCache/Include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../Recast/Include/
 )
 
@@ -58,4 +61,4 @@ if(WIN32)
 else()
     add_executable(RecastDemo ${RecastDemo_LIB_SRCS})
 endif()
-target_link_libraries(RecastDemo DebugUtils Detour Recast ${SDL_LIBRARY} ${OPENGL_LIBRARIES})
+target_link_libraries(RecastDemo Detour DebugUtils DetourTileCache DetourCrowd Recast ${SDL_LIBRARY} ${OPENGL_LIBRARIES})

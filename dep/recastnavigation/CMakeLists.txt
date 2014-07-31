@@ -42,5 +42,7 @@ add_subdirectory(Recast)
 
 if(WITH_RECAST_DEMO)
     add_subdirectory(DebugUtils)
-    add_subdirectory(RecastDemo)
+    add_subdirectory(DetourCrowd)
+    add_subdirectory(DetourTileCache)
+    # add_subdirectory(RecastDemo)
 endif()

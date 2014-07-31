@@ -29,6 +29,10 @@ awesome things such as these:
   despawn,
 * core: vmap extraction will now use bounding geometry when extracting model
   geometry which fixes various LOS issues,
+* core: mmap generation now uses an up to date version for recastnavigation, and
+  has been tweaked to achieve better results,
+* core: the recast demo application now is able to preview generated data
+  visually,
 * core: random movement will now switch between short and long reset timers,
 * EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
 * scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
@@ -44,12 +48,14 @@ awesome things such as these:
 * tools: the movement map extractor now sports an up to date list of junk and
   battleground maps,
 * tools: all map tools now are able to skip junk maps, such as development or
-  Azshara Crater.
+  Azshara Crater,
+* tools: map tools will now always be built, and are no longer an optional part
+  of the build process.
 
 Also numerous minor fixes and improvements have been added, such as:
 
 * dependencies: [RecastNavigation](http://github.com/memononen/recastnavigation)
-  has been updated to **SVN revision 256** (further updates pending),
+  has been upgraded to use the latest release,
 * core: various memory leaks and compiler warnings have been fixed,
 * core: home location for players will no longer reset to a wrong location,
 * core: character creation will only allow race/class combinations as defined
