@@ -314,7 +314,8 @@ void Item::SaveToDB()
 
             stmt = CharacterDatabase.CreateStatement(insItem, "INSERT INTO item_instance (guid,owner_guid,data) VALUES (?, ?, ?)");
             stmt.PExecute(guid, GetOwnerGuid().GetCounter(), ss.str().c_str());
-        } break;
+        }
+        break;
         case ITEM_CHANGED:
         {
             static SqlStatementID updInstance ;
@@ -333,7 +334,8 @@ void Item::SaveToDB()
                 stmt = CharacterDatabase.CreateStatement(updGifts, "UPDATE character_gifts SET guid = ? WHERE item_guid = ?");
                 stmt.PExecute(GetOwnerGuid().GetCounter(), GetGUIDLow());
             }
-        } break;
+        }
+        break;
         case ITEM_REMOVED:
         {
             static SqlStatementID delItemText;
@@ -618,32 +620,54 @@ uint32 Item::GetSpell()
         case ITEM_CLASS_WEAPON:
             switch (proto->SubClass)
             {
-                case ITEM_SUBCLASS_WEAPON_AXE:     return  196;
-                case ITEM_SUBCLASS_WEAPON_AXE2:    return  197;
-                case ITEM_SUBCLASS_WEAPON_BOW:     return  264;
-                case ITEM_SUBCLASS_WEAPON_GUN:     return  266;
-                case ITEM_SUBCLASS_WEAPON_MACE:    return  198;
-                case ITEM_SUBCLASS_WEAPON_MACE2:   return  199;
-                case ITEM_SUBCLASS_WEAPON_POLEARM: return  200;
-                case ITEM_SUBCLASS_WEAPON_SWORD:   return  201;
-                case ITEM_SUBCLASS_WEAPON_SWORD2:  return  202;
-                case ITEM_SUBCLASS_WEAPON_STAFF:   return  227;
-                case ITEM_SUBCLASS_WEAPON_DAGGER:  return 1180;
-                case ITEM_SUBCLASS_WEAPON_THROWN:  return 2567;
-                case ITEM_SUBCLASS_WEAPON_SPEAR:   return 3386;
-                case ITEM_SUBCLASS_WEAPON_CROSSBOW: return 5011;
-                case ITEM_SUBCLASS_WEAPON_WAND:    return 5009;
-                default: return 0;
+                case ITEM_SUBCLASS_WEAPON_AXE:
+                    return  196;
+                case ITEM_SUBCLASS_WEAPON_AXE2:
+                    return  197;
+                case ITEM_SUBCLASS_WEAPON_BOW:
+                    return  264;
+                case ITEM_SUBCLASS_WEAPON_GUN:
+                    return  266;
+                case ITEM_SUBCLASS_WEAPON_MACE:
+                    return  198;
+                case ITEM_SUBCLASS_WEAPON_MACE2:
+                    return  199;
+                case ITEM_SUBCLASS_WEAPON_POLEARM:
+                    return  200;
+                case ITEM_SUBCLASS_WEAPON_SWORD:
+                    return  201;
+                case ITEM_SUBCLASS_WEAPON_SWORD2:
+                    return  202;
+                case ITEM_SUBCLASS_WEAPON_STAFF:
+                    return  227;
+                case ITEM_SUBCLASS_WEAPON_DAGGER:
+                    return 1180;
+                case ITEM_SUBCLASS_WEAPON_THROWN:
+                    return 2567;
+                case ITEM_SUBCLASS_WEAPON_SPEAR:
+                    return 3386;
+                case ITEM_SUBCLASS_WEAPON_CROSSBOW:
+                    return 5011;
+                case ITEM_SUBCLASS_WEAPON_WAND:
+                    return 5009;
+                default:
+                    return 0;
             }
         case ITEM_CLASS_ARMOR:
             switch (proto->SubClass)
             {
-                case ITEM_SUBCLASS_ARMOR_CLOTH:    return 9078;
-                case ITEM_SUBCLASS_ARMOR_LEATHER:  return 9077;
-                case ITEM_SUBCLASS_ARMOR_MAIL:     return 8737;
-                case ITEM_SUBCLASS_ARMOR_PLATE:    return  750;
-                case ITEM_SUBCLASS_ARMOR_SHIELD:   return 9116;
-                default: return 0;
+                case ITEM_SUBCLASS_ARMOR_CLOTH:
+                    return 9078;
+                case ITEM_SUBCLASS_ARMOR_LEATHER:
+                    return 9077;
+                case ITEM_SUBCLASS_ARMOR_MAIL:
+                    return 8737;
+                case ITEM_SUBCLASS_ARMOR_PLATE:
+                    return  750;
+                case ITEM_SUBCLASS_ARMOR_SHIELD:
+                    return 9116;
+                default:
+                    return 0;
             }
     }
     return 0;

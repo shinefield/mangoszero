@@ -119,7 +119,10 @@ class BattleGroundQueue
                 void Init();
                 bool AddGroup(GroupQueueInfo* ginfo, uint32 desiredCount);
                 bool KickGroup(uint32 size);
-                uint32 GetPlayerCount() const {return PlayerCount;}
+                uint32 GetPlayerCount() const
+                {
+                    return PlayerCount;
+                }
             public:
                 GroupsQueueType SelectedGroups;
             private:
@@ -208,8 +211,14 @@ class BattleGroundMgr
 
         uint32 CreateBattleGround(BattleGroundTypeId bgTypeId, uint32 MinPlayersPerTeam, uint32 MaxPlayersPerTeam, uint32 LevelMin, uint32 LevelMax, char const* BattleGroundName, uint32 MapID, float Team1StartLocX, float Team1StartLocY, float Team1StartLocZ, float Team1StartLocO, float Team2StartLocX, float Team2StartLocY, float Team2StartLocZ, float Team2StartLocO);
 
-        void AddBattleGround(uint32 InstanceID, BattleGroundTypeId bgTypeId, BattleGround* BG) { m_BattleGrounds[bgTypeId][InstanceID] = BG; };
-        void RemoveBattleGround(uint32 instanceID, BattleGroundTypeId bgTypeId) { m_BattleGrounds[bgTypeId].erase(instanceID); }
+        void AddBattleGround(uint32 InstanceID, BattleGroundTypeId bgTypeId, BattleGround* BG)
+        {
+            m_BattleGrounds[bgTypeId][InstanceID] = BG;
+        };
+        void RemoveBattleGround(uint32 instanceID, BattleGroundTypeId bgTypeId)
+        {
+            m_BattleGrounds[bgTypeId].erase(instanceID);
+        }
         uint32 CreateClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BattleGroundBracketId bracket_id);
         void DeleteClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BattleGroundBracketId bracket_id, uint32 clientInstanceID)
         {
@@ -257,7 +266,10 @@ class BattleGroundMgr
             return m_GameObjectBattleEventIndexMap.find(-1)->second;
         }
 
-        bool isTesting() const { return m_Testing; }
+        bool isTesting() const
+        {
+            return m_Testing;
+        }
 
         static BattleGroundQueueTypeId BGQueueTypeId(BattleGroundTypeId bgTypeId);
         static BattleGroundTypeId BGTemplateId(BattleGroundQueueTypeId bgQueueTypeId);

@@ -191,7 +191,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
                     return;
                 GetPlayer()->Yell(msg, lang);
             }
-        } break;
+        }
+        break;
 
         case CHAT_MSG_WHISPER:
         {
@@ -232,7 +233,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             // used by eluna
             sEluna->OnChat(GetPlayer(), type, lang, msg, player);
             GetPlayer()->Whisper(msg, lang, player->GetObjectGuid());
-        } break;
+        }
+        break;
 
         case CHAT_MSG_PARTY:
         {
@@ -361,7 +363,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             WorldPacket data;
             ChatHandler::BuildChatPacket(data, CHAT_MSG_RAID, msg.c_str(), Language(lang), _player->GetChatTag(), _player->GetObjectGuid(), _player->GetName());
             group->BroadcastPacket(&data, false);
-        } break;
+        }
+        break;
         case CHAT_MSG_RAID_LEADER:
         {
             std::string msg;
@@ -395,7 +398,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             WorldPacket data;
             ChatHandler::BuildChatPacket(data, CHAT_MSG_RAID_LEADER, msg.c_str(), Language(lang), _player->GetChatTag(), _player->GetObjectGuid(), _player->GetName());
             group->BroadcastPacket(&data, false);
-        } break;
+        }
+        break;
 
         case CHAT_MSG_RAID_WARNING:
         {
@@ -421,7 +425,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             // in battleground, raid warning is sent only to players in battleground - code is ok
             ChatHandler::BuildChatPacket(data, CHAT_MSG_RAID_WARNING, msg.c_str(), Language(lang), _player->GetChatTag(), _player->GetObjectGuid(), _player->GetName());
             group->BroadcastPacket(&data, false);
-        } break;
+        }
+        break;
 
         case CHAT_MSG_BATTLEGROUND:
         {
@@ -446,7 +451,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             WorldPacket data;
             ChatHandler::BuildChatPacket(data, CHAT_MSG_BATTLEGROUND, msg.c_str(), Language(lang), _player->GetChatTag(), _player->GetObjectGuid(), _player->GetName());
             group->BroadcastPacket(&data, false);
-        } break;
+        }
+        break;
 
         case CHAT_MSG_BATTLEGROUND_LEADER:
         {
@@ -471,7 +477,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             WorldPacket data;
             ChatHandler::BuildChatPacket(data, CHAT_MSG_BATTLEGROUND_LEADER, msg.c_str(), Language(lang), _player->GetChatTag(), _player->GetObjectGuid(), _player->GetName());
             group->BroadcastPacket(&data, false);
-        } break;
+        }
+        break;
 
         case CHAT_MSG_CHANNEL:
         {
@@ -494,7 +501,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
 
                     chn->Say(_player, msg.c_str(), lang);
                 }
-        } break;
+        }
+        break;
 
         case CHAT_MSG_AFK:
         {

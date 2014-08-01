@@ -225,23 +225,32 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
         switch (store.GetDstFormat(x))
         {
             case DB_FT_LOGIC:
-                recordsize += sizeof(bool);   break;
+                recordsize += sizeof(bool);
+                break;
             case DB_FT_BYTE:
-                recordsize += sizeof(char);   break;
+                recordsize += sizeof(char);
+                break;
             case DB_FT_INT:
-                recordsize += sizeof(uint32); break;
+                recordsize += sizeof(uint32);
+                break;
             case DB_FT_FLOAT:
-                recordsize += sizeof(float);  break;
+                recordsize += sizeof(float);
+                break;
             case DB_FT_STRING:
-                recordsize += sizeof(char*);  break;
+                recordsize += sizeof(char*);
+                break;
             case DB_FT_NA:
-                recordsize += sizeof(uint32); break;
+                recordsize += sizeof(uint32);
+                break;
             case DB_FT_NA_BYTE:
-                recordsize += sizeof(char);   break;
+                recordsize += sizeof(char);
+                break;
             case DB_FT_NA_FLOAT:
-                recordsize += sizeof(float);  break;
+                recordsize += sizeof(float);
+                break;
             case DB_FT_NA_POINTER:
-                recordsize += sizeof(char*);  break;
+                recordsize += sizeof(char*);
+                break;
             case DB_FT_IND:
             case DB_FT_SORT:
                 assert(false && "SQL storage not have sort field types");
@@ -273,10 +282,22 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
             switch (store.GetDstFormat(x))
             {
                     // For default fill continue and do not increase y
-                case DB_FT_NA:         storeValue((uint32)0, store, record, x, offset);         ++x; continue;
-                case DB_FT_NA_BYTE:    storeValue((char)0, store, record, x, offset);           ++x; continue;
-                case DB_FT_NA_FLOAT:   storeValue((float)0.0f, store, record, x, offset);       ++x; continue;
-                case DB_FT_NA_POINTER: storeValue((char const*)NULL, store, record, x, offset); ++x; continue;
+                case DB_FT_NA:
+                    storeValue((uint32)0, store, record, x, offset);
+                    ++x;
+                    continue;
+                case DB_FT_NA_BYTE:
+                    storeValue((char)0, store, record, x, offset);
+                    ++x;
+                    continue;
+                case DB_FT_NA_FLOAT:
+                    storeValue((float)0.0f, store, record, x, offset);
+                    ++x;
+                    continue;
+                case DB_FT_NA_POINTER:
+                    storeValue((char const*)NULL, store, record, x, offset);
+                    ++x;
+                    continue;
                 default:
                     break;
             }
@@ -287,11 +308,26 @@ void SQLStorageLoaderBase<DerivedLoader, StorageClass>::Load(StorageClass& store
 
             switch (store.GetSrcFormat(y))
             {
-                case DB_FT_LOGIC:  storeValue((bool)(fields[y].GetUInt32() > 0), store, record, x, offset);  ++x; break;
-                case DB_FT_BYTE:   storeValue((char)fields[y].GetUInt8(), store, record, x, offset);         ++x; break;
-                case DB_FT_INT:    storeValue((uint32)fields[y].GetUInt32(), store, record, x, offset);      ++x; break;
-                case DB_FT_FLOAT:  storeValue((float)fields[y].GetFloat(), store, record, x, offset);        ++x; break;
-                case DB_FT_STRING: storeValue((char const*)fields[y].GetString(), store, record, x, offset); ++x; break;
+                case DB_FT_LOGIC:
+                    storeValue((bool)(fields[y].GetUInt32() > 0), store, record, x, offset);
+                    ++x;
+                    break;
+                case DB_FT_BYTE:
+                    storeValue((char)fields[y].GetUInt8(), store, record, x, offset);
+                    ++x;
+                    break;
+                case DB_FT_INT:
+                    storeValue((uint32)fields[y].GetUInt32(), store, record, x, offset);
+                    ++x;
+                    break;
+                case DB_FT_FLOAT:
+                    storeValue((float)fields[y].GetFloat(), store, record, x, offset);
+                    ++x;
+                    break;
+                case DB_FT_STRING:
+                    storeValue((char const*)fields[y].GetString(), store, record, x, offset);
+                    ++x;
+                    break;
                 case DB_FT_NA:
                 case DB_FT_NA_BYTE:
                 case DB_FT_NA_FLOAT:

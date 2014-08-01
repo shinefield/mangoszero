@@ -40,7 +40,10 @@ struct MANGOS_DLL_DECL CellArea
     CellArea() {}
     CellArea(CellPair low, CellPair high) : low_bound(low), high_bound(high) {}
 
-    bool operator!() const { return low_bound == high_bound; }
+    bool operator!() const
+    {
+        return low_bound == high_bound;
+    }
 
     void ResizeBorders(CellPair& begin_cell, CellPair& end_cell) const
     {
@@ -54,8 +57,14 @@ struct MANGOS_DLL_DECL CellArea
 
 struct MANGOS_DLL_DECL Cell
 {
-        Cell() { data.All = 0; }
-        Cell(const Cell& cell) { data.All = cell.data.All; }
+        Cell()
+        {
+            data.All = 0;
+        }
+        Cell(const Cell& cell)
+        {
+            data.All = cell.data.All;
+        }
         explicit Cell(CellPair const& p);
 
         void Compute(uint32& x, uint32& y) const
@@ -76,14 +85,35 @@ struct MANGOS_DLL_DECL Cell
                     data.Part.grid_y != cell.data.Part.grid_y);
         }
 
-        uint32 CellX() const { return data.Part.cell_x; }
-        uint32 CellY() const { return data.Part.cell_y; }
-        uint32 GridX() const { return data.Part.grid_x; }
-        uint32 GridY() const { return data.Part.grid_y; }
-        bool NoCreate() const { return data.Part.nocreate; }
-        void SetNoCreate() { data.Part.nocreate = 1; }
+        uint32 CellX() const
+        {
+            return data.Part.cell_x;
+        }
+        uint32 CellY() const
+        {
+            return data.Part.cell_y;
+        }
+        uint32 GridX() const
+        {
+            return data.Part.grid_x;
+        }
+        uint32 GridY() const
+        {
+            return data.Part.grid_y;
+        }
+        bool NoCreate() const
+        {
+            return data.Part.nocreate;
+        }
+        void SetNoCreate()
+        {
+            data.Part.nocreate = 1;
+        }
 
-        GridPair gridPair() const { return GridPair(GridX(), GridY()); }
+        GridPair gridPair() const
+        {
+            return GridPair(GridX(), GridY());
+        }
 
         CellPair cellPair() const
         {
@@ -98,8 +128,14 @@ struct MANGOS_DLL_DECL Cell
             return *this;
         }
 
-        bool operator==(const Cell& cell) const { return (data.All == cell.data.All); }
-        bool operator!=(const Cell& cell) const { return !operator==(cell); }
+        bool operator==(const Cell& cell) const
+        {
+            return (data.All == cell.data.All);
+        }
+        bool operator!=(const Cell& cell) const
+        {
+            return !operator==(cell);
+        }
         union
         {
             struct

@@ -44,7 +44,10 @@ class Transport : public GameObject
         bool RemovePassenger(Player* passenger);
 
         typedef std::set<Player*> PlayerSet;
-        PlayerSet const& GetPassengers() const { return m_passengers; }
+        PlayerSet const& GetPassengers() const
+        {
+            return m_passengers;
+        }
 
     private:
         struct WayPoint

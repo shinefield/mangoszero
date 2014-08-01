@@ -134,7 +134,10 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         void MessageDistBroadcast(Player const*, WorldPacket*, float dist, bool to_self, bool own_team_only = false);
         void MessageDistBroadcast(WorldObject const*, WorldPacket*, float dist);
 
-        float GetVisibilityDistance() const { return m_VisibleDistance; }
+        float GetVisibilityDistance() const
+        {
+            return m_VisibleDistance;
+        }
         // function for setting up visibility distance for maps on per-type/per-Id basis
         virtual void InitVisibilityDistance();
 
@@ -155,8 +158,14 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
             return loaded(p);
         }
 
-        bool GetUnloadLock(const GridPair& p) const { return getNGrid(p.x_coord, p.y_coord)->getUnloadLock(); }
-        void SetUnloadLock(const GridPair& p, bool on) { getNGrid(p.x_coord, p.y_coord)->setUnloadExplicitLock(on); }
+        bool GetUnloadLock(const GridPair& p) const
+        {
+            return getNGrid(p.x_coord, p.y_coord)->getUnloadLock();
+        }
+        void SetUnloadLock(const GridPair& p, bool on)
+        {
+            getNGrid(p.x_coord, p.y_coord)->setUnloadExplicitLock(on);
+        }
         void LoadGrid(const Cell& cell, bool no_unload = false);
         bool UnloadGrid(const uint32& x, const uint32& y, bool pForce);
         virtual void UnloadAll(bool pForce);
@@ -166,8 +175,14 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
             grid.ResetTimeTracker((time_t)((float)i_gridExpiry * factor));
         }
 
-        time_t GetGridExpiry(void) const { return i_gridExpiry; }
-        uint32 GetId(void) const { return i_id; }
+        time_t GetGridExpiry(void) const
+        {
+            return i_gridExpiry;
+        }
+        uint32 GetId(void) const
+        {
+            return i_id;
+        }
 
         // some calls like isInWater should not use vmaps due to processor power
         // can return INVALID_HEIGHT if under z+2 z coord not found height
@@ -178,35 +193,68 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
 
         bool CheckGridIntegrity(Creature* c, bool moved) const;
 
-        uint32 GetInstanceId() const { return i_InstanceId; }
+        uint32 GetInstanceId() const
+        {
+            return i_InstanceId;
+        }
         virtual bool CanEnter(Player* player);
         const char* GetMapName() const;
 
-        bool Instanceable() const { return i_mapEntry && i_mapEntry->Instanceable(); }
+        bool Instanceable() const
+        {
+            return i_mapEntry && i_mapEntry->Instanceable();
+        }
         // NOTE: this duplicate of Instanceable(), but Instanceable() can be changed when BG also will be instanceable
-        bool IsDungeon() const { return i_mapEntry && i_mapEntry->IsDungeon(); }
-        bool IsRaid() const { return i_mapEntry && i_mapEntry->IsRaid(); }
-        bool IsBattleGround() const { return i_mapEntry && i_mapEntry->IsBattleGround(); }
+        bool IsDungeon() const
+        {
+            return i_mapEntry && i_mapEntry->IsDungeon();
+        }
+        bool IsRaid() const
+        {
+            return i_mapEntry && i_mapEntry->IsRaid();
+        }
+        bool IsBattleGround() const
+        {
+            return i_mapEntry && i_mapEntry->IsBattleGround();
+        }
 
         // can't be NULL for loaded map
-        MapPersistentState* GetPersistentState() const { return m_persistentState; }
+        MapPersistentState* GetPersistentState() const
+        {
+            return m_persistentState;
+        }
 
         void AddObjectToRemoveList(WorldObject* obj);
 
         void UpdateObjectVisibility(WorldObject* obj, Cell cell, CellPair cellpair);
 
-        void resetMarkedCells() { marked_cells.reset(); }
-        bool isCellMarked(uint32 pCellId) { return marked_cells.test(pCellId); }
-        void markCell(uint32 pCellId) { marked_cells.set(pCellId); }
+        void resetMarkedCells()
+        {
+            marked_cells.reset();
+        }
+        bool isCellMarked(uint32 pCellId)
+        {
+            return marked_cells.test(pCellId);
+        }
+        void markCell(uint32 pCellId)
+        {
+            marked_cells.set(pCellId);
+        }
 
-        bool HavePlayers() const { return !m_mapRefManager.isEmpty(); }
+        bool HavePlayers() const
+        {
+            return !m_mapRefManager.isEmpty();
+        }
         uint32 GetPlayersCountExceptGMs() const;
         bool ActiveObjectsNearGrid(uint32 x, uint32 y) const;
 
         void SendToPlayers(WorldPacket const* data) const;
 
         typedef MapRefManager PlayerList;
-        PlayerList const& GetPlayers() const { return m_mapRefManager; }
+        PlayerList const& GetPlayers() const
+        {
+            return m_mapRefManager;
+        }
 
         // per-map script storage
         enum ScriptExecutionParam
@@ -235,7 +283,10 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         WorldObject* GetWorldObject(ObjectGuid guid);       // only use if sure that need objects at current map, specially for player case
 
         typedef TypeUnorderedMapContainer<AllMapStoredObjectTypes, ObjectGuid> MapStoredObjectTypesContainer;
-        MapStoredObjectTypesContainer& GetObjectsStore() { return m_objectsStore; }
+        MapStoredObjectTypesContainer& GetObjectsStore()
+        {
+            return m_objectsStore;
+        }
 
         void AddUpdateObject(Object* obj)
         {
@@ -251,11 +302,20 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         uint32 GenerateLocalLowGuid(HighGuid guidhigh);
 
         // get corresponding TerrainData object for this particular map
-        const TerrainInfo* GetTerrain() const { return m_TerrainData; }
+        const TerrainInfo* GetTerrain() const
+        {
+            return m_TerrainData;
+        }
 
         void CreateInstanceData(bool load);
-        InstanceData* GetInstanceData() const { return i_data; }
-        uint32 GetScriptId() const { return i_script_id; }
+        InstanceData* GetInstanceData() const
+        {
+            return i_data;
+        }
+        uint32 GetScriptId() const
+        {
+            return i_script_id;
+        }
 
         void MonsterYellToMap(ObjectGuid guid, int32 textId, Language language, Unit const* target) const;
         void MonsterYellToMap(CreatureInfo const* cinfo, int32 textId, Language language, Unit const* target, uint32 senderLowGuid = 0) const;
@@ -272,12 +332,18 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         bool ContainsGameObjectModel(const GameObjectModel& mdl) const;
 
         // Get Holder for Creature Linking
-        CreatureLinkingHolder* GetCreatureLinkingHolder() { return &m_creatureLinkingHolder; }
+        CreatureLinkingHolder* GetCreatureLinkingHolder()
+        {
+            return &m_creatureLinkingHolder;
+        }
 
     private:
         void LoadMapAndVMap(int gx, int gy);
 
-        void SetTimer(uint32 t) { i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t; }
+        void SetTimer(uint32 t)
+        {
+            i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t;
+        }
 
         void SendInitSelf(Player* player);
 
@@ -291,7 +357,10 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         bool EnsureGridLoaded(Cell const&);
         void EnsureGridLoadedAtEnter(Cell const&, Player* player = NULL);
 
-        void buildNGridLinkage(NGridType* pNGridType) { pNGridType->link(this); }
+        void buildNGridLinkage(NGridType* pNGridType)
+        {
+            pNGridType->link(this);
+        }
 
         template<class T> void AddType(T* obj);
         template<class T> void RemoveType(T* obj, bool);
@@ -303,8 +372,14 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
             return i_grids[x][y];
         }
 
-        bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x, y)->isGridObjectDataLoaded(); }
-        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x, y)->setGridObjectDataLoaded(pLoaded); }
+        bool isGridObjectDataLoaded(uint32 x, uint32 y) const
+        {
+            return getNGrid(x, y)->isGridObjectDataLoaded();
+        }
+        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y)
+        {
+            getNGrid(x, y)->setGridObjectDataLoaded(pLoaded);
+        }
 
         void setNGrid(NGridType* grid, uint32 x, uint32 y);
         void ScriptsProcess();
@@ -421,8 +496,14 @@ class MANGOS_DLL_SPEC BattleGroundMap : public Map
         void UnloadAll(bool pForce) override;
 
         virtual void InitVisibilityDistance() override;
-        BattleGround* GetBG() { return m_bg; }
-        void SetBG(BattleGround* bg) { m_bg = bg; }
+        BattleGround* GetBG()
+        {
+            return m_bg;
+        }
+        void SetBG(BattleGround* bg)
+        {
+            m_bg = bg;
+        }
 
         // can't be NULL for loaded map
         BattleGroundPersistentState* GetPersistanceState() const;

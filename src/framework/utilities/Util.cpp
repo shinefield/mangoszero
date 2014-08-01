@@ -39,8 +39,14 @@ static ACE_Time_Value g_SystemTickTime = ACE_OS::gettimeofday();
 uint32 WorldTimer::m_iTime = 0;
 uint32 WorldTimer::m_iPrevTime = 0;
 
-uint32 WorldTimer::tickTime() { return m_iTime; }
-uint32 WorldTimer::tickPrevTime() { return m_iPrevTime; }
+uint32 WorldTimer::tickTime()
+{
+    return m_iTime;
+}
+uint32 WorldTimer::tickPrevTime()
+{
+    return m_iPrevTime;
+}
 
 uint32 WorldTimer::tick()
 {
@@ -223,11 +229,20 @@ uint32 TimeStringToSecs(const std::string& timestring)
         {
             switch (*itr)
             {
-                case 'd': multiplier = DAY;     break;
-                case 'h': multiplier = HOUR;    break;
-                case 'm': multiplier = MINUTE;  break;
-                case 's': multiplier = 1;       break;
-                default : return 0;                         // bad format
+                case 'd':
+                    multiplier = DAY;
+                    break;
+                case 'h':
+                    multiplier = HOUR;
+                    break;
+                case 'm':
+                    multiplier = MINUTE;
+                    break;
+                case 's':
+                    multiplier = 1;
+                    break;
+                default :
+                    return 0;                         // bad format
             }
             buffer *= multiplier;
             secs += buffer;

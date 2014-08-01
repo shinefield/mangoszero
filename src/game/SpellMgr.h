@@ -81,13 +81,25 @@ enum SpellSpecific
 SpellSpecific GetSpellSpecific(uint32 spellId);
 
 // Different spell properties
-inline float GetSpellRadius(SpellRadiusEntry const* radius) { return (radius ? radius->Radius : 0); }
+inline float GetSpellRadius(SpellRadiusEntry const* radius)
+{
+    return (radius ? radius->Radius : 0);
+}
 uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell = NULL);
 uint32 GetSpellCastTimeForBonus(SpellEntry const* spellProto, DamageEffectType damagetype);
 float CalculateDefaultCoefficient(SpellEntry const* spellProto, DamageEffectType const damagetype);
-inline float GetSpellMinRange(SpellRangeEntry const* range) { return (range ? range->minRange : 0); }
-inline float GetSpellMaxRange(SpellRangeEntry const* range) { return (range ? range->maxRange : 0); }
-inline uint32 GetSpellRecoveryTime(SpellEntry const* spellInfo) { return spellInfo->RecoveryTime > spellInfo->CategoryRecoveryTime ? spellInfo->RecoveryTime : spellInfo->CategoryRecoveryTime; }
+inline float GetSpellMinRange(SpellRangeEntry const* range)
+{
+    return (range ? range->minRange : 0);
+}
+inline float GetSpellMaxRange(SpellRangeEntry const* range)
+{
+    return (range ? range->maxRange : 0);
+}
+inline uint32 GetSpellRecoveryTime(SpellEntry const* spellInfo)
+{
+    return spellInfo->RecoveryTime > spellInfo->CategoryRecoveryTime ? spellInfo->RecoveryTime : spellInfo->CategoryRecoveryTime;
+}
 int32 GetSpellDuration(SpellEntry const* spellInfo);
 int32 GetSpellMaxDuration(SpellEntry const* spellInfo);
 int32 CalculateSpellDuration(SpellEntry const* spellInfo, Unit const* caster = NULL);
@@ -117,7 +129,7 @@ inline bool IsAuraApplyEffect(SpellEntry const* spellInfo, SpellEffectIndex effe
 
 inline bool IsSpellAppliesAura(SpellEntry const* spellInfo, uint32 effectMask = ((1 << EFFECT_INDEX_0) | (1 << EFFECT_INDEX_1) | (1 << EFFECT_INDEX_2)))
 {
-    for(int i = 0; i < MAX_EFFECT_INDEX; ++i)
+    for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
         if (effectMask & (1 << i))
             if (IsAuraApplyEffect(spellInfo, SpellEffectIndex(i)))
                 return true;
@@ -661,7 +673,10 @@ struct SpellTargetEntry
     uint32 targetEntry;
     uint32 inverseEffectMask;
 
-    bool CanNotHitWithSpellEffect(SpellEffectIndex effect) const { return inverseEffectMask & (1 << effect); }
+    bool CanNotHitWithSpellEffect(SpellEffectIndex effect) const
+    {
+        return inverseEffectMask & (1 << effect);
+    }
 };
 
 // coordinates for spells (accessed using SpellMgr functions)
@@ -832,7 +847,10 @@ class SpellMgr
             return ClassFamilyMask();
         }
 
-        SpellElixirMap const& GetSpellElixirMap() const { return mSpellElixirs; }
+        SpellElixirMap const& GetSpellElixirMap() const
+        {
+            return mSpellElixirs;
+        }
 
         uint32 GetSpellElixirMask(uint32 spellid) const
         {
@@ -951,7 +969,10 @@ class SpellMgr
             return 0;
         }
 
-        SpellChainMapNext const& GetSpellChainNext() const { return mSpellChainsNext; }
+        SpellChainMapNext const& GetSpellChainNext() const
+        {
+            return mSpellChainsNext;
+        }
 
         template<typename Worker>
         void doForHighRanks(uint32 spellid, Worker& worker)

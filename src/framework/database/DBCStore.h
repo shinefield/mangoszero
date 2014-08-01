@@ -34,11 +34,23 @@ class DBCStorage
         typedef std::list<char*> StringPoolList;
     public:
         explicit DBCStorage(const char* f) : nCount(0), fieldCount(0), fmt(f), indexTable(NULL), m_dataTable(NULL) { }
-        ~DBCStorage() { Clear(); }
+        ~DBCStorage()
+        {
+            Clear();
+        }
 
-        uint32  GetNumRows() const { return loaded ? data.size() : nCount; }
-        char const* GetFormat() const { return fmt; }
-        uint32 GetFieldCount() const { return fieldCount; }
+        uint32  GetNumRows() const
+        {
+            return loaded ? data.size() : nCount;
+        }
+        char const* GetFormat() const
+        {
+            return fmt;
+        }
+        uint32 GetFieldCount() const
+        {
+            return fieldCount;
+        }
 
         T const* LookupEntry(uint32 id) const
         {
@@ -127,8 +139,16 @@ class DBCStorage
             nCount = 0;
         }
 
-        void EraseEntry(uint32 id) { assert(id < nCount && "To be erased entry must be in bounds!") ; indexTable[id] = NULL; }
-        void InsertEntry(T* entry, uint32 id) { assert(id < nCount && "To be inserted entry must be in bounds!"); indexTable[id] = entry; }
+        void EraseEntry(uint32 id)
+        {
+            assert(id < nCount && "To be erased entry must be in bounds!") ;
+            indexTable[id] = NULL;
+        }
+        void InsertEntry(T* entry, uint32 id)
+        {
+            assert(id < nCount && "To be inserted entry must be in bounds!");
+            indexTable[id] = entry;
+        }
 
     private:
         uint32 nCount;

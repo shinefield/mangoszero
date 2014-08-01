@@ -353,7 +353,10 @@ class BattleGroundAV : public BattleGround
 
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* plr) override;
 
-        static BattleGroundAVTeamIndex GetAVTeamIndexByTeamId(Team team) { return BattleGroundAVTeamIndex(GetTeamIndexByTeamId(team)); }
+        static BattleGroundAVTeamIndex GetAVTeamIndexByTeamId(Team team)
+        {
+            return BattleGroundAVTeamIndex(GetTeamIndexByTeamId(team));
+        }
     private:
         /* Nodes occupying */
         void EventPlayerAssaultsPoint(Player* player, BG_AV_Nodes node);
@@ -368,14 +371,23 @@ class BattleGroundAV : public BattleGround
         void PopulateNode(BG_AV_Nodes node);
 
         uint32 GetNodeName(BG_AV_Nodes node) const;
-        bool IsTower(BG_AV_Nodes node) const { return (node == BG_AV_NODES_ERROR) ? false : m_Nodes[node].Tower; }
-        bool IsGrave(BG_AV_Nodes node) const { return (node == BG_AV_NODES_ERROR) ? false : !m_Nodes[node].Tower; }
+        bool IsTower(BG_AV_Nodes node) const
+        {
+            return (node == BG_AV_NODES_ERROR) ? false : m_Nodes[node].Tower;
+        }
+        bool IsGrave(BG_AV_Nodes node) const
+        {
+            return (node == BG_AV_NODES_ERROR) ? false : !m_Nodes[node].Tower;
+        }
 
         /*mine*/
         void ChangeMineOwner(uint8 mine, BattleGroundAVTeamIndex teamIdx);
 
         /*worldstates*/
-        uint8 GetWorldStateType(uint8 state, BattleGroundAVTeamIndex teamIdx) const { return teamIdx * BG_AV_MAX_STATES + state; }
+        uint8 GetWorldStateType(uint8 state, BattleGroundAVTeamIndex teamIdx) const
+        {
+            return teamIdx * BG_AV_MAX_STATES + state;
+        }
         void SendMineWorldStates(uint32 mine);
         void UpdateNodeWorldState(BG_AV_Nodes node);
 

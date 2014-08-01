@@ -242,10 +242,18 @@ void Spell::EffectInstaKill(SpellEffectIndex /*eff_idx*/)
         uint32 spellID;
         switch (entry)
         {
-            case   416: spellID = 18789; break;             // imp
-            case   417: spellID = 18792; break;             // fellhunter
-            case  1860: spellID = 18790; break;             // void
-            case  1863: spellID = 18791; break;             // succubus
+            case   416:
+                spellID = 18789;    // imp
+                break;
+            case   417:
+                spellID = 18792;    // fellhunter
+                break;
+            case  1860:
+                spellID = 18790;    // void
+                break;
+            case  1863:
+                spellID = 18791;    // succubus
+                break;
             default:
                 sLog.outError("EffectInstaKill: Unhandled creature entry (%u) case.", entry);
                 return;
@@ -295,8 +303,10 @@ void Spell::EffectSchoolDMG(SpellEffectIndex effect_idx)
             {
                 switch (m_spellInfo->Id)                    // better way to check unknown
                 {
-                        // Meteor like spells (divided damage to targets)
-                    case 24340: case 26558: case 28884:     // Meteor
+                                                            // Meteor like spells (divided damage to targets)
+                    case 24340:                             // Meteor
+                    case 26558:                             // Meteor
+                    case 28884:                             // Meteor
                     case 26789:                             // Shard of the Fallen Star
                     {
                         uint32 count = 0;
@@ -307,7 +317,7 @@ void Spell::EffectSchoolDMG(SpellEffectIndex effect_idx)
                         damage /= count;                    // divide to all targets
                         break;
                     }
-                    // percent from health with min
+                                                            // percent from health with min
                     case 25599:                             // Thundercrash
                     {
                         damage = unitTarget->GetHealth() / 2;
@@ -427,11 +437,21 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     uint32 spell_id = 0;
                     switch (urand(1, 5))
                     {
-                        case 1: spell_id = 8064; break;     // Sleepy
-                        case 2: spell_id = 8065; break;     // Invigorate
-                        case 3: spell_id = 8066; break;     // Shrink
-                        case 4: spell_id = 8067; break;     // Party Time!
-                        case 5: spell_id = 8068; break;     // Healthy Spirit
+                        case 1:
+                            spell_id = 8064;                // Sleepy
+                            break;
+                        case 2:
+                            spell_id = 8065;                // Invigorate
+                            break;
+                        case 3:
+                            spell_id = 8066;                // Shrink
+                            break;
+                        case 4:
+                            spell_id = 8067;                // Party Time!
+                            break;
+                        case 5:
+                            spell_id = 8068;                // Healthy Spirit
+                            break;
                     }
                     m_caster->CastSpell(m_caster, spell_id, true, NULL);
                     return;
@@ -444,10 +464,12 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     uint32 spell_id = 0;
                     switch (urand(1, 2))
                     {
-                            // Flip Out - ninja
-                        case 1: spell_id = (m_caster->getGender() == GENDER_MALE ? 8219 : 8220); break;
-                            // Yaaarrrr - pirate
-                        case 2: spell_id = (m_caster->getGender() == GENDER_MALE ? 8221 : 8222); break;
+                        case 1:                             // Flip Out - ninja
+                            spell_id = (m_caster->getGender() == GENDER_MALE ? 8219 : 8220);
+                            break;
+                        case 2:                             // Yaaarrrr - pirate
+                            spell_id = (m_caster->getGender() == GENDER_MALE ? 8221 : 8222);
+                            break;
                     }
 
                     m_caster->CastSpell(m_caster, spell_id, true, NULL);
@@ -571,7 +593,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     }
                     else if (roll < 95)                     // Enveloping Winds (15% chance)
                         spell_id = 25189;
-                    else                                    // Summon Felhund minion (5% chance)
+                    else                                    // Summon Felhound minion (5% chance)
                     {
                         spell_id = 14642;
                         newTarget = m_caster;
@@ -598,9 +620,15 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     uint32 spell_id = 0;
                     switch (urand(1, 3))
                     {
-                        case 1: spell_id = 16595; break;
-                        case 2: spell_id = 16593; break;
-                        default: spell_id = 16591; break;
+                        case 1:
+                            spell_id = 16595;
+                            break;
+                        case 2:
+                            spell_id = 16593;
+                            break;
+                        default:
+                            spell_id = 16591;
+                            break;
                     }
 
                     m_caster->CastSpell(m_caster, spell_id, true, NULL);
@@ -614,13 +642,27 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     uint32 spell_id = 0;
                     switch (urand(0, 6))
                     {
-                        case 0: spell_id = 16707; break;    // Hex
-                        case 1: spell_id = 16708; break;    // Hex
-                        case 2: spell_id = 16709; break;    // Hex
-                        case 3: spell_id = 16711; break;    // Grow
-                        case 4: spell_id = 16712; break;    // Special Brew
-                        case 5: spell_id = 16713; break;    // Ghostly
-                        case 6: spell_id = 16716; break;    // Launch
+                        case 0:
+                            spell_id = 16707;               // Hex
+                            break;
+                        case 1:
+                            spell_id = 16708;               // Hex
+                            break;
+                        case 2:
+                            spell_id = 16709;               // Hex
+                            break;
+                        case 3:
+                            spell_id = 16711;               // Grow
+                            break;
+                        case 4:
+                            spell_id = 16712;               // Special Brew
+                            break;
+                        case 5:
+                            spell_id = 16713;               // Ghostly
+                            break;
+                        case 6:
+                            spell_id = 16716;               // Launch
+                            break;
                     }
 
                     m_caster->CastSpell(unitTarget, spell_id, true, NULL, NULL, m_originalCasterGUID, m_spellInfo);
@@ -680,7 +722,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     {
                         SpellEntry const* spell = itr->second->GetSpellProto();
                         if (spell->SpellFamilyName == SPELLFAMILY_SHAMAN &&
-                            (spell->SpellFamilyFlags & UI64LIT(0x0000000000000400)))
+                                (spell->SpellFamilyFlags & UI64LIT(0x0000000000000400)))
                             return;
                     }
                     unitTarget->RemoveAurasDueToSpell(28820);
@@ -842,10 +884,18 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
 
                     switch (urand(1, 4))
                     {
-                        case 1: spell_id = 24924; break;    // Larger and Orange
-                        case 2: spell_id = 24925; break;    // Skeleton
-                        case 3: spell_id = 24926; break;    // Pirate
-                        case 4: spell_id = 24927; break;    // Ghost
+                        case 1:
+                            spell_id = 24924;               // Larger and Orange
+                            break;
+                        case 2:
+                            spell_id = 24925;               // Skeleton
+                            break;
+                        case 3:
+                            spell_id = 24926;               // Pirate
+                            break;
+                        case 4:
+                            spell_id = 24927;               // Ghost
+                            break;
                     }
 
                     m_caster->CastSpell(m_caster, spell_id, true);
@@ -916,8 +966,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
             // All IconID Check in there
             switch (m_spellInfo->SpellIconID)
             {
-                    // Berserking (troll racial traits)
-                case 1661:
+                case 1661:                                  // Berserking (troll racial traits)
                 {
                     uint32 healthPerc = uint32((float(m_caster->GetHealth()) / m_caster->GetMaxHealth()) * 100);
                     int32 melee_mod = 10;
@@ -1055,15 +1104,29 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     uint32 spellid = 0;
                     switch (m_triggeredByAuraSpell->Id)
                     {
-                        case 2652:  spellid =  2943; break; // Rank 1
-                        case 19261: spellid = 19249; break; // Rank 2
-                        case 19262: spellid = 19251; break; // Rank 3
-                        case 19264: spellid = 19252; break; // Rank 4
-                        case 19265: spellid = 19253; break; // Rank 5
-                        case 19266: spellid = 19254; break; // Rank 6
-                        case 25461: spellid = 25460; break; // Rank 7
+                        case 2652:
+                            spellid =  2943;                // Rank 1
+                            break;
+                        case 19261:
+                            spellid = 19249;                // Rank 2
+                            break;
+                        case 19262:
+                            spellid = 19251;                // Rank 3
+                            break;
+                        case 19264:
+                            spellid = 19252;                // Rank 4
+                            break;
+                        case 19265:
+                            spellid = 19253;                // Rank 5
+                            break;
+                        case 19266:
+                            spellid = 19254;                // Rank 6
+                            break;
+                        case 25461:
+                            spellid = 25460;                // Rank 7
+                            break;
                         default:
-                            sLog.outError("Spell::EffectDummy: Spell 28598 triggered by unhandeled spell %u", m_triggeredByAuraSpell->Id);
+                            sLog.outError("Spell::EffectDummy: Spell 28598 triggered by unhandled spell %u", m_triggeredByAuraSpell->Id);
                             return;
                     }
                     m_caster->CastSpell(unitTarget, spellid, true, NULL);
@@ -1179,11 +1242,26 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
 
                     switch (m_spellInfo->Id)
                     {
-                        case 20473: hurt = 25912; heal = 25914; break;
-                        case 20929: hurt = 25911; heal = 25913; break;
-                        case 20930: hurt = 25902; heal = 25903; break;
-                        case 27174: hurt = 27176; heal = 27175; break;
-                        case 33072: hurt = 33073; heal = 33074; break;
+                        case 20473:
+                            hurt = 25912;
+                            heal = 25914;
+                            break;
+                        case 20929:
+                            hurt = 25911;
+                            heal = 25913;
+                            break;
+                        case 20930:
+                            hurt = 25902;
+                            heal = 25903;
+                            break;
+                        case 27174:
+                            hurt = 27176;
+                            heal = 27175;
+                            break;
+                        case 33072:
+                            hurt = 33073;
+                            heal = 33074;
+                            break;
                         default:
                             sLog.outError("Spell::EffectDummy: Spell %u not handled in HS", m_spellInfo->Id);
                             return;
@@ -1335,14 +1413,12 @@ void Spell::EffectTriggerSpell(SpellEffectIndex eff_idx)
         }
         // just skip
         case 23770:                                         // Sayge's Dark Fortune of *
-            // not exist, common cooldown can be implemented in scripts if need.
+                                                            // not exist, common cooldown can be implemented in scripts if need.
             return;
-            // Brittle Armor - (need add max stack of 24575 Brittle Armor)
-        case 29284:
+        case 29284:                                         // Brittle Armor - (need add max stack of 24575 Brittle Armor)
             m_caster->CastSpell(unitTarget, 24575, true, m_CastItem, NULL, m_originalCasterGUID);
             return;
-            // Mercurial Shield - (need add max stack of 26464 Mercurial Shield)
-        case 29286:
+        case 29286:                                         // Mercurial Shield - (need add max stack of 26464 Mercurial Shield)
             m_caster->CastSpell(unitTarget, 26464, true, m_CastItem, NULL, m_originalCasterGUID);
             return;
     }
@@ -1424,7 +1500,7 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
     if (!unitTarget || unitTarget->IsTaxiFlying())
         return;
 
-    // Target dependend on TargetB, if there is none provided, decide dependend on A
+    // Target dependent on TargetB, if there is none provided, decide dependent on A
     uint32 targetType = m_spellInfo->EffectImplicitTargetB[eff_idx];
     if (!targetType)
         targetType = m_spellInfo->EffectImplicitTargetA[eff_idx];
@@ -1490,8 +1566,7 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
     // post effects for TARGET_TABLE_X_Y_Z_COORDINATES
     switch (m_spellInfo->Id)
     {
-            // Dimensional Ripper - Everlook
-        case 23442:
+        case 23442:                                         // Dimensional Ripper - Everlook
         {
             int32 r = irand(0, 119);
             if (r >= 70)                                    // 7/12 success
@@ -2322,10 +2397,18 @@ void Spell::EffectDispel(SpellEffectIndex eff_idx)
                 uint32 heal_spell = 0;
                 switch (m_spellInfo->Id)
                 {
-                    case 19505: heal_spell = 19658; break;
-                    case 19731: heal_spell = 19732; break;
-                    case 19734: heal_spell = 19733; break;
-                    case 19736: heal_spell = 19735; break;
+                    case 19505:
+                        heal_spell = 19658;
+                        break;
+                    case 19731:
+                        heal_spell = 19732;
+                        break;
+                    case 19734:
+                        heal_spell = 19733;
+                        break;
+                    case 19736:
+                        heal_spell = 19735;
+                        break;
                     default:
                         DEBUG_LOG("Spell for Devour Magic %d not handled in Spell::EffectDispel", m_spellInfo->Id);
                         break;
@@ -3154,9 +3237,15 @@ void Spell::EffectWeaponDmg(SpellEffectIndex eff_idx)
         switch (m_attackType)
         {
             default:
-            case BASE_ATTACK:   unitMod = UNIT_MOD_DAMAGE_MAINHAND; break;
-            case OFF_ATTACK:    unitMod = UNIT_MOD_DAMAGE_OFFHAND;  break;
-            case RANGED_ATTACK: unitMod = UNIT_MOD_DAMAGE_RANGED;   break;
+            case BASE_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_MAINHAND;
+                break;
+            case OFF_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_OFFHAND;
+                break;
+            case RANGED_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_RANGED;
+                break;
         }
 
         float weapon_total_pct  = m_caster->GetModifierValue(unitMod, TOTAL_PCT);
@@ -3306,8 +3395,12 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                     uint32 spell_id = 0;
                     switch (urand(1, 5))
                     {
-                        case 1:  spell_id = 8854; break;
-                        default: spell_id = 8855; break;
+                        case 1:
+                            spell_id = 8854;
+                            break;
+                        default:
+                            spell_id = 8855;
+                            break;
                     }
 
                     m_caster->CastSpell(m_caster, spell_id, true, NULL);
@@ -3361,19 +3454,35 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                         case 24194:
                             switch (race)
                             {
-                                case RACE_HUMAN:            spellId = 24105; break;
-                                case RACE_DWARF:            spellId = 24107; break;
-                                case RACE_NIGHTELF:         spellId = 24108; break;
-                                case RACE_GNOME:            spellId = 24106; break;
+                                case RACE_HUMAN:
+                                    spellId = 24105;
+                                    break;
+                                case RACE_DWARF:
+                                    spellId = 24107;
+                                    break;
+                                case RACE_NIGHTELF:
+                                    spellId = 24108;
+                                    break;
+                                case RACE_GNOME:
+                                    spellId = 24106;
+                                    break;
                             }
                             break;
                         case 24195:
                             switch (race)
                             {
-                                case RACE_ORC:              spellId = 24104; break;
-                                case RACE_UNDEAD:           spellId = 24103; break;
-                                case RACE_TAUREN:           spellId = 24102; break;
-                                case RACE_TROLL:            spellId = 24101; break;
+                                case RACE_ORC:
+                                    spellId = 24104;
+                                    break;
+                                case RACE_UNDEAD:
+                                    spellId = 24103;
+                                    break;
+                                case RACE_TAUREN:
+                                    spellId = 24102;
+                                    break;
+                                case RACE_TROLL:
+                                    spellId = 24101;
+                                    break;
                             }
                             break;
                     }
@@ -3607,7 +3716,7 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
         {
             switch (m_spellInfo->Id)
             {
-                case  6201:                                 // Healthstone creating spells
+                case  6201:                                 // Health stone creating spells
                 case  6202:
                 case  5699:
                 case 11729:
@@ -3635,25 +3744,30 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
 
                     static uint32 const itypes[5][3] =
                     {
-                        { 5512, 19004, 19005},              // Minor Healthstone
-                        { 5511, 19006, 19007},              // Lesser Healthstone
-                        { 5509, 19008, 19009},              // Healthstone
-                        { 5510, 19010, 19011},              // Greater Healthstone
-                        { 9421, 19012, 19013}               // Major Healthstone
+                        { 5512, 19004, 19005},              // Minor Health stone
+                        { 5511, 19006, 19007},              // Lesser Health stone
+                        { 5509, 19008, 19009},              // Health stone
+                        { 5510, 19010, 19011},              // Greater Health stone
+                        { 9421, 19012, 19013}               // Major Health stone
                     };
 
                     switch (m_spellInfo->Id)
                     {
-                        case  6201:
-                            itemtype = itypes[0][rank]; break; // Minor Healthstone
-                        case  6202:
-                            itemtype = itypes[1][rank]; break; // Lesser Healthstone
-                        case  5699:
-                            itemtype = itypes[2][rank]; break; // Healthstone
-                        case 11729:
-                            itemtype = itypes[3][rank]; break; // Greater Healthstone
-                        case 11730:
-                            itemtype = itypes[4][rank]; break; // Major Healthstone
+                        case  6201:                         // Minor Health stone
+                            itemtype = itypes[0][rank];
+                            break;
+                        case  6202:                         // Lesser Health stone
+                            itemtype = itypes[1][rank];
+                            break;
+                        case  5699:                         // Health stone
+                            itemtype = itypes[2][rank];
+                            break;
+                        case 11729:                         // Greater Health stone
+                            itemtype = itypes[3][rank];
+                            break;
+                        case 11730:                         // Major Health stone
+                            itemtype = itypes[4][rank];
+                            break;
                         default:
                             return;
                     }
@@ -3969,21 +4083,51 @@ void Spell::EffectActivateObject(SpellEffectIndex eff_idx)
 
                     switch (m_spellInfo->Id)
                     {
-                        case 24734: npcEntry = templars[urand(0, 3)]; break;
-                        case 24763: npcEntry = dukes[urand(0, 3)];    break;
-                        case 24784: npcEntry = royals[urand(0, 3)];   break;
-                        case 24744: npcEntry = 15209;                 break;
-                        case 24756: npcEntry = 15212;                 break;
-                        case 24758: npcEntry = 15307;                 break;
-                        case 24760: npcEntry = 15211;                 break;
-                        case 24765: npcEntry = 15206;                 break;
-                        case 24768: npcEntry = 15220;                 break;
-                        case 24770: npcEntry = 15208;                 break;
-                        case 24772: npcEntry = 15207;                 break;
-                        case 24786: npcEntry = 15203;                 break;
-                        case 24788: npcEntry = 15204;                 break;
-                        case 24789: npcEntry = 15205;                 break;
-                        case 24790: npcEntry = 15305;                 break;
+                        case 24734:
+                            npcEntry = templars[urand(0, 3)];
+                            break;
+                        case 24763:
+                            npcEntry = dukes[urand(0, 3)];
+                            break;
+                        case 24784:
+                            npcEntry = royals[urand(0, 3)];
+                            break;
+                        case 24744:
+                            npcEntry = 15209;
+                            break;
+                        case 24756:
+                            npcEntry = 15212;
+                            break;
+                        case 24758:
+                            npcEntry = 15307;
+                            break;
+                        case 24760:
+                            npcEntry = 15211;
+                            break;
+                        case 24765:
+                            npcEntry = 15206;
+                            break;
+                        case 24768:
+                            npcEntry = 15220;
+                            break;
+                        case 24770:
+                            npcEntry = 15208;
+                            break;
+                        case 24772:
+                            npcEntry = 15207;
+                            break;
+                        case 24786:
+                            npcEntry = 15203;
+                            break;
+                        case 24788:
+                            npcEntry = 15204;
+                            break;
+                        case 24789:
+                            npcEntry = 15205;
+                            break;
+                        case 24790:
+                            npcEntry = 15305;
+                            break;
                     }
 
                     gameObjTarget->SummonCreature(npcEntry, gameObjTarget->GetPositionX(), gameObjTarget->GetPositionY(), gameObjTarget->GetPositionZ(), gameObjTarget->GetAngle(m_caster), TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
@@ -4004,12 +4148,23 @@ void Spell::EffectSummonTotem(SpellEffectIndex eff_idx)
     int slot = 0;
     switch (m_spellInfo->Effect[eff_idx])
     {
-        case SPELL_EFFECT_SUMMON_TOTEM:       slot = TOTEM_SLOT_NONE;  break;
-        case SPELL_EFFECT_SUMMON_TOTEM_SLOT1: slot = TOTEM_SLOT_FIRE;  break;
-        case SPELL_EFFECT_SUMMON_TOTEM_SLOT2: slot = TOTEM_SLOT_EARTH; break;
-        case SPELL_EFFECT_SUMMON_TOTEM_SLOT3: slot = TOTEM_SLOT_WATER; break;
-        case SPELL_EFFECT_SUMMON_TOTEM_SLOT4: slot = TOTEM_SLOT_AIR;   break;
-        default: return;
+        case SPELL_EFFECT_SUMMON_TOTEM:
+            slot = TOTEM_SLOT_NONE;
+            break;
+        case SPELL_EFFECT_SUMMON_TOTEM_SLOT1:
+            slot = TOTEM_SLOT_FIRE;
+            break;
+        case SPELL_EFFECT_SUMMON_TOTEM_SLOT2:
+            slot = TOTEM_SLOT_EARTH;
+            break;
+        case SPELL_EFFECT_SUMMON_TOTEM_SLOT3:
+            slot = TOTEM_SLOT_WATER;
+            break;
+        case SPELL_EFFECT_SUMMON_TOTEM_SLOT4:
+            slot = TOTEM_SLOT_AIR;
+            break;
+        default:
+            return;
     }
 
     // unsummon old totem
@@ -4243,11 +4398,20 @@ void Spell::EffectSummonObject(SpellEffectIndex eff_idx)
     uint8 slot = 0;
     switch (m_spellInfo->Effect[eff_idx])
     {
-        case SPELL_EFFECT_SUMMON_OBJECT_SLOT1: slot = 0; break;
-        case SPELL_EFFECT_SUMMON_OBJECT_SLOT2: slot = 1; break;
-        case SPELL_EFFECT_SUMMON_OBJECT_SLOT3: slot = 2; break;
-        case SPELL_EFFECT_SUMMON_OBJECT_SLOT4: slot = 3; break;
-        default: return;
+        case SPELL_EFFECT_SUMMON_OBJECT_SLOT1:
+            slot = 0;
+            break;
+        case SPELL_EFFECT_SUMMON_OBJECT_SLOT2:
+            slot = 1;
+            break;
+        case SPELL_EFFECT_SUMMON_OBJECT_SLOT3:
+            slot = 2;
+            break;
+        case SPELL_EFFECT_SUMMON_OBJECT_SLOT4:
+            slot = 3;
+            break;
+        default:
+            return;
     }
 
     if (ObjectGuid guid = m_caster->m_ObjectSlotGuid[slot])
@@ -4313,8 +4477,14 @@ void Spell::EffectResurrect(SpellEffectIndex /*eff_idx*/)
             uint32 failSpellId = 0;
             switch (m_spellInfo->Id)
             {
-                case 8342:  failChance = 67; failSpellId = 8338;  break;
-                case 22999: failChance = 50; failSpellId = 23055; break;
+                case 8342:
+                    failChance = 67;
+                    failSpellId = 8338;
+                    break;
+                case 22999:
+                    failChance = 50;
+                    failSpellId = 23055;
+                    break;
             }
 
             if (roll_chance_i(failChance))
@@ -4808,10 +4978,18 @@ void Spell::EffectTransmitted(SpellEffectIndex eff_idx)
             int32 lastSec = 0;
             switch (urand(0, 3))
             {
-                case 0: lastSec =  3; break;
-                case 1: lastSec =  7; break;
-                case 2: lastSec = 13; break;
-                case 3: lastSec = 17; break;
+                case 0:
+                    lastSec =  3;
+                    break;
+                case 1:
+                    lastSec =  7;
+                    break;
+                case 2:
+                    lastSec = 13;
+                    break;
+                case 3:
+                    lastSec = 17;
+                    break;
             }
 
             duration = duration - lastSec * IN_MILLISECONDS + FISHING_BOBBER_READY_TIME * IN_MILLISECONDS;

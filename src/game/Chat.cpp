@@ -897,7 +897,8 @@ bool ChatHandler::hasStringAbbr(const char* name, const char* part)
                 return false;
             else if (tolower(*name) != tolower(*part))
                 return false;
-            ++name; ++part;
+            ++name;
+            ++part;
         }
     }
     // allow with any for ""
@@ -2096,7 +2097,9 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
     switch (head[0])
     {
             // reject quoted string
-        case '[': case '\'': case '"':
+        case '[':
+        case '\'':
+        case '"':
             return NULL;
             // reject link (|-started text)
         case '|':
@@ -2105,7 +2108,8 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
                 return NULL;
             ++head;                                         // skip one |
             break;
-        default: break;
+        default:
+            break;
     }
 
     if (lit)
@@ -2113,7 +2117,7 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
         int l = strlen(lit);
 
         int largs = 0;
-        while(head[largs] && !isWhiteSpace(head[largs]))
+        while (head[largs] && !isWhiteSpace(head[largs]))
             ++largs;
 
         if (largs < l)
@@ -3313,13 +3317,13 @@ void ChatHandler::LogCommand(char const* fullcmd)
         Player* p = m_session->GetPlayer();
         ObjectGuid sel_guid = p->GetSelectionGuid();
         sLog.outCommand(GetAccountId(),"Command: %s [Player: %s (Account: %u) X: %f Y: %f Z: %f Map: %u Selected: %s]",
-            fullcmd, p->GetName(), GetAccountId(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetMapId(),
-            sel_guid.GetString().c_str());
+                        fullcmd, p->GetName(), GetAccountId(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetMapId(),
+                        sel_guid.GetString().c_str());
     }
     else                                        // 0 account -> console
     {
         sLog.outCommand(GetAccountId(),"Command: %s [Account: %u from %s]",
-            fullcmd, GetAccountId(), GetAccountId() ? "RA-connection" : "Console");
+                        fullcmd, GetAccountId(), GetAccountId() ? "RA-connection" : "Console");
     }
 }
 

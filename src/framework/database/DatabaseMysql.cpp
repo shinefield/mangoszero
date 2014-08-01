@@ -154,7 +154,7 @@ bool MySQLConnection::Initialize(const char* infoString)
 
     DETAIL_LOG("Connected to MySQL database %s@%s:%s/%s", user.c_str(), host.c_str(), port_or_socket.c_str(), database.c_str());
     sLog.outString("MySQL client library: %s", mysql_get_client_info());
-    sLog.outString("MySQL server ver: %s ", mysql_get_server_info( mMysql));
+    sLog.outString("MySQL server ver: %s ", mysql_get_server_info(mMysql));
 
     /*----------SET AUTOCOMMIT ON---------*/
     // It seems mysql 5.0.x have enabled this feature
@@ -487,20 +487,48 @@ enum_field_types MySqlPreparedStatement::ToMySQLType(const SqlStmtFieldData& dat
 
     switch (data.type())
     {
-        case FIELD_NONE:    dataType = MYSQL_TYPE_NULL;                     break;
+        case FIELD_NONE:
+            dataType = MYSQL_TYPE_NULL;
+            break;
             // MySQL does not support MYSQL_TYPE_BIT as input type
         case FIELD_BOOL:    // dataType = MYSQL_TYPE_BIT;      bUnsigned = 1;  break;
-        case FIELD_UI8:     dataType = MYSQL_TYPE_TINY;     bUnsigned = 1;  break;
-        case FIELD_I8:      dataType = MYSQL_TYPE_TINY;                     break;
-        case FIELD_I16:     dataType = MYSQL_TYPE_SHORT;                    break;
-        case FIELD_UI16:    dataType = MYSQL_TYPE_SHORT;    bUnsigned = 1;  break;
-        case FIELD_I32:     dataType = MYSQL_TYPE_LONG;                     break;
-        case FIELD_UI32:    dataType = MYSQL_TYPE_LONG;     bUnsigned = 1;  break;
-        case FIELD_I64:     dataType = MYSQL_TYPE_LONGLONG;                 break;
-        case FIELD_UI64:    dataType = MYSQL_TYPE_LONGLONG; bUnsigned = 1;  break;
-        case FIELD_FLOAT:   dataType = MYSQL_TYPE_FLOAT;                    break;
-        case FIELD_DOUBLE:  dataType = MYSQL_TYPE_DOUBLE;                   break;
-        case FIELD_STRING:  dataType = MYSQL_TYPE_STRING;                   break;
+        case FIELD_UI8:
+            dataType = MYSQL_TYPE_TINY;
+            bUnsigned = 1;
+            break;
+        case FIELD_I8:
+            dataType = MYSQL_TYPE_TINY;
+            break;
+        case FIELD_I16:
+            dataType = MYSQL_TYPE_SHORT;
+            break;
+        case FIELD_UI16:
+            dataType = MYSQL_TYPE_SHORT;
+            bUnsigned = 1;
+            break;
+        case FIELD_I32:
+            dataType = MYSQL_TYPE_LONG;
+            break;
+        case FIELD_UI32:
+            dataType = MYSQL_TYPE_LONG;
+            bUnsigned = 1;
+            break;
+        case FIELD_I64:
+            dataType = MYSQL_TYPE_LONGLONG;
+            break;
+        case FIELD_UI64:
+            dataType = MYSQL_TYPE_LONGLONG;
+            bUnsigned = 1;
+            break;
+        case FIELD_FLOAT:
+            dataType = MYSQL_TYPE_FLOAT;
+            break;
+        case FIELD_DOUBLE:
+            dataType = MYSQL_TYPE_DOUBLE;
+            break;
+        case FIELD_STRING:
+            dataType = MYSQL_TYPE_STRING;
+            break;
     }
 
     return dataType;

@@ -886,7 +886,8 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
         for (SpellAuraHolderMap::const_iterator i = vAuras.begin(), next; i != vAuras.end(); i = next)
         {
             const SpellEntry* se = i->second->GetSpellProto();
-            next = i; ++next;
+            next = i;
+            ++next;
             if (spellProto && spellProto->Id == se->Id) // Not drop auras added by self
                 continue;
             if (se->AuraInterruptFlags & AURA_INTERRUPT_FLAG_DAMAGE)
@@ -1003,7 +1004,7 @@ void Unit::JustKilledCreature(Creature* victim, Player* responsiblePlayer)
             ((Player*)this)->KilledMonster(normalInfo, victim->GetObjectGuid());
     }
 
-    // Interrupt channeling spell when a Possessed Summoned is killed
+    // Interrupt channelling spell when a Possessed Summoned is killed
     SpellEntry const* spellInfo = sSpellStore.LookupEntry(victim->GetUInt32Value(UNIT_CREATED_BY_SPELL));
     if (spellInfo && spellInfo->HasAttribute(SPELL_ATTR_EX_FARSIGHT) && spellInfo->HasAttribute(SPELL_ATTR_EX_CHANNELED_1))
     {
@@ -1941,7 +1942,8 @@ void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolM
     AuraList const& vManaShield = GetAurasByType(SPELL_AURA_MANA_SHIELD);
     for (AuraList::const_iterator i = vManaShield.begin(), next; i != vManaShield.end() && RemainingDamage > 0; i = next)
     {
-        next = i; ++next;
+        next = i;
+        ++next;
 
         // check damage school mask
         if (((*i)->GetModifier()->m_miscvalue & schoolMask) == 0)
@@ -1982,7 +1984,8 @@ void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolM
         AuraList const& vSplitDamageFlat = GetAurasByType(SPELL_AURA_SPLIT_DAMAGE_FLAT);
         for (AuraList::const_iterator i = vSplitDamageFlat.begin(), next; i != vSplitDamageFlat.end() && RemainingDamage >= 0; i = next)
         {
-            next = i; ++next;
+            next = i;
+            ++next;
 
             // check damage school mask
             if (((*i)->GetModifier()->m_miscvalue & schoolMask) == 0)
@@ -2015,7 +2018,8 @@ void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolM
         AuraList const& vSplitDamagePct = GetAurasByType(SPELL_AURA_SPLIT_DAMAGE_PCT);
         for (AuraList::const_iterator i = vSplitDamagePct.begin(), next; i != vSplitDamagePct.end() && RemainingDamage >= 0; i = next)
         {
-            next = i; ++next;
+            next = i;
+            ++next;
 
             // check damage school mask
             if (((*i)->GetModifier()->m_miscvalue & schoolMask) == 0)
@@ -3022,7 +3026,8 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
                     InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
                 m_AutoRepeatFirstCast = true;
             }
-        } break;
+        }
+        break;
 
         case CURRENT_CHANNELED_SPELL:
         {
@@ -3034,7 +3039,8 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
             if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL] &&
                     m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Category == 351)
                 InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
-        } break;
+        }
+        break;
 
         case CURRENT_AUTOREPEAT_SPELL:
         {
@@ -3047,7 +3053,8 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
             }
             // special action: set first cast flag
             m_AutoRepeatFirstCast = true;
-        } break;
+        }
+        break;
 
         default:
         {
@@ -3606,7 +3613,8 @@ bool Unit::RemoveNoStackAurasDueToAuraHolder(SpellAuraHolder* holder)
                     firstHoT = sSpellMgr.GetFirstSpellInChain(holder->GetId());
                     break;
                 }
-                default: break;
+                default:
+                    break;
             }
         }
 
@@ -4117,7 +4125,8 @@ void Unit::RemoveAura(Aura* Aur, AuraRemoveMode mode)
             case SPELL_AURA_MOD_POSSESS_PET:
                 Aur->ApplyModifier(false, true);
                 break;
-            default: break;
+            default:
+                break;
         }
     }
     else
@@ -5059,7 +5068,10 @@ void Unit::CombatStop(bool includingCast)
 struct CombatStopWithPetsHelper
 {
     explicit CombatStopWithPetsHelper(bool _includingCast) : includingCast(_includingCast) {}
-    void operator()(Unit* unit) const { unit->CombatStop(includingCast); }
+    void operator()(Unit* unit) const
+    {
+        unit->CombatStop(includingCast);
+    }
     bool includingCast;
 };
 
@@ -5072,7 +5084,10 @@ void Unit::CombatStopWithPets(bool includingCast)
 struct IsAttackingPlayerHelper
 {
     explicit IsAttackingPlayerHelper() {}
-    bool operator()(Unit const* unit) const { return unit->isAttackingPlayer(); }
+    bool operator()(Unit const* unit) const
+    {
+        return unit->isAttackingPlayer();
+    }
 };
 
 bool Unit::isAttackingPlayer() const
@@ -5647,11 +5662,21 @@ bool Unit::IsSpellCrit(Unit* pVictim, SpellEntry const* spellProto, SpellSchoolM
                     switch ((*i)->GetModifier()->m_miscvalue)
                     {
                             // Shatter
-                        case 849: if (pVictim->isFrozen()) crit_chance += 10.0f; break;
-                        case 910: if (pVictim->isFrozen()) crit_chance += 20.0f; break;
-                        case 911: if (pVictim->isFrozen()) crit_chance += 30.0f; break;
-                        case 912: if (pVictim->isFrozen()) crit_chance += 40.0f; break;
-                        case 913: if (pVictim->isFrozen()) crit_chance += 50.0f; break;
+                        case 849:
+                            if (pVictim->isFrozen()) crit_chance += 10.0f;
+                            break;
+                        case 910:
+                            if (pVictim->isFrozen()) crit_chance += 20.0f;
+                            break;
+                        case 911:
+                            if (pVictim->isFrozen()) crit_chance += 30.0f;
+                            break;
+                        case 912:
+                            if (pVictim->isFrozen()) crit_chance += 40.0f;
+                            break;
+                        case 913:
+                            if (pVictim->isFrozen()) crit_chance += 50.0f;
+                            break;
                         default:
                             break;
                     }
@@ -6108,9 +6133,15 @@ uint32 Unit::MeleeDamageBonusDone(Unit* pVictim, uint32 pdamage, WeaponAttackTyp
         switch (attType)
         {
             default:
-            case BASE_ATTACK:   unitMod = UNIT_MOD_DAMAGE_MAINHAND; break;
-            case OFF_ATTACK:    unitMod = UNIT_MOD_DAMAGE_OFFHAND;  break;
-            case RANGED_ATTACK: unitMod = UNIT_MOD_DAMAGE_RANGED;   break;
+            case BASE_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_MAINHAND;
+                break;
+            case OFF_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_OFFHAND;
+                break;
+            case RANGED_ATTACK:
+                unitMod = UNIT_MOD_DAMAGE_RANGED;
+                break;
         }
 
         DoneTotal += DoneFlat;
@@ -6195,7 +6226,8 @@ void Unit::ApplySpellImmune(uint32 spellId, uint32 op, uint32 type, bool apply)
     {
         for (SpellImmuneList::iterator itr = m_spellImmune[op].begin(), next; itr != m_spellImmune[op].end(); itr = next)
         {
-            next = itr; ++next;
+            next = itr;
+            ++next;
             if (itr->type == type)
             {
                 m_spellImmune[op].erase(itr);
@@ -6906,7 +6938,10 @@ float Unit::GetSpeed(UnitMoveType mtype) const
 struct SetSpeedRateHelper
 {
     explicit SetSpeedRateHelper(UnitMoveType _mtype, bool _forced) : mtype(_mtype), forced(_forced) {}
-    void operator()(Unit* unit) const { unit->UpdateSpeed(mtype, forced); }
+    void operator()(Unit* unit) const
+    {
+        unit->UpdateSpeed(mtype, forced);
+    }
     UnitMoveType mtype;
     bool forced;
 };
@@ -7317,7 +7352,9 @@ int32 Unit::CalculateSpellDamage(Unit const* target, SpellEntry const* spellProt
     switch (randomPoints)
     {
         case 0:
-        case 1: basePoints += baseDice; break;              // range 1..1
+        case 1:
+            basePoints += baseDice;
+            break;              // range 1..1
         default:
         {
             // range can have positive (1..rand) and negative (rand..1) values, so order its for irand
@@ -7403,11 +7440,19 @@ void Unit::ApplyDiminishingToDuration(DiminishingGroup group, int32& duration, U
         DiminishingLevels diminish = Level;
         switch (diminish)
         {
-            case DIMINISHING_LEVEL_1: break;
-            case DIMINISHING_LEVEL_2: mod = 0.5f; break;
-            case DIMINISHING_LEVEL_3: mod = 0.25f; break;
-            case DIMINISHING_LEVEL_IMMUNE: mod = 0.0f; break;
-            default: break;
+            case DIMINISHING_LEVEL_1:
+                break;
+            case DIMINISHING_LEVEL_2:
+                mod = 0.5f;
+                break;
+            case DIMINISHING_LEVEL_3:
+                mod = 0.25f;
+                break;
+            case DIMINISHING_LEVEL_IMMUNE:
+                mod = 0.0f;
+                break;
+            default:
+                break;
         }
     }
 
@@ -7507,30 +7552,50 @@ bool Unit::HandleStatModifier(UnitMods unitMod, UnitModifierType modifierType, f
         case UNIT_MOD_STAT_AGILITY:
         case UNIT_MOD_STAT_STAMINA:
         case UNIT_MOD_STAT_INTELLECT:
-        case UNIT_MOD_STAT_SPIRIT:         UpdateStats(GetStatByAuraGroup(unitMod));  break;
+        case UNIT_MOD_STAT_SPIRIT:
+            UpdateStats(GetStatByAuraGroup(unitMod));
+            break;
 
-        case UNIT_MOD_ARMOR:               UpdateArmor();           break;
-        case UNIT_MOD_HEALTH:              UpdateMaxHealth();       break;
+        case UNIT_MOD_ARMOR:
+            UpdateArmor();
+            break;
+        case UNIT_MOD_HEALTH:
+            UpdateMaxHealth();
+            break;
 
         case UNIT_MOD_MANA:
         case UNIT_MOD_RAGE:
         case UNIT_MOD_FOCUS:
         case UNIT_MOD_ENERGY:
-        case UNIT_MOD_HAPPINESS:           UpdateMaxPower(GetPowerTypeByAuraGroup(unitMod)); break;
+        case UNIT_MOD_HAPPINESS:
+            UpdateMaxPower(GetPowerTypeByAuraGroup(unitMod));
+            break;
 
         case UNIT_MOD_RESISTANCE_HOLY:
         case UNIT_MOD_RESISTANCE_FIRE:
         case UNIT_MOD_RESISTANCE_NATURE:
         case UNIT_MOD_RESISTANCE_FROST:
         case UNIT_MOD_RESISTANCE_SHADOW:
-        case UNIT_MOD_RESISTANCE_ARCANE:   UpdateResistances(GetSpellSchoolByAuraGroup(unitMod)); break;
+        case UNIT_MOD_RESISTANCE_ARCANE:
+            UpdateResistances(GetSpellSchoolByAuraGroup(unitMod));
+            break;
 
-        case UNIT_MOD_ATTACK_POWER:        UpdateAttackPowerAndDamage();         break;
-        case UNIT_MOD_ATTACK_POWER_RANGED: UpdateAttackPowerAndDamage(true);     break;
+        case UNIT_MOD_ATTACK_POWER:
+            UpdateAttackPowerAndDamage();
+            break;
+        case UNIT_MOD_ATTACK_POWER_RANGED:
+            UpdateAttackPowerAndDamage(true);
+            break;
 
-        case UNIT_MOD_DAMAGE_MAINHAND:     UpdateDamagePhysical(BASE_ATTACK);    break;
-        case UNIT_MOD_DAMAGE_OFFHAND:      UpdateDamagePhysical(OFF_ATTACK);     break;
-        case UNIT_MOD_DAMAGE_RANGED:       UpdateDamagePhysical(RANGED_ATTACK);  break;
+        case UNIT_MOD_DAMAGE_MAINHAND:
+            UpdateDamagePhysical(BASE_ATTACK);
+            break;
+        case UNIT_MOD_DAMAGE_OFFHAND:
+            UpdateDamagePhysical(OFF_ATTACK);
+            break;
+        case UNIT_MOD_DAMAGE_RANGED:
+            UpdateDamagePhysical(RANGED_ATTACK);
+            break;
 
         default:
             break;
@@ -7594,12 +7659,24 @@ SpellSchools Unit::GetSpellSchoolByAuraGroup(UnitMods unitMod) const
 
     switch (unitMod)
     {
-        case UNIT_MOD_RESISTANCE_HOLY:     school = SPELL_SCHOOL_HOLY;          break;
-        case UNIT_MOD_RESISTANCE_FIRE:     school = SPELL_SCHOOL_FIRE;          break;
-        case UNIT_MOD_RESISTANCE_NATURE:   school = SPELL_SCHOOL_NATURE;        break;
-        case UNIT_MOD_RESISTANCE_FROST:    school = SPELL_SCHOOL_FROST;         break;
-        case UNIT_MOD_RESISTANCE_SHADOW:   school = SPELL_SCHOOL_SHADOW;        break;
-        case UNIT_MOD_RESISTANCE_ARCANE:   school = SPELL_SCHOOL_ARCANE;        break;
+        case UNIT_MOD_RESISTANCE_HOLY:
+            school = SPELL_SCHOOL_HOLY;
+            break;
+        case UNIT_MOD_RESISTANCE_FIRE:
+            school = SPELL_SCHOOL_FIRE;
+            break;
+        case UNIT_MOD_RESISTANCE_NATURE:
+            school = SPELL_SCHOOL_NATURE;
+            break;
+        case UNIT_MOD_RESISTANCE_FROST:
+            school = SPELL_SCHOOL_FROST;
+            break;
+        case UNIT_MOD_RESISTANCE_SHADOW:
+            school = SPELL_SCHOOL_SHADOW;
+            break;
+        case UNIT_MOD_RESISTANCE_ARCANE:
+            school = SPELL_SCHOOL_ARCANE;
+            break;
 
         default:
             break;
@@ -7614,11 +7691,21 @@ Stats Unit::GetStatByAuraGroup(UnitMods unitMod) const
 
     switch (unitMod)
     {
-        case UNIT_MOD_STAT_STRENGTH:    stat = STAT_STRENGTH;      break;
-        case UNIT_MOD_STAT_AGILITY:     stat = STAT_AGILITY;       break;
-        case UNIT_MOD_STAT_STAMINA:     stat = STAT_STAMINA;       break;
-        case UNIT_MOD_STAT_INTELLECT:   stat = STAT_INTELLECT;     break;
-        case UNIT_MOD_STAT_SPIRIT:      stat = STAT_SPIRIT;        break;
+        case UNIT_MOD_STAT_STRENGTH:
+            stat = STAT_STRENGTH;
+            break;
+        case UNIT_MOD_STAT_AGILITY:
+            stat = STAT_AGILITY;
+            break;
+        case UNIT_MOD_STAT_STAMINA:
+            stat = STAT_STAMINA;
+            break;
+        case UNIT_MOD_STAT_INTELLECT:
+            stat = STAT_INTELLECT;
+            break;
+        case UNIT_MOD_STAT_SPIRIT:
+            stat = STAT_SPIRIT;
+            break;
 
         default:
             break;
@@ -7631,12 +7718,18 @@ Powers Unit::GetPowerTypeByAuraGroup(UnitMods unitMod) const
 {
     switch (unitMod)
     {
-        case UNIT_MOD_MANA:       return POWER_MANA;
-        case UNIT_MOD_RAGE:       return POWER_RAGE;
-        case UNIT_MOD_FOCUS:      return POWER_FOCUS;
-        case UNIT_MOD_ENERGY:     return POWER_ENERGY;
-        case UNIT_MOD_HAPPINESS:  return POWER_HAPPINESS;
-        default:                  return POWER_MANA;
+        case UNIT_MOD_MANA:
+            return POWER_MANA;
+        case UNIT_MOD_RAGE:
+            return POWER_RAGE;
+        case UNIT_MOD_FOCUS:
+            return POWER_FOCUS;
+        case UNIT_MOD_ENERGY:
+            return POWER_ENERGY;
+        case UNIT_MOD_HAPPINESS:
+            return POWER_HAPPINESS;
+        default:
+            return POWER_MANA;
     }
 }
 
@@ -7851,12 +7944,18 @@ uint32 Unit::GetCreatePowers(Powers power) const
 {
     switch (power)
     {
-        case POWER_HEALTH:      return 0;                   // is it really should be here?
-        case POWER_MANA:        return GetCreateMana();
-        case POWER_RAGE:        return 1000;
-        case POWER_FOCUS:       return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->IsPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 100);
-        case POWER_ENERGY:      return 100;
-        case POWER_HAPPINESS:   return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->IsPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 1050000);
+        case POWER_HEALTH:
+            return 0;                   // is it really should be here?
+        case POWER_MANA:
+            return GetCreateMana();
+        case POWER_RAGE:
+            return 1000;
+        case POWER_FOCUS:
+            return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->IsPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 100);
+        case POWER_ENERGY:
+            return 100;
+        case POWER_HAPPINESS:
+            return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->IsPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 1050000);
     }
 
     return 0;
@@ -8141,17 +8240,39 @@ uint32 createProcExtendMask(SpellNonMeleeDamage* damageInfo, SpellMissInfo missC
     if (missCondition != SPELL_MISS_NONE)
         switch (missCondition)
         {
-            case SPELL_MISS_MISS:    procEx |= PROC_EX_MISS;   break;
-            case SPELL_MISS_RESIST:  procEx |= PROC_EX_RESIST; break;
-            case SPELL_MISS_DODGE:   procEx |= PROC_EX_DODGE;  break;
-            case SPELL_MISS_PARRY:   procEx |= PROC_EX_PARRY;  break;
-            case SPELL_MISS_BLOCK:   procEx |= PROC_EX_BLOCK;  break;
-            case SPELL_MISS_EVADE:   procEx |= PROC_EX_EVADE;  break;
-            case SPELL_MISS_IMMUNE:  procEx |= PROC_EX_IMMUNE; break;
-            case SPELL_MISS_IMMUNE2: procEx |= PROC_EX_IMMUNE; break;
-            case SPELL_MISS_DEFLECT: procEx |= PROC_EX_DEFLECT; break;
-            case SPELL_MISS_ABSORB:  procEx |= PROC_EX_ABSORB; break;
-            case SPELL_MISS_REFLECT: procEx |= PROC_EX_REFLECT; break;
+            case SPELL_MISS_MISS:
+                procEx |= PROC_EX_MISS;
+                break;
+            case SPELL_MISS_RESIST:
+                procEx |= PROC_EX_RESIST;
+                break;
+            case SPELL_MISS_DODGE:
+                procEx |= PROC_EX_DODGE;
+                break;
+            case SPELL_MISS_PARRY:
+                procEx |= PROC_EX_PARRY;
+                break;
+            case SPELL_MISS_BLOCK:
+                procEx |= PROC_EX_BLOCK;
+                break;
+            case SPELL_MISS_EVADE:
+                procEx |= PROC_EX_EVADE;
+                break;
+            case SPELL_MISS_IMMUNE:
+                procEx |= PROC_EX_IMMUNE;
+                break;
+            case SPELL_MISS_IMMUNE2:
+                procEx |= PROC_EX_IMMUNE;
+                break;
+            case SPELL_MISS_DEFLECT:
+                procEx |= PROC_EX_DEFLECT;
+                break;
+            case SPELL_MISS_ABSORB:
+                procEx |= PROC_EX_ABSORB;
+                break;
+            case SPELL_MISS_REFLECT:
+                procEx |= PROC_EX_REFLECT;
+                break;
             default:
                 break;
         }
@@ -8986,7 +9107,10 @@ void Unit::MonsterMoveWithSpeed(float x, float y, float z, float speed, bool gen
 struct SetPvPHelper
 {
     explicit SetPvPHelper(bool _state) : state(_state) {}
-    void operator()(Unit* unit) const { unit->SetPvP(state); }
+    void operator()(Unit* unit) const
+    {
+        unit->SetPvP(state);
+    }
     bool state;
 };
 
@@ -9003,7 +9127,10 @@ void Unit::SetPvP(bool state)
 struct StopAttackFactionHelper
 {
     explicit StopAttackFactionHelper(uint32 _faction_id) : faction_id(_faction_id) {}
-    void operator()(Unit* unit) const { unit->StopAttackFaction(faction_id); }
+    void operator()(Unit* unit) const
+    {
+        unit->StopAttackFaction(faction_id);
+    }
     uint32 faction_id;
 };
 

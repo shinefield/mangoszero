@@ -51,7 +51,10 @@ class MANGOS_DLL_SPEC PathMovementBase
 
         // template pattern, not defined .. override required
         void LoadPath(T&);
-        uint32 GetCurrentNode() const { return i_currentNode; }
+        uint32 GetCurrentNode() const
+        {
+            return i_currentNode;
+        }
 
     protected:
         P i_path;
@@ -73,7 +76,10 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 {
     public:
         WaypointMovementGenerator(Creature&) : i_nextMoveTime(0), m_isArrivalDone(false), m_lastReachedWaypoint(0) {}
-        ~WaypointMovementGenerator() { i_path = NULL; }
+        ~WaypointMovementGenerator()
+        {
+            i_path = NULL;
+        }
         void Initialize(Creature& u);
         void Interrupt(Creature&);
         void Finalize(Creature&);
@@ -82,7 +88,10 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 
         void MovementInform(Creature&);
 
-        MovementGeneratorType GetMovementGeneratorType() const { return WAYPOINT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const
+        {
+            return WAYPOINT_MOTION_TYPE;
+        }
 
         // now path movement implmementation
         void LoadPath(Creature& c);
@@ -91,10 +100,16 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 
         void AddToWaypointPauseTime(int32 waitTimeDiff);
 
-        uint32 getLastReachedWaypoint() const { return m_lastReachedWaypoint; }
+        uint32 getLastReachedWaypoint() const
+        {
+            return m_lastReachedWaypoint;
+        }
 
     private:
-        void Stop(int32 time) { i_nextMoveTime.Reset(time); }
+        void Stop(int32 time)
+        {
+            i_nextMoveTime.Reset(time);
+        }
         bool Stopped(Creature& u);
         bool CanMove(int32 diff, Creature& u);
 
@@ -126,13 +141,25 @@ class MANGOS_DLL_SPEC FlightPathMovementGenerator
         void Interrupt(Player&);
         void Reset(Player&);
         bool Update(Player&, const uint32&);
-        MovementGeneratorType GetMovementGeneratorType() const override { return FLIGHT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return FLIGHT_MOTION_TYPE;
+        }
 
-        TaxiPathNodeList const& GetPath() { return *i_path; }
+        TaxiPathNodeList const& GetPath()
+        {
+            return *i_path;
+        }
         uint32 GetPathAtMapEnd() const;
-        bool HasArrived() const { return (i_currentNode >= i_path->size()); }
+        bool HasArrived() const
+        {
+            return (i_currentNode >= i_path->size());
+        }
         void SetCurrentNodeAfterTeleport();
-        void SkipCurrentNode() { ++i_currentNode; }
+        void SkipCurrentNode()
+        {
+            ++i_currentNode;
+        }
         bool GetResetPosition(Player&, float& x, float& y, float& z) const;
 };
 

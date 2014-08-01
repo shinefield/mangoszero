@@ -57,10 +57,22 @@ namespace VMAP
     {
         public:
             ManagedModel(): iModel(0), iRefCount(0) {}
-            void setModel(WorldModel* model) { iModel = model; }
-            WorldModel* getModel() { return iModel; }
-            void incRefCount() { ++iRefCount; }
-            int decRefCount() { return --iRefCount; }
+            void setModel(WorldModel* model)
+            {
+                iModel = model;
+            }
+            WorldModel* getModel()
+            {
+                return iModel;
+            }
+            void incRefCount()
+            {
+                ++iRefCount;
+            }
+            int decRefCount()
+            {
+                return --iRefCount;
+            }
         protected:
             WorldModel* iModel;
             int iRefCount;
@@ -99,7 +111,10 @@ namespace VMAP
             bool getObjectHitPos(unsigned int pMapId, float x1, float y1, float z1, float x2, float y2, float z2, float& rx, float& ry, float& rz, float pModifyDist) override;
             float getHeight(unsigned int pMapId, float x, float y, float z, float maxSearchDist) override;
 
-            bool processCommand(char* /*pCommand*/) override { return false; }      // for debug and extensions
+            bool processCommand(char* /*pCommand*/) override
+            {
+                return false;    // for debug and extensions
+            }
 
             bool getAreaInfo(unsigned int pMapId, float x, float y, float& z, uint32& flags, int32& adtId, int32& rootId, int32& groupId) const override;
             bool GetLiquidLevel(uint32 pMapId, float x, float y, float z, uint8 ReqLiquidType, float& level, float& floor, uint32& type) const override;

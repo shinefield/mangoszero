@@ -94,7 +94,7 @@ bool ChatHandler::HandleAHBotItemsAmountQualityCommand(char* args)
         return false;
     sAuctionBot.SetItemsAmountForQuality(AuctionQuality(Q), qVal);
     PSendSysMessage(LANG_AHBOT_ITEMS_AMOUNT, GetMangosString(ahbotQualityIds[Q]),
-        sAuctionBotConfig.getConfigItemQualityAmount(AuctionQuality(Q)));
+                    sAuctionBotConfig.getConfigItemQualityAmount(AuctionQuality(Q)));
     return true;
 }
 
@@ -189,22 +189,22 @@ bool ChatHandler::HandleAHBotStatusCommand(char* args)
     uint32 fmtId = m_session ? LANG_AHBOT_STATUS_FORMAT_CHAT : LANG_AHBOT_STATUS_FORMAT_CONSOLE;
 
     PSendSysMessage(fmtId, GetMangosString(LANG_AHBOT_STATUS_ITEM_COUNT),
-        statusInfo[AUCTION_HOUSE_ALLIANCE].ItemsCount,
-        statusInfo[AUCTION_HOUSE_HORDE].ItemsCount,
-        statusInfo[AUCTION_HOUSE_NEUTRAL].ItemsCount,
-        statusInfo[AUCTION_HOUSE_ALLIANCE].ItemsCount +
-        statusInfo[AUCTION_HOUSE_HORDE].ItemsCount +
-        statusInfo[AUCTION_HOUSE_NEUTRAL].ItemsCount);
+                    statusInfo[AUCTION_HOUSE_ALLIANCE].ItemsCount,
+                    statusInfo[AUCTION_HOUSE_HORDE].ItemsCount,
+                    statusInfo[AUCTION_HOUSE_NEUTRAL].ItemsCount,
+                    statusInfo[AUCTION_HOUSE_ALLIANCE].ItemsCount +
+                    statusInfo[AUCTION_HOUSE_HORDE].ItemsCount +
+                    statusInfo[AUCTION_HOUSE_NEUTRAL].ItemsCount);
 
     if (all)
     {
         PSendSysMessage(fmtId, GetMangosString(LANG_AHBOT_STATUS_ITEM_RATIO),
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_ALLIANCE_ITEM_AMOUNT_RATIO),
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_HORDE_ITEM_AMOUNT_RATIO),
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_NEUTRAL_ITEM_AMOUNT_RATIO),
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_ALLIANCE_ITEM_AMOUNT_RATIO) +
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_HORDE_ITEM_AMOUNT_RATIO) +
-            sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_NEUTRAL_ITEM_AMOUNT_RATIO));
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_ALLIANCE_ITEM_AMOUNT_RATIO),
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_HORDE_ITEM_AMOUNT_RATIO),
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_NEUTRAL_ITEM_AMOUNT_RATIO),
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_ALLIANCE_ITEM_AMOUNT_RATIO) +
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_HORDE_ITEM_AMOUNT_RATIO) +
+                        sAuctionBotConfig.getConfig(CONFIG_UINT32_AHBOT_NEUTRAL_ITEM_AMOUNT_RATIO));
 
         if (!m_session)
         {
@@ -217,10 +217,10 @@ bool ChatHandler::HandleAHBotStatusCommand(char* args)
 
         for (int i = 0; i < MAX_AUCTION_QUALITY; ++i)
             PSendSysMessage(fmtId, GetMangosString(ahbotQualityIds[i]),
-                statusInfo[AUCTION_HOUSE_ALLIANCE].QualityInfo[i],
-                statusInfo[AUCTION_HOUSE_HORDE].QualityInfo[i],
-                statusInfo[AUCTION_HOUSE_NEUTRAL].QualityInfo[i],
-                sAuctionBotConfig.getConfigItemQualityAmount(AuctionQuality(i)));
+                            statusInfo[AUCTION_HOUSE_ALLIANCE].QualityInfo[i],
+                            statusInfo[AUCTION_HOUSE_HORDE].QualityInfo[i],
+                            statusInfo[AUCTION_HOUSE_NEUTRAL].QualityInfo[i],
+                            sAuctionBotConfig.getConfigItemQualityAmount(AuctionQuality(i)));
     }
 
     if (!m_session)
@@ -1159,7 +1159,7 @@ bool ChatHandler::HandleAccountSetPasswordCommand(char* args)
 
     // OK, but avoid normal report for hide passwords, but log use command for anyone
     char msg[100];
-    snprintf( msg, 100, ".account set password %s *** ***", account_name.c_str());
+    snprintf(msg, 100, ".account set password %s *** ***", account_name.c_str());
     LogCommand(msg);
     SetSentErrorMessage(true);
     return false;
@@ -3037,9 +3037,9 @@ bool ChatHandler::HandleLookupCreatureCommand(char* args)
         }
 
         if (m_session)
-            PSendSysMessage (LANG_CREATURE_ENTRY_LIST_CHAT, id, id, name);
+            PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CHAT, id, id, name);
         else
-            PSendSysMessage (LANG_CREATURE_ENTRY_LIST_CONSOLE, id, name);
+            PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CONSOLE, id, name);
 
         ++counter;
     }
@@ -5533,10 +5533,18 @@ bool ChatHandler::HandleMovegensCommand(char* /*args*/)
     {
         switch ((*itr)->GetMovementGeneratorType())
         {
-            case IDLE_MOTION_TYPE:          SendSysMessage(LANG_MOVEGENS_IDLE);          break;
-            case RANDOM_MOTION_TYPE:        SendSysMessage(LANG_MOVEGENS_RANDOM);        break;
-            case WAYPOINT_MOTION_TYPE:      SendSysMessage(LANG_MOVEGENS_WAYPOINT);      break;
-            case CONFUSED_MOTION_TYPE:      SendSysMessage(LANG_MOVEGENS_CONFUSED);      break;
+            case IDLE_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_IDLE);
+                break;
+            case RANDOM_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_RANDOM);
+                break;
+            case WAYPOINT_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_WAYPOINT);
+                break;
+            case CONFUSED_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_CONFUSED);
+                break;
 
             case CHASE_MOTION_TYPE:
             {
@@ -5578,15 +5586,23 @@ bool ChatHandler::HandleMovegensCommand(char* /*args*/)
                 else
                     SendSysMessage(LANG_MOVEGENS_HOME_PLAYER);
                 break;
-            case FLIGHT_MOTION_TYPE:   SendSysMessage(LANG_MOVEGENS_FLIGHT);  break;
+            case FLIGHT_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_FLIGHT);
+                break;
             case POINT_MOTION_TYPE:
             {
                 PSendSysMessage(LANG_MOVEGENS_POINT, x, y, z);
                 break;
             }
-            case FLEEING_MOTION_TYPE:  SendSysMessage(LANG_MOVEGENS_FEAR);    break;
-            case DISTRACT_MOTION_TYPE: SendSysMessage(LANG_MOVEGENS_DISTRACT);  break;
-            case EFFECT_MOTION_TYPE: SendSysMessage(LANG_MOVEGENS_EFFECT);  break;
+            case FLEEING_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_FEAR);
+                break;
+            case DISTRACT_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_DISTRACT);
+                break;
+            case EFFECT_MOTION_TYPE:
+                SendSysMessage(LANG_MOVEGENS_EFFECT);
+                break;
             default:
                 PSendSysMessage(LANG_MOVEGENS_UNKNOWN, (*itr)->GetMovementGeneratorType());
                 break;
@@ -5636,11 +5652,21 @@ bool ChatHandler::HandleServerPLimitCommand(char* args)
     char const* secName = "";
     switch (allowedAccountType)
     {
-        case SEC_PLAYER:        secName = "Player";        break;
-        case SEC_MODERATOR:     secName = "Moderator";     break;
-        case SEC_GAMEMASTER:    secName = "Gamemaster";    break;
-        case SEC_ADMINISTRATOR: secName = "Administrator"; break;
-        default:                secName = "<unknown>";     break;
+        case SEC_PLAYER:
+            secName = "Player";
+            break;
+        case SEC_MODERATOR:
+            secName = "Moderator";
+            break;
+        case SEC_GAMEMASTER:
+            secName = "Gamemaster";
+            break;
+        case SEC_ADMINISTRATOR:
+            secName = "Administrator";
+            break;
+        default:
+            secName = "<unknown>";
+            break;
     }
 
     PSendSysMessage("Player limits: amount %u, min. security level %s.", pLimit, secName);

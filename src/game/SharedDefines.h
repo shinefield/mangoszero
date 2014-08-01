@@ -61,17 +61,17 @@ enum Races
 
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))    |(1<<(RACE_ORC-1))      |(1<<(RACE_DWARF-1))   | \
-    (1<<(RACE_NIGHTELF-1))  |(1<<(RACE_UNDEAD-1))   |(1<<(RACE_TAUREN-1))  | \
-    (1<<(RACE_GNOME-1))     |(1<<(RACE_TROLL-1)))
+     (1<<(RACE_NIGHTELF-1))  |(1<<(RACE_UNDEAD-1))   |(1<<(RACE_TAUREN-1))  | \
+     (1<<(RACE_GNOME-1))     |(1<<(RACE_TROLL-1)))
 
 // for most cases batter use ChrRace data for team check as more safe, but when need full mask of team can be use this defines.
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1))    |(1<<(RACE_DWARF-1))    |(1<<(RACE_NIGHTELF-1))| \
-    (1<<(RACE_GNOME-1)))
+     (1<<(RACE_GNOME-1)))
 
 #define RACEMASK_HORDE \
     ((1<<(RACE_ORC-1))      |(1<<(RACE_UNDEAD-1))   |(1<<(RACE_TAUREN-1))  | \
-    (1<<(RACE_TROLL-1)))
+     (1<<(RACE_TROLL-1)))
 
 // Class value is index in ChrClasses.dbc
 enum Classes
@@ -94,8 +94,8 @@ enum Classes
 
 #define CLASSMASK_ALL_PLAYABLE \
     ((1<<(CLASS_WARRIOR-1))|(1<<(CLASS_PALADIN-1))|(1<<(CLASS_HUNTER-1))| \
-    (1<<(CLASS_ROGUE-1))  |(1<<(CLASS_PRIEST-1)) |(1<<(CLASS_SHAMAN-1))| \
-    (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1))   )
+     (1<<(CLASS_ROGUE-1))  |(1<<(CLASS_PRIEST-1)) |(1<<(CLASS_SHAMAN-1))| \
+     (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1))   )
 
 #define CLASSMASK_ALL_CREATURES ((1<<(CLASS_WARRIOR-1)) | (1<<(CLASS_PALADIN-1)) | (1<<(CLASS_MAGE-1)) )
 #define MAX_CREATURE_CLASS 3
@@ -853,17 +853,17 @@ enum Mechanics
 #define MAX_MECHANIC            31
 
 #define IMMUNE_TO_ROOT_AND_SNARE_MASK ( \
-    (1<<(MECHANIC_ROOT-1))|(1<<(MECHANIC_SNARE-1)))
+                                        (1<<(MECHANIC_ROOT-1))|(1<<(MECHANIC_SNARE-1)))
 
 #define IMMUNE_TO_ROOT_AND_STUN_MASK ( \
-    (1<<(MECHANIC_ROOT-1))|(1<<(MECHANIC_STUN-1)))
+                                       (1<<(MECHANIC_ROOT-1))|(1<<(MECHANIC_STUN-1)))
 
 // Daze and all croud control spells except polymorph are not removed
 #define MECHANIC_NOT_REMOVED_BY_SHAPESHIFT ( \
-    (1<<(MECHANIC_CHARM -1))|(1<<(MECHANIC_DISORIENTED-1))|(1<<(MECHANIC_FEAR  -1))| \
-    (1<<(MECHANIC_PACIFY-1))|(1<<(MECHANIC_STUN       -1))|(1<<(MECHANIC_FREEZE-1))| \
-    (1<<(MECHANIC_BANISH-1))|(1<<(MECHANIC_SHACKLE    -1))|(1<<(MECHANIC_HORROR-1))| \
-    (1<<(MECHANIC_TURN  -1))|(1<<(MECHANIC_DAZE       -1))|(1<<(MECHANIC_SAPPED-1)))
+        (1<<(MECHANIC_CHARM -1))|(1<<(MECHANIC_DISORIENTED-1))|(1<<(MECHANIC_FEAR  -1))| \
+        (1<<(MECHANIC_PACIFY-1))|(1<<(MECHANIC_STUN       -1))|(1<<(MECHANIC_FREEZE-1))| \
+        (1<<(MECHANIC_BANISH-1))|(1<<(MECHANIC_SHACKLE    -1))|(1<<(MECHANIC_HORROR-1))| \
+        (1<<(MECHANIC_TURN  -1))|(1<<(MECHANIC_DAZE       -1))|(1<<(MECHANIC_SAPPED-1)))
 
 // Spell dispell type
 enum DispelType
@@ -1793,15 +1793,24 @@ inline uint8 ClassByQuestSort(int32 QuestSort)
 {
     switch (QuestSort)
     {
-        case QUEST_SORT_WARLOCK:        return CLASS_WARLOCK;
-        case QUEST_SORT_WARRIOR:        return CLASS_WARRIOR;
-        case QUEST_SORT_SHAMAN:         return CLASS_SHAMAN;
-        case QUEST_SORT_PALADIN:        return CLASS_PALADIN;
-        case QUEST_SORT_MAGE:           return CLASS_MAGE;
-        case QUEST_SORT_ROGUE:          return CLASS_ROGUE;
-        case QUEST_SORT_HUNTER:         return CLASS_HUNTER;
-        case QUEST_SORT_PRIEST:         return CLASS_PRIEST;
-        case QUEST_SORT_DRUID:          return CLASS_DRUID;
+        case QUEST_SORT_WARLOCK:
+            return CLASS_WARLOCK;
+        case QUEST_SORT_WARRIOR:
+            return CLASS_WARRIOR;
+        case QUEST_SORT_SHAMAN:
+            return CLASS_SHAMAN;
+        case QUEST_SORT_PALADIN:
+            return CLASS_PALADIN;
+        case QUEST_SORT_MAGE:
+            return CLASS_MAGE;
+        case QUEST_SORT_ROGUE:
+            return CLASS_ROGUE;
+        case QUEST_SORT_HUNTER:
+            return CLASS_HUNTER;
+        case QUEST_SORT_PRIEST:
+            return CLASS_PRIEST;
+        case QUEST_SORT_DRUID:
+            return CLASS_DRUID;
     }
     return 0;
 }
@@ -1942,11 +1951,16 @@ inline SkillType SkillByLockType(LockType locktype)
 {
     switch (locktype)
     {
-        case LOCKTYPE_PICKLOCK:    return SKILL_LOCKPICKING;
-        case LOCKTYPE_HERBALISM:   return SKILL_HERBALISM;
-        case LOCKTYPE_MINING:      return SKILL_MINING;
-        case LOCKTYPE_FISHING:     return SKILL_FISHING;
-        default: break;
+        case LOCKTYPE_PICKLOCK:
+            return SKILL_LOCKPICKING;
+        case LOCKTYPE_HERBALISM:
+            return SKILL_HERBALISM;
+        case LOCKTYPE_MINING:
+            return SKILL_MINING;
+        case LOCKTYPE_FISHING:
+            return SKILL_FISHING;
+        default:
+            break;
     }
     return SKILL_NONE;
 }
@@ -1955,15 +1969,24 @@ inline uint32 SkillByQuestSort(int32 QuestSort)
 {
     switch (QuestSort)
     {
-        case QUEST_SORT_HERBALISM:      return SKILL_HERBALISM;
-        case QUEST_SORT_FISHING:        return SKILL_FISHING;
-        case QUEST_SORT_BLACKSMITHING:  return SKILL_BLACKSMITHING;
-        case QUEST_SORT_ALCHEMY:        return SKILL_ALCHEMY;
-        case QUEST_SORT_LEATHERWORKING: return SKILL_LEATHERWORKING;
-        case QUEST_SORT_ENGINEERING:    return SKILL_ENGINEERING;
-        case QUEST_SORT_TAILORING:      return SKILL_TAILORING;
-        case QUEST_SORT_COOKING:        return SKILL_COOKING;
-        case QUEST_SORT_FIRST_AID:      return SKILL_FIRST_AID;
+        case QUEST_SORT_HERBALISM:
+            return SKILL_HERBALISM;
+        case QUEST_SORT_FISHING:
+            return SKILL_FISHING;
+        case QUEST_SORT_BLACKSMITHING:
+            return SKILL_BLACKSMITHING;
+        case QUEST_SORT_ALCHEMY:
+            return SKILL_ALCHEMY;
+        case QUEST_SORT_LEATHERWORKING:
+            return SKILL_LEATHERWORKING;
+        case QUEST_SORT_ENGINEERING:
+            return SKILL_ENGINEERING;
+        case QUEST_SORT_TAILORING:
+            return SKILL_TAILORING;
+        case QUEST_SORT_COOKING:
+            return SKILL_COOKING;
+        case QUEST_SORT_FIRST_AID:
+            return SKILL_FIRST_AID;
     }
     return 0;
 }
@@ -2359,10 +2382,14 @@ inline BattleGroundTypeId GetBattleGroundTypeIdByMapId(uint32 mapId)
 {
     switch (mapId)
     {
-        case 30:    return BATTLEGROUND_AV;
-        case 489:   return BATTLEGROUND_WS;
-        case 529:   return BATTLEGROUND_AB;
-        default:    return BATTLEGROUND_TYPE_NONE;
+        case 30:
+            return BATTLEGROUND_AV;
+        case 489:
+            return BATTLEGROUND_WS;
+        case 529:
+            return BATTLEGROUND_AB;
+        default:
+            return BATTLEGROUND_TYPE_NONE;
     }
 }
 
@@ -2370,10 +2397,14 @@ inline uint32 GetBattleGrounMapIdByTypeId(BattleGroundTypeId bgTypeId)
 {
     switch (bgTypeId)
     {
-        case BATTLEGROUND_AV:   return 30;
-        case BATTLEGROUND_WS:   return 489;
-        case BATTLEGROUND_AB:   return 529;
-        default:                return 0;   // none
+        case BATTLEGROUND_AV:
+            return 30;
+        case BATTLEGROUND_WS:
+            return 489;
+        case BATTLEGROUND_AB:
+            return 529;
+        default:
+            return 0;   // none
     }
 
     // impossible, just make compiler happy

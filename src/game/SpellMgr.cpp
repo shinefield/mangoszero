@@ -720,7 +720,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 case SPELL_AURA_MOD_DAMAGE_DONE:            // dependent from base point sign (negative -> negative)
                 case SPELL_AURA_MOD_RESISTANCE:
                 case SPELL_AURA_MOD_STAT:
@@ -830,7 +831,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 case SPELL_AURA_ADD_FLAT_MODIFIER:          // mods
                 case SPELL_AURA_ADD_PCT_MODIFIER:
                 {
@@ -844,7 +846,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 default:
                     break;
             }
@@ -1198,7 +1201,10 @@ struct DoSpellProcEvent
         }
     }
 
-    const char* TableName() { return "spell_proc_event"; }
+    const char* TableName()
+    {
+        return "spell_proc_event";
+    }
     bool IsValidCustomRank(SpellProcEventEntry const& spe, uint32 entry, uint32 first_id)
     {
         // let have independent data in table for spells with ppm rates (exist rank dependent ppm rate spells)
@@ -1267,8 +1273,14 @@ struct DoSpellProcEvent
             ++count;
     }
 
-    bool HasEntry(uint32 spellId) { return spe_map.count(spellId) > 0; }
-    bool SetStateToEntry(uint32 spellId) { return (state = spe_map.find(spellId)) != spe_map.end(); }
+    bool HasEntry(uint32 spellId)
+    {
+        return spe_map.count(spellId) > 0;
+    }
+    bool SetStateToEntry(uint32 spellId)
+    {
+        return (state = spe_map.find(spellId)) != spe_map.end();
+    }
     SpellProcEventMap& spe_map;
     SpellProcEventMap::const_iterator state;
 
@@ -1331,7 +1343,10 @@ void SpellMgr::LoadSpellProcEvents()
 struct DoSpellProcItemEnchant
 {
     DoSpellProcItemEnchant(SpellProcItemEnchantMap& _procMap, float _ppm) : procMap(_procMap), ppm(_ppm) {}
-    void operator()(uint32 spell_id) { procMap[spell_id] = ppm; }
+    void operator()(uint32 spell_id)
+    {
+        procMap[spell_id] = ppm;
+    }
 
     SpellProcItemEnchantMap& procMap;
     float ppm;
@@ -1403,7 +1418,10 @@ void SpellMgr::LoadSpellProcItemEnchant()
 struct DoSpellBonuses
 {
     DoSpellBonuses(SpellBonusMap& _spellBonusMap, SpellBonusEntry const& _spellBonus) : spellBonusMap(_spellBonusMap), spellBonus(_spellBonus) {}
-    void operator()(uint32 spell_id) { spellBonusMap[spell_id] = spellBonus; }
+    void operator()(uint32 spell_id)
+    {
+        spellBonusMap[spell_id] = spellBonus;
+    }
 
     SpellBonusMap& spellBonusMap;
     SpellBonusEntry const& spellBonus;
@@ -1674,7 +1692,10 @@ struct DoSpellThreat
                 sLog.outErrorDb("Spell %u listed in `spell_threat` as custom rank has same data as Rank 1, so redundant", spell_id);
         }
     }
-    const char* TableName() { return "spell_threat"; }
+    const char* TableName()
+    {
+        return "spell_threat";
+    }
     bool IsValidCustomRank(SpellThreatEntry const& ste, uint32 entry, uint32 first_id)
     {
         if (!ste.threat)
@@ -1700,8 +1721,14 @@ struct DoSpellThreat
         }
         ++count;
     }
-    bool HasEntry(uint32 spellId) { return threatMap.count(spellId) > 0; }
-    bool SetStateToEntry(uint32 spellId) { return (state = threatMap.find(spellId)) != threatMap.end(); }
+    bool HasEntry(uint32 spellId)
+    {
+        return threatMap.count(spellId) > 0;
+    }
+    bool SetStateToEntry(uint32 spellId)
+    {
+        return (state = threatMap.find(spellId)) != threatMap.end();
+    }
 
     SpellThreatMap& threatMap;
     SpellThreatMap::const_iterator state;
@@ -3207,40 +3234,40 @@ void SpellMgr::LoadSpellAreas()
             continue;
         }
         else if (!spellArea.conditionId)
-    {
-        if (spellArea.questStart && !sObjectMgr.GetQuestTemplate(spellArea.questStart))
         {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong start quest (%u) requirement", spell, spellArea.questStart);
-            continue;
-        }
-
-        if (spellArea.questEnd)
-        {
-            if (!sObjectMgr.GetQuestTemplate(spellArea.questEnd))
+            if (spellArea.questStart && !sObjectMgr.GetQuestTemplate(spellArea.questStart))
             {
-                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong end quest (%u) requirement", spell, spellArea.questEnd);
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong start quest (%u) requirement", spell, spellArea.questStart);
                 continue;
             }
 
-            if (spellArea.questEnd == spellArea.questStart && !spellArea.questStartCanActive)
+            if (spellArea.questEnd)
             {
-                sLog.outErrorDb("Spell %u listed in `spell_area` have quest (%u) requirement for start and end in same time", spell, spellArea.questEnd);
+                if (!sObjectMgr.GetQuestTemplate(spellArea.questEnd))
+                {
+                    sLog.outErrorDb("Spell %u listed in `spell_area` have wrong end quest (%u) requirement", spell, spellArea.questEnd);
+                    continue;
+                }
+
+                if (spellArea.questEnd == spellArea.questStart && !spellArea.questStartCanActive)
+                {
+                    sLog.outErrorDb("Spell %u listed in `spell_area` have quest (%u) requirement for start and end in same time", spell, spellArea.questEnd);
+                    continue;
+                }
+            }
+
+            if (spellArea.raceMask && (spellArea.raceMask & RACEMASK_ALL_PLAYABLE) == 0)
+            {
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong race mask (%u) requirement", spell, spellArea.raceMask);
+                continue;
+            }
+
+            if (spellArea.gender != GENDER_NONE && spellArea.gender != GENDER_FEMALE && spellArea.gender != GENDER_MALE)
+            {
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong gender (%u) requirement", spell, spellArea.gender);
                 continue;
             }
         }
-
-        if (spellArea.raceMask && (spellArea.raceMask & RACEMASK_ALL_PLAYABLE) == 0)
-        {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong race mask (%u) requirement", spell, spellArea.raceMask);
-            continue;
-        }
-
-        if (spellArea.gender != GENDER_NONE && spellArea.gender != GENDER_FEMALE && spellArea.gender != GENDER_MALE)
-        {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong gender (%u) requirement", spell, spellArea.gender);
-            continue;
-        }
-   }
 
         if (spellArea.auraSpell)
         {
@@ -3819,35 +3846,35 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
             return false;
     }
     else                                                    // This block will be removed
- {
-    if (gender != GENDER_NONE)
     {
-        // not in expected gender
-        if (!player || gender != player->getGender())
-            return false;
-    }
+        if (gender != GENDER_NONE)
+        {
+            // not in expected gender
+            if (!player || gender != player->getGender())
+                return false;
+        }
 
-    if (raceMask)
-    {
-        // not in expected race
-        if (!player || !(raceMask & player->getRaceMask()))
-            return false;
-    }
+        if (raceMask)
+        {
+            // not in expected race
+            if (!player || !(raceMask & player->getRaceMask()))
+                return false;
+        }
 
-    if (questStart)
-    {
-        // not in expected required quest state
-        if (!player || (!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart))
-            return false;
-    }
+        if (questStart)
+        {
+            // not in expected required quest state
+            if (!player || (!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart))
+                return false;
+        }
 
-    if (questEnd)
-    {
-        // not in expected forbidden quest state
-        if (!player || player->GetQuestRewardStatus(questEnd))
-            return false;
+        if (questEnd)
+        {
+            // not in expected forbidden quest state
+            if (!player || player->GetQuestRewardStatus(questEnd))
+                return false;
+        }
     }
- }
 
     if (areaId)
     {

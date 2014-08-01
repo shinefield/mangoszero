@@ -68,8 +68,15 @@ namespace VMAP
             // bool containsLoadedMapTile(unsigned int pTileIdent) const { return(iLoadedMapTiles.containsKey(pTileIdent)); }
         public:
             static std::string getTileFileName(uint32 mapID, uint32 tileX, uint32 tileY);
-            static uint32 packTileID(uint32 tileX, uint32 tileY) { return tileX << 16 | tileY; }
-            static void unpackTileID(uint32 ID, uint32& tileX, uint32& tileY) { tileX = ID >> 16; tileY = ID & 0xFF; }
+            static uint32 packTileID(uint32 tileX, uint32 tileY)
+            {
+                return tileX << 16 | tileY;
+            }
+            static void unpackTileID(uint32 ID, uint32& tileX, uint32& tileY)
+            {
+                tileX = ID >> 16;
+                tileY = ID & 0xFF;
+            }
             static bool CanLoadMap(const std::string& basePath, uint32 mapID, uint32 tileX, uint32 tileY);
 
             StaticMapTree(uint32 mapID, const std::string& basePath);
@@ -85,8 +92,14 @@ namespace VMAP
             void UnloadMap(VMapManager2* vm);
             bool LoadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm);
             void UnloadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm);
-            bool isTiled() const { return iIsTiled; }
-            uint32 numLoadedTiles() const { return iLoadedTiles.size(); }
+            bool isTiled() const
+            {
+                return iIsTiled;
+            }
+            uint32 numLoadedTiles() const
+            {
+                return iLoadedTiles.size();
+            }
 
 #ifdef MMAP_GENERATOR
         public:

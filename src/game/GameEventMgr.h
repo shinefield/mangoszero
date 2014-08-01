@@ -47,7 +47,10 @@ struct GameEventData
     HolidayIds holiday_id;
     std::string description;
 
-    bool isValid() const { return length > 0; }
+    bool isValid() const
+    {
+        return length > 0;
+    }
 };
 
 struct GameEventCreatureData
@@ -80,15 +83,27 @@ class GameEventMgr
         ~GameEventMgr() {};
         typedef std::set<uint16> ActiveEvents;
         typedef std::vector<GameEventData> GameEventDataMap;
-        ActiveEvents const& GetActiveEventList() const { return m_ActiveEvents; }
-        GameEventDataMap const& GetEventMap() const { return mGameEvent; }
+        ActiveEvents const& GetActiveEventList() const
+        {
+            return m_ActiveEvents;
+        }
+        GameEventDataMap const& GetEventMap() const
+        {
+            return mGameEvent;
+        }
         bool CheckOneGameEvent(uint16 entry, time_t currenttime) const;
         uint32 NextCheck(uint16 entry) const;
         void LoadFromDB();
         void Initialize(MapPersistentState* state);         // called at new MapPersistentState object create
         uint32 Update(ActiveEvents const* activeAtShutdown = NULL);
-        bool IsValidEvent(uint16 event_id) const { return event_id < mGameEvent.size() && mGameEvent[event_id].isValid(); }
-        bool IsActiveEvent(uint16 event_id) const { return (m_ActiveEvents.find(event_id) != m_ActiveEvents.end()); }
+        bool IsValidEvent(uint16 event_id) const
+        {
+            return event_id < mGameEvent.size() && mGameEvent[event_id].isValid();
+        }
+        bool IsActiveEvent(uint16 event_id) const
+        {
+            return (m_ActiveEvents.find(event_id) != m_ActiveEvents.end());
+        }
         bool IsActiveHoliday(HolidayIds id);
         uint32 Initialize();
         void StartEvent(uint16 event_id, bool overwrite = false, bool resume = false);

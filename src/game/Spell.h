@@ -95,7 +95,10 @@ class SpellCastTargets
         void read(ByteBuffer& data, Unit* caster);
         void write(ByteBuffer& data) const;
 
-        SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this, caster); }
+        SpellCastTargetsReader ReadForCaster(Unit* caster)
+        {
+            return SpellCastTargetsReader(*this, caster);
+        }
 
         SpellCastTargets& operator=(const SpellCastTargets& target)
         {
@@ -126,25 +129,58 @@ class SpellCastTargets
         }
 
         void setUnitTarget(Unit* target);
-        ObjectGuid getUnitTargetGuid() const { return m_unitTargetGUID; }
-        Unit* getUnitTarget() const { return m_unitTarget; }
+        ObjectGuid getUnitTargetGuid() const
+        {
+            return m_unitTargetGUID;
+        }
+        Unit* getUnitTarget() const
+        {
+            return m_unitTarget;
+        }
 
         void setDestination(float x, float y, float z);
         void setSource(float x, float y, float z);
-        void getDestination(float& x, float& y, float& z) const { x = m_destX; y = m_destY; z = m_destZ; }
-        void getSource(float& x, float& y, float& z) const { x = m_srcX; y = m_srcY, z = m_srcZ; }
+        void getDestination(float& x, float& y, float& z) const
+        {
+            x = m_destX;
+            y = m_destY;
+            z = m_destZ;
+        }
+        void getSource(float& x, float& y, float& z) const
+        {
+            x = m_srcX;
+            y = m_srcY, z = m_srcZ;
+        }
 
         void setGOTarget(GameObject* target);
-        ObjectGuid getGOTargetGuid() const { return m_GOTargetGUID; }
-        GameObject* getGOTarget() const { return m_GOTarget; }
+        ObjectGuid getGOTargetGuid() const
+        {
+            return m_GOTargetGUID;
+        }
+        GameObject* getGOTarget() const
+        {
+            return m_GOTarget;
+        }
 
         void setCorpseTarget(Corpse* corpse);
-        ObjectGuid getCorpseTargetGuid() const { return m_CorpseTargetGUID; }
+        ObjectGuid getCorpseTargetGuid() const
+        {
+            return m_CorpseTargetGUID;
+        }
 
         void setItemTarget(Item* item);
-        ObjectGuid getItemTargetGuid() const { return m_itemTargetGUID; }
-        Item* getItemTarget() const { return m_itemTarget; }
-        uint32 getItemTargetEntry() const { return m_itemTargetEntry; }
+        ObjectGuid getItemTargetGuid() const
+        {
+            return m_itemTargetGUID;
+        }
+        Item* getItemTarget() const
+        {
+            return m_itemTarget;
+        }
+        uint32 getItemTargetEntry() const
+        {
+            return m_itemTargetEntry;
+        }
 
         void setTradeItemTarget(Player* caster);
 
@@ -157,7 +193,10 @@ class SpellCastTargets
             }
         }
 
-        bool IsEmpty() const { return !m_GOTargetGUID && !m_unitTargetGUID && !m_itemTarget && !m_CorpseTargetGUID; }
+        bool IsEmpty() const
+        {
+            return !m_GOTargetGUID && !m_unitTargetGUID && !m_itemTarget && !m_CorpseTargetGUID;
+        }
 
         void Update(Unit* caster);
 
@@ -342,14 +381,23 @@ class Spell
         SpellCastResult CheckPower();
         SpellCastResult CheckCasterAuras() const;
 
-        int32 CalculateDamage(SpellEffectIndex i, Unit* target) { return m_caster->CalculateSpellDamage(target, m_spellInfo, i, &m_currentBasePoints[i]); }
+        int32 CalculateDamage(SpellEffectIndex i, Unit* target)
+        {
+            return m_caster->CalculateSpellDamage(target, m_spellInfo, i, &m_currentBasePoints[i]);
+        }
         static uint32 CalculatePowerCost(SpellEntry const* spellInfo, Unit* caster, Spell const* spell = NULL, Item* castItem = NULL);
 
         bool HaveTargetsForEffect(SpellEffectIndex effect) const;
         void Delayed();
         void DelayedChannel();
-        uint32 getState() const { return m_spellState; }
-        void setState(uint32 state) { m_spellState = state; }
+        uint32 getState() const
+        {
+            return m_spellState;
+        }
+        void setState(uint32 state)
+        {
+            m_spellState = state;
+        }
 
         void DoCreateItem(SpellEffectIndex eff_idx, uint32 itemtype);
 
@@ -382,11 +430,26 @@ class Spell
         Item* m_CastItem;
         SpellCastTargets m_targets;
 
-        int32 GetCastTime() const { return m_casttime; }
-        uint32 GetCastedTime() { return m_timer; }
-        bool IsAutoRepeat() const { return m_autoRepeat; }
-        void SetAutoRepeat(bool rep) { m_autoRepeat = rep; }
-        void ReSetTimer() { m_timer = m_casttime > 0 ? m_casttime : 0; }
+        int32 GetCastTime() const
+        {
+            return m_casttime;
+        }
+        uint32 GetCastedTime()
+        {
+            return m_timer;
+        }
+        bool IsAutoRepeat() const
+        {
+            return m_autoRepeat;
+        }
+        void SetAutoRepeat(bool rep)
+        {
+            m_autoRepeat = rep;
+        }
+        void ReSetTimer()
+        {
+            m_timer = m_casttime > 0 ? m_casttime : 0;
+        }
         bool IsNextMeleeSwingSpell() const
         {
             return m_spellInfo->HasAttribute(SPELL_ATTR_ON_NEXT_SWING_1) || m_spellInfo->HasAttribute(SPELL_ATTR_ON_NEXT_SWING_2);
@@ -395,16 +458,43 @@ class Spell
         {
             return  m_spellInfo->HasAttribute(SPELL_ATTR_REQ_AMMO);
         }
-        bool IsChannelActive() const { return m_caster->GetUInt32Value(UNIT_CHANNEL_SPELL) != 0; }
-        bool IsMeleeAttackResetSpell() const { return !m_IsTriggeredSpell && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_AUTOATTACK);  }
-        bool IsRangedAttackResetSpell() const { return !m_IsTriggeredSpell && IsRangedSpell() && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_AUTOATTACK); }
+        bool IsChannelActive() const
+        {
+            return m_caster->GetUInt32Value(UNIT_CHANNEL_SPELL) != 0;
+        }
+        bool IsMeleeAttackResetSpell() const
+        {
+            return !m_IsTriggeredSpell && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_AUTOATTACK);
+        }
+        bool IsRangedAttackResetSpell() const
+        {
+            return !m_IsTriggeredSpell && IsRangedSpell() && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_AUTOATTACK);
+        }
 
-        bool IsDeletable() const { return !m_referencedFromCurrentSpell && !m_executedCurrently; }
-        void SetReferencedFromCurrent(bool yes) { m_referencedFromCurrentSpell = yes; }
-        void SetExecutedCurrently(bool yes) { m_executedCurrently = yes; }
-        uint64 GetDelayStart() const { return m_delayStart; }
-        void SetDelayStart(uint64 m_time) { m_delayStart = m_time; }
-        uint64 GetDelayMoment() const { return m_delayMoment; }
+        bool IsDeletable() const
+        {
+            return !m_referencedFromCurrentSpell && !m_executedCurrently;
+        }
+        void SetReferencedFromCurrent(bool yes)
+        {
+            m_referencedFromCurrentSpell = yes;
+        }
+        void SetExecutedCurrently(bool yes)
+        {
+            m_executedCurrently = yes;
+        }
+        uint64 GetDelayStart() const
+        {
+            return m_delayStart;
+        }
+        void SetDelayStart(uint64 m_time)
+        {
+            m_delayStart = m_time;
+        }
+        uint64 GetDelayMoment() const
+        {
+            return m_delayMoment;
+        }
 
         bool IsNeedSendToClient() const;                    // use for hide spell cast for client in case when cast not have client side affect (animation or log entries)
         bool IsTriggeredSpellWithRedundentCastTime() const; // use for ignore some spell data for triggered spells like cast time, some triggered spells have redundent copy data from main spell for client use purpose
@@ -413,22 +503,37 @@ class Spell
 
         // caster types:
         // formal spell caster, in game source of spell affects cast
-        Unit* GetCaster() const { return m_caster; }
+        Unit* GetCaster() const
+        {
+            return m_caster;
+        }
         // real source of cast affects, explicit caster, or DoT/HoT applier, or GO owner, or wild GO itself. Can be NULL
         WorldObject* GetAffectiveCasterObject() const;
         // limited version returning NULL in cases wild gameobject caster object, need for Aura (auras currently not support non-Unit caster)
-        Unit* GetAffectiveCaster() const { return m_originalCasterGUID ? m_originalCaster : m_caster; }
+        Unit* GetAffectiveCaster() const
+        {
+            return m_originalCasterGUID ? m_originalCaster : m_caster;
+        }
         // m_originalCasterGUID can store GO guid, and in this case this is visual caster
         WorldObject* GetCastingObject() const;
 
-        uint32 GetPowerCost() const { return m_powerCost; }
+        uint32 GetPowerCost() const
+        {
+            return m_powerCost;
+        }
 
         void UpdatePointers();                              // must be used at call Spell code after time delay (non triggered spell cast/update spell call/etc)
 
         bool CheckTargetCreatureType(Unit* target) const;
 
-        void AddTriggeredSpell(SpellEntry const* spellInfo) { m_TriggerSpells.push_back(spellInfo); }
-        void AddPrecastSpell(SpellEntry const* spellInfo) { m_preCastSpells.push_back(spellInfo); }
+        void AddTriggeredSpell(SpellEntry const* spellInfo)
+        {
+            m_TriggerSpells.push_back(spellInfo);
+        }
+        void AddPrecastSpell(SpellEntry const* spellInfo)
+        {
+            m_preCastSpells.push_back(spellInfo);
+        }
         void AddTriggeredSpell(uint32 spellId);
         void AddPrecastSpell(uint32 spellId);
         void CastPreCastSpells(Unit* target);
@@ -466,7 +571,10 @@ class Spell
         bool m_autoRepeat;
 
         uint8 m_delayAtDamageCount;
-        int32 GetNextDelayAtDamageMsTime() { return m_delayAtDamageCount < 5 ? 1000 - (m_delayAtDamageCount++) * 200 : 200; }
+        int32 GetNextDelayAtDamageMsTime()
+        {
+            return m_delayAtDamageCount < 5 ? 1000 - (m_delayAtDamageCount++) * 200 : 200;
+        }
 
         // Delayed spells system
         uint64 m_delayStart;                                // time of spell delay start, filled by event handler, zero = just started
@@ -655,8 +763,14 @@ namespace MaNGOS
         float i_centerY;
         float i_centerZ;
 
-        float GetCenterX() const { return i_centerX; }
-        float GetCenterY() const { return i_centerY; }
+        float GetCenterX() const
+        {
+            return i_centerX;
+        }
+        float GetCenterY() const
+        {
+            return i_centerY;
+        }
 
         SpellNotifierCreatureAndPlayer(Spell& spell, Spell::UnitList& data, float radius, SpellNotifyPushType type,
                                        SpellTargets TargetType = SPELL_TARGETS_NOT_FRIENDLY, WorldObject* originalCaster = NULL)
@@ -751,7 +865,8 @@ namespace MaNGOS
                     break;
                     case SPELL_TARGETS_ALL:
                         break;
-                    default: continue;
+                    default:
+                        continue;
                 }
 
                 // we don't need to check InMap here, it's already done some lines above

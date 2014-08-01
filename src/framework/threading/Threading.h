@@ -39,7 +39,10 @@ namespace ACE_Based
             virtual ~Runnable() {}
             virtual void run() = 0;
 
-            void incReference() { ++m_refs; }
+            void incReference()
+            {
+                ++m_refs;
+            }
             void decReference()
             {
                 if (!--m_refs)

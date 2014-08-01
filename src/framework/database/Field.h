@@ -46,23 +46,59 @@ class Field
 
         ~Field() {}
 
-        enum DataTypes GetType() const { return mType; }
-        bool IsNULL() const { return mValue == NULL; }
+        enum DataTypes GetType() const
+        {
+            return mType;
+        }
+        bool IsNULL() const
+        {
+            return mValue == NULL;
+        }
 
-        const char* GetString() const { return mValue; }
+        const char* GetString() const
+        {
+            return mValue;
+        }
         std::string GetCppString() const
         {
             return mValue ? mValue : "";                    // std::string s = 0 have undefine result in C++
         }
-        float GetFloat() const { return mValue ? static_cast<float>(atof(mValue)) : 0.0f; }
-        bool GetBool() const { return mValue ? atoi(mValue) > 0 : false; }
-        double GetDouble() const { return mValue ? static_cast<double>(atof(mValue)) : 0.0f; }
-        int8 GetInt8() const { return mValue ? static_cast<int8>(atol(mValue)) : int8(0); }
-        int32 GetInt32() const { return mValue ? static_cast<int32>(atol(mValue)) : int32(0); }
-        uint8 GetUInt8() const { return mValue ? static_cast<uint8>(atol(mValue)) : uint8(0); }
-        uint16 GetUInt16() const { return mValue ? static_cast<uint16>(atol(mValue)) : uint16(0); }
-        int16 GetInt16() const { return mValue ? static_cast<int16>(atol(mValue)) : int16(0); }
-        uint32 GetUInt32() const { return mValue ? static_cast<uint32>(atol(mValue)) : uint32(0); }
+        float GetFloat() const
+        {
+            return mValue ? static_cast<float>(atof(mValue)) : 0.0f;
+        }
+        bool GetBool() const
+        {
+            return mValue ? atoi(mValue) > 0 : false;
+        }
+        double GetDouble() const
+        {
+            return mValue ? static_cast<double>(atof(mValue)) : 0.0f;
+        }
+        int8 GetInt8() const
+        {
+            return mValue ? static_cast<int8>(atol(mValue)) : int8(0);
+        }
+        int32 GetInt32() const
+        {
+            return mValue ? static_cast<int32>(atol(mValue)) : int32(0);
+        }
+        uint8 GetUInt8() const
+        {
+            return mValue ? static_cast<uint8>(atol(mValue)) : uint8(0);
+        }
+        uint16 GetUInt16() const
+        {
+            return mValue ? static_cast<uint16>(atol(mValue)) : uint16(0);
+        }
+        int16 GetInt16() const
+        {
+            return mValue ? static_cast<int16>(atol(mValue)) : int16(0);
+        }
+        uint32 GetUInt32() const
+        {
+            return mValue ? static_cast<uint32>(atol(mValue)) : uint32(0);
+        }
         uint64 GetUInt64() const
         {
             uint64 value = 0;
@@ -81,10 +117,16 @@ class Field
             return value;
         }
 
-        void SetType(enum DataTypes type) { mType = type; }
+        void SetType(enum DataTypes type)
+        {
+            mType = type;
+        }
         // no need for memory allocations to store resultset field strings
         // all we need is to cache pointers returned by different DBMS APIs
-        void SetValue(const char* value) { mValue = value; };
+        void SetValue(const char* value)
+        {
+            mValue = value;
+        };
 
     private:
         Field(Field const&);

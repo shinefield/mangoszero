@@ -68,7 +68,10 @@ namespace Movement
             /* Sets Id of fisrt point of the path. When N-th path point will be done ILisener will notify that pointId + N done
              * Needed for waypoint movement where path splitten into parts
              */
-            void SetFirstPointId(int32 pointId) { args.path_Idx_offset = pointId; }
+            void SetFirstPointId(int32 pointId)
+            {
+                args.path_Idx_offset = pointId;
+            }
 
             /* Enables CatmullRom spline interpolation mode, enables flying animation. Disabled by default
              */
@@ -90,7 +93,10 @@ namespace Movement
              */
             void SetVelocity(float velocity);
 
-            PointsArray& Path() { return args.path; }
+            PointsArray& Path()
+            {
+                return args.path;
+            }
 
         protected:
 
@@ -98,11 +104,26 @@ namespace Movement
             Unit&  unit;
     };
 
-    inline void MoveSplineInit::SetFly() { args.flags.flying = true;}
-    inline void MoveSplineInit::SetWalk(bool enable) { args.flags.runmode = !enable;}
-    inline void MoveSplineInit::SetCyclic() { args.flags.cyclic = true;}
-    inline void MoveSplineInit::SetFall() { args.flags.falling = true;}
-    inline void MoveSplineInit::SetVelocity(float vel) { args.velocity = vel;}
+    inline void MoveSplineInit::SetFly()
+    {
+        args.flags.flying = true;
+    }
+    inline void MoveSplineInit::SetWalk(bool enable)
+    {
+        args.flags.runmode = !enable;
+    }
+    inline void MoveSplineInit::SetCyclic()
+    {
+        args.flags.cyclic = true;
+    }
+    inline void MoveSplineInit::SetFall()
+    {
+        args.flags.falling = true;
+    }
+    inline void MoveSplineInit::SetVelocity(float vel)
+    {
+        args.velocity = vel;
+    }
 
     inline void MoveSplineInit::MovebyPath(const PointsArray& controls, int32 path_offset)
     {

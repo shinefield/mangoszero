@@ -680,10 +680,14 @@ uint32 BattleGround::GetBattlemasterEntry() const
 {
     switch (GetTypeID())
     {
-        case BATTLEGROUND_AV: return 15972;
-        case BATTLEGROUND_WS: return 14623;
-        case BATTLEGROUND_AB: return 14879;
-        default:              return 0;
+        case BATTLEGROUND_AV:
+            return 15972;
+        case BATTLEGROUND_WS:
+            return 14623;
+        case BATTLEGROUND_AB:
+            return 14879;
+        default:
+            return 0;
     }
 }
 

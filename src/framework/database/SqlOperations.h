@@ -43,7 +43,10 @@ class SqlStmtParameters;
 class SqlOperation
 {
     public:
-        virtual void OnRemove() { delete this; }
+        virtual void OnRemove()
+        {
+            delete this;
+        }
         virtual bool Execute(SqlConnection* conn) = 0;
         virtual ~SqlOperation() {}
 };
@@ -56,7 +59,11 @@ class SqlPlainRequest : public SqlOperation
         const char* m_sql;
     public:
         SqlPlainRequest(const char* sql) : m_sql(mangos_strdup(sql)) {}
-        ~SqlPlainRequest() { char* tofree = const_cast<char*>(m_sql); delete[] tofree; }
+        ~SqlPlainRequest()
+        {
+            char* tofree = const_cast<char*>(m_sql);
+            delete[] tofree;
+        }
         bool Execute(SqlConnection* conn) override;
 };
 
@@ -69,7 +76,10 @@ class SqlTransaction : public SqlOperation
         SqlTransaction() {}
         ~SqlTransaction();
 
-        void DelayExecute(SqlOperation* sql) { m_queue.push_back(sql); }
+        void DelayExecute(SqlOperation* sql)
+        {
+            m_queue.push_back(sql);
+        }
 
         bool Execute(SqlConnection* conn) override;
 };
@@ -111,7 +121,11 @@ class SqlQuery : public SqlOperation
     public:
         SqlQuery(const char* sql, MaNGOS::IQueryCallback* callback, SqlResultQueue* queue)
             : m_sql(mangos_strdup(sql)), m_callback(callback), m_queue(queue) {}
-        ~SqlQuery() { char* tofree = const_cast<char*>(m_sql); delete[] tofree; }
+        ~SqlQuery()
+        {
+            char* tofree = const_cast<char*>(m_sql);
+            delete[] tofree;
+        }
         bool Execute(SqlConnection* conn) override;
 };
 

@@ -247,12 +247,24 @@ class MANGOS_DLL_SPEC Item : public Object
 
         ItemPrototype const* GetProto() const;
 
-        ObjectGuid const& GetOwnerGuid() const { return GetGuidValue(ITEM_FIELD_OWNER); }
-        void SetOwnerGuid(ObjectGuid guid) { SetGuidValue(ITEM_FIELD_OWNER, guid); }
+        ObjectGuid const& GetOwnerGuid() const
+        {
+            return GetGuidValue(ITEM_FIELD_OWNER);
+        }
+        void SetOwnerGuid(ObjectGuid guid)
+        {
+            SetGuidValue(ITEM_FIELD_OWNER, guid);
+        }
         Player* GetOwner()const;
 
-        void SetBinding(bool val) { ApplyModFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_BINDED, val); }
-        bool IsSoulBound() const { return HasFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_BINDED); }
+        void SetBinding(bool val)
+        {
+            ApplyModFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_BINDED, val);
+        }
+        bool IsSoulBound() const
+        {
+            return HasFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_BINDED);
+        }
         bool IsBindedNotWith(Player const* player) const;
         bool IsBoundByEnchant() const;
         virtual void SaveToDB();
@@ -261,85 +273,192 @@ class MANGOS_DLL_SPEC Item : public Object
         void DeleteFromInventoryDB();
         void LoadLootFromDB(Field* fields);
 
-        Bag* ToBag() { if (IsBag()) return reinterpret_cast<Bag*>(this); else return NULL; }
-        const Bag* ToBag() const { if (IsBag()) return reinterpret_cast<const Bag*>(this); else return NULL; }
+        Bag* ToBag()
+        {
+            if (IsBag()) return reinterpret_cast<Bag*>(this);
+            else return NULL;
+        }
+        const Bag* ToBag() const
+        {
+            if (IsBag()) return reinterpret_cast<const Bag*>(this);
+            else return NULL;
+        }
 
-        bool IsLocked() const { return !HasFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_UNLOCKED); }
-        bool IsBag() const { return GetProto()->InventoryType == INVTYPE_BAG; }
+        bool IsLocked() const
+        {
+            return !HasFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_UNLOCKED);
+        }
+        bool IsBag() const
+        {
+            return GetProto()->InventoryType == INVTYPE_BAG;
+        }
         bool IsNotEmptyBag() const;
-        bool IsBroken() const { return GetUInt32Value(ITEM_FIELD_MAXDURABILITY) > 0 && GetUInt32Value(ITEM_FIELD_DURABILITY) == 0; }
+        bool IsBroken() const
+        {
+            return GetUInt32Value(ITEM_FIELD_MAXDURABILITY) > 0 && GetUInt32Value(ITEM_FIELD_DURABILITY) == 0;
+        }
         bool CanBeTraded() const;
-        void SetInTrade(bool b = true) { mb_in_trade = b; }
-        bool IsInTrade() const { return mb_in_trade; }
+        void SetInTrade(bool b = true)
+        {
+            mb_in_trade = b;
+        }
+        bool IsInTrade() const
+        {
+            return mb_in_trade;
+        }
 
         bool IsFitToSpellRequirements(SpellEntry const* spellInfo) const;
         bool IsTargetValidForItemUse(Unit* pUnitTarget);
         bool IsLimitedToAnotherMapOrZone(uint32 cur_mapId, uint32 cur_zoneId) const;
 
-        uint32 GetCount() const { return GetUInt32Value(ITEM_FIELD_STACK_COUNT); }
-        void SetCount(uint32 value) { SetUInt32Value(ITEM_FIELD_STACK_COUNT, value); }
-        uint32 GetMaxStackCount() const { return GetProto()->GetMaxStackSize(); }
+        uint32 GetCount() const
+        {
+            return GetUInt32Value(ITEM_FIELD_STACK_COUNT);
+        }
+        void SetCount(uint32 value)
+        {
+            SetUInt32Value(ITEM_FIELD_STACK_COUNT, value);
+        }
+        uint32 GetMaxStackCount() const
+        {
+            return GetProto()->GetMaxStackSize();
+        }
         InventoryResult CanBeMergedPartlyWith(ItemPrototype const* proto) const;
 
-        uint8 GetSlot() const {return m_slot;}
-        Bag* GetContainer() { return m_container; }
+        uint8 GetSlot() const
+        {
+            return m_slot;
+        }
+        Bag* GetContainer()
+        {
+            return m_container;
+        }
         uint8 GetBagSlot() const;
-        void SetSlot(uint8 slot) {m_slot = slot;}
-        uint16 GetPos() const { return uint16(GetBagSlot()) << 8 | GetSlot(); }
-        void SetContainer(Bag* container) { m_container = container; }
+        void SetSlot(uint8 slot)
+        {
+            m_slot = slot;
+        }
+        uint16 GetPos() const
+        {
+            return uint16(GetBagSlot()) << 8 | GetSlot();
+        }
+        void SetContainer(Bag* container)
+        {
+            m_container = container;
+        }
 
-        bool IsInBag() const { return m_container != NULL; }
+        bool IsInBag() const
+        {
+            return m_container != NULL;
+        }
         bool IsEquipped() const;
 
         uint32 GetSkill();
         uint32 GetSpell();
 
         // RandomPropertyId (signed but stored as unsigned)
-        int32 GetItemRandomPropertyId() const { return GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID); }
-        uint32 GetItemSuffixFactor() const { return GetUInt32Value(ITEM_FIELD_PROPERTY_SEED); }
+        int32 GetItemRandomPropertyId() const
+        {
+            return GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID);
+        }
+        uint32 GetItemSuffixFactor() const
+        {
+            return GetUInt32Value(ITEM_FIELD_PROPERTY_SEED);
+        }
         void SetItemRandomProperties(int32 randomPropId);
         static int32 GenerateItemRandomPropertyId(uint32 item_id);
         void SetEnchantment(EnchantmentSlot slot, uint32 id, uint32 duration, uint32 charges);
         void SetEnchantmentDuration(EnchantmentSlot slot, uint32 duration);
         void SetEnchantmentCharges(EnchantmentSlot slot, uint32 charges);
         void ClearEnchantment(EnchantmentSlot slot);
-        uint32 GetEnchantmentId(EnchantmentSlot slot)       const { return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_ID_OFFSET);}
-        uint32 GetEnchantmentDuration(EnchantmentSlot slot) const { return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET);}
-        uint32 GetEnchantmentCharges(EnchantmentSlot slot)  const { return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET);}
+        uint32 GetEnchantmentId(EnchantmentSlot slot)       const
+        {
+            return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_ID_OFFSET);
+        }
+        uint32 GetEnchantmentDuration(EnchantmentSlot slot) const
+        {
+            return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET);
+        }
+        uint32 GetEnchantmentCharges(EnchantmentSlot slot)  const
+        {
+            return GetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET);
+        }
 
         void SendTimeUpdate(Player* owner);
         void UpdateDuration(Player* owner, uint32 diff);
 
         // spell charges (signed but stored as unsigned)
-        int32 GetSpellCharges(uint8 index/*0..5*/ = 0) const { return GetInt32Value(ITEM_FIELD_SPELL_CHARGES + index); }
-        void SetSpellCharges(uint8 index/*0..5*/, int32 value) { SetInt32Value(ITEM_FIELD_SPELL_CHARGES + index, value); }
+        int32 GetSpellCharges(uint8 index/*0..5*/ = 0) const
+        {
+            return GetInt32Value(ITEM_FIELD_SPELL_CHARGES + index);
+        }
+        void SetSpellCharges(uint8 index/*0..5*/, int32 value)
+        {
+            SetInt32Value(ITEM_FIELD_SPELL_CHARGES + index, value);
+        }
 
         Loot loot;
 
         void SetLootState(ItemLootUpdateState state);
-        bool HasGeneratedLoot() const { return m_lootState != ITEM_LOOT_NONE && m_lootState != ITEM_LOOT_REMOVED; }
-        bool HasTemporaryLoot() const { return m_lootState == ITEM_LOOT_TEMPORARY; }
+        bool HasGeneratedLoot() const
+        {
+            return m_lootState != ITEM_LOOT_NONE && m_lootState != ITEM_LOOT_REMOVED;
+        }
+        bool HasTemporaryLoot() const
+        {
+            return m_lootState == ITEM_LOOT_TEMPORARY;
+        }
 
-        bool HasSavedLoot() const { return m_lootState != ITEM_LOOT_NONE && m_lootState != ITEM_LOOT_NEW && m_lootState != ITEM_LOOT_TEMPORARY; }
+        bool HasSavedLoot() const
+        {
+            return m_lootState != ITEM_LOOT_NONE && m_lootState != ITEM_LOOT_NEW && m_lootState != ITEM_LOOT_TEMPORARY;
+        }
 
         // Update States
-        ItemUpdateState GetState() const { return uState; }
+        ItemUpdateState GetState() const
+        {
+            return uState;
+        }
         void SetState(ItemUpdateState state, Player* forplayer = NULL);
         void AddToUpdateQueueOf(Player* player);
         void RemoveFromUpdateQueueOf(Player* player);
-        bool IsInUpdateQueue() const { return uQueuePos != -1; }
-        uint16 GetQueuePos() const { return uQueuePos; }
+        bool IsInUpdateQueue() const
+        {
+            return uQueuePos != -1;
+        }
+        uint16 GetQueuePos() const
+        {
+            return uQueuePos;
+        }
         void FSetState(ItemUpdateState state)               // forced
         {
             uState = state;
         }
 
-        bool HasQuest(uint32 quest_id) const override { return GetProto()->StartQuest == quest_id; }
-        bool HasInvolvedQuest(uint32 /*quest_id*/) const override { return false; }
-        bool IsPotion() const { return GetProto()->IsPotion(); }
-        bool IsConjuredConsumable() const { return GetProto()->IsConjuredConsumable(); }
-        bool IsWeaponVellum() const { return GetProto()->IsWeaponVellum(); }
-        bool IsArmorVellum() const { return GetProto()->IsArmorVellum(); }
+        bool HasQuest(uint32 quest_id) const override
+        {
+            return GetProto()->StartQuest == quest_id;
+        }
+        bool HasInvolvedQuest(uint32 /*quest_id*/) const override
+        {
+            return false;
+        }
+        bool IsPotion() const
+        {
+            return GetProto()->IsPotion();
+        }
+        bool IsConjuredConsumable() const
+        {
+            return GetProto()->IsConjuredConsumable();
+        }
+        bool IsWeaponVellum() const
+        {
+            return GetProto()->IsWeaponVellum();
+        }
+        bool IsArmorVellum() const
+        {
+            return GetProto()->IsArmorVellum();
+        }
 
         void AddToClientUpdateList() override;
         void RemoveFromClientUpdateList() override;

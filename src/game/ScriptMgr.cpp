@@ -1083,7 +1083,8 @@ bool ScriptAction::HandleScriptStep()
     WorldObject* pTarget;
     Object* pSourceOrItem;                                  // Stores a provided pSource (if exists as WorldObject) or source-item
 
-    {                                                       // Add scope for source & target variables so that they are not used below
+    {
+        // Add scope for source & target variables so that they are not used below
         Object* source = NULL;
         Object* target = NULL;
         if (!GetScriptCommandObject(m_sourceGuid, true, source))
@@ -1798,8 +1799,8 @@ bool ScriptAction::HandleScriptStep()
             if (LogIfNotUnit(pSource))
                 break;
 
-           ((Unit*)pSource)->SetFacingTo(pSource->GetAngle(pTarget));
-           break;
+            ((Unit*)pSource)->SetFacingTo(pSource->GetAngle(pTarget));
+            break;
         }
         default:
             sLog.outErrorDb(" DB-SCRIPTS: Process table `%s` id %u, command %u unknown command used.", m_table, m_script->id, m_script->command);
@@ -2213,14 +2214,14 @@ ScriptLoadResult ScriptMgr::LoadScriptLibrary(const char* libName)
         return SCRIPT_LOAD_ERR_NOT_FOUND;
 
 #   define GET_SCRIPT_HOOK_PTR(P,N)             \
-        GetScriptHookPtr((P), (N));             \
-        if (!(P))                               \
-        {                                       \
-            /* prevent call before init */      \
-            m_pOnFreeScriptLibrary = NULL;      \
-            UnloadScriptLibrary();              \
-            return SCRIPT_LOAD_ERR_WRONG_API;   \
-        }
+    GetScriptHookPtr((P), (N));             \
+    if (!(P))                               \
+    {                                       \
+        /* prevent call before init */      \
+        m_pOnFreeScriptLibrary = NULL;      \
+        UnloadScriptLibrary();              \
+        return SCRIPT_LOAD_ERR_WRONG_API;   \
+    }
 
     // let check used mangosd revision for build library (unsafe use with different revision because changes in inline functions, define and etc)
     char const*(MANGOS_IMPORT * pGetMangosRevStr)();

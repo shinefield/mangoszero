@@ -117,7 +117,10 @@ class WorldUpdateCounter
             return WorldTimer::getMSTimeDiff(m_tmStart, WorldTimer::tickTime());
         }
 
-        void Reset() { m_tmStart = WorldTimer::tickTime(); }
+        void Reset()
+        {
+            m_tmStart = WorldTimer::tickTime();
+        }
 
     private:
         uint32 m_tmStart;
@@ -128,7 +131,10 @@ class MANGOS_DLL_SPEC Object
     public:
         virtual ~Object();
 
-        const bool& IsInWorld() const { return m_inWorld; }
+        const bool& IsInWorld() const
+        {
+            return m_inWorld;
+        }
         virtual void AddToWorld()
         {
             if (m_inWorld)
@@ -146,14 +152,35 @@ class MANGOS_DLL_SPEC Object
             m_inWorld = false;
         }
 
-        ObjectGuid const& GetObjectGuid() const { return GetGuidValue(OBJECT_FIELD_GUID); }
-        const uint64& GetGUID() const { return GetUInt64Value(OBJECT_FIELD_GUID); } // DEPRECATED, not use, will removed soon
-        uint32 GetGUIDLow() const { return GetObjectGuid().GetCounter(); }
-        PackedGuid const& GetPackGUID() const { return m_PackGUID; }
-        std::string GetGuidStr() const { return GetObjectGuid().GetString(); }
+        ObjectGuid const& GetObjectGuid() const
+        {
+            return GetGuidValue(OBJECT_FIELD_GUID);
+        }
+        const uint64& GetGUID() const
+        {
+            return GetUInt64Value(OBJECT_FIELD_GUID);    // DEPRECATED, not use, will removed soon
+        }
+        uint32 GetGUIDLow() const
+        {
+            return GetObjectGuid().GetCounter();
+        }
+        PackedGuid const& GetPackGUID() const
+        {
+            return m_PackGUID;
+        }
+        std::string GetGuidStr() const
+        {
+            return GetObjectGuid().GetString();
+        }
 
-        uint32 GetEntry() const { return GetUInt32Value(OBJECT_FIELD_ENTRY); }
-        void SetEntry(uint32 entry) { SetUInt32Value(OBJECT_FIELD_ENTRY, entry); }
+        uint32 GetEntry() const
+        {
+            return GetUInt32Value(OBJECT_FIELD_ENTRY);
+        }
+        void SetEntry(uint32 entry)
+        {
+            SetUInt32Value(OBJECT_FIELD_ENTRY, entry);
+        }
 
         float GetObjectScale() const
         {
@@ -162,8 +189,14 @@ class MANGOS_DLL_SPEC Object
 
         void SetObjectScale(float newScale);
 
-        uint8 GetTypeId() const { return m_objectTypeId; }
-        bool isType(TypeMask mask) const { return (mask & m_objectType); }
+        uint8 GetTypeId() const
+        {
+            return m_objectTypeId;
+        }
+        bool isType(TypeMask mask) const
+        {
+            return (mask & m_objectType);
+        }
 
         virtual void BuildCreateUpdateBlockForPlayer(UpdateData* data, Player* target) const;
         void SendCreateUpdateToPlayer(Player* player);
@@ -219,25 +252,76 @@ class MANGOS_DLL_SPEC Object
             return *(((uint16*)&m_uint32Values[ index ]) + offset);
         }
 
-        ObjectGuid const& GetGuidValue(uint16 index) const { return *reinterpret_cast<ObjectGuid const*>(&GetUInt64Value(index)); }
+        ObjectGuid const& GetGuidValue(uint16 index) const
+        {
+            return *reinterpret_cast<ObjectGuid const*>(&GetUInt64Value(index));
+        }
 
-        Player* ToPlayer() { if (GetTypeId() == TYPEID_PLAYER) return reinterpret_cast<Player*>(this); else return NULL; }
-        Player const* ToPlayer() const { if (GetTypeId() == TYPEID_PLAYER) return reinterpret_cast<Player const*>(this); else return NULL; }
+        Player* ToPlayer()
+        {
+            if (GetTypeId() == TYPEID_PLAYER) return reinterpret_cast<Player*>(this);
+            else return NULL;
+        }
+        Player const* ToPlayer() const
+        {
+            if (GetTypeId() == TYPEID_PLAYER) return reinterpret_cast<Player const*>(this);
+            else return NULL;
+        }
 
-        Creature* ToCreature() { if (GetTypeId() == TYPEID_UNIT) return reinterpret_cast<Creature*>(this); else return NULL; }
-        Creature const* ToCreature() const { if (GetTypeId() == TYPEID_UNIT) return reinterpret_cast<Creature const*>(this); else return NULL; }
+        Creature* ToCreature()
+        {
+            if (GetTypeId() == TYPEID_UNIT) return reinterpret_cast<Creature*>(this);
+            else return NULL;
+        }
+        Creature const* ToCreature() const
+        {
+            if (GetTypeId() == TYPEID_UNIT) return reinterpret_cast<Creature const*>(this);
+            else return NULL;
+        }
 
-        Unit* ToUnit() { if (isType(TYPEMASK_UNIT)) return reinterpret_cast<Unit*>(this); else return NULL; }
-        Unit const* ToUnit() const { if (isType(TYPEMASK_UNIT)) return reinterpret_cast<Unit const*>(this); else return NULL; }
+        Unit* ToUnit()
+        {
+            if (isType(TYPEMASK_UNIT)) return reinterpret_cast<Unit*>(this);
+            else return NULL;
+        }
+        Unit const* ToUnit() const
+        {
+            if (isType(TYPEMASK_UNIT)) return reinterpret_cast<Unit const*>(this);
+            else return NULL;
+        }
 
-        GameObject* ToGameObject() { if (GetTypeId() == TYPEID_GAMEOBJECT) return reinterpret_cast<GameObject*>(this); else return NULL; }
-        GameObject const* ToGameObject() const { if (GetTypeId() == TYPEID_GAMEOBJECT) return reinterpret_cast<GameObject const*>(this); else return NULL; }
+        GameObject* ToGameObject()
+        {
+            if (GetTypeId() == TYPEID_GAMEOBJECT) return reinterpret_cast<GameObject*>(this);
+            else return NULL;
+        }
+        GameObject const* ToGameObject() const
+        {
+            if (GetTypeId() == TYPEID_GAMEOBJECT) return reinterpret_cast<GameObject const*>(this);
+            else return NULL;
+        }
 
-        Corpse* ToCorpse() { if (GetTypeId() == TYPEID_CORPSE) return reinterpret_cast<Corpse*>(this); else return NULL; }
-        Corpse const* ToCorpse() const { if (GetTypeId() == TYPEID_CORPSE) return reinterpret_cast<Corpse const*>(this); else return NULL; }
+        Corpse* ToCorpse()
+        {
+            if (GetTypeId() == TYPEID_CORPSE) return reinterpret_cast<Corpse*>(this);
+            else return NULL;
+        }
+        Corpse const* ToCorpse() const
+        {
+            if (GetTypeId() == TYPEID_CORPSE) return reinterpret_cast<Corpse const*>(this);
+            else return NULL;
+        }
 
-        DynamicObject* ToDynObject() { if (GetTypeId() == TYPEID_DYNAMICOBJECT) return reinterpret_cast<DynamicObject*>(this); else return NULL; }
-        DynamicObject const* ToDynObject() const { if (GetTypeId() == TYPEID_DYNAMICOBJECT) return reinterpret_cast<DynamicObject const*>(this); else return NULL; }
+        DynamicObject* ToDynObject()
+        {
+            if (GetTypeId() == TYPEID_DYNAMICOBJECT) return reinterpret_cast<DynamicObject*>(this);
+            else return NULL;
+        }
+        DynamicObject const* ToDynObject() const
+        {
+            if (GetTypeId() == TYPEID_DYNAMICOBJECT) return reinterpret_cast<DynamicObject const*>(this);
+            else return NULL;
+        }
 
         void SetInt32Value(uint16 index,        int32  value);
         void SetUInt32Value(uint16 index,       uint32  value);
@@ -246,8 +330,14 @@ class MANGOS_DLL_SPEC Object
         void SetFloatValue(uint16 index,       float   value);
         void SetByteValue(uint16 index, uint8 offset, uint8 value);
         void SetUInt16Value(uint16 index, uint8 offset, uint16 value);
-        void SetInt16Value(uint16 index, uint8 offset, int16 value) { SetUInt16Value(index, offset, (uint16)value); }
-        void SetGuidValue(uint16 index, ObjectGuid const& value) { SetUInt64Value(index, value.GetRawValue()); }
+        void SetInt16Value(uint16 index, uint8 offset, int16 value)
+        {
+            SetUInt16Value(index, offset, (uint16)value);
+        }
+        void SetGuidValue(uint16 index, ObjectGuid const& value)
+        {
+            SetUInt64Value(index, value.GetRawValue());
+        }
         void SetStatFloatValue(uint16 index, float value);
         void SetStatInt32Value(uint16 index, int32 value);
 
@@ -379,10 +469,19 @@ class MANGOS_DLL_SPEC Object
 
         bool LoadValues(const char* data);
 
-        uint16 GetValuesCount() const { return m_valuesCount; }
+        uint16 GetValuesCount() const
+        {
+            return m_valuesCount;
+        }
 
-        virtual bool HasQuest(uint32 /* quest_id */) const { return false; }
-        virtual bool HasInvolvedQuest(uint32 /* quest_id */) const { return false; }
+        virtual bool HasQuest(uint32 /* quest_id */) const
+        {
+            return false;
+        }
+        virtual bool HasInvolvedQuest(uint32 /* quest_id */) const
+        {
+            return false;
+        }
 
     protected:
         Object();
@@ -470,14 +569,34 @@ class MANGOS_DLL_SPEC WorldObject : public Object
 
         void SetOrientation(float orientation);
 
-        float GetPositionX() const { return m_position.x; }
-        float GetPositionY() const { return m_position.y; }
-        float GetPositionZ() const { return m_position.z; }
+        float GetPositionX() const
+        {
+            return m_position.x;
+        }
+        float GetPositionY() const
+        {
+            return m_position.y;
+        }
+        float GetPositionZ() const
+        {
+            return m_position.z;
+        }
         void GetPosition(float& x, float& y, float& z) const
-        { x = m_position.x; y = m_position.y; z = m_position.z; }
+        {
+            x = m_position.x;
+            y = m_position.y;
+            z = m_position.z;
+        }
         void GetPosition(WorldLocation& loc) const
-        { loc.mapid = m_mapId; GetPosition(loc.coord_x, loc.coord_y, loc.coord_z); loc.orientation = GetOrientation(); }
-        float GetOrientation() const { return m_position.o; }
+        {
+            loc.mapid = m_mapId;
+            GetPosition(loc.coord_x, loc.coord_y, loc.coord_z);
+            loc.orientation = GetOrientation();
+        }
+        float GetOrientation() const
+        {
+            return m_position.o;
+        }
 
         /// Gives a 2d-point in distance distance2d in direction absAngle around the current position (point-to-point)
         void GetNearPoint2D(float& x, float& y, float distance2d, float absAngle) const;
@@ -512,7 +631,10 @@ class MANGOS_DLL_SPEC WorldObject : public Object
             GetNearPoint(obj, x, y, z, obj->GetObjectBoundingRadius(), distance2d + GetObjectBoundingRadius() + obj->GetObjectBoundingRadius(), GetAngle(obj));
         }
 
-        virtual float GetObjectBoundingRadius() const { return DEFAULT_WORLD_OBJECT_SIZE; }
+        virtual float GetObjectBoundingRadius() const
+        {
+            return DEFAULT_WORLD_OBJECT_SIZE;
+        }
 
         bool IsPositionValid() const;
         void UpdateGroundPositionZ(float x, float y, float& z) const;
@@ -520,8 +642,14 @@ class MANGOS_DLL_SPEC WorldObject : public Object
 
         void GetRandomPoint(float x, float y, float z, float distance, float& rand_x, float& rand_y, float& rand_z) const;
 
-        uint32 GetMapId() const { return m_mapId; }
-        uint32 GetInstanceId() const { return m_InstanceId; }
+        uint32 GetMapId() const
+        {
+            return m_mapId;
+        }
+        uint32 GetInstanceId() const
+        {
+            return m_InstanceId;
+        }
 
         uint32 GetZoneId() const;
         uint32 GetAreaId() const;
@@ -529,10 +657,19 @@ class MANGOS_DLL_SPEC WorldObject : public Object
 
         InstanceData* GetInstanceData() const;
 
-        const char* GetName() const { return m_name.c_str(); }
-        void SetName(const std::string& newname) { m_name = newname; }
+        const char* GetName() const
+        {
+            return m_name.c_str();
+        }
+        void SetName(const std::string& newname)
+        {
+            m_name = newname;
+        }
 
-        virtual const char* GetNameForLocaleIdx(int32 /*locale_idx*/) const { return GetName(); }
+        virtual const char* GetNameForLocaleIdx(int32 /*locale_idx*/) const
+        {
+            return GetName();
+        }
 
         float GetDistance(const WorldObject* obj) const;
         float GetDistance(float x, float y, float z) const;
@@ -601,15 +738,25 @@ class MANGOS_DLL_SPEC WorldObject : public Object
         virtual void UpdateVisibilityAndView();             // update visibility for object and object for all around
 
         // main visibility check function in normal case (ignore grey zone distance check)
-        bool isVisibleFor(Player const* u, WorldObject const* viewPoint) const { return isVisibleForInState(u, viewPoint, false); }
+        bool isVisibleFor(Player const* u, WorldObject const* viewPoint) const
+        {
+            return isVisibleForInState(u, viewPoint, false);
+        }
 
         // low level function for visibility change code, must be define in all main world object subclasses
         virtual bool isVisibleForInState(Player const* u, WorldObject const* viewPoint, bool inVisibleList) const = 0;
 
         void SetMap(Map* map);
-        Map* GetMap() const { MANGOS_ASSERT(m_currMap); return m_currMap; }
+        Map* GetMap() const
+        {
+            MANGOS_ASSERT(m_currMap);
+            return m_currMap;
+        }
         // used to check all object's GetMap() calls when object is not in world!
-        void ResetMap() { m_currMap = NULL; }
+        void ResetMap()
+        {
+            m_currMap = NULL;
+        }
 
         // obtain terrain data for map where this object belong...
         TerrainInfo const* GetTerrain() const;
@@ -621,10 +768,16 @@ class MANGOS_DLL_SPEC WorldObject : public Object
         Creature* SummonCreature(uint32 id, float x, float y, float z, float ang, TempSummonType spwtype, uint32 despwtime, bool asActiveObject = false);
         GameObject* SummonGameObject(uint32 id, float x, float y, float z, float angle, uint32 despwtime);
 
-        bool isActiveObject() const { return m_isActiveObject || m_viewPoint.hasViewers(); }
+        bool isActiveObject() const
+        {
+            return m_isActiveObject || m_viewPoint.hasViewers();
+        }
         void SetActiveObjectState(bool active);
 
-        ViewPoint& GetViewPoint() { return m_viewPoint; }
+        ViewPoint& GetViewPoint()
+        {
+            return m_viewPoint;
+        }
 
         // ASSERT print helper
         bool PrintCoordinatesError(float x, float y, float z, char const* descr) const;
@@ -637,8 +790,14 @@ class MANGOS_DLL_SPEC WorldObject : public Object
         // these functions are used mostly for Relocate() and Corpse/Player specific stuff...
         // use them ONLY in LoadFromDB()/Create() funcs and nowhere else!
         // mapId/instanceId should be set in SetMap() function!
-        void SetLocationMapId(uint32 _mapId) { m_mapId = _mapId; }
-        void SetLocationInstanceId(uint32 _instanceId) { m_InstanceId = _instanceId; }
+        void SetLocationMapId(uint32 _mapId)
+        {
+            m_mapId = _mapId;
+        }
+        void SetLocationInstanceId(uint32 _instanceId)
+        {
+            m_InstanceId = _instanceId;
+        }
 
         virtual void StopGroupLoot() {}
 

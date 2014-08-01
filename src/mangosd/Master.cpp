@@ -65,11 +65,17 @@ volatile uint32 Master::m_masterLoopCounter = 0;
 class FreezeDetectorRunnable : public ACE_Based::Runnable
 {
     public:
-        FreezeDetectorRunnable() { _delaytime = 0; }
+        FreezeDetectorRunnable()
+        {
+            _delaytime = 0;
+        }
         uint32 m_loops, m_lastchange;
         uint32 w_loops, w_lastchange;
         uint32 _delaytime;
-        void SetDelayTime(uint32 t) { _delaytime = t; }
+        void SetDelayTime(uint32 t)
+        {
+            _delaytime = t;
+        }
         void run(void)
         {
             if (!_delaytime)

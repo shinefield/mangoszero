@@ -1336,9 +1336,12 @@ inline uint32 CreatureEventAI::GetRandActionParam(uint32 rnd, uint32 param1, uin
 {
     switch (rnd % 3)
     {
-        case 0: return param1;
-        case 1: return param2;
-        case 2: return param3;
+        case 0:
+            return param1;
+        case 1:
+            return param2;
+        case 2:
+            return param3;
     }
     return 0;
 }
@@ -1347,9 +1350,12 @@ inline int32 CreatureEventAI::GetRandActionParam(uint32 rnd, int32 param1, int32
 {
     switch (rnd % 3)
     {
-        case 0: return param1;
-        case 1: return param2;
-        case 2: return param3;
+        case 0:
+            return param1;
+        case 1:
+            return param2;
+        case 2:
+            return param3;
     }
     return 0;
 }

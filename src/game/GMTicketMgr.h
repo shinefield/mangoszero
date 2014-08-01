@@ -88,7 +88,10 @@ class GMTicket
             CharacterDatabase.PExecute("UPDATE character_ticket SET response_text = '%s' WHERE guid = '%u'", escapedString.c_str(), m_guid.GetCounter());
         }
 
-        bool HasResponse() { return !m_responseText.empty(); }
+        bool HasResponse()
+        {
+            return !m_responseText.empty();
+        }
 
         void DeleteFromDB() const
         {

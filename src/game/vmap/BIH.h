@@ -96,7 +96,10 @@ class BIH
         }
 
     public:
-        BIH() {init_empty();}
+        BIH()
+        {
+            init_empty();
+        }
         template< class BoundsFunc, class PrimArray >
         void build(const PrimArray& primitives, BoundsFunc& getBounds, uint32 leafSize = 3, bool printStats = false)
         {
@@ -132,7 +135,10 @@ class BIH
             delete[] dat.primBound;
             delete[] dat.indices;
         }
-        uint32 primCount() { return objects.size(); }
+        uint32 primCount()
+        {
+            return objects.size();
+        }
 
         template<typename RayCallback>
         void intersectRay(const Ray& r, RayCallback& intersectCallback, float& maxDist, bool stopAtFirst = false) const
@@ -405,8 +411,14 @@ class BIH
                     for (int i = 0; i < 6; ++i) numLeavesN[i] = 0;
                 }
 
-                void updateInner() { ++numNodes; }
-                void updateBVH2() { ++numBVH2; }
+                void updateInner()
+                {
+                    ++numNodes;
+                }
+                void updateBVH2()
+                {
+                    ++numBVH2;
+                }
                 void updateLeaf(int depth, int n);
                 void printStats();
         };

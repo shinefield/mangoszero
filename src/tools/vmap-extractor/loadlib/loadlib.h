@@ -74,8 +74,14 @@ class FileLoader
         uint32  data_size;
     public:
         virtual bool prepareLoadedData();
-        uint8* GetData()     {return data;}
-        uint32 GetDataSize() {return data_size;}
+        uint8* GetData()
+        {
+            return data;
+        }
+        uint32 GetDataSize()
+        {
+            return data_size;
+        }
 
         file_MVER* version;
         FileLoader();

@@ -413,11 +413,26 @@ class ScriptAction
 
         bool HandleScriptStep();                            // return true IF AND ONLY IF the script should be terminated
 
-        const char* GetTableName() const { return m_table; }
-        uint32 GetId() const { return m_script->id; }
-        ObjectGuid GetSourceGuid() const { return m_sourceGuid; }
-        ObjectGuid GetTargetGuid() const { return m_targetGuid; }
-        ObjectGuid GetOwnerGuid() const { return m_ownerGuid; }
+        const char* GetTableName() const
+        {
+            return m_table;
+        }
+        uint32 GetId() const
+        {
+            return m_script->id;
+        }
+        ObjectGuid GetSourceGuid() const
+        {
+            return m_sourceGuid;
+        }
+        ObjectGuid GetTargetGuid() const
+        {
+            return m_targetGuid;
+        }
+        ObjectGuid GetOwnerGuid() const
+        {
+            return m_ownerGuid;
+        }
 
         bool IsSameScript(const char* table, uint32 id, ObjectGuid sourceGuid, ObjectGuid targetGuid, ObjectGuid ownerGuid) const
         {
@@ -491,18 +506,39 @@ class ScriptMgr
         uint32 GetAreaTriggerScriptId(uint32 triggerId) const;
         uint32 GetEventIdScriptId(uint32 eventId) const;
 
-        const char* GetScriptName(uint32 id) const { return id < m_scriptNames.size() ? m_scriptNames[id].c_str() : ""; }
+        const char* GetScriptName(uint32 id) const
+        {
+            return id < m_scriptNames.size() ? m_scriptNames[id].c_str() : "";
+        }
         uint32 GetScriptId(const char* name) const;
-        uint32 GetScriptIdsCount() const { return m_scriptNames.size(); }
+        uint32 GetScriptIdsCount() const
+        {
+            return m_scriptNames.size();
+        }
 
         ScriptLoadResult LoadScriptLibrary(const char* libName);
         void UnloadScriptLibrary();
-        bool IsScriptLibraryLoaded() const { return m_hScriptLib != NULL; }
+        bool IsScriptLibraryLoaded() const
+        {
+            return m_hScriptLib != NULL;
+        }
 
-        uint32 IncreaseScheduledScriptsCount() { return (uint32)++m_scheduledScripts; }
-        uint32 DecreaseScheduledScriptCount() { return (uint32)--m_scheduledScripts; }
-        uint32 DecreaseScheduledScriptCount(size_t count) { return (uint32)(m_scheduledScripts -= count); }
-        bool IsScriptScheduled() const { return m_scheduledScripts > 0; }
+        uint32 IncreaseScheduledScriptsCount()
+        {
+            return (uint32)++m_scheduledScripts;
+        }
+        uint32 DecreaseScheduledScriptCount()
+        {
+            return (uint32)--m_scheduledScripts;
+        }
+        uint32 DecreaseScheduledScriptCount(size_t count)
+        {
+            return (uint32)(m_scheduledScripts -= count);
+        }
+        bool IsScriptScheduled() const
+        {
+            return m_scheduledScripts > 0;
+        }
         static bool CanSpellEffectStartDBScript(SpellEntry const* spellinfo, SpellEffectIndex effIdx);
 
         CreatureAI* GetCreatureAI(Creature* pCreature);

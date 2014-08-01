@@ -303,9 +303,9 @@ bool Group::AddMember(ObjectGuid guid, const char* name, uint8 joinMethod)
         if (isRaidGroup())
             player->UpdateForQuestWorldObjects();
 
-        if(isInLFG())
+        if (isInLFG())
         {
-            if(joinMethod == GROUP_LFG)
+            if (joinMethod == GROUP_LFG)
             {
 
             }
@@ -341,7 +341,7 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 removeMethod)
                 data.Initialize(SMSG_GROUP_UNINVITE, 0);
                 player->GetSession()->SendPacket(&data);
 
-                if(isInLFG())
+                if (isInLFG())
                 {
                     data.Initialize(SMSG_MEETINGSTONE_SETQUEUE, 5);
                     data << 0 << uint8(MEETINGSTONE_STATUS_PARTY_MEMBER_REMOVED_PARTY_REMOVED);
@@ -354,7 +354,7 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 removeMethod)
                 }
             }
 
-            if(removeMethod == GROUP_LEAVE && isInLFG())
+            if (removeMethod == GROUP_LEAVE && isInLFG())
             {
                 player->GetSession()->SendMeetingstoneSetqueue(0, MEETINGSTONE_STATUS_NONE);
 
@@ -387,7 +387,7 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 removeMethod)
             sLFGMgr.RemoveGroupFromQueue(m_Id);
         }
 
-        if(isInLFG())
+        if (isInLFG())
         {
             sLFGMgr.UpdateGroup(m_Id);
         }
@@ -469,7 +469,7 @@ void Group::Disband(bool hideDestroy)
             data << uint64(0) << uint64(0) << uint64(0);
             player->GetSession()->SendPacket(&data);
 
-            if(isInLFG())
+            if (isInLFG())
             {
                 sLFGMgr.RemoveGroupFromQueue(m_Id);
 
@@ -545,7 +545,7 @@ void Group::FillPremadeLFG(ObjectGuid plrGuid, ClassRoles requiredRole, uint32& 
 
     if (sLFGMgr.getPriority(plrClass, requiredRole) >= LFG_PRIORITY_HIGH && !inLFGGroup(playersProcessed, plrGuid))
     {
-        switch(requiredRole)
+        switch (requiredRole)
         {
             case LFG_ROLE_TANK:
             {
@@ -561,11 +561,11 @@ void Group::FillPremadeLFG(ObjectGuid plrGuid, ClassRoles requiredRole, uint32& 
 
             case LFG_ROLE_DPS:
             {
-                if(DpsCount < 3)
+                if (DpsCount < 3)
                 {
                     ++DpsCount;
 
-                    if(DpsCount >= 3)
+                    if (DpsCount >= 3)
                         InitRoles &= ~LFG_ROLE_DPS;
                 }
                 break;
@@ -592,7 +592,7 @@ void Group::FillPremadeLFG(ObjectGuid plrGuid, ClassRoles requiredRole, uint32& 
 
         if (!hasFoundPriority)
         {
-            switch(requiredRole)
+            switch (requiredRole)
             {
                 case LFG_ROLE_TANK:
                 {
@@ -609,11 +609,11 @@ void Group::FillPremadeLFG(ObjectGuid plrGuid, ClassRoles requiredRole, uint32& 
 
                 case LFG_ROLE_DPS:
                 {
-                    if(DpsCount < 3)
+                    if (DpsCount < 3)
                     {
                         ++DpsCount;
 
-                        if(DpsCount >= 3)
+                        if (DpsCount >= 3)
                             InitRoles &= ~LFG_ROLE_DPS;
                     }
                     break;

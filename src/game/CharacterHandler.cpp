@@ -64,8 +64,14 @@ class LoginQueryHolder : public SqlQueryHolder
     public:
         LoginQueryHolder(uint32 accountId, ObjectGuid guid)
             : m_accountId(accountId), m_guid(guid) { }
-        ObjectGuid GetGuid() const { return m_guid; }
-        uint32 GetAccountId() const { return m_accountId; }
+        ObjectGuid GetGuid() const
+        {
+            return m_guid;
+        }
+        uint32 GetAccountId() const
+        {
+            return m_accountId;
+        }
         bool Initialize();
 };
 
@@ -203,9 +209,14 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recv_data)
             Team team = Player::TeamForRace(race_);
             switch (team)
             {
-                case ALLIANCE: disabled = mask & (1 << 0); break;
-                case HORDE:    disabled = mask & (1 << 1); break;
-                default: break;
+                case ALLIANCE:
+                    disabled = mask & (1 << 0);
+                    break;
+                case HORDE:
+                    disabled = mask & (1 << 1);
+                    break;
+                default:
+                    break;
             }
 
             if (disabled)

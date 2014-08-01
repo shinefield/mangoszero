@@ -230,11 +230,16 @@ int32 BattleGroundAB::_GetNodeNameId(uint8 node)
 {
     switch (node)
     {
-        case BG_AB_NODE_STABLES:    return LANG_BG_AB_NODE_STABLES;
-        case BG_AB_NODE_BLACKSMITH: return LANG_BG_AB_NODE_BLACKSMITH;
-        case BG_AB_NODE_FARM:       return LANG_BG_AB_NODE_FARM;
-        case BG_AB_NODE_LUMBER_MILL: return LANG_BG_AB_NODE_LUMBER_MILL;
-        case BG_AB_NODE_GOLD_MINE:  return LANG_BG_AB_NODE_GOLD_MINE;
+        case BG_AB_NODE_STABLES:
+            return LANG_BG_AB_NODE_STABLES;
+        case BG_AB_NODE_BLACKSMITH:
+            return LANG_BG_AB_NODE_BLACKSMITH;
+        case BG_AB_NODE_FARM:
+            return LANG_BG_AB_NODE_FARM;
+        case BG_AB_NODE_LUMBER_MILL:
+            return LANG_BG_AB_NODE_LUMBER_MILL;
+        case BG_AB_NODE_GOLD_MINE:
+            return LANG_BG_AB_NODE_GOLD_MINE;
         default:
             MANGOS_ASSERT(0);
     }

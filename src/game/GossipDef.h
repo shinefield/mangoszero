@@ -175,8 +175,14 @@ class MANGOS_DLL_SPEC GossipMenu
 
         void AddMenuItem(uint8 Icon, int32 itemText, uint32 dtSender, uint32 dtAction, int32 boxText, bool Coded = false);
 
-        void SetMenuId(uint32 menu_id) { m_gMenuId = menu_id; }
-        uint32 GetMenuId() { return m_gMenuId; }
+        void SetMenuId(uint32 menu_id)
+        {
+            m_gMenuId = menu_id;
+        }
+        uint32 GetMenuId()
+        {
+            return m_gMenuId;
+        }
 
         void AddGossipMenuItemData(int32 action_menu, uint32 action_poi, uint32 action_script);
 
@@ -206,7 +212,10 @@ class MANGOS_DLL_SPEC GossipMenu
 
         void ClearMenu();
 
-        WorldSession* GetMenuSession() const { return m_session; }
+        WorldSession* GetMenuSession() const
+        {
+            return m_session;
+        }
 
     protected:
         GossipMenuItemList      m_gItems;
@@ -258,12 +267,24 @@ class MANGOS_DLL_SPEC PlayerMenu
         explicit PlayerMenu(WorldSession* Session);
         ~PlayerMenu();
 
-        GossipMenu& GetGossipMenu() { return mGossipMenu; }
-        QuestMenu& GetQuestMenu() { return mQuestMenu; }
+        GossipMenu& GetGossipMenu()
+        {
+            return mGossipMenu;
+        }
+        QuestMenu& GetQuestMenu()
+        {
+            return mQuestMenu;
+        }
 
-        WorldSession* GetMenuSession() const { return mGossipMenu.GetMenuSession(); }
+        WorldSession* GetMenuSession() const
+        {
+            return mGossipMenu.GetMenuSession();
+        }
 
-        bool Empty() const { return mGossipMenu.Empty() && mQuestMenu.Empty(); }
+        bool Empty() const
+        {
+            return mGossipMenu.Empty() && mQuestMenu.Empty();
+        }
 
         void ClearMenus();
         uint32 GossipOptionSender(unsigned int Selection);

@@ -73,11 +73,23 @@ class MANGOS_DLL_SPEC UnitBaseEvent
     private:
         uint32 iType;
     public:
-        UnitBaseEvent(uint32 pType) { iType = pType; }
-        uint32 getType() const { return iType; }
-        bool matchesTypeMask(uint32 pMask) const { return iType & pMask; }
+        UnitBaseEvent(uint32 pType)
+        {
+            iType = pType;
+        }
+        uint32 getType() const
+        {
+            return iType;
+        }
+        bool matchesTypeMask(uint32 pMask) const
+        {
+            return iType & pMask;
+        }
 
-        void setType(uint32 pType) { iType = pType; }
+        void setType(uint32 pType)
+        {
+            iType = pType;
+        }
 };
 
 //==============================================================
@@ -94,27 +106,62 @@ class MANGOS_DLL_SPEC ThreatRefStatusChangeEvent : public UnitBaseEvent
         };
         ThreatManager* iThreatManager;
     public:
-        ThreatRefStatusChangeEvent(uint32 pType) : UnitBaseEvent(pType) { iHostileReference = NULL; }
+        ThreatRefStatusChangeEvent(uint32 pType) : UnitBaseEvent(pType)
+        {
+            iHostileReference = NULL;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, float pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iFValue = pValue; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, float pValue) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+            iFValue = pValue;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, bool pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iBValue = pValue; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, bool pValue) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+            iBValue = pValue;
+        }
 
-        int32 getIValue() const { return iIValue; }
+        int32 getIValue() const
+        {
+            return iIValue;
+        }
 
-        float getFValue() const { return iFValue; }
+        float getFValue() const
+        {
+            return iFValue;
+        }
 
-        bool getBValue() const { return iBValue; }
+        bool getBValue() const
+        {
+            return iBValue;
+        }
 
-        void setBValue(bool pValue) { iBValue = pValue; }
+        void setBValue(bool pValue)
+        {
+            iBValue = pValue;
+        }
 
-        HostileReference* getReference() const { return iHostileReference; }
+        HostileReference* getReference() const
+        {
+            return iHostileReference;
+        }
 
-        void setThreatManager(ThreatManager* pThreatManager) { iThreatManager = pThreatManager; }
+        void setThreatManager(ThreatManager* pThreatManager)
+        {
+            iThreatManager = pThreatManager;
+        }
 
-        ThreatManager* getThreatManager() const { return iThreatManager; }
+        ThreatManager* getThreatManager() const
+        {
+            return iThreatManager;
+        }
 };
 
 //==============================================================
@@ -127,9 +174,15 @@ class MANGOS_DLL_SPEC ThreatManagerEvent : public ThreatRefStatusChangeEvent
         ThreatManagerEvent(uint32 pType) : ThreatRefStatusChangeEvent(pType) {}
         ThreatManagerEvent(uint32 pType, HostileReference* pHostileReference) : ThreatRefStatusChangeEvent(pType, pHostileReference) {}
 
-        void setThreatContainer(ThreatContainer* pThreatContainer) { iThreatContainer = pThreatContainer; }
+        void setThreatContainer(ThreatContainer* pThreatContainer)
+        {
+            iThreatContainer = pThreatContainer;
+        }
 
-        ThreatContainer* getThreatContainer() const { return iThreatContainer; }
+        ThreatContainer* getThreatContainer() const
+        {
+            return iThreatContainer;
+        }
 };
 
 //==============================================================

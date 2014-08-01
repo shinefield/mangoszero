@@ -77,7 +77,10 @@ class ReputationMgr
 
         static ReputationRank ReputationToRank(int32 standing);
     public:                                                 // accessors
-        FactionStateList const& GetStateList() const { return m_factions; }
+        FactionStateList const& GetStateList() const
+        {
+            return m_factions;
+        }
 
         FactionState const* GetState(FactionEntry const* factionEntry) const
         {

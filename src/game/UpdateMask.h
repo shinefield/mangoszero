@@ -33,7 +33,10 @@ class UpdateMask
 {
     public:
         UpdateMask() : mCount(0), mBlocks(0), mUpdateMask(0) { }
-        UpdateMask(const UpdateMask& mask) : mUpdateMask(0) { *this = mask; }
+        UpdateMask(const UpdateMask& mask) : mUpdateMask(0)
+        {
+            *this = mask;
+        }
 
         ~UpdateMask()
         {
@@ -55,10 +58,22 @@ class UpdateMask
             return (((uint8*)mUpdateMask)[ index >> 3 ] & (1 << (index & 0x7))) != 0;
         }
 
-        uint32 GetBlockCount() const { return mBlocks; }
-        uint32 GetLength() const { return mBlocks << 2; }
-        uint32 GetCount() const { return mCount; }
-        uint8* GetMask() { return (uint8*)mUpdateMask; }
+        uint32 GetBlockCount() const
+        {
+            return mBlocks;
+        }
+        uint32 GetLength() const
+        {
+            return mBlocks << 2;
+        }
+        uint32 GetCount() const
+        {
+            return mCount;
+        }
+        uint8* GetMask()
+        {
+            return (uint8*)mUpdateMask;
+        }
 
         void SetCount(uint32 valuesCount)
         {

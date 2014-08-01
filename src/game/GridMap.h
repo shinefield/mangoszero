@@ -184,7 +184,10 @@ class GridMap
         static bool ExistVMap(uint32 mapid, int gx, int gy);
 
         uint16 getArea(float x, float y);
-        float getHeight(float x, float y) { return (this->*m_gridGetHeight)(x, y); }
+        float getHeight(float x, float y)
+        {
+            return (this->*m_gridGetHeight)(x, y);
+        }
         float getLiquidLevel(float x, float y);
         uint8 getTerrainType(float x, float y);
         GridMapLiquidStatus getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, GridMapLiquidData* data = 0);
@@ -194,11 +197,23 @@ template<typename Countable>
 class MANGOS_DLL_SPEC Referencable
 {
     public:
-        Referencable() { m_count = 0; }
+        Referencable()
+        {
+            m_count = 0;
+        }
 
-        void AddRef() { ++m_count; }
-        bool Release() { return (--m_count < 1); }
-        bool IsReferenced() const { return (m_count > 0); }
+        void AddRef()
+        {
+            ++m_count;
+        }
+        bool Release()
+        {
+            return (--m_count < 1);
+        }
+        bool IsReferenced() const
+        {
+            return (m_count > 0);
+        }
 
     private:
         Referencable(const Referencable&);
@@ -223,7 +238,10 @@ class MANGOS_DLL_SPEC TerrainInfo : public Referencable<AtomicLong>
         TerrainInfo(uint32 mapid);
         ~TerrainInfo();
 
-        uint32 GetMapId() const { return m_mapId; }
+        uint32 GetMapId() const
+        {
+            return m_mapId;
+        }
 
         // TODO: move all terrain/vmaps data info query functions
         // from 'Map' class into this class

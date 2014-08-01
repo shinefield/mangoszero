@@ -73,52 +73,124 @@ enum SqlStmtFieldType
 class MANGOS_DLL_SPEC SqlStmtFieldData
 {
     public:
-        SqlStmtFieldData() : m_type(FIELD_NONE) { m_binaryData.ui64 = 0; }
+        SqlStmtFieldData() : m_type(FIELD_NONE)
+        {
+            m_binaryData.ui64 = 0;
+        }
         ~SqlStmtFieldData() {}
 
         template<typename T>
-        SqlStmtFieldData(T param) { set(param); }
+        SqlStmtFieldData(T param)
+        {
+            set(param);
+        }
 
         template<typename T1>
         void set(T1 param1);
 
         // getters
-        bool toBool() const { MANGOS_ASSERT(m_type == FIELD_BOOL); return static_cast<bool>(m_binaryData.ui8); }
-        uint8 toUint8() const { MANGOS_ASSERT(m_type == FIELD_UI8); return m_binaryData.ui8; }
-        int8 toInt8() const { MANGOS_ASSERT(m_type == FIELD_I8); return m_binaryData.i8; }
-        uint16 toUint16() const { MANGOS_ASSERT(m_type == FIELD_UI16); return m_binaryData.ui16; }
-        int16 toInt16() const { MANGOS_ASSERT(m_type == FIELD_I16); return m_binaryData.i16; }
-        uint32 toUint32() const { MANGOS_ASSERT(m_type == FIELD_UI32); return m_binaryData.ui32; }
-        int32 toInt32() const { MANGOS_ASSERT(m_type == FIELD_I32); return m_binaryData.i32; }
-        uint64 toUint64() const { MANGOS_ASSERT(m_type == FIELD_UI64); return m_binaryData.ui64; }
-        int64 toInt64() const { MANGOS_ASSERT(m_type == FIELD_I64); return m_binaryData.i64; }
-        float toFloat() const { MANGOS_ASSERT(m_type == FIELD_FLOAT); return m_binaryData.f; }
-        double toDouble() const { MANGOS_ASSERT(m_type == FIELD_DOUBLE); return m_binaryData.d; }
-        const char* toStr() const { MANGOS_ASSERT(m_type == FIELD_STRING); return m_szStringData.c_str(); }
+        bool toBool() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_BOOL);
+            return static_cast<bool>(m_binaryData.ui8);
+        }
+        uint8 toUint8() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_UI8);
+            return m_binaryData.ui8;
+        }
+        int8 toInt8() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_I8);
+            return m_binaryData.i8;
+        }
+        uint16 toUint16() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_UI16);
+            return m_binaryData.ui16;
+        }
+        int16 toInt16() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_I16);
+            return m_binaryData.i16;
+        }
+        uint32 toUint32() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_UI32);
+            return m_binaryData.ui32;
+        }
+        int32 toInt32() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_I32);
+            return m_binaryData.i32;
+        }
+        uint64 toUint64() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_UI64);
+            return m_binaryData.ui64;
+        }
+        int64 toInt64() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_I64);
+            return m_binaryData.i64;
+        }
+        float toFloat() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_FLOAT);
+            return m_binaryData.f;
+        }
+        double toDouble() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_DOUBLE);
+            return m_binaryData.d;
+        }
+        const char* toStr() const
+        {
+            MANGOS_ASSERT(m_type == FIELD_STRING);
+            return m_szStringData.c_str();
+        }
 
         // get type of data
-        SqlStmtFieldType type() const { return m_type; }
+        SqlStmtFieldType type() const
+        {
+            return m_type;
+        }
         // get underlying buffer type
-        void* buff() const { return m_type == FIELD_STRING ? (void*)m_szStringData.c_str() : (void*)&m_binaryData; }
+        void* buff() const
+        {
+            return m_type == FIELD_STRING ? (void*)m_szStringData.c_str() : (void*)&m_binaryData;
+        }
 
         // get size of data
         size_t size() const
         {
             switch (m_type)
             {
-                case FIELD_NONE:    return 0;
+                case FIELD_NONE:
+                    return 0;
                 case FIELD_BOOL:    // return sizeof(bool);
-                case FIELD_UI8:     return sizeof(uint8);
-                case FIELD_UI16:    return sizeof(uint16);
-                case FIELD_UI32:    return sizeof(uint32);
-                case FIELD_UI64:    return sizeof(uint64);
-                case FIELD_I8:      return sizeof(int8);
-                case FIELD_I16:     return sizeof(int16);
-                case FIELD_I32:     return sizeof(int32);
-                case FIELD_I64:     return sizeof(int64);
-                case FIELD_FLOAT:   return sizeof(float);
-                case FIELD_DOUBLE:  return sizeof(double);
-                case FIELD_STRING:  return m_szStringData.length();
+                case FIELD_UI8:
+                    return sizeof(uint8);
+                case FIELD_UI16:
+                    return sizeof(uint16);
+                case FIELD_UI32:
+                    return sizeof(uint32);
+                case FIELD_UI64:
+                    return sizeof(uint64);
+                case FIELD_I8:
+                    return sizeof(int8);
+                case FIELD_I16:
+                    return sizeof(int16);
+                case FIELD_I32:
+                    return sizeof(int32);
+                case FIELD_I64:
+                    return sizeof(int64);
+                case FIELD_FLOAT:
+                    return sizeof(float);
+                case FIELD_DOUBLE:
+                    return sizeof(double);
+                case FIELD_STRING:
+                    return m_szStringData.length();
 
                 default:
                     throw std::runtime_error("unrecognized type of SqlStmtFieldType obtained");
@@ -132,18 +204,66 @@ class MANGOS_DLL_SPEC SqlStmtFieldData
 };
 
 // template specialization
-template<> inline void SqlStmtFieldData::set(bool val) { m_type = FIELD_BOOL; m_binaryData.ui8 = val; }
-template<> inline void SqlStmtFieldData::set(uint8 val) { m_type = FIELD_UI8; m_binaryData.ui8 = val; }
-template<> inline void SqlStmtFieldData::set(int8 val) { m_type = FIELD_I8; m_binaryData.i8 = val; }
-template<> inline void SqlStmtFieldData::set(uint16 val) { m_type = FIELD_UI16; m_binaryData.ui16 = val; }
-template<> inline void SqlStmtFieldData::set(int16 val) { m_type = FIELD_I16; m_binaryData.i16 = val; }
-template<> inline void SqlStmtFieldData::set(uint32 val) { m_type = FIELD_UI32; m_binaryData.ui32 = val; }
-template<> inline void SqlStmtFieldData::set(int32 val) { m_type = FIELD_I32; m_binaryData.i32 = val; }
-template<> inline void SqlStmtFieldData::set(uint64 val) { m_type = FIELD_UI64; m_binaryData.ui64 = val; }
-template<> inline void SqlStmtFieldData::set(int64 val) { m_type = FIELD_I64; m_binaryData.i64 = val; }
-template<> inline void SqlStmtFieldData::set(float val) { m_type = FIELD_FLOAT; m_binaryData.f = val; }
-template<> inline void SqlStmtFieldData::set(double val) { m_type = FIELD_DOUBLE; m_binaryData.d = val; }
-template<> inline void SqlStmtFieldData::set(const char* val) { m_type = FIELD_STRING; m_szStringData = val; }
+template<> inline void SqlStmtFieldData::set(bool val)
+{
+    m_type = FIELD_BOOL;
+    m_binaryData.ui8 = val;
+}
+template<> inline void SqlStmtFieldData::set(uint8 val)
+{
+    m_type = FIELD_UI8;
+    m_binaryData.ui8 = val;
+}
+template<> inline void SqlStmtFieldData::set(int8 val)
+{
+    m_type = FIELD_I8;
+    m_binaryData.i8 = val;
+}
+template<> inline void SqlStmtFieldData::set(uint16 val)
+{
+    m_type = FIELD_UI16;
+    m_binaryData.ui16 = val;
+}
+template<> inline void SqlStmtFieldData::set(int16 val)
+{
+    m_type = FIELD_I16;
+    m_binaryData.i16 = val;
+}
+template<> inline void SqlStmtFieldData::set(uint32 val)
+{
+    m_type = FIELD_UI32;
+    m_binaryData.ui32 = val;
+}
+template<> inline void SqlStmtFieldData::set(int32 val)
+{
+    m_type = FIELD_I32;
+    m_binaryData.i32 = val;
+}
+template<> inline void SqlStmtFieldData::set(uint64 val)
+{
+    m_type = FIELD_UI64;
+    m_binaryData.ui64 = val;
+}
+template<> inline void SqlStmtFieldData::set(int64 val)
+{
+    m_type = FIELD_I64;
+    m_binaryData.i64 = val;
+}
+template<> inline void SqlStmtFieldData::set(float val)
+{
+    m_type = FIELD_FLOAT;
+    m_binaryData.f = val;
+}
+template<> inline void SqlStmtFieldData::set(double val)
+{
+    m_type = FIELD_DOUBLE;
+    m_binaryData.d = val;
+}
+template<> inline void SqlStmtFieldData::set(const char* val)
+{
+    m_type = FIELD_STRING;
+    m_szStringData = val;
+}
 
 class SqlStatement;
 // prepared statement executor
@@ -158,16 +278,25 @@ class MANGOS_DLL_SPEC SqlStmtParameters
         ~SqlStmtParameters() {}
 
         // get amount of bound parameters
-        uint32 boundParams() const { return m_params.size(); }
+        uint32 boundParams() const
+        {
+            return m_params.size();
+        }
         // add parameter
-        void addParam(const SqlStmtFieldData& data) { m_params.push_back(data); }
+        void addParam(const SqlStmtFieldData& data)
+        {
+            m_params.push_back(data);
+        }
         // empty SQL statement parameters. In case nParams > 1 - reserve memory for parameters
         // should help to reuse the same object with batched SQL requests
         void reset(const SqlStatement& stmt);
         // swaps contents of intenral param container
         void swap(SqlStmtParameters& obj);
         // get bound parameters
-        const ParameterContainer& params() const { return m_params; }
+        const ParameterContainer& params() const
+        {
+            return m_params;
+        }
 
     private:
         SqlStmtParameters& operator=(const SqlStmtParameters& obj);
@@ -182,13 +311,27 @@ class SqlStatementID
     public:
         SqlStatementID() : m_bInitialized(false) {}
 
-        int ID() const { return m_nIndex; }
-        uint32 arguments() const { return m_nArguments; }
-        bool initialized() const { return m_bInitialized; }
+        int ID() const
+        {
+            return m_nIndex;
+        }
+        uint32 arguments() const
+        {
+            return m_nArguments;
+        }
+        bool initialized() const
+        {
+            return m_bInitialized;
+        }
 
     private:
         friend class Database;
-        void init(int nID, uint32 nArgs) { m_nIndex = nID; m_nArguments = nArgs; m_bInitialized = true; }
+        void init(int nID, uint32 nArgs)
+        {
+            m_nIndex = nID;
+            m_nArguments = nArgs;
+            m_bInitialized = true;
+        }
 
         int m_nIndex;
         uint32 m_nArguments;
@@ -199,7 +342,10 @@ class SqlStatementID
 class MANGOS_DLL_SPEC SqlStatement
 {
     public:
-        ~SqlStatement() { delete m_pParams; }
+        ~SqlStatement()
+        {
+            delete m_pParams;
+        }
 
         SqlStatement(const SqlStatement& index) : m_index(index.m_index), m_pDB(index.m_pDB), m_pParams(NULL)
         {
@@ -209,8 +355,14 @@ class MANGOS_DLL_SPEC SqlStatement
 
         SqlStatement& operator=(const SqlStatement& index);
 
-        int ID() const { return m_index.ID(); }
-        uint32 arguments() const { return m_index.arguments(); }
+        int ID() const
+        {
+            return m_index.ID();
+        }
+        uint32 arguments() const
+        {
+            return m_index.arguments();
+        }
 
         bool Execute();
         bool DirectExecute();
@@ -251,20 +403,63 @@ class MANGOS_DLL_SPEC SqlStatement
         }
 
         // bind parameters with specified type
-        void addBool(bool var) { arg(var); }
-        void addUInt8(uint8 var) { arg(var); }
-        void addInt8(int8 var) { arg(var); }
-        void addUInt16(uint16 var) { arg(var); }
-        void addInt16(int16 var) { arg(var); }
-        void addUInt32(uint32 var) { arg(var); }
-        void addInt32(int32 var) { arg(var); }
-        void addUInt64(uint64 var) { arg(var); }
-        void addInt64(int64 var) { arg(var); }
-        void addFloat(float var) { arg(var); }
-        void addDouble(double var) { arg(var); }
-        void addString(const char* var) { arg(var); }
-        void addString(const std::string& var) { arg(var.c_str()); }
-        void addString(std::ostringstream& ss) { arg(ss.str().c_str()); ss.str(std::string()); }
+        void addBool(bool var)
+        {
+            arg(var);
+        }
+        void addUInt8(uint8 var)
+        {
+            arg(var);
+        }
+        void addInt8(int8 var)
+        {
+            arg(var);
+        }
+        void addUInt16(uint16 var)
+        {
+            arg(var);
+        }
+        void addInt16(int16 var)
+        {
+            arg(var);
+        }
+        void addUInt32(uint32 var)
+        {
+            arg(var);
+        }
+        void addInt32(int32 var)
+        {
+            arg(var);
+        }
+        void addUInt64(uint64 var)
+        {
+            arg(var);
+        }
+        void addInt64(int64 var)
+        {
+            arg(var);
+        }
+        void addFloat(float var)
+        {
+            arg(var);
+        }
+        void addDouble(double var)
+        {
+            arg(var);
+        }
+        void addString(const char* var)
+        {
+            arg(var);
+        }
+        void addString(const std::string& var)
+        {
+            arg(var.c_str());
+        }
+        void addString(std::ostringstream& ss)
+        {
+            arg(ss.str().c_str());
+            ss.str(std::string());
+        }
 
     protected:
         // don't allow anyone except Database class to create static SqlStatement objects
@@ -308,11 +503,23 @@ class MANGOS_DLL_SPEC SqlPreparedStatement
     public:
         virtual ~SqlPreparedStatement() {}
 
-        bool isPrepared() const { return m_bPrepared; }
-        bool isQuery() const { return m_bIsQuery; }
+        bool isPrepared() const
+        {
+            return m_bPrepared;
+        }
+        bool isQuery() const
+        {
+            return m_bIsQuery;
+        }
 
-        uint32 params() const { return m_nParams; }
-        uint32 columns() const { return isQuery() ? m_nColumns : 0; }
+        uint32 params() const
+        {
+            return m_nParams;
+        }
+        uint32 columns() const
+        {
+            return isQuery() ? m_nColumns : 0;
+        }
 
         // initialize internal structures of prepared statement
         // upon success m_bPrepared should be true
@@ -345,7 +552,10 @@ class MANGOS_DLL_SPEC SqlPlainPreparedStatement : public SqlPreparedStatement
         ~SqlPlainPreparedStatement() {}
 
         // this statement is always prepared
-        virtual bool prepare() override { return true; }
+        virtual bool prepare() override
+        {
+            return true;
+        }
 
         // we should replace all '?' symbols with substrings with proper format
         virtual void bind(const SqlStmtParameters& holder) override;

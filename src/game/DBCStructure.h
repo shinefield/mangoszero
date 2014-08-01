@@ -349,7 +349,10 @@ struct FactionTemplateEntry
         }
         return (hostileMask & entry.ourMask) != 0;
     }
-    bool IsHostileToPlayers() const { return (hostileMask & FACTION_MASK_PLAYER) != 0; }
+    bool IsHostileToPlayers() const
+    {
+        return (hostileMask & FACTION_MASK_PLAYER) != 0;
+    }
     bool IsNeutralToAll() const
     {
         for (int i = 0; i < 4; ++i)
@@ -357,7 +360,10 @@ struct FactionTemplateEntry
                 return false;
         return hostileMask == 0 && friendlyMask == 0;
     }
-    bool IsContestedGuardFaction() const { return (factionFlags & FACTION_TEMPLATE_FLAG_CONTESTED_GUARD) != 0; }
+    bool IsContestedGuardFaction() const
+    {
+        return (factionFlags & FACTION_TEMPLATE_FLAG_CONTESTED_GUARD) != 0;
+    }
 };
 
 struct GameObjectDisplayInfoEntry
@@ -461,11 +467,26 @@ struct MapEntry
 
     // Helpers
 
-    bool IsDungeon() const { return map_type == MAP_INSTANCE || map_type == MAP_RAID; }
-    bool IsNonRaidDungeon() const { return map_type == MAP_INSTANCE; }
-    bool Instanceable() const { return map_type == MAP_INSTANCE || map_type == MAP_RAID || map_type == MAP_BATTLEGROUND; }
-    bool IsRaid() const { return map_type == MAP_RAID; }
-    bool IsBattleGround() const { return map_type == MAP_BATTLEGROUND; }
+    bool IsDungeon() const
+    {
+        return map_type == MAP_INSTANCE || map_type == MAP_RAID;
+    }
+    bool IsNonRaidDungeon() const
+    {
+        return map_type == MAP_INSTANCE;
+    }
+    bool Instanceable() const
+    {
+        return map_type == MAP_INSTANCE || map_type == MAP_RAID || map_type == MAP_BATTLEGROUND;
+    }
+    bool IsRaid() const
+    {
+        return map_type == MAP_RAID;
+    }
+    bool IsBattleGround() const
+    {
+        return map_type == MAP_BATTLEGROUND;
+    }
 
     bool IsMountAllowed() const
     {
@@ -564,9 +585,18 @@ struct ClassFamilyMask
     ClassFamilyMask() : Flags(0) {}
     explicit ClassFamilyMask(uint64 familyFlags) : Flags(familyFlags) {}
 
-    bool Empty() const { return Flags == 0; }
-    bool operator!() const { return Empty(); }
-    operator void const* () const { return Empty() ? NULL : this; } // for allow normal use in if(mask)
+    bool Empty() const
+    {
+        return Flags == 0;
+    }
+    bool operator!() const
+    {
+        return Empty();
+    }
+    operator void const* () const
+    {
+        return Empty() ? NULL : this;    // for allow normal use in if(mask)
+    }
 
     bool IsFitToFamilyMask(uint64 familyFlags) const
     {
@@ -688,7 +718,10 @@ struct SpellEntry
         // uint32    RequiredAuraVision;                    // 172 not used
 
         // helpers
-        int32 CalculateSimpleValue(SpellEffectIndex eff) const { return EffectBasePoints[eff] + int32(EffectBaseDice[eff]); }
+        int32 CalculateSimpleValue(SpellEffectIndex eff) const
+        {
+            return EffectBasePoints[eff] + int32(EffectBaseDice[eff]);
+        }
 
         bool IsFitToFamilyMask(uint64 familyFlags) const
         {
@@ -710,11 +743,26 @@ struct SpellEntry
             return SpellFamily(SpellFamilyName) == family && IsFitToFamilyMask(mask);
         }
 
-        inline bool HasAttribute(SpellAttributes attribute) const { return Attributes & attribute; }
-        inline bool HasAttribute(SpellAttributesEx attribute) const { return AttributesEx & attribute; }
-        inline bool HasAttribute(SpellAttributesEx2 attribute) const { return AttributesEx2 & attribute; }
-        inline bool HasAttribute(SpellAttributesEx3 attribute) const { return AttributesEx3 & attribute; }
-        inline bool HasAttribute(SpellAttributesEx4 attribute) const { return AttributesEx4 & attribute; }
+        inline bool HasAttribute(SpellAttributes attribute) const
+        {
+            return Attributes & attribute;
+        }
+        inline bool HasAttribute(SpellAttributesEx attribute) const
+        {
+            return AttributesEx & attribute;
+        }
+        inline bool HasAttribute(SpellAttributesEx2 attribute) const
+        {
+            return AttributesEx2 & attribute;
+        }
+        inline bool HasAttribute(SpellAttributesEx3 attribute) const
+        {
+            return AttributesEx3 & attribute;
+        }
+        inline bool HasAttribute(SpellAttributesEx4 attribute) const
+        {
+            return AttributesEx4 & attribute;
+        }
 
     private:
         // prevent creating custom entries (copy data from original in fact)
@@ -958,7 +1006,10 @@ struct TaxiPathNodePtr
 
     TaxiPathNodeEntry const* i_ptr;
 
-    operator TaxiPathNodeEntry const& () const { return *i_ptr; }
+    operator TaxiPathNodeEntry const& () const
+    {
+        return *i_ptr;
+    }
 };
 
 typedef Path<TaxiPathNodePtr, TaxiPathNodeEntry const> TaxiPathNodeList;

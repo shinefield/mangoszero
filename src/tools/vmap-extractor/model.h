@@ -53,7 +53,10 @@ class Model
         bool ok;
 
         Model(std::string& filename);
-        ~Model() {_unload();}
+        ~Model()
+        {
+            _unload();
+        }
 
     private:
         void _unload()

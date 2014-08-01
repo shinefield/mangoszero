@@ -153,7 +153,10 @@ struct CreatureInfo
         return HIGHGUID_UNIT;                               // in pre-3.x always HIGHGUID_UNIT
     }
 
-    ObjectGuid GetObjectGuid(uint32 lowguid) const { return ObjectGuid(GetHighGuid(), Entry, lowguid); }
+    ObjectGuid GetObjectGuid(uint32 lowguid) const
+    {
+        return ObjectGuid(GetHighGuid(), Entry, lowguid);
+    }
 
     SkillType GetRequiredLootSkill() const
     {
@@ -212,7 +215,10 @@ struct CreatureData
     uint8 movementType;
 
     // helper function
-    ObjectGuid GetObjectGuid(uint32 lowguid) const { return ObjectGuid(CreatureInfo::GetHighGuid(), id, lowguid); }
+    ObjectGuid GetObjectGuid(uint32 lowguid) const
+    {
+        return ObjectGuid(CreatureInfo::GetHighGuid(), id, lowguid);
+    }
 };
 
 enum SplineFlags
@@ -340,8 +346,14 @@ struct VendorItemData
         if (slot >= m_items.size()) return NULL;
         return m_items[slot];
     }
-    bool Empty() const { return m_items.empty(); }
-    uint8 GetItemCount() const { return m_items.size(); }
+    bool Empty() const
+    {
+        return m_items.empty();
+    }
+    uint8 GetItemCount() const
+    {
+        return m_items.size();
+    }
     void AddItem(uint32 item, uint32 maxcount, uint32 ptime, uint16 conditonId)
     {
         m_items.push_back(new VendorItem(item, maxcount, ptime, conditonId));
@@ -396,7 +408,10 @@ struct TrainerSpellData
     uint32 trainerType;                                     // trainer type based at trainer spells, can be different from creature_template value.
     // req. for correct show non-prof. trainers like weaponmaster, allowed values 0 and 2.
     TrainerSpell const* Find(uint32 spell_id) const;
-    void Clear() { spellList.clear(); }
+    void Clear()
+    {
+        spellList.clear();
+    }
 };
 
 typedef std::map<uint32, time_t> CreatureSpellCooldowns;
@@ -430,13 +445,25 @@ struct CreatureCreatePos
     public:
         // exactly coordinates used
         CreatureCreatePos(Map* map, float x, float y, float z, float o)
-            : m_map(map), m_closeObject(NULL), m_angle(0.0f), m_dist(0.0f) { m_pos.x = x; m_pos.y = y; m_pos.z = z; m_pos.o = o; }
+            : m_map(map), m_closeObject(NULL), m_angle(0.0f), m_dist(0.0f)
+        {
+            m_pos.x = x;
+            m_pos.y = y;
+            m_pos.z = z;
+            m_pos.o = o;
+        }
         // if dist == 0.0f -> exactly object coordinates used, in other case close point to object (CONTACT_DIST can be used as minimal distances)
         CreatureCreatePos(WorldObject* closeObject, float ori, float dist = 0.0f, float angle = 0.0f)
             : m_map(closeObject->GetMap()),
-              m_closeObject(closeObject), m_angle(angle), m_dist(dist) { m_pos.o = ori; }
+              m_closeObject(closeObject), m_angle(angle), m_dist(dist)
+        {
+            m_pos.o = ori;
+        }
     public:
-        Map* GetMap() const { return m_map; }
+        Map* GetMap() const
+        {
+            return m_map;
+        }
         void SelectFinalPoint(Creature* cr);
         bool Relocate(Creature* cr) const;
 
@@ -488,29 +515,77 @@ class MANGOS_DLL_SPEC Creature : public Unit
 
         bool HasStaticDBSpawnData() const;                  // listed in `creature` table and have fixed in DB guid
 
-        char const* GetSubName() const { return GetCreatureInfo()->SubName; }
+        char const* GetSubName() const
+        {
+            return GetCreatureInfo()->SubName;
+        }
 
         void Update(uint32 update_diff, uint32 time) override;  // overwrite Unit::Update
 
         virtual void RegenerateAll(uint32 update_diff);
-        uint32 GetEquipmentId() const { return m_equipmentId; }
+        uint32 GetEquipmentId() const
+        {
+            return m_equipmentId;
+        }
 
-        CreatureSubtype GetSubtype() const { return m_subtype; }
-        bool IsPet() const { return m_subtype == CREATURE_SUBTYPE_PET; }
-        bool IsTotem() const { return m_subtype == CREATURE_SUBTYPE_TOTEM; }
-        bool IsTemporarySummon() const { return m_subtype == CREATURE_SUBTYPE_TEMPORARY_SUMMON; }
+        CreatureSubtype GetSubtype() const
+        {
+            return m_subtype;
+        }
+        bool IsPet() const
+        {
+            return m_subtype == CREATURE_SUBTYPE_PET;
+        }
+        bool IsTotem() const
+        {
+            return m_subtype == CREATURE_SUBTYPE_TOTEM;
+        }
+        bool IsTemporarySummon() const
+        {
+            return m_subtype == CREATURE_SUBTYPE_TEMPORARY_SUMMON;
+        }
 
-        bool IsCorpse() const { return getDeathState() ==  CORPSE; }
-        bool IsDespawned() const { return getDeathState() ==  DEAD; }
-        void SetCorpseDelay(uint32 delay) { m_corpseDelay = delay; }
-        uint32 GetCorpseDelay() const { return m_corpseDelay; }
-        bool IsRacialLeader() const { return GetCreatureInfo()->RacialLeader; }
-        bool IsCivilian() const { return GetCreatureInfo()->civilian; }
-        bool IsGuard() const { return GetCreatureInfo()->ExtraFlags & CREATURE_EXTRA_FLAG_GUARD; }
+        bool IsCorpse() const
+        {
+            return getDeathState() ==  CORPSE;
+        }
+        bool IsDespawned() const
+        {
+            return getDeathState() ==  DEAD;
+        }
+        void SetCorpseDelay(uint32 delay)
+        {
+            m_corpseDelay = delay;
+        }
+        uint32 GetCorpseDelay() const
+        {
+            return m_corpseDelay;
+        }
+        bool IsRacialLeader() const
+        {
+            return GetCreatureInfo()->RacialLeader;
+        }
+        bool IsCivilian() const
+        {
+            return GetCreatureInfo()->civilian;
+        }
+        bool IsGuard() const
+        {
+            return GetCreatureInfo()->ExtraFlags & CREATURE_EXTRA_FLAG_GUARD;
+        }
 
-        bool CanWalk() const { return GetCreatureInfo()->InhabitType & INHABIT_GROUND; }
-        virtual bool CanSwim() const { return GetCreatureInfo()->InhabitType & INHABIT_WATER; }
-        bool CanFly()  const { return GetCreatureInfo()->InhabitType & INHABIT_AIR; }
+        bool CanWalk() const
+        {
+            return GetCreatureInfo()->InhabitType & INHABIT_GROUND;
+        }
+        virtual bool CanSwim() const
+        {
+            return GetCreatureInfo()->InhabitType & INHABIT_WATER;
+        }
+        bool CanFly()  const
+        {
+            return GetCreatureInfo()->InhabitType & INHABIT_AIR;
+        }
 
         bool IsTrainerOf(Player* player, bool msg) const;
         bool CanInteractWithBattleMaster(Player* player, bool msg) const;
@@ -545,7 +620,10 @@ class MANGOS_DLL_SPEC Creature : public Unit
 
         bool AIM_Initialize();
 
-        CreatureAI* AI() { return i_AI; }
+        CreatureAI* AI()
+        {
+            return i_AI;
+        }
 
         void SetWalk(bool enable, bool asDefault = true);
         void SetLevitate(bool enable);
@@ -557,8 +635,14 @@ class MANGOS_DLL_SPEC Creature : public Unit
             return (getLevel() / 2 + uint32(GetStat(STAT_STRENGTH) / 20));
         }
 
-        SpellSchoolMask GetMeleeDamageSchoolMask() const override { return m_meleeDamageSchoolMask; }
-        void SetMeleeDamageSchool(SpellSchools school) { m_meleeDamageSchoolMask = GetSchoolMask(school); }
+        SpellSchoolMask GetMeleeDamageSchoolMask() const override
+        {
+            return m_meleeDamageSchoolMask;
+        }
+        void SetMeleeDamageSchool(SpellSchools school)
+        {
+            m_meleeDamageSchoolMask = GetSchoolMask(school);
+        }
 
         void _AddCreatureSpellCooldown(uint32 spell_id, time_t end_time);
         void _AddCreatureCategoryCooldown(uint32 category, time_t apply_time);
@@ -580,7 +664,10 @@ class MANGOS_DLL_SPEC Creature : public Unit
         void UpdateMaxPower(Powers power) override;
         void UpdateAttackPowerAndDamage(bool ranged = false) override;
         void UpdateDamagePhysical(WeaponAttackType attType) override;
-        uint32 GetCurrentEquipmentId() const { return m_equipmentId; }
+        uint32 GetCurrentEquipmentId() const
+        {
+            return m_equipmentId;
+        }
 
         static float _GetHealthMod(int32 Rank);             ///< Get custom factor to scale health (default 1, CONFIG_FLOAT_RATE_CREATURE_*_HP)
         static float _GetDamageMod(int32 Rank);             ///< Get custom factor to scale damage (default 1, CONFIG_FLOAT_RATE_*_DAMAGE)
@@ -594,7 +681,10 @@ class MANGOS_DLL_SPEC Creature : public Unit
         TrainerSpellData const* GetTrainerTemplateSpells() const;
         TrainerSpellData const* GetTrainerSpells() const;
 
-        CreatureInfo const* GetCreatureInfo() const { return m_creatureInfo; }
+        CreatureInfo const* GetCreatureInfo() const
+        {
+            return m_creatureInfo;
+        }
         CreatureDataAddon const* GetCreatureAddon() const;
 
         static uint32 ChooseDisplayId(const CreatureInfo* cinfo, const CreatureData* data = NULL, GameEventCreatureData const* eventData = NULL);
@@ -621,13 +711,25 @@ class MANGOS_DLL_SPEC Creature : public Unit
         bool lootForSkin;
 
         void PrepareBodyLootState();
-        ObjectGuid GetLootRecipientGuid() const { return m_lootRecipientGuid; }
-        uint32 GetLootGroupRecipientId() const { return m_lootGroupRecipientId; }
+        ObjectGuid GetLootRecipientGuid() const
+        {
+            return m_lootRecipientGuid;
+        }
+        uint32 GetLootGroupRecipientId() const
+        {
+            return m_lootGroupRecipientId;
+        }
         Player* GetLootRecipient() const;                   // use group cases as prefered
         Group* GetGroupLootRecipient() const;
         bool isTappedBy(Player const* player) const;
-        bool HasLootRecipient() const { return m_lootGroupRecipientId || m_lootRecipientGuid; }
-        bool IsGroupLootRecipient() const { return m_lootGroupRecipientId; }
+        bool HasLootRecipient() const
+        {
+            return m_lootGroupRecipientId || m_lootRecipientGuid;
+        }
+        bool IsGroupLootRecipient() const
+        {
+            return m_lootGroupRecipientId;
+        }
         void SetLootRecipient(Unit* unit);
         void AllLootRemovedFromCorpse();
         Player* GetOriginalLootRecipient() const;           // ignore group changes/etc, not for looting
@@ -646,37 +748,79 @@ class MANGOS_DLL_SPEC Creature : public Unit
         void DoFleeToGetAssistance();
         void CallForHelp(float fRadius);
         void CallAssistance();
-        void SetNoCallAssistance(bool val) { m_AlreadyCallAssistance = val; }
-        void SetNoSearchAssistance(bool val) { m_AlreadySearchedAssistance = val; }
-        bool HasSearchedAssistance() { return m_AlreadySearchedAssistance; }
+        void SetNoCallAssistance(bool val)
+        {
+            m_AlreadyCallAssistance = val;
+        }
+        void SetNoSearchAssistance(bool val)
+        {
+            m_AlreadySearchedAssistance = val;
+        }
+        bool HasSearchedAssistance()
+        {
+            return m_AlreadySearchedAssistance;
+        }
         bool CanAssistTo(const Unit* u, const Unit* enemy, bool checkfaction = true) const;
         bool CanInitiateAttack();
 
-        MovementGeneratorType GetDefaultMovementType() const { return m_defaultMovementType; }
-        void SetDefaultMovementType(MovementGeneratorType mgt) { m_defaultMovementType = mgt; }
+        MovementGeneratorType GetDefaultMovementType() const
+        {
+            return m_defaultMovementType;
+        }
+        void SetDefaultMovementType(MovementGeneratorType mgt)
+        {
+            m_defaultMovementType = mgt;
+        }
 
         // for use only in LoadHelper, Map::Add Map::CreatureCellRelocation
-        Cell const& GetCurrentCell() const { return m_currentCell; }
-        void SetCurrentCell(Cell const& cell) { m_currentCell = cell; }
+        Cell const& GetCurrentCell() const
+        {
+            return m_currentCell;
+        }
+        void SetCurrentCell(Cell const& cell)
+        {
+            m_currentCell = cell;
+        }
 
         bool IsVisibleInGridForPlayer(Player* pl) const override;
 
         void RemoveCorpse();
-        bool IsDeadByDefault() const { return m_isDeadByDefault; };
+        bool IsDeadByDefault() const
+        {
+            return m_isDeadByDefault;
+        };
 
         void ForcedDespawn(uint32 timeMSToDespawn = 0);
 
-        time_t const& GetRespawnTime() const { return m_respawnTime; }
+        time_t const& GetRespawnTime() const
+        {
+            return m_respawnTime;
+        }
         time_t GetRespawnTimeEx() const;
-        void SetRespawnTime(uint32 respawn) { m_respawnTime = respawn ? time(NULL) + respawn : 0; }
+        void SetRespawnTime(uint32 respawn)
+        {
+            m_respawnTime = respawn ? time(NULL) + respawn : 0;
+        }
         void Respawn();
         void SaveRespawnTime() override;
 
-        uint32 GetRespawnDelay() const { return m_respawnDelay; }
-        void SetRespawnDelay(uint32 delay) { m_respawnDelay = delay; }
+        uint32 GetRespawnDelay() const
+        {
+            return m_respawnDelay;
+        }
+        void SetRespawnDelay(uint32 delay)
+        {
+            m_respawnDelay = delay;
+        }
 
-        float GetRespawnRadius() const { return m_respawnradius; }
-        void SetRespawnRadius(float dist) { m_respawnradius = dist; }
+        float GetRespawnRadius() const
+        {
+            return m_respawnradius;
+        }
+        void SetRespawnRadius(float dist)
+        {
+            m_respawnradius = dist;
+        }
 
         // Functions spawn/remove creature with DB guid in all loaded map copies (if point grid loaded in map)
         static void AddToRemoveListInMaps(uint32 db_guid, CreatureData const* data);
@@ -694,9 +838,18 @@ class MANGOS_DLL_SPEC Creature : public Unit
         bool HasQuest(uint32 quest_id) const override;
         bool HasInvolvedQuest(uint32 quest_id)  const override;
 
-        GridReference<Creature>& GetGridRef() { return m_gridRef; }
-        bool IsRegeneratingHealth() { return m_regenHealth; }
-        virtual uint8 GetPetAutoSpellSize() const { return CREATURE_MAX_SPELLS; }
+        GridReference<Creature>& GetGridRef()
+        {
+            return m_gridRef;
+        }
+        bool IsRegeneratingHealth()
+        {
+            return m_regenHealth;
+        }
+        virtual uint8 GetPetAutoSpellSize() const
+        {
+            return CREATURE_MAX_SPELLS;
+        }
         virtual uint32 GetPetAutoSpellOnPos(uint8 pos) const
         {
             if (pos >= CREATURE_MAX_SPELLS || m_charmInfo->GetCharmSpell(pos)->GetType() != ACT_ENABLED)
@@ -705,27 +858,58 @@ class MANGOS_DLL_SPEC Creature : public Unit
                 return m_charmInfo->GetCharmSpell(pos)->GetAction();
         }
 
-        void SetCombatStartPosition(float x, float y, float z) { m_combatStartX = x; m_combatStartY = y; m_combatStartZ = z; }
-        void GetCombatStartPosition(float& x, float& y, float& z) { x = m_combatStartX; y = m_combatStartY; z = m_combatStartZ; }
+        void SetCombatStartPosition(float x, float y, float z)
+        {
+            m_combatStartX = x;
+            m_combatStartY = y;
+            m_combatStartZ = z;
+        }
+        void GetCombatStartPosition(float& x, float& y, float& z)
+        {
+            x = m_combatStartX;
+            y = m_combatStartY;
+            z = m_combatStartZ;
+        }
 
-        void SetRespawnCoord(CreatureCreatePos const& pos) { m_respawnPos = pos.m_pos; }
-        void SetRespawnCoord(float x, float y, float z, float ori) { m_respawnPos.x = x; m_respawnPos.y = y; m_respawnPos.z = z; m_respawnPos.o = ori; }
+        void SetRespawnCoord(CreatureCreatePos const& pos)
+        {
+            m_respawnPos = pos.m_pos;
+        }
+        void SetRespawnCoord(float x, float y, float z, float ori)
+        {
+            m_respawnPos.x = x;
+            m_respawnPos.y = y;
+            m_respawnPos.z = z;
+            m_respawnPos.o = ori;
+        }
         void GetRespawnCoord(float& x, float& y, float& z, float* ori = NULL, float* dist = NULL) const;
         void ResetRespawnCoord();
 
-        void SetDeadByDefault(bool death_state) { m_isDeadByDefault = death_state; }
+        void SetDeadByDefault(bool death_state)
+        {
+            m_isDeadByDefault = death_state;
+        }
 
         void SetFactionTemporary(uint32 factionId, uint32 tempFactionFlags = TEMPFACTION_ALL);
         void ClearTemporaryFaction();
-        uint32 GetTemporaryFactionFlags() { return m_temporaryFactionFlags; }
+        uint32 GetTemporaryFactionFlags()
+        {
+            return m_temporaryFactionFlags;
+        }
 
         void SendAreaSpiritHealerQueryOpcode(Player* pl);
 
         void SetVirtualItem(VirtualItemSlot slot, uint32 item_id);
         void SetVirtualItemRaw(VirtualItemSlot slot, uint32 display_id, uint32 info0, uint32 info1);
 
-        void SetDisableReputationGain(bool disable) { DisableReputationGain = disable; }
-        bool IsReputationGainDisabled() { return DisableReputationGain; }
+        void SetDisableReputationGain(bool disable)
+        {
+            DisableReputationGain = disable;
+        }
+        bool IsReputationGainDisabled()
+        {
+            return DisableReputationGain;
+        }
 
     protected:
         bool MeetsSelectAttackingRequirement(Unit* pTarget, SpellEntry const* pSpellInfo, uint32 selectFlags) const;

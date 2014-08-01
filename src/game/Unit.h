@@ -578,14 +578,32 @@ class MovementInfo
         void Write(ByteBuffer& data) const;
 
         // Movement flags manipulations
-        void AddMovementFlag(MovementFlags f) { moveFlags |= f; }
-        void RemoveMovementFlag(MovementFlags f) { moveFlags &= ~f; }
-        bool HasMovementFlag(MovementFlags f) const { return moveFlags & f; }
-        MovementFlags GetMovementFlags() const { return MovementFlags(moveFlags); }
-        void SetMovementFlags(MovementFlags f) { moveFlags = f; }
+        void AddMovementFlag(MovementFlags f)
+        {
+            moveFlags |= f;
+        }
+        void RemoveMovementFlag(MovementFlags f)
+        {
+            moveFlags &= ~f;
+        }
+        bool HasMovementFlag(MovementFlags f) const
+        {
+            return moveFlags & f;
+        }
+        MovementFlags GetMovementFlags() const
+        {
+            return MovementFlags(moveFlags);
+        }
+        void SetMovementFlags(MovementFlags f)
+        {
+            moveFlags = f;
+        }
 
         // Position manipulations
-        Position const* GetPos() const { return &pos; }
+        Position const* GetPos() const
+        {
+            return &pos;
+        }
         void SetTransportData(ObjectGuid guid, float x, float y, float z, float o, uint32 time)
         {
             t_guid = guid;
@@ -604,13 +622,37 @@ class MovementInfo
             t_pos.o = 0.0f;
             t_time = 0;
         }
-        ObjectGuid const& GetTransportGuid() const { return t_guid; }
-        Position const* GetTransportPos() const { return &t_pos; }
-        uint32 GetTransportTime() const { return t_time; }
-        uint32 GetFallTime() const { return fallTime; }
-        void ChangeOrientation(float o) { pos.o = o; }
-        void ChangePosition(float x, float y, float z, float o) { pos.x = x; pos.y = y; pos.z = z; pos.o = o; }
-        void UpdateTime(uint32 _time) { time = _time; }
+        ObjectGuid const& GetTransportGuid() const
+        {
+            return t_guid;
+        }
+        Position const* GetTransportPos() const
+        {
+            return &t_pos;
+        }
+        uint32 GetTransportTime() const
+        {
+            return t_time;
+        }
+        uint32 GetFallTime() const
+        {
+            return fallTime;
+        }
+        void ChangeOrientation(float o)
+        {
+            pos.o = o;
+        }
+        void ChangePosition(float x, float y, float z, float o)
+        {
+            pos.x = x;
+            pos.y = y;
+            pos.z = z;
+            pos.o = o;
+        }
+        void UpdateTime(uint32 _time)
+        {
+            time = _time;
+        }
 
         struct JumpInfo
         {
@@ -618,7 +660,10 @@ class MovementInfo
             float   velocity, sinAngle, cosAngle, xyspeed;
         };
 
-        JumpInfo const& GetJumpInfo() const { return jump; }
+        JumpInfo const& GetJumpInfo() const
+        {
+            return jump;
+        }
     private:
         // common
         uint32   moveFlags;                                 // see enum MovementFlags
@@ -868,8 +913,14 @@ struct UnitActionBarEntry
     uint32 packedData;
 
     // helper
-    ActiveStates GetType() const { return ActiveStates(UNIT_ACTION_BUTTON_TYPE(packedData)); }
-    uint32 GetAction() const { return UNIT_ACTION_BUTTON_ACTION(packedData); }
+    ActiveStates GetType() const
+    {
+        return ActiveStates(UNIT_ACTION_BUTTON_TYPE(packedData));
+    }
+    uint32 GetAction() const
+    {
+        return UNIT_ACTION_BUTTON_ACTION(packedData);
+    }
     bool IsActionBarForSpell() const
     {
         ActiveStates Type = GetType();
@@ -908,15 +959,36 @@ struct CharmInfo
 {
     public:
         explicit CharmInfo(Unit* unit);
-        uint32 GetPetNumber() const { return m_petnumber; }
+        uint32 GetPetNumber() const
+        {
+            return m_petnumber;
+        }
         void SetPetNumber(uint32 petnumber, bool statwindow);
 
-        void SetCommandState(CommandStates st) { m_CommandState = st; }
-        CommandStates GetCommandState() { return m_CommandState; }
-        bool HasCommandState(CommandStates state) { return (m_CommandState == state); }
-        void SetReactState(ReactStates st) { m_reactState = st; }
-        ReactStates GetReactState() { return m_reactState; }
-        bool HasReactState(ReactStates state) { return (m_reactState == state); }
+        void SetCommandState(CommandStates st)
+        {
+            m_CommandState = st;
+        }
+        CommandStates GetCommandState()
+        {
+            return m_CommandState;
+        }
+        bool HasCommandState(CommandStates state)
+        {
+            return (m_CommandState == state);
+        }
+        void SetReactState(ReactStates st)
+        {
+            m_reactState = st;
+        }
+        ReactStates GetReactState()
+        {
+            return m_reactState;
+        }
+        bool HasReactState(ReactStates state)
+        {
+            return (m_reactState == state);
+        }
 
         void InitPossessCreateSpells();
         void InitCharmCreateSpells();
@@ -933,13 +1005,22 @@ struct CharmInfo
         {
             PetActionBar[index].SetActionAndType(spellOrAction, type);
         }
-        UnitActionBarEntry const* GetActionBarEntry(uint8 index) const { return &(PetActionBar[index]); }
+        UnitActionBarEntry const* GetActionBarEntry(uint8 index) const
+        {
+            return &(PetActionBar[index]);
+        }
 
         void ToggleCreatureAutocast(uint32 spellid, bool apply);
 
-        CharmSpellEntry* GetCharmSpell(uint8 index) { return &(m_charmspells[index]); }
+        CharmSpellEntry* GetCharmSpell(uint8 index)
+        {
+            return &(m_charmspells[index]);
+        }
 
-        GlobalCooldownMgr& GetGlobalCooldownMgr() { return m_GlobalCooldownMgr; }
+        GlobalCooldownMgr& GetGlobalCooldownMgr()
+        {
+            return m_GlobalCooldownMgr;
+        }
 
     private:
         Unit* m_unit;
@@ -1045,7 +1126,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         /**
          * Clears all the current diminishing returns for this Unit.
          */
-        void ClearDiminishings() { m_Diminishing.clear(); }
+        void ClearDiminishings()
+        {
+            m_Diminishing.clear();
+        }
 
         void Update(uint32 update_diff, uint32 time) override;
 
@@ -1054,7 +1138,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
          * @param type The type of weapon that we want to update the time for
          * @param time the remaining time until we can attack with the WeaponAttackType again
          */
-        void setAttackTimer(WeaponAttackType type, uint32 time) { m_attackTimer[type] = time; }
+        void setAttackTimer(WeaponAttackType type, uint32 time)
+        {
+            m_attackTimer[type] = time;
+        }
         /**
          * Resets the attack timer to the base value decided by Unit::m_modAttackSpeedPct and
          * Unit::GetAttackTime
@@ -1066,14 +1153,20 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
          * @param type The weapon type to check the remaining time for
          * @return The remaining time until we can attack with this weapon type.
          */
-        uint32 getAttackTimer(WeaponAttackType type) const { return m_attackTimer[type]; }
+        uint32 getAttackTimer(WeaponAttackType type) const
+        {
+            return m_attackTimer[type];
+        }
         /**
          * Checks whether the unit can do an attack. Does this by checking the attacktimer for the
          * WeaponAttackType, can probably be thought of as a cooldown for each swing/shot
          * @param type What weapon should we check for
          * @return true if the Unit::m_attackTimer is zero for the given WeaponAttackType
          */
-        bool isAttackReady(WeaponAttackType type = BASE_ATTACK) const { return m_attackTimer[type] == 0; }
+        bool isAttackReady(WeaponAttackType type = BASE_ATTACK) const
+        {
+            return m_attackTimer[type] == 0;
+        }
         /**
          * Checks if the current Unit has an offhand weapon
          * @return True if there is a offhand weapon.
@@ -1190,11 +1283,17 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void RemoveAllAttackers();
 
         /// Returns the Unit::m_attackers, that stores the units that are attacking you
-        AttackerSet const& getAttackers() const { return m_attackers; }
+        AttackerSet const& getAttackers() const
+        {
+            return m_attackers;
+        }
 
         bool isAttackingPlayer() const;                     //< Returns if this unit is attacking a player (or this unit's minions/pets are attacking a player)
 
-        Unit* getVictim() const { return m_attacking; }     //< Returns the victim that this unit is currently attacking
+        Unit* getVictim() const
+        {
+            return m_attacking;    //< Returns the victim that this unit is currently attacking
+        }
         void CombatStop(bool includingCast = false);        //< Stop this unit from combat, if includingCast==true, also interrupt casting
         void CombatStopWithPets(bool includingCast = false);
         void StopAttackFaction(uint32 faction_id);
@@ -1204,69 +1303,174 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void SendMeleeAttackStop(Unit* victim);
         void SendMeleeAttackStart(Unit* pVictim);
 
-        void addUnitState(uint32 f) { m_state |= f; }
-        bool hasUnitState(uint32 f) const { return (m_state & f); }
-        void clearUnitState(uint32 f) { m_state &= ~f; }
+        void addUnitState(uint32 f)
+        {
+            m_state |= f;
+        }
+        bool hasUnitState(uint32 f) const
+        {
+            return (m_state & f);
+        }
+        void clearUnitState(uint32 f)
+        {
+            m_state &= ~f;
+        }
         bool CanFreeMove() const
         {
             return !hasUnitState(UNIT_STAT_NO_FREE_MOVE) && !GetOwnerGuid();
         }
 
-        uint32 getLevel() const { return GetUInt32Value(UNIT_FIELD_LEVEL); }
-        virtual uint32 GetLevelForTarget(Unit const* /*target*/) const { return getLevel(); }
+        uint32 getLevel() const
+        {
+            return GetUInt32Value(UNIT_FIELD_LEVEL);
+        }
+        virtual uint32 GetLevelForTarget(Unit const* /*target*/) const
+        {
+            return getLevel();
+        }
         void SetLevel(uint32 lvl);
-        uint8 getRace() const { return GetByteValue(UNIT_FIELD_BYTES_0, 0); }
-        uint32 getRaceMask() const { return 1 << (getRace() - 1); }
-        uint8 getClass() const { return GetByteValue(UNIT_FIELD_BYTES_0, 1); }
-        uint32 getClassMask() const { return 1 << (getClass() - 1); }
-        uint8 getGender() const { return GetByteValue(UNIT_FIELD_BYTES_0, 2); }
+        uint8 getRace() const
+        {
+            return GetByteValue(UNIT_FIELD_BYTES_0, 0);
+        }
+        uint32 getRaceMask() const
+        {
+            return 1 << (getRace() - 1);
+        }
+        uint8 getClass() const
+        {
+            return GetByteValue(UNIT_FIELD_BYTES_0, 1);
+        }
+        uint32 getClassMask() const
+        {
+            return 1 << (getClass() - 1);
+        }
+        uint8 getGender() const
+        {
+            return GetByteValue(UNIT_FIELD_BYTES_0, 2);
+        }
 
-        float GetStat(Stats stat) const { return float(GetUInt32Value(UNIT_FIELD_STAT0 + stat)); }
-        void SetStat(Stats stat, int32 val) { SetStatInt32Value(UNIT_FIELD_STAT0 + stat, val); }
-        uint32 GetArmor() const { return GetResistance(SPELL_SCHOOL_NORMAL) ; }
-        void SetArmor(int32 val) { SetResistance(SPELL_SCHOOL_NORMAL, val); }
+        float GetStat(Stats stat) const
+        {
+            return float(GetUInt32Value(UNIT_FIELD_STAT0 + stat));
+        }
+        void SetStat(Stats stat, int32 val)
+        {
+            SetStatInt32Value(UNIT_FIELD_STAT0 + stat, val);
+        }
+        uint32 GetArmor() const
+        {
+            return GetResistance(SPELL_SCHOOL_NORMAL) ;
+        }
+        void SetArmor(int32 val)
+        {
+            SetResistance(SPELL_SCHOOL_NORMAL, val);
+        }
 
-        uint32 GetResistance(SpellSchools school) const { return GetUInt32Value(UNIT_FIELD_RESISTANCES + school); }
-        void SetResistance(SpellSchools school, int32 val) { SetStatInt32Value(UNIT_FIELD_RESISTANCES + school, val); }
+        uint32 GetResistance(SpellSchools school) const
+        {
+            return GetUInt32Value(UNIT_FIELD_RESISTANCES + school);
+        }
+        void SetResistance(SpellSchools school, int32 val)
+        {
+            SetStatInt32Value(UNIT_FIELD_RESISTANCES + school, val);
+        }
 
-        uint32 GetHealth()    const { return GetUInt32Value(UNIT_FIELD_HEALTH); }
-        uint32 GetMaxHealth() const { return GetUInt32Value(UNIT_FIELD_MAXHEALTH); }
+        uint32 GetHealth()    const
+        {
+            return GetUInt32Value(UNIT_FIELD_HEALTH);
+        }
+        uint32 GetMaxHealth() const
+        {
+            return GetUInt32Value(UNIT_FIELD_MAXHEALTH);
+        }
 
-        bool IsFullHealth() const { return GetHealth() == GetMaxHealth(); }
-        bool HealthBelowPct(int32 pct) const { return GetHealth() < CountPctFromMaxHealth(pct); }
-        bool HealthBelowPctDamaged(int32 pct, uint32 damage) const { return int64(GetHealth()) - int64(damage) < int64(CountPctFromMaxHealth(pct)); }
-        bool HealthAbovePct(int32 pct) const { return GetHealth() > CountPctFromMaxHealth(pct); }
-        bool HealthAbovePctHealed(int32 pct, uint32 heal) const { return uint64(GetHealth()) + uint64(heal) > CountPctFromMaxHealth(pct); }
-        float GetHealthPercent() const { return (GetHealth() * 100.0f) / GetMaxHealth(); }
-        uint32 CountPctFromMaxHealth(int32 pct) const { return (GetMaxHealth() * static_cast<float>(pct) / 100.0f); }
-        uint32 CountPctFromCurHealth(int32 pct) const { return (GetHealth() * static_cast<float>(pct) / 100.0f); }
+        bool IsFullHealth() const
+        {
+            return GetHealth() == GetMaxHealth();
+        }
+        bool HealthBelowPct(int32 pct) const
+        {
+            return GetHealth() < CountPctFromMaxHealth(pct);
+        }
+        bool HealthBelowPctDamaged(int32 pct, uint32 damage) const
+        {
+            return int64(GetHealth()) - int64(damage) < int64(CountPctFromMaxHealth(pct));
+        }
+        bool HealthAbovePct(int32 pct) const
+        {
+            return GetHealth() > CountPctFromMaxHealth(pct);
+        }
+        bool HealthAbovePctHealed(int32 pct, uint32 heal) const
+        {
+            return uint64(GetHealth()) + uint64(heal) > CountPctFromMaxHealth(pct);
+        }
+        float GetHealthPercent() const
+        {
+            return (GetHealth() * 100.0f) / GetMaxHealth();
+        }
+        uint32 CountPctFromMaxHealth(int32 pct) const
+        {
+            return (GetMaxHealth() * static_cast<float>(pct) / 100.0f);
+        }
+        uint32 CountPctFromCurHealth(int32 pct) const
+        {
+            return (GetHealth() * static_cast<float>(pct) / 100.0f);
+        }
 
         void SetHealth(uint32 val);
         void SetMaxHealth(uint32 val);
         void SetHealthPercent(float percent);
         int32 ModifyHealth(int32 val);
 
-        Powers getPowerType() const { return Powers(GetByteValue(UNIT_FIELD_BYTES_0, 3)); }
+        Powers getPowerType() const
+        {
+            return Powers(GetByteValue(UNIT_FIELD_BYTES_0, 3));
+        }
         void setPowerType(Powers power);
-        uint32 GetPower(Powers power) const { return GetUInt32Value(UNIT_FIELD_POWER1   + power); }
-        uint32 GetMaxPower(Powers power) const { return GetUInt32Value(UNIT_FIELD_MAXPOWER1 + power); }
+        uint32 GetPower(Powers power) const
+        {
+            return GetUInt32Value(UNIT_FIELD_POWER1   + power);
+        }
+        uint32 GetMaxPower(Powers power) const
+        {
+            return GetUInt32Value(UNIT_FIELD_MAXPOWER1 + power);
+        }
         void SetPower(Powers power, uint32 val);
         void SetMaxPower(Powers power, uint32 val);
         int32 ModifyPower(Powers power, int32 val);
         void ApplyPowerMod(Powers power, uint32 val, bool apply);
         void ApplyMaxPowerMod(Powers power, uint32 val, bool apply);
 
-        uint32 GetAttackTime(WeaponAttackType att) const { return (uint32)(GetFloatValue(UNIT_FIELD_BASEATTACKTIME + att) / m_modAttackSpeedPct[att]); }
-        void SetAttackTime(WeaponAttackType att, uint32 val) { SetFloatValue(UNIT_FIELD_BASEATTACKTIME + att, val * m_modAttackSpeedPct[att]); }
+        uint32 GetAttackTime(WeaponAttackType att) const
+        {
+            return (uint32)(GetFloatValue(UNIT_FIELD_BASEATTACKTIME + att) / m_modAttackSpeedPct[att]);
+        }
+        void SetAttackTime(WeaponAttackType att, uint32 val)
+        {
+            SetFloatValue(UNIT_FIELD_BASEATTACKTIME + att, val * m_modAttackSpeedPct[att]);
+        }
         void ApplyAttackTimePercentMod(WeaponAttackType att, float val, bool apply);
         void ApplyCastTimePercentMod(float val, bool apply);
 
-        SheathState GetSheath() const { return SheathState(GetByteValue(UNIT_FIELD_BYTES_2, 0)); }
-        virtual void SetSheath(SheathState sheathed) { SetByteValue(UNIT_FIELD_BYTES_2, 0, sheathed); }
+        SheathState GetSheath() const
+        {
+            return SheathState(GetByteValue(UNIT_FIELD_BYTES_2, 0));
+        }
+        virtual void SetSheath(SheathState sheathed)
+        {
+            SetByteValue(UNIT_FIELD_BYTES_2, 0, sheathed);
+        }
 
         // faction template id
-        uint32 getFaction() const { return GetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE); }
-        void setFaction(uint32 faction) { SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, faction); }
+        uint32 getFaction() const
+        {
+            return GetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE);
+        }
+        void setFaction(uint32 faction)
+        {
+            SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, faction);
+        }
         FactionTemplateEntry const* getFactionTemplateEntry() const;
         bool IsHostileTo(Unit const* unit) const override;
         bool IsHostileToPlayers() const;
@@ -1279,7 +1483,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
             return false;
         }
-        bool IsPvP() const { return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP); }
+        bool IsPvP() const
+        {
+            return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP);
+        }
         void SetPvP(bool state);
         uint32 GetCreatureType() const;
         uint32 GetCreatureTypeMask() const
@@ -1288,17 +1495,29 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
             return (creatureType >= 1) ? (1 << (creatureType - 1)) : 0;
         }
 
-        uint8 getStandState() const { return GetByteValue(UNIT_FIELD_BYTES_1, 0); }
+        uint8 getStandState() const
+        {
+            return GetByteValue(UNIT_FIELD_BYTES_1, 0);
+        }
         bool IsSitState() const;
         bool IsStandState() const;
         void SetStandState(uint8 state);
 
-        bool IsMounted() const { return GetMountID(); }
-        uint32 GetMountID() const { return GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID); }
+        bool IsMounted() const
+        {
+            return GetMountID();
+        }
+        uint32 GetMountID() const
+        {
+            return GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID);
+        }
         void Mount(uint32 mount, uint32 spellId = 0);
         void Unmount(bool from_aura = false);
 
-        uint16 GetMaxSkillValueForLevel(Unit const* target = NULL) const { return (target ? GetLevelForTarget(target) : getLevel()) * 5; }
+        uint16 GetMaxSkillValueForLevel(Unit const* target = NULL) const
+        {
+            return (target ? GetLevelForTarget(target) : getLevel()) * 5;
+        }
         void DealDamageMods(Unit* pVictim, uint32& damage, uint32* absorb);
         uint32 DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDamage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask, SpellEntry const* spellProto, bool durabilityLoss);
         int32 DealHeal(Unit* pVictim, uint32 addhealth, SpellEntry const* spellProto, bool critical = false);
@@ -1332,7 +1551,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         float GetUnitCriticalChance(WeaponAttackType attackType, const Unit* pVictim) const;
 
         virtual uint32 GetShieldBlockValue() const = 0;
-        uint32 GetUnitMeleeSkill(Unit const* target = NULL) const { return (target ? GetLevelForTarget(target) : getLevel()) * 5; }
+        uint32 GetUnitMeleeSkill(Unit const* target = NULL) const
+        {
+            return (target ? GetLevelForTarget(target) : getLevel()) * 5;
+        }
         uint32 GetDefenseSkillValue(Unit const* target = NULL) const;
         uint32 GetWeaponSkillValue(WeaponAttackType attType, Unit const* target = NULL) const;
         float GetWeaponProcChance() const;
@@ -1341,20 +1563,62 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         MeleeHitOutcome RollMeleeOutcomeAgainst(const Unit* pVictim, WeaponAttackType attType) const;
         MeleeHitOutcome RollMeleeOutcomeAgainst(const Unit* pVictim, WeaponAttackType attType, int32 crit_chance, int32 miss_chance, int32 dodge_chance, int32 parry_chance, int32 block_chance, bool SpellCasted) const;
 
-        bool isVendor()       const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_VENDOR); }
-        bool isTrainer()      const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TRAINER); }
-        bool isQuestGiver()   const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER); }
-        bool isGossip()       const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP); }
-        bool isTaxi()         const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_FLIGHTMASTER); }
-        bool isGuildMaster()  const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_PETITIONER); }
-        bool isBattleMaster() const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BATTLEMASTER); }
-        bool isBanker()       const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BANKER); }
-        bool isInnkeeper()    const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_INNKEEPER); }
-        bool isSpiritHealer() const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITHEALER); }
-        bool isSpiritGuide()  const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITGUIDE); }
-        bool isTabardDesigner()const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TABARDDESIGNER); }
-        bool isAuctioner()    const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_AUCTIONEER); }
-        bool isArmorer()      const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_REPAIR); }
+        bool isVendor()       const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_VENDOR);
+        }
+        bool isTrainer()      const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TRAINER);
+        }
+        bool isQuestGiver()   const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+        }
+        bool isGossip()       const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        }
+        bool isTaxi()         const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_FLIGHTMASTER);
+        }
+        bool isGuildMaster()  const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_PETITIONER);
+        }
+        bool isBattleMaster() const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BATTLEMASTER);
+        }
+        bool isBanker()       const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BANKER);
+        }
+        bool isInnkeeper()    const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_INNKEEPER);
+        }
+        bool isSpiritHealer() const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITHEALER);
+        }
+        bool isSpiritGuide()  const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITGUIDE);
+        }
+        bool isTabardDesigner()const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TABARDDESIGNER);
+        }
+        bool isAuctioner()    const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_AUCTIONEER);
+        }
+        bool isArmorer()      const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_REPAIR);
+        }
         bool isServiceProvider() const
         {
             return HasFlag(UNIT_NPC_FLAGS,
@@ -1363,16 +1627,28 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
                            UNIT_NPC_FLAG_INNKEEPER | UNIT_NPC_FLAG_SPIRITHEALER |
                            UNIT_NPC_FLAG_SPIRITGUIDE | UNIT_NPC_FLAG_TABARDDESIGNER | UNIT_NPC_FLAG_AUCTIONEER);
         }
-        bool isSpiritService() const { return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITHEALER | UNIT_NPC_FLAG_SPIRITGUIDE); }
+        bool isSpiritService() const
+        {
+            return HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITHEALER | UNIT_NPC_FLAG_SPIRITGUIDE);
+        }
 
-        bool IsTaxiFlying()  const { return hasUnitState(UNIT_STAT_TAXI_FLIGHT); }
+        bool IsTaxiFlying()  const
+        {
+            return hasUnitState(UNIT_STAT_TAXI_FLIGHT);
+        }
 
-        bool isInCombat()  const { return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT); }
+        bool isInCombat()  const
+        {
+            return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+        }
         void SetInCombatState(bool PvP, Unit* enemy = NULL);
         void SetInDummyCombatState(bool state);
         void SetInCombatWith(Unit* enemy);
         void ClearInCombat();
-        uint32 GetCombatTimer() const { return m_CombatTimer; }
+        uint32 GetCombatTimer() const
+        {
+            return m_CombatTimer;
+        }
 
         SpellAuraHolderBounds GetSpellAuraHolderBounds(uint32 spell_id)
         {
@@ -1391,12 +1667,27 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
             return m_spellAuraHolders.find(spellId) != m_spellAuraHolders.end();
         }
 
-        virtual bool HasSpell(uint32 /*spellID*/) const { return false; }
+        virtual bool HasSpell(uint32 /*spellID*/) const
+        {
+            return false;
+        }
 
-        bool HasStealthAura()      const { return HasAuraType(SPELL_AURA_MOD_STEALTH); }
-        bool HasInvisibilityAura() const { return HasAuraType(SPELL_AURA_MOD_INVISIBILITY); }
-        bool isFeared()  const { return HasAuraType(SPELL_AURA_MOD_FEAR); }
-        bool isInRoots() const { return HasAuraType(SPELL_AURA_MOD_ROOT); }
+        bool HasStealthAura()      const
+        {
+            return HasAuraType(SPELL_AURA_MOD_STEALTH);
+        }
+        bool HasInvisibilityAura() const
+        {
+            return HasAuraType(SPELL_AURA_MOD_INVISIBILITY);
+        }
+        bool isFeared()  const
+        {
+            return HasAuraType(SPELL_AURA_MOD_FEAR);
+        }
+        bool isInRoots() const
+        {
+            return HasAuraType(SPELL_AURA_MOD_ROOT);
+        }
         bool IsPolymorphed() const;
 
         bool isFrozen() const;
@@ -1404,7 +1695,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void RemoveSpellbyDamageTaken(AuraType auraType, uint32 damage);
 
         bool isTargetableForAttack(bool inversAlive = false) const;
-        bool isPassiveToHostile() { return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE); }
+        bool isPassiveToHostile()
+        {
+            return HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+        }
 
         virtual bool IsInWater() const;
         virtual bool IsUnderWater() const;
@@ -1436,9 +1730,18 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         // if used additional args in ... part then floats must explicitly casted to double
         void SendHeartBeat();
 
-        bool IsLevitating() const { return m_movementInfo.HasMovementFlag(MOVEFLAG_LEVITATING); }
-        bool IsWalking() const { return m_movementInfo.HasMovementFlag(MOVEFLAG_WALK_MODE); }
-        bool IsRooted() const { return m_movementInfo.HasMovementFlag(MOVEFLAG_ROOT); }
+        bool IsLevitating() const
+        {
+            return m_movementInfo.HasMovementFlag(MOVEFLAG_LEVITATING);
+        }
+        bool IsWalking() const
+        {
+            return m_movementInfo.HasMovementFlag(MOVEFLAG_WALK_MODE);
+        }
+        bool IsRooted() const
+        {
+            return m_movementInfo.HasMovementFlag(MOVEFLAG_ROOT);
+        }
         virtual void SetRoot(bool /*enabled*/) {}
         virtual void SetWaterWalk(bool /*enabled*/) {}
 
@@ -1446,37 +1749,100 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void SetFacingTo(float ori);
         void SetFacingToObject(WorldObject* pObject);
 
-        bool isAlive() const { return (m_deathState == ALIVE); };
-        bool isDying() const { return (m_deathState == JUST_DIED); }
-        bool isDead() const { return (m_deathState == DEAD || m_deathState == CORPSE); };
-        DeathState getDeathState() const { return m_deathState; };
+        bool isAlive() const
+        {
+            return (m_deathState == ALIVE);
+        };
+        bool isDying() const
+        {
+            return (m_deathState == JUST_DIED);
+        }
+        bool isDead() const
+        {
+            return (m_deathState == DEAD || m_deathState == CORPSE);
+        };
+        DeathState getDeathState() const
+        {
+            return m_deathState;
+        };
         virtual void SetDeathState(DeathState s);           // overwritten in Creature/Player/Pet
 
-        ObjectGuid const& GetOwnerGuid() const { return  GetGuidValue(UNIT_FIELD_SUMMONEDBY); }
-        void SetOwnerGuid(ObjectGuid owner) { SetGuidValue(UNIT_FIELD_SUMMONEDBY, owner); }
-        ObjectGuid const& GetCreatorGuid() const { return GetGuidValue(UNIT_FIELD_CREATEDBY); }
-        void SetCreatorGuid(ObjectGuid creator) { SetGuidValue(UNIT_FIELD_CREATEDBY, creator); }
-        ObjectGuid const& GetPetGuid() const { return GetGuidValue(UNIT_FIELD_SUMMON); }
-        void SetPetGuid(ObjectGuid pet) { SetGuidValue(UNIT_FIELD_SUMMON, pet); }
-        ObjectGuid const& GetCharmerGuid() const { return GetGuidValue(UNIT_FIELD_CHARMEDBY); }
-        void SetCharmerGuid(ObjectGuid owner) { SetGuidValue(UNIT_FIELD_CHARMEDBY, owner); }
-        ObjectGuid const& GetCharmGuid() const { return GetGuidValue(UNIT_FIELD_CHARM); }
-        void SetCharmGuid(ObjectGuid charm) { SetGuidValue(UNIT_FIELD_CHARM, charm); }
-        ObjectGuid const& GetTargetGuid() const { return GetGuidValue(UNIT_FIELD_TARGET); }
-        void SetTargetGuid(ObjectGuid targetGuid) { SetGuidValue(UNIT_FIELD_TARGET, targetGuid); }
-        ObjectGuid const& GetChannelObjectGuid() const { return GetGuidValue(UNIT_FIELD_CHANNEL_OBJECT); }
-        void SetChannelObjectGuid(ObjectGuid targetGuid) { SetGuidValue(UNIT_FIELD_CHANNEL_OBJECT, targetGuid); }
+        ObjectGuid const& GetOwnerGuid() const
+        {
+            return  GetGuidValue(UNIT_FIELD_SUMMONEDBY);
+        }
+        void SetOwnerGuid(ObjectGuid owner)
+        {
+            SetGuidValue(UNIT_FIELD_SUMMONEDBY, owner);
+        }
+        ObjectGuid const& GetCreatorGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_CREATEDBY);
+        }
+        void SetCreatorGuid(ObjectGuid creator)
+        {
+            SetGuidValue(UNIT_FIELD_CREATEDBY, creator);
+        }
+        ObjectGuid const& GetPetGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_SUMMON);
+        }
+        void SetPetGuid(ObjectGuid pet)
+        {
+            SetGuidValue(UNIT_FIELD_SUMMON, pet);
+        }
+        ObjectGuid const& GetCharmerGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_CHARMEDBY);
+        }
+        void SetCharmerGuid(ObjectGuid owner)
+        {
+            SetGuidValue(UNIT_FIELD_CHARMEDBY, owner);
+        }
+        ObjectGuid const& GetCharmGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_CHARM);
+        }
+        void SetCharmGuid(ObjectGuid charm)
+        {
+            SetGuidValue(UNIT_FIELD_CHARM, charm);
+        }
+        ObjectGuid const& GetTargetGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_TARGET);
+        }
+        void SetTargetGuid(ObjectGuid targetGuid)
+        {
+            SetGuidValue(UNIT_FIELD_TARGET, targetGuid);
+        }
+        ObjectGuid const& GetChannelObjectGuid() const
+        {
+            return GetGuidValue(UNIT_FIELD_CHANNEL_OBJECT);
+        }
+        void SetChannelObjectGuid(ObjectGuid targetGuid)
+        {
+            SetGuidValue(UNIT_FIELD_CHANNEL_OBJECT, targetGuid);
+        }
 
-        virtual Pet* GetMiniPet() const { return NULL; }    // overwrited in Player
+        virtual Pet* GetMiniPet() const
+        {
+            return NULL;    // overwrited in Player
+        }
 
-        ObjectGuid const& GetCharmerOrOwnerGuid() const { return GetCharmerGuid() ? GetCharmerGuid() : GetOwnerGuid(); }
+        ObjectGuid const& GetCharmerOrOwnerGuid() const
+        {
+            return GetCharmerGuid() ? GetCharmerGuid() : GetOwnerGuid();
+        }
         ObjectGuid const& GetCharmerOrOwnerOrOwnGuid() const
         {
             if (ObjectGuid const& guid = GetCharmerOrOwnerGuid())
                 return guid;
             return GetObjectGuid();
         }
-        bool isCharmedOwnedByPlayerOrPlayer() const { return GetCharmerOrOwnerOrOwnGuid().IsPlayer(); }
+        bool isCharmedOwnedByPlayerOrPlayer() const
+        {
+            return GetCharmerOrOwnerOrOwnGuid().IsPlayer();
+        }
 
         Player* GetSpellModOwner() const;
 
@@ -1485,7 +1851,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         Unit* GetCharmer() const;
         Unit* GetCharm() const;
         void Uncharm();
-        Unit* GetCharmerOrOwner() const { return GetCharmerGuid() ? GetCharmer() : GetOwner(); }
+        Unit* GetCharmerOrOwner() const
+        {
+            return GetCharmerGuid() ? GetCharmer() : GetOwner();
+        }
         Unit* GetCharmerOrOwnerOrSelf()
         {
             if (Unit* u = GetCharmerOrOwner())
@@ -1505,12 +1874,21 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void RemoveGuardians();
         Pet* FindGuardianWithEntry(uint32 entry);
 
-        bool isCharmed() const { return !GetCharmerGuid().IsEmpty(); }
+        bool isCharmed() const
+        {
+            return !GetCharmerGuid().IsEmpty();
+        }
 
-        CharmInfo* GetCharmInfo() { return m_charmInfo; }
+        CharmInfo* GetCharmInfo()
+        {
+            return m_charmInfo;
+        }
         CharmInfo* InitCharmInfo(Unit* charm);
 
-        ObjectGuid const& GetTotemGuid(TotemSlot slot) const { return m_TotemSlot[slot]; }
+        ObjectGuid const& GetTotemGuid(TotemSlot slot) const
+        {
+            return m_TotemSlot[slot];
+        }
         Totem* GetTotem(TotemSlot slot) const;
         bool IsAllTotemSlotsUsed() const;
 
@@ -1560,13 +1938,31 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
         void DelaySpellAuraHolder(uint32 spellId, int32 delaytime, ObjectGuid casterGuid);
 
-        void SetCreateStat(Stats stat, float val) { m_createStats[stat] = val; }
-        void SetCreateHealth(uint32 val) { SetUInt32Value(UNIT_FIELD_BASE_HEALTH, val); }
-        uint32 GetCreateHealth() const { return GetUInt32Value(UNIT_FIELD_BASE_HEALTH); }
-        void SetCreateMana(uint32 val) { SetUInt32Value(UNIT_FIELD_BASE_MANA, val); }
-        uint32 GetCreateMana() const { return GetUInt32Value(UNIT_FIELD_BASE_MANA); }
+        void SetCreateStat(Stats stat, float val)
+        {
+            m_createStats[stat] = val;
+        }
+        void SetCreateHealth(uint32 val)
+        {
+            SetUInt32Value(UNIT_FIELD_BASE_HEALTH, val);
+        }
+        uint32 GetCreateHealth() const
+        {
+            return GetUInt32Value(UNIT_FIELD_BASE_HEALTH);
+        }
+        void SetCreateMana(uint32 val)
+        {
+            SetUInt32Value(UNIT_FIELD_BASE_MANA, val);
+        }
+        uint32 GetCreateMana() const
+        {
+            return GetUInt32Value(UNIT_FIELD_BASE_MANA);
+        }
         uint32 GetCreatePowers(Powers power) const;
-        float GetCreateStat(Stats stat) const { return m_createStats[stat]; }
+        float GetCreateStat(Stats stat) const
+        {
+            return m_createStats[stat];
+        }
 
         void SetCurrentCastedSpell(Spell* pSpell);
         virtual void ProhibitSpellSchool(SpellSchoolMask /*idSchoolMask*/, uint32 /*unTimeMs*/) { }
@@ -1582,19 +1978,34 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         // delayed+channeled spells are always interrupted
         void InterruptNonMeleeSpells(bool withDelayed, uint32 spellid = 0);
 
-        Spell* GetCurrentSpell(CurrentSpellTypes spellType) const { return m_currentSpells[spellType]; }
-        Spell* GetCurrentSpell(uint32 spellType) const { return m_currentSpells[spellType]; }
+        Spell* GetCurrentSpell(CurrentSpellTypes spellType) const
+        {
+            return m_currentSpells[spellType];
+        }
+        Spell* GetCurrentSpell(uint32 spellType) const
+        {
+            return m_currentSpells[spellType];
+        }
         Spell* FindCurrentSpellBySpellId(uint32 spell_id) const;
 
         bool CheckAndIncreaseCastCounter();
-        void DecreaseCastCounter() { if (m_castCounter) --m_castCounter; }
+        void DecreaseCastCounter()
+        {
+            if (m_castCounter) --m_castCounter;
+        }
 
         ObjectGuid m_ObjectSlotGuid[4];
         uint32 m_detectInvisibilityMask;
         uint32 m_invisibilityMask;
 
-        ShapeshiftForm GetShapeshiftForm() const { return ShapeshiftForm(GetByteValue(UNIT_FIELD_BYTES_1, 2)); }
-        void  SetShapeshiftForm(ShapeshiftForm form) { SetByteValue(UNIT_FIELD_BYTES_1, 2, form); }
+        ShapeshiftForm GetShapeshiftForm() const
+        {
+            return ShapeshiftForm(GetByteValue(UNIT_FIELD_BYTES_1, 2));
+        }
+        void  SetShapeshiftForm(ShapeshiftForm form)
+        {
+            SetByteValue(UNIT_FIELD_BYTES_1, 2, form);
+        }
 
         bool IsInFeralForm() const
         {
@@ -1622,15 +2033,24 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
         // stat system
         bool HandleStatModifier(UnitMods unitMod, UnitModifierType modifierType, float amount, bool apply);
-        void SetModifierValue(UnitMods unitMod, UnitModifierType modifierType, float value) { m_auraModifiersGroup[unitMod][modifierType] = value; }
+        void SetModifierValue(UnitMods unitMod, UnitModifierType modifierType, float value)
+        {
+            m_auraModifiersGroup[unitMod][modifierType] = value;
+        }
         float GetModifierValue(UnitMods unitMod, UnitModifierType modifierType) const;
         float GetTotalStatValue(Stats stat) const;
         float GetTotalAuraModValue(UnitMods unitMod) const;
         SpellSchools GetSpellSchoolByAuraGroup(UnitMods unitMod) const;
         Stats GetStatByAuraGroup(UnitMods unitMod) const;
         Powers GetPowerTypeByAuraGroup(UnitMods unitMod) const;
-        bool CanModifyStats() const { return m_canModifyStats; }
-        void SetCanModifyStats(bool modifyStats) { m_canModifyStats = modifyStats; }
+        bool CanModifyStats() const
+        {
+            return m_canModifyStats;
+        }
+        void SetCanModifyStats(bool modifyStats)
+        {
+            m_canModifyStats = modifyStats;
+        }
         virtual bool UpdateStats(Stats stat) = 0;
         virtual bool UpdateAllStats() = 0;
         virtual void UpdateResistances(uint32 school) = 0;
@@ -1641,10 +2061,16 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         virtual void UpdateDamagePhysical(WeaponAttackType attType) = 0;
         float GetTotalAttackPowerValue(WeaponAttackType attType) const;
         float GetWeaponDamageRange(WeaponAttackType attType , WeaponDamageRange type) const;
-        void SetBaseWeaponDamage(WeaponAttackType attType , WeaponDamageRange damageRange, float value) { m_weaponDamage[attType][damageRange] = value; }
+        void SetBaseWeaponDamage(WeaponAttackType attType , WeaponDamageRange damageRange, float value)
+        {
+            m_weaponDamage[attType][damageRange] = value;
+        }
 
         // Visibility system
-        UnitVisibility GetVisibility() const { return m_Visibility; }
+        UnitVisibility GetVisibility() const
+        {
+            return m_Visibility;
+        }
         void SetVisibility(UnitVisibility x);
         void UpdateVisibilityAndView() override;            // overwrite WorldObject::UpdateVisibilityAndView()
 
@@ -1658,8 +2084,14 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         virtual bool IsVisibleInGridForPlayer(Player* pl) const = 0;
         bool isInvisibleForAlive() const;
 
-        TrackedAuraTargetMap&       GetTrackedAuraTargets(TrackedAuraType type)       { return m_trackedAuraTargets[type]; }
-        TrackedAuraTargetMap const& GetTrackedAuraTargets(TrackedAuraType type) const { return m_trackedAuraTargets[type]; }
+        TrackedAuraTargetMap&       GetTrackedAuraTargets(TrackedAuraType type)
+        {
+            return m_trackedAuraTargets[type];
+        }
+        TrackedAuraTargetMap const& GetTrackedAuraTargets(TrackedAuraType type) const
+        {
+            return m_trackedAuraTargets[type];
+        }
         SpellImmuneList m_spellImmune[MAX_SPELL_IMMUNITY];
 
         // Threat related methods
@@ -1672,21 +2104,48 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void TauntApply(Unit* pVictim);
         void TauntFadeOut(Unit* taunter);
         void FixateTarget(Unit* pVictim);
-        ObjectGuid GetFixateTargetGuid() const { return m_fixateTargetGuid; }
-        ThreatManager& getThreatManager() { return m_ThreatManager; }
-        ThreatManager const& getThreatManager() const { return m_ThreatManager; }
-        void addHatedBy(HostileReference* pHostileReference) { m_HostileRefManager.insertFirst(pHostileReference); };
-        void removeHatedBy(HostileReference* /*pHostileReference*/) { /* nothing to do yet */ }
-        HostileRefManager& getHostileRefManager() { return m_HostileRefManager; }
+        ObjectGuid GetFixateTargetGuid() const
+        {
+            return m_fixateTargetGuid;
+        }
+        ThreatManager& getThreatManager()
+        {
+            return m_ThreatManager;
+        }
+        ThreatManager const& getThreatManager() const
+        {
+            return m_ThreatManager;
+        }
+        void addHatedBy(HostileReference* pHostileReference)
+        {
+            m_HostileRefManager.insertFirst(pHostileReference);
+        };
+        void removeHatedBy(HostileReference* /*pHostileReference*/)
+        {
+            /* nothing to do yet */
+        }
+        HostileRefManager& getHostileRefManager()
+        {
+            return m_HostileRefManager;
+        }
 
         Aura* GetAura(uint32 spellId, SpellEffectIndex effindex);
         Aura* GetAura(AuraType type, SpellFamily family, uint64 familyFlag, ObjectGuid casterGuid = ObjectGuid());
         SpellAuraHolder* GetSpellAuraHolder(uint32 spellid) const;
         SpellAuraHolder* GetSpellAuraHolder(uint32 spellid, ObjectGuid casterGUID) const;
 
-        SpellAuraHolderMap&       GetSpellAuraHolderMap()       { return m_spellAuraHolders; }
-        SpellAuraHolderMap const& GetSpellAuraHolderMap() const { return m_spellAuraHolders; }
-        AuraList const& GetAurasByType(AuraType type) const { return m_modAuras[type]; }
+        SpellAuraHolderMap&       GetSpellAuraHolderMap()
+        {
+            return m_spellAuraHolders;
+        }
+        SpellAuraHolderMap const& GetSpellAuraHolderMap() const
+        {
+            return m_spellAuraHolders;
+        }
+        AuraList const& GetAurasByType(AuraType type) const
+        {
+            return m_modAuras[type];
+        }
         void ApplyAuraProcTriggerDamage(Aura* aura, bool apply);
 
         int32 GetTotalAuraModifier(AuraType auratype) const;
@@ -1708,12 +2167,27 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
         uint32 m_AuraFlags;
 
-        uint32 GetDisplayId() const { return GetUInt32Value(UNIT_FIELD_DISPLAYID); }
+        uint32 GetDisplayId() const
+        {
+            return GetUInt32Value(UNIT_FIELD_DISPLAYID);
+        }
         void SetDisplayId(uint32 modelId);
-        uint32 GetNativeDisplayId() const { return GetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID); }
-        void SetNativeDisplayId(uint32 modelId) { SetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID, modelId); }
-        void setTransForm(uint32 spellid) { m_transform = spellid;}
-        uint32 getTransForm() const { return m_transform;}
+        uint32 GetNativeDisplayId() const
+        {
+            return GetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID);
+        }
+        void SetNativeDisplayId(uint32 modelId)
+        {
+            SetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID, modelId);
+        }
+        void setTransForm(uint32 spellid)
+        {
+            m_transform = spellid;
+        }
+        uint32 getTransForm() const
+        {
+            return m_transform;
+        }
 
         // at any changes to scale and/or displayId
         void UpdateModelData();
@@ -1722,7 +2196,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         DynamicObject* GetDynObject(uint32 spellId);
         void AddDynObject(DynamicObject* dynObj);
         void RemoveDynObject(uint32 spellid);
-        void RemoveDynObjectWithGUID(ObjectGuid guid) { m_dynObjGUIDs.remove(guid); }
+        void RemoveDynObjectWithGUID(ObjectGuid guid)
+        {
+            m_dynObjGUIDs.remove(guid);
+        }
         void RemoveAllDynObjects();
 
         GameObject* GetGameObject(uint32 spellId) const;
@@ -1735,7 +2212,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         uint32 CalculateDamage(WeaponAttackType attType, bool normalized);
         float GetAPMultiplier(WeaponAttackType attType, bool normalized);
         void ModifyAuraState(AuraState flag, bool apply);
-        bool HasAuraState(AuraState flag) const { return HasFlag(UNIT_FIELD_AURASTATE, 1 << (flag - 1)); }
+        bool HasAuraState(AuraState flag) const
+        {
+            return HasFlag(UNIT_FIELD_AURASTATE, 1 << (flag - 1));
+        }
         void UnsummonAllTotems();
         Unit* SelectMagnetTarget(Unit* victim, Spell* spell = NULL, SpellEffectIndex eff = EFFECT_INDEX_0);
 
@@ -1783,7 +2263,10 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         {
             m_lastManaUseTimer = 5000;
         }
-        bool IsUnderLastManaUseEffect() const { return m_lastManaUseTimer; }
+        bool IsUnderLastManaUseEffect() const
+        {
+            return m_lastManaUseTimer;
+        }
 
         void SetContestedPvP(Player* attackedPlayer = NULL);
 
@@ -1799,10 +2282,16 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
         void  UpdateSpeed(UnitMoveType mtype, bool forced, float ratio = 1.0f);
         float GetSpeed(UnitMoveType mtype) const;
-        float GetSpeedRate(UnitMoveType mtype) const { return m_speed_rate[mtype]; }
+        float GetSpeedRate(UnitMoveType mtype) const
+        {
+            return m_speed_rate[mtype];
+        }
         void SetSpeedRate(UnitMoveType mtype, float rate, bool forced = false);
 
-        bool isHover() const { return HasAuraType(SPELL_AURA_HOVER); }
+        bool isHover() const
+        {
+            return HasAuraType(SPELL_AURA_HOVER);
+        }
 
         void _RemoveAllAuraMods();
         void _ApplyAllAuraMods();
@@ -1811,12 +2300,24 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
         float CalculateLevelPenalty(SpellEntry const* spellProto) const;
 
-        void addFollower(FollowerReference* pRef) { m_FollowingRefManager.insertFirst(pRef); }
-        void removeFollower(FollowerReference* /*pRef*/) { /* nothing to do yet */ }
+        void addFollower(FollowerReference* pRef)
+        {
+            m_FollowingRefManager.insertFirst(pRef);
+        }
+        void removeFollower(FollowerReference* /*pRef*/)
+        {
+            /* nothing to do yet */
+        }
 
-        MotionMaster* GetMotionMaster() { return &i_motionMaster; }
+        MotionMaster* GetMotionMaster()
+        {
+            return &i_motionMaster;
+        }
 
-        bool IsStopped() const { return !(hasUnitState(UNIT_STAT_MOVING)); }
+        bool IsStopped() const
+        {
+            return !(hasUnitState(UNIT_STAT_MOVING));
+        }
         void StopMoving(bool forceSendStop = false);
         void InterruptMoving(bool forceSendStop = false);
 
@@ -1824,8 +2325,14 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void SetConfused(bool apply, ObjectGuid casterGuid = ObjectGuid(), uint32 spellID = 0);
         void SetFeignDeath(bool apply, ObjectGuid casterGuid = ObjectGuid(), uint32 spellID = 0);
 
-        void AddComboPointHolder(uint32 lowguid) { m_ComboPointHolders.insert(lowguid); }
-        void RemoveComboPointHolder(uint32 lowguid) { m_ComboPointHolders.erase(lowguid); }
+        void AddComboPointHolder(uint32 lowguid)
+        {
+            m_ComboPointHolders.insert(lowguid);
+        }
+        void RemoveComboPointHolder(uint32 lowguid)
+        {
+            m_ComboPointHolders.erase(lowguid);
+        }
         void ClearComboPointHolders();
 
         ///----------Pet responses methods-----------------
@@ -1835,11 +2342,17 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void SendPetAIReaction();
         ///----------End of Pet responses methods----------
 
-        void propagateSpeedChange() { GetMotionMaster()->propagateSpeedChange(); }
+        void propagateSpeedChange()
+        {
+            GetMotionMaster()->propagateSpeedChange();
+        }
 
         // reactive attacks
         void ClearAllReactives();
-        void StartReactiveTimer(ReactiveType reactive) { m_reactiveTimer[reactive] = REACTIVE_TIMER_START;}
+        void StartReactiveTimer(ReactiveType reactive)
+        {
+            m_reactiveTimer[reactive] = REACTIVE_TIMER_START;
+        }
         void UpdateReactives(uint32 p_time);
 
         // group updates
@@ -1856,11 +2369,20 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         Movement::MoveSpline* movespline;
 
         void ScheduleAINotify(uint32 delay);
-        bool IsAINotifyScheduled() const { return m_AINotifyScheduled;}
-        void _SetAINotifyScheduled(bool on) { m_AINotifyScheduled = on;}       // only for call from RelocationNotifyEvent code
+        bool IsAINotifyScheduled() const
+        {
+            return m_AINotifyScheduled;
+        }
+        void _SetAINotifyScheduled(bool on)
+        {
+            m_AINotifyScheduled = on;   // only for call from RelocationNotifyEvent code
+        }
         void OnRelocated();
 
-        bool IsLinkingEventTrigger() { return m_isCreatureLinkingTrigger; }
+        bool IsLinkingEventTrigger()
+        {
+            return m_isCreatureLinkingTrigger;
+        }
 
     protected:
         explicit Unit();

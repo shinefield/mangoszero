@@ -511,12 +511,13 @@ namespace MMAP
                     indices[1] = square + V9_SIZE + 1 + rowOffset;
                     indices[2] = square + V9_SIZE + rowOffset;
                     break;
-                default: break;
+                default:
+                    break;
             }
         else
             switch (triangle)
             {
-                    //           0-----1 .... 128
+                                                                        //           0-----1 .... 128
                 case TOP:                                               //           |\    |
                     indices[0] = square + rowOffset;                    //           | \ T |
                     indices[1] = square + 1 + rowOffset;                //           |  \  |
@@ -527,8 +528,9 @@ namespace MMAP
                     indices[1] = square + V9_SIZE + 1 + rowOffset;      //           | \   |
                     indices[2] = square + V9_SIZE + rowOffset;          //           |  \  |
                     break;                                              //           |   \ |
-                default: break;                                         //           |    \|
-            }                                                           //          258---259 ... 515
+                default:                                                //           |    \|
+                    break;                                              //          258---259 ... 515
+            }
 
     }
 

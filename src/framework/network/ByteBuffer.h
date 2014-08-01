@@ -253,7 +253,10 @@ class ByteBuffer
             return read<uint8>(pos);
         }
 
-        size_t rpos() const { return _rpos; }
+        size_t rpos() const
+        {
+            return _rpos;
+        }
 
         size_t rpos(size_t rpos_)
         {
@@ -261,7 +264,10 @@ class ByteBuffer
             return _rpos;
         }
 
-        size_t wpos() const { return _wpos; }
+        size_t wpos() const
+        {
+            return _wpos;
+        }
 
         size_t wpos(size_t wpos_)
         {
@@ -270,7 +276,10 @@ class ByteBuffer
         }
 
         template<typename T>
-        void read_skip() { read_skip(sizeof(T)); }
+        void read_skip()
+        {
+            read_skip(sizeof(T));
+        }
 
         void read_skip(size_t skip)
         {
@@ -322,10 +331,19 @@ class ByteBuffer
             return guid;
         }
 
-        const uint8* contents() const { return &_storage[0]; }
+        const uint8* contents() const
+        {
+            return &_storage[0];
+        }
 
-        size_t size() const { return _storage.size(); }
-        bool empty() const { return _storage.empty(); }
+        size_t size() const
+        {
+            return _storage.size();
+        }
+        bool empty() const
+        {
+            return _storage.empty();
+        }
 
         void resize(size_t newsize)
         {

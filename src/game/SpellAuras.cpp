@@ -694,7 +694,10 @@ void Aura::ReapplyAffectedPassiveAuras(Unit* target)
 struct ReapplyAffectedPassiveAurasHelper
 {
     explicit ReapplyAffectedPassiveAurasHelper(Aura* _aura) : aura(_aura) {}
-    void operator()(Unit* unit) const { aura->ReapplyAffectedPassiveAuras(unit); }
+    void operator()(Unit* unit) const
+    {
+        aura->ReapplyAffectedPassiveAuras(unit);
+    }
     Aura* aura;
 };
 
@@ -1059,9 +1062,14 @@ void Aura::TriggerSpell()
                     {
                         switch ((*i)->GetModifier()->m_miscvalue)
                         {
-                            case STAT_INTELLECT: intelectLoss += (*i)->GetModifier()->m_amount; break;
-                            case STAT_SPIRIT:    spiritLoss   += (*i)->GetModifier()->m_amount; break;
-                            default: break;
+                            case STAT_INTELLECT:
+                                intelectLoss += (*i)->GetModifier()->m_amount;
+                                break;
+                            case STAT_SPIRIT:
+                                spiritLoss   += (*i)->GetModifier()->m_amount;
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -1171,10 +1179,18 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                         {
                             case 1:
                                 return;
-                            case 2: damage =   500; break;
-                            case 3: damage =  1500; break;
-                            case 4: damage =  4000; break;
-                            case 5: damage = 12500; break;
+                            case 2:
+                                damage =   500;
+                                break;
+                            case 3:
+                                damage =  1500;
+                                break;
+                            case 4:
+                                damage =  4000;
+                                break;
+                            case 5:
+                                damage = 12500;
+                                break;
                             default:
                                 damage = 14000 + 1000 * GetStackAmount();
                                 break;
@@ -1201,18 +1217,42 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
             uint32 finalSpellId = 0;
             switch (GetId())
             {
-                case 19548: finalSpellId = 19597; break;
-                case 19674: finalSpellId = 19677; break;
-                case 19687: finalSpellId = 19676; break;
-                case 19688: finalSpellId = 19678; break;
-                case 19689: finalSpellId = 19679; break;
-                case 19692: finalSpellId = 19680; break;
-                case 19693: finalSpellId = 19684; break;
-                case 19694: finalSpellId = 19681; break;
-                case 19696: finalSpellId = 19682; break;
-                case 19697: finalSpellId = 19683; break;
-                case 19699: finalSpellId = 19685; break;
-                case 19700: finalSpellId = 19686; break;
+                case 19548:
+                    finalSpellId = 19597;
+                    break;
+                case 19674:
+                    finalSpellId = 19677;
+                    break;
+                case 19687:
+                    finalSpellId = 19676;
+                    break;
+                case 19688:
+                    finalSpellId = 19678;
+                    break;
+                case 19689:
+                    finalSpellId = 19679;
+                    break;
+                case 19692:
+                    finalSpellId = 19680;
+                    break;
+                case 19693:
+                    finalSpellId = 19684;
+                    break;
+                case 19694:
+                    finalSpellId = 19681;
+                    break;
+                case 19696:
+                    finalSpellId = 19682;
+                    break;
+                case 19697:
+                    finalSpellId = 19683;
+                    break;
+                case 19699:
+                    finalSpellId = 19685;
+                    break;
+                case 19700:
+                    finalSpellId = 19686;
+                    break;
             }
 
             if (finalSpellId)
@@ -1683,11 +1723,21 @@ void Aura::HandleAuraModShapeshift(bool apply, bool Real)
                             // select by script id
                             switch ((*iter)->GetModifier()->m_miscvalue)
                             {
-                                case 831: Rage_val =  50; break;
-                                case 832: Rage_val = 100; break;
-                                case 833: Rage_val = 150; break;
-                                case 834: Rage_val = 200; break;
-                                case 835: Rage_val = 250; break;
+                                case 831:
+                                    Rage_val =  50;
+                                    break;
+                                case 832:
+                                    Rage_val = 100;
+                                    break;
+                                case 833:
+                                    Rage_val = 150;
+                                    break;
+                                case 834:
+                                    Rage_val = 200;
+                                    break;
+                                case 835:
+                                    Rage_val = 250;
+                                    break;
                             }
                             if (Rage_val != 0)
                                 break;
@@ -1749,39 +1799,56 @@ void Aura::HandleAuraTransform(bool apply, bool Real)
                     uint32 orb_model = target->GetNativeDisplayId();
                     switch (orb_model)
                     {
-                            // Troll Female
-                        case 1479: target->SetDisplayId(10134); break;
-                            // Troll Male
-                        case 1478: target->SetDisplayId(10135); break;
-                            // Tauren Male
-                        case 59:   target->SetDisplayId(10136); break;
-                            // Human Male
-                        case 49:   target->SetDisplayId(10137); break;
-                            // Human Female
-                        case 50:   target->SetDisplayId(10138); break;
-                            // Orc Male
-                        case 51:   target->SetDisplayId(10139); break;
-                            // Orc Female
-                        case 52:   target->SetDisplayId(10140); break;
-                            // Dwarf Male
-                        case 53:   target->SetDisplayId(10141); break;
-                            // Dwarf Female
-                        case 54:   target->SetDisplayId(10142); break;
-                            // NightElf Male
-                        case 55:   target->SetDisplayId(10143); break;
-                            // NightElf Female
-                        case 56:   target->SetDisplayId(10144); break;
-                            // Undead Female
-                        case 58:   target->SetDisplayId(10145); break;
-                            // Undead Male
-                        case 57:   target->SetDisplayId(10146); break;
-                            // Tauren Female
-                        case 60:   target->SetDisplayId(10147); break;
-                            // Gnome Male
-                        case 1563: target->SetDisplayId(10148); break;
-                            // Gnome Female
-                        case 1564: target->SetDisplayId(10149); break;
-                        default: break;
+                        case 1479:                          // Troll Female
+                            target->SetDisplayId(10134);
+                            break;
+                        case 1478:                          // Troll Male
+                            target->SetDisplayId(10135);
+                            break;
+                        case 59:                            // Tauren Male
+                            target->SetDisplayId(10136);
+                            break;
+                        case 49:                            // Human Male
+                            target->SetDisplayId(10137);
+                            break;
+                        case 50:                            // Human Female
+                            target->SetDisplayId(10138);
+                            break;
+                        case 51:                            // Orc Male
+                            target->SetDisplayId(10139);
+                            break;
+                        case 52:                            // Orc Female
+                            target->SetDisplayId(10140);
+                            break;
+                        case 53:                            // Dwarf Male
+                            target->SetDisplayId(10141);
+                            break;
+                        case 54:                            // Dwarf Female
+                            target->SetDisplayId(10142);
+                            break;
+                        case 55:                            // NightElf Male
+                            target->SetDisplayId(10143);
+                            break;
+                        case 56:                            // NightElf Female
+                            target->SetDisplayId(10144);
+                            break;
+                        case 58:                            // Undead Female
+                            target->SetDisplayId(10145);
+                            break;
+                        case 57:                            // Undead Male
+                            target->SetDisplayId(10146);
+                            break;
+                        case 60:                            // Tauren Female
+                            target->SetDisplayId(10147);
+                            break;
+                        case 1563:                          // Gnome Male
+                            target->SetDisplayId(10148);
+                            break;
+                        case 1564:                          // Gnome Female
+                            target->SetDisplayId(10149);
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 }
@@ -2412,9 +2479,15 @@ void Aura::HandleAuraModStun(bool apply, bool Real)
 
             switch (GetId())
             {
-                case 19386: spell_id = 24131; break;
-                case 24132: spell_id = 24134; break;
-                case 24133: spell_id = 24135; break;
+                case 19386:
+                    spell_id = 24131;
+                    break;
+                case 24132:
+                    spell_id = 24134;
+                    break;
+                case 24133:
+                    spell_id = 24135;
+                    break;
                 default:
                     sLog.outError("Spell selection called for unexpected original spell %u, new spell for this spell family?", GetId());
                     return;
@@ -3439,10 +3512,10 @@ void Aura::HandleAuraModIncreaseHealth(bool apply, bool Real)
 
     switch (GetId())
     {
-        // Special case with temporary increase max/current health
+            // Special case with temporary increase max/current health
             // Cases where we need to manually calculate the amount for the spell (by percentage)
             // recalculate to full amount at apply for proper remove
-        // Backport notive TBC: no cases yet
+            // Backport native TBC: no cases yet
             // no break here
 
             // Cases where m_amount already has the correct value (spells cast with CastCustomSpell or absolute values)
@@ -5234,7 +5307,7 @@ void SpellAuraHolder::HandleSpellSpecificBoosts(bool apply)
             {
                 case 11129:                                 // Combustion (remove triggered aura stack)
                 {
-                    if(!apply)
+                    if (!apply)
                         spellId1 = 28682;
                     else
                         return;
@@ -5242,7 +5315,7 @@ void SpellAuraHolder::HandleSpellSpecificBoosts(bool apply)
                 }
                 case 28682:                                 // Combustion (remove main aura)
                 {
-                    if(!apply)
+                    if (!apply)
                         spellId1 = 11129;
                     else
                         return;

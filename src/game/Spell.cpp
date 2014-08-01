@@ -1053,10 +1053,18 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
             uint32 BTAura = 0;
             switch (m_spellInfo->Id)
             {
-                case 23881: BTAura = 23885; break;
-                case 23892: BTAura = 23886; break;
-                case 23893: BTAura = 23887; break;
-                case 23894: BTAura = 23888; break;
+                case 23881:
+                    BTAura = 23885;
+                    break;
+                case 23892:
+                    BTAura = 23886;
+                    break;
+                case 23893:
+                    BTAura = 23887;
+                    break;
+                case 23894:
+                    BTAura = 23888;
+                    break;
                 default:
                     sLog.outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura", m_spellInfo->Id);
                     break;
@@ -1472,10 +1480,18 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
             float angle = m_caster->GetOrientation();
             switch (targetMode)
             {
-                case TARGET_TOTEM_FIRE:  angle += M_PI_F * 0.25f; break;            // front - left
-                case TARGET_TOTEM_AIR:   angle += M_PI_F * 0.75f; break;            // back  - left
-                case TARGET_TOTEM_WATER: angle += M_PI_F * 1.25f; break;            // back  - right
-                case TARGET_TOTEM_EARTH: angle += M_PI_F * 1.75f; break;            // front - right
+                case TARGET_TOTEM_FIRE:
+                    angle += M_PI_F * 0.25f;                // front - left
+                    break;
+                case TARGET_TOTEM_AIR:
+                    angle += M_PI_F * 0.75f;                // back  - left
+                    break;
+                case TARGET_TOTEM_WATER:
+                    angle += M_PI_F * 1.25f;                // back  - right
+                    break;
+                case TARGET_TOTEM_EARTH:
+                    angle += M_PI_F * 1.75f;                // front - right
+                    break;
             }
 
             float x, y;
@@ -1966,8 +1982,12 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
             SpellNotifyPushType pushType = PUSH_IN_FRONT;
             switch (m_spellInfo->SpellVisual)            // Some spell require a different target fill
             {
-                case 3879: pushType = PUSH_IN_BACK;     break;
-                case 7441: pushType = PUSH_IN_FRONT_15; break;
+                case 3879:
+                    pushType = PUSH_IN_BACK;
+                    break;
+                case 7441:
+                    pushType = PUSH_IN_FRONT_15;
+                    break;
             }
             FillAreaTargets(targetUnitMap, radius, pushType, SPELL_TARGETS_AOE_DAMAGE);
             break;
@@ -2224,10 +2244,17 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                 float angle = m_caster->GetOrientation();
                 switch (targetMode)
                 {
-                    case TARGET_DYNAMIC_OBJECT_FRONT:                           break;
-                    case TARGET_DYNAMIC_OBJECT_BEHIND:      angle += M_PI_F;      break;
-                    case TARGET_DYNAMIC_OBJECT_LEFT_SIDE:   angle += M_PI_F / 2;  break;
-                    case TARGET_DYNAMIC_OBJECT_RIGHT_SIDE:  angle -= M_PI_F / 2;  break;
+                    case TARGET_DYNAMIC_OBJECT_FRONT:
+                        break;
+                    case TARGET_DYNAMIC_OBJECT_BEHIND:
+                        angle += M_PI_F;
+                        break;
+                    case TARGET_DYNAMIC_OBJECT_LEFT_SIDE:
+                        angle += M_PI_F / 2;
+                        break;
+                    case TARGET_DYNAMIC_OBJECT_RIGHT_SIDE:
+                        angle -= M_PI_F / 2;
+                        break;
                 }
 
                 float x, y;
@@ -2575,7 +2602,8 @@ void Spell::cancel()
 
             if (sendInterrupt)
                 SendCastResult(SPELL_FAILED_INTERRUPTED);
-        } break;
+        }
+        break;
 
         case SPELL_STATE_CASTING:
         {
@@ -2594,7 +2622,8 @@ void Spell::cancel()
 
             if (sendInterrupt)
                 SendCastResult(SPELL_FAILED_INTERRUPTED);
-        } break;
+        }
+        break;
 
         default:
         {
@@ -2692,14 +2721,29 @@ void Spell::cast(bool skipCheck)
 
             switch (m_spellInfo->Id)
             {
-                case 15237: AddTriggeredSpell(23455); break;// Holy Nova, rank 1
-                case 15430: AddTriggeredSpell(23458); break;// Holy Nova, rank 2
-                case 15431: AddTriggeredSpell(23459); break;// Holy Nova, rank 3
-                case 27799: AddTriggeredSpell(27803); break;// Holy Nova, rank 4
-                case 27800: AddTriggeredSpell(27804); break;// Holy Nova, rank 5
-                case 27801: AddTriggeredSpell(27805); break;// Holy Nova, rank 6
-                case 25331: AddTriggeredSpell(25329); break;// Holy Nova, rank 7
-                default: break;
+                case 15237:
+                    AddTriggeredSpell(23455);               // Holy Nova, rank 1
+                    break;
+                case 15430:
+                    AddTriggeredSpell(23458);               // Holy Nova, rank 2
+                    break;
+                case 15431:
+                    AddTriggeredSpell(23459);               // Holy Nova, rank 3
+                    break;
+                case 27799:
+                    AddTriggeredSpell(27803);               // Holy Nova, rank 4
+                    break;
+                case 27800:
+                    AddTriggeredSpell(27804);               // Holy Nova, rank 5
+                    break;
+                case 27801:
+                    AddTriggeredSpell(27805);               // Holy Nova, rank 6
+                    break;
+                case 25331:
+                    AddTriggeredSpell(25329);               // Holy Nova, rank 7
+                    break;
+                default:
+                    break;
             }
             break;
         }
@@ -2948,7 +2992,8 @@ void Spell::update(uint32 difftime)
 
             if (m_timer == 0 && !IsNextMeleeSwingSpell() && !IsAutoRepeat())
                 cast();
-        } break;
+        }
+        break;
         case SPELL_STATE_CASTING:
         {
             if (m_timer > 0)
@@ -3020,7 +3065,8 @@ void Spell::update(uint32 difftime)
 
                 finish();
             }
-        } break;
+        }
+        break;
         default:
         {
         } break;
@@ -3968,7 +4014,9 @@ SpellCastResult Spell::CheckCast(bool strict)
                 if ((*i)->GetSpellProto()->SpellFamilyName == m_spellInfo->SpellFamilyName)
                     if (m_spellInfo->IsFitToFamilyMask((*i)->GetSpellProto()->SpellFamilyFlags))
                         if (CompareAuraRanks(m_spellInfo->Id, (*i)->GetSpellProto()->Id) < 0)
-                            { return SPELL_FAILED_MORE_POWERFUL_SPELL_ACTIVE; }
+                        {
+                            return SPELL_FAILED_MORE_POWERFUL_SPELL_ACTIVE;
+                        }
             }
         }
 
@@ -4037,8 +4085,8 @@ SpellCastResult Spell::CheckCast(bool strict)
         // totem immunity for channeled spells(needs to be before spell cast)
         // spell attribs for player channeled spells
         if (m_spellInfo->HasAttribute(SPELL_ATTR_EX_CHANNEL_TRACK_TARGET)
-            && target->GetTypeId() == TYPEID_UNIT
-            && ((Creature*)target)->IsTotem())
+                && target->GetTypeId() == TYPEID_UNIT
+                && ((Creature*)target)->IsTotem())
             return SPELL_FAILED_IMMUNE;
 
         // Power Infusion: As of patch 1.10, this is no longer usable if the target
@@ -4860,7 +4908,8 @@ SpellCastResult Spell::CheckCast(bool strict)
                             return SPELL_FAILED_TRY_AGAIN;
                 break;
             }
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -5223,7 +5272,8 @@ SpellCastResult Spell::CheckCasterAuras() const
                             else if (m_spellInfo->PreventionType == SPELL_PREVENTION_TYPE_SILENCE)
                                 return SPELL_FAILED_SILENCED;
                             break;
-                        default: break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -5746,7 +5796,8 @@ SpellCastResult Spell::CheckItems()
                         uint32 ammo = pItem->GetEntry();
                         if (!((Player*)m_caster)->HasItemCount(ammo, 1))
                             return SPELL_FAILED_NO_AMMO;
-                    };  break;
+                    };
+                    break;
                     case ITEM_SUBCLASS_WEAPON_GUN:
                     case ITEM_SUBCLASS_WEAPON_BOW:
                     case ITEM_SUBCLASS_WEAPON_CROSSBOW:
@@ -5786,7 +5837,8 @@ SpellCastResult Spell::CheckItems()
 
                         if (!((Player*)m_caster)->HasItemCount(ammo, 1))
                             return SPELL_FAILED_NO_AMMO;
-                    };  break;
+                    };
+                    break;
                     case ITEM_SUBCLASS_WEAPON_WAND:
                         break;
                     default:
@@ -5794,7 +5846,8 @@ SpellCastResult Spell::CheckItems()
                 }
                 break;
             }
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -6097,7 +6150,8 @@ bool SpellEvent::Execute(uint64 e_time, uint32 p_time)
                 return true;                                // spell is deletable, finish event
             }
             // event will be re-added automatically at the end of routine)
-        } break;
+        }
+        break;
 
         case SPELL_STATE_CASTING:
         {
@@ -6151,7 +6205,8 @@ bool SpellEvent::Execute(uint64 e_time, uint32 p_time)
                 m_Spell->GetCaster()->m_Events.AddEvent(this, e_time + m_Spell->GetDelayMoment(), false);
                 return false;                               // event not complete
             }
-        } break;
+        }
+        break;
 
         default:
         {

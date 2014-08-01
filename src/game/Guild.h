@@ -211,34 +211,79 @@ class Guild
         typedef UNORDERED_MAP<uint32, MemberSlot> MemberList;
         typedef std::vector<RankInfo> RankList;
 
-        uint32 GetId() { return m_Id; }
-        ObjectGuid GetLeaderGuid() const { return m_LeaderGuid; }
-        std::string const& GetName() const { return m_Name; }
-        std::string const& GetMOTD() const { return MOTD; }
-        std::string const& GetGINFO() const { return GINFO; }
+        uint32 GetId()
+        {
+            return m_Id;
+        }
+        ObjectGuid GetLeaderGuid() const
+        {
+            return m_LeaderGuid;
+        }
+        std::string const& GetName() const
+        {
+            return m_Name;
+        }
+        std::string const& GetMOTD() const
+        {
+            return MOTD;
+        }
+        std::string const& GetGINFO() const
+        {
+            return GINFO;
+        }
 
-        uint32 GetCreatedYear() const { return m_CreatedYear; }
-        uint32 GetCreatedMonth() const { return m_CreatedMonth; }
-        uint32 GetCreatedDay() const { return m_CreatedDay; }
+        uint32 GetCreatedYear() const
+        {
+            return m_CreatedYear;
+        }
+        uint32 GetCreatedMonth() const
+        {
+            return m_CreatedMonth;
+        }
+        uint32 GetCreatedDay() const
+        {
+            return m_CreatedDay;
+        }
 
-        uint32 GetEmblemStyle() const { return m_EmblemStyle; }
-        uint32 GetEmblemColor() const { return m_EmblemColor; }
-        uint32 GetBorderStyle() const { return m_BorderStyle; }
-        uint32 GetBorderColor() const { return m_BorderColor; }
-        uint32 GetBackgroundColor() const { return m_BackgroundColor; }
+        uint32 GetEmblemStyle() const
+        {
+            return m_EmblemStyle;
+        }
+        uint32 GetEmblemColor() const
+        {
+            return m_EmblemColor;
+        }
+        uint32 GetBorderStyle() const
+        {
+            return m_BorderStyle;
+        }
+        uint32 GetBorderColor() const
+        {
+            return m_BorderColor;
+        }
+        uint32 GetBackgroundColor() const
+        {
+            return m_BackgroundColor;
+        }
 
         void SetLeader(ObjectGuid guid);
         bool AddMember(ObjectGuid plGuid, uint32 plRank);
         bool DelMember(ObjectGuid guid, bool isDisbanding = false);
         bool ChangeMemberRank(ObjectGuid guid, uint8 newRank);
         // lowest rank is the count of ranks - 1 (the highest rank_id in table)
-        uint32 GetLowestRank() const { return m_Ranks.size() - 1; }
+        uint32 GetLowestRank() const
+        {
+            return m_Ranks.size() - 1;
+        }
 
         void SetMOTD(std::string motd);
         void SetGINFO(std::string ginfo);
         void SetEmblem(uint32 emblemStyle, uint32 emblemColor, uint32 borderStyle, uint32 borderColor, uint32 backgroundColor);
 
-        uint32 GetMemberSize() const { return members.size(); }
+        uint32 GetMemberSize() const
+        {
+            return members.size();
+        }
         uint32 GetAccountsNumber();
 
         bool LoadGuildFromDB(QueryResult* guildDataResult);
@@ -270,7 +315,10 @@ class Guild
         void DelRank();
         std::string GetRankName(uint32 rankId);
         uint32 GetRankRights(uint32 rankId);
-        uint32 GetRanksSize() const { return m_Ranks.size(); }
+        uint32 GetRanksSize() const
+        {
+            return m_Ranks.size();
+        }
 
         void SetRankName(uint32 rankId, std::string name);
         void SetRankRights(uint32 rankId, uint32 rights);
@@ -338,6 +386,9 @@ class Guild
         uint32 m_GuildEventLogNextGuid;
 
     private:
-        void UpdateAccountsNumber() { m_accountsNumber = 0;}// mark for lazy calculation at request in GetAccountsNumber
+        void UpdateAccountsNumber()
+        {
+            m_accountsNumber = 0;   // mark for lazy calculation at request in GetAccountsNumber
+        }
 };
 #endif

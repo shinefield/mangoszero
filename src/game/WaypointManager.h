@@ -67,7 +67,10 @@ class WaypointManager
 {
     public:
         WaypointManager() {}
-        ~WaypointManager() { Unload(); }
+        ~WaypointManager()
+        {
+            Unload();
+        }
 
         void Load();
         void Unload();

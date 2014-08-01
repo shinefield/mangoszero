@@ -56,7 +56,10 @@ class Bag : public Item
         uint8 GetSlotByItemGUID(ObjectGuid guid) const;
         bool IsEmpty() const;
         uint32 GetFreeSlots() const;
-        uint32 GetBagSize() const { return GetUInt32Value(CONTAINER_FIELD_NUM_SLOTS); }
+        uint32 GetBagSize() const
+        {
+            return GetUInt32Value(CONTAINER_FIELD_NUM_SLOTS);
+        }
 
         // DB operations
         // overwrite virtual Item::SaveToDB

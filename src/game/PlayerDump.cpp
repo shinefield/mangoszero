@@ -38,7 +38,10 @@ struct DumpTable
     DumpTableType type;
 
     // helpers
-    bool isValid() const { return name != NULL; }
+    bool isValid() const
+    {
+        return name != NULL;
+    }
 };
 
 static DumpTable dumpTables[] =
@@ -71,7 +74,8 @@ static DumpTable dumpTables[] =
 // Low level functions
 static bool findtoknth(std::string& str, int n, std::string::size_type& s, std::string::size_type& e)
 {
-    int i; s = e = 0;
+    int i;
+    s = e = 0;
     std::string::size_type size = str.size();
     for (i = 1; s < size && i < n; ++s) if (str[s] == ' ') ++i;
     if (i < n)
@@ -287,15 +291,39 @@ void PlayerDumpWriter::DumpTableContent(std::string& dump, uint32 guid, char con
 
     switch (type)
     {
-        case DTT_ITEM:      fieldname = "guid";      guids = &items; break;
-        case DTT_ITEM_GIFT: fieldname = "item_guid"; guids = &items; break;
-        case DTT_ITEM_LOOT: fieldname = "guid";      guids = &items; break;
-        case DTT_PET:       fieldname = "owner";                     break;
-        case DTT_PET_TABLE: fieldname = "guid";      guids = &pets;  break;
-        case DTT_MAIL:      fieldname = "receiver";                  break;
-        case DTT_MAIL_ITEM: fieldname = "mail_id";   guids = &mails; break;
-        case DTT_ITEM_TEXT: fieldname = "id";        guids = &texts; break;
-        default:            fieldname = "guid";                      break;
+        case DTT_ITEM:
+            fieldname = "guid";
+            guids = &items;
+            break;
+        case DTT_ITEM_GIFT:
+            fieldname = "item_guid";
+            guids = &items;
+            break;
+        case DTT_ITEM_LOOT:
+            fieldname = "guid";
+            guids = &items;
+            break;
+        case DTT_PET:
+            fieldname = "owner";
+            break;
+        case DTT_PET_TABLE:
+            fieldname = "guid";
+            guids = &pets;
+            break;
+        case DTT_MAIL:
+            fieldname = "receiver";
+            break;
+        case DTT_MAIL_ITEM:
+            fieldname = "mail_id";
+            guids = &mails;
+            break;
+        case DTT_ITEM_TEXT:
+            fieldname = "id";
+            guids = &texts;
+            break;
+        default:
+            fieldname = "guid";
+            break;
     }
 
     // for guid set stop if set is empty
@@ -326,18 +354,24 @@ void PlayerDumpWriter::DumpTableContent(std::string& dump, uint32 guid, char con
             switch (type)
             {
                 case DTT_INVENTORY:
-                    StoreGUID(result, 3, items); break;     // item guid collection
+                    StoreGUID(result, 3, items);
+                    break;     // item guid collection
                 case DTT_ITEM:
-                    StoreGUID(result, 0, ITEM_FIELD_ITEM_TEXT_ID, texts); break;
+                    StoreGUID(result, 0, ITEM_FIELD_ITEM_TEXT_ID, texts);
+                    break;
                     // item text id collection
                 case DTT_PET:
-                    StoreGUID(result, 0, pets);  break;     // pet petnumber collection (character_pet.id)
+                    StoreGUID(result, 0, pets);
+                    break;     // pet petnumber collection (character_pet.id)
                 case DTT_MAIL:
                     StoreGUID(result, 0, mails);            // mail id collection (mail.id)
-                    StoreGUID(result, 7, texts); break;     // item text id collection
+                    StoreGUID(result, 7, texts);
+                    break;     // item text id collection
                 case DTT_MAIL_ITEM:
-                    StoreGUID(result, 1, items); break;     // item guid collection (mail_items.item_guid)
-                default:                       break;
+                    StoreGUID(result, 1, items);
+                    break;     // item guid collection (mail_items.item_guid)
+                default:
+                    break;
             }
 
             dump += CreateDumpString(tableTo, result);
@@ -481,7 +515,8 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
             ROLLBACK(DUMP_FILE_BROKEN);
         }
 
-        std::string line; line.assign(buf);
+        std::string line;
+        line.assign(buf);
 
         // skip empty strings
         size_t nw_pos = line.find_first_not_of(" \t\n\r\7");

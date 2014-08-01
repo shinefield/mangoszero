@@ -96,10 +96,22 @@ class DBCFileLoader
         Record getRecord(size_t id);
         /// Get begin iterator over records
 
-        uint32 GetNumRows() const { return recordCount;}
-        uint32 GetCols() const { return fieldCount; }
-        uint32 GetOffset(size_t id) const { return (fieldsOffset != NULL && id < fieldCount) ? fieldsOffset[id] : 0; }
-        bool IsLoaded() {return (data != NULL);}
+        uint32 GetNumRows() const
+        {
+            return recordCount;
+        }
+        uint32 GetCols() const
+        {
+            return fieldCount;
+        }
+        uint32 GetOffset(size_t id) const
+        {
+            return (fieldsOffset != NULL && id < fieldCount) ? fieldsOffset[id] : 0;
+        }
+        bool IsLoaded()
+        {
+            return (data != NULL);
+        }
         char* AutoProduceData(const char* fmt, uint32& count, char**& indexTable);
         char* AutoProduceStrings(const char* fmt, char* dataTable);
         static uint32 GetFormatRecordSize(const char* format, int32* index_pos = NULL);

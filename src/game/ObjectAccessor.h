@@ -75,9 +75,15 @@ class HashMapHolder
             return (itr != m_objectMap.end()) ? itr->second : NULL;
         }
 
-        static MapType& GetContainer() { return m_objectMap; }
+        static MapType& GetContainer()
+        {
+            return m_objectMap;
+        }
 
-        static LockType& GetLock() { return i_lock; }
+        static LockType& GetLock()
+        {
+            return i_lock;
+        }
 
     private:
 
@@ -126,10 +132,22 @@ class MANGOS_DLL_DECL ObjectAccessor : public MaNGOS::Singleton<ObjectAccessor, 
         void RemoveOldCorpses();
 
         // For call from Player/Corpse AddToWorld/RemoveFromWorld only
-        void AddObject(Corpse* object) { HashMapHolder<Corpse>::Insert(object); }
-        void AddObject(Player* object) { HashMapHolder<Player>::Insert(object); }
-        void RemoveObject(Corpse* object) { HashMapHolder<Corpse>::Remove(object); }
-        void RemoveObject(Player* object) { HashMapHolder<Player>::Remove(object); }
+        void AddObject(Corpse* object)
+        {
+            HashMapHolder<Corpse>::Insert(object);
+        }
+        void AddObject(Player* object)
+        {
+            HashMapHolder<Player>::Insert(object);
+        }
+        void RemoveObject(Corpse* object)
+        {
+            HashMapHolder<Corpse>::Remove(object);
+        }
+        void RemoveObject(Player* object)
+        {
+            HashMapHolder<Player>::Remove(object);
+        }
 
     private:
 

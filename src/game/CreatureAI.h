@@ -289,11 +289,17 @@ class MANGOS_DLL_SPEC CreatureAI
          * Note: This check is by default only the state-depending (visibility, range), NOT LineOfSight
          * @param pWho Unit* who is checked if it is visisble for the creature
          */
-        virtual bool IsVisible(Unit* /*pWho*/) const { return false; }
+        virtual bool IsVisible(Unit* /*pWho*/) const
+        {
+            return false;
+        }
 
         // Called when victim entered water and creature can not enter water
         // TODO: rather unused
-        virtual bool canReachByRangeAttack(Unit*) { return false; }
+        virtual bool canReachByRangeAttack(Unit*)
+        {
+            return false;
+        }
 
         ///== Helper functions =============================
 
@@ -314,7 +320,10 @@ class MANGOS_DLL_SPEC CreatureAI
 
         /// Set combat movement (on/off), also sets UNIT_STAT_NO_COMBAT_MOVEMENT
         void SetCombatMovement(bool enable, bool stopOrStartMovement = false);
-        bool IsCombatMovement() const { return m_isCombatMovement; }
+        bool IsCombatMovement() const
+        {
+            return m_isCombatMovement;
+        }
 
         ///== Event Handling ===============================
 
@@ -370,7 +379,10 @@ struct CreatureAIFactory : public SelectableAI
 
     CreatureAI* Create(void*) const override;
 
-    int Permit(const Creature* c) const { return REAL_AI::Permissible(c); }
+    int Permit(const Creature* c) const
+    {
+        return REAL_AI::Permissible(c);
+    }
 };
 
 enum Permitions

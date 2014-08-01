@@ -80,17 +80,32 @@ class IntervalTimer
             if (_current < 0)
                 _current = 0;
         }
-        bool Passed() const { return _current >= _interval; }
+        bool Passed() const
+        {
+            return _current >= _interval;
+        }
         void Reset()
         {
             if (_current >= _interval)
                 _current -= _interval;
         }
 
-        void SetCurrent(time_t current) { _current = current; }
-        void SetInterval(time_t interval) { _interval = interval; }
-        time_t GetInterval() const { return _interval; }
-        time_t GetCurrent() const { return _current; }
+        void SetCurrent(time_t current)
+        {
+            _current = current;
+        }
+        void SetInterval(time_t interval)
+        {
+            _interval = interval;
+        }
+        time_t GetInterval() const
+        {
+            return _interval;
+        }
+        time_t GetCurrent() const
+        {
+            return _current;
+        }
 
     private:
         time_t _interval;
@@ -107,17 +122,32 @@ class ShortIntervalTimer
             _current += diff;
         }
 
-        bool Passed() const { return _current >= _interval; }
+        bool Passed() const
+        {
+            return _current >= _interval;
+        }
         void Reset()
         {
             if (_current >= _interval)
                 _current -= _interval;
         }
 
-        void SetCurrent(uint32 current) { _current = current; }
-        void SetInterval(uint32 interval) { _interval = interval; }
-        uint32 GetInterval() const { return _interval; }
-        uint32 GetCurrent() const { return _current; }
+        void SetCurrent(uint32 current)
+        {
+            _current = current;
+        }
+        void SetInterval(uint32 interval)
+        {
+            _interval = interval;
+        }
+        uint32 GetInterval() const
+        {
+            return _interval;
+        }
+        uint32 GetCurrent() const
+        {
+            return _current;
+        }
 
     private:
         uint32 _interval;
@@ -128,10 +158,22 @@ struct TimeTracker
 {
     public:
         TimeTracker(time_t expiry) : i_expiryTime(expiry) {}
-        void Update(time_t diff) { i_expiryTime -= diff; }
-        bool Passed() const { return (i_expiryTime <= 0); }
-        void Reset(time_t interval) { i_expiryTime = interval; }
-        time_t GetExpiry() const { return i_expiryTime; }
+        void Update(time_t diff)
+        {
+            i_expiryTime -= diff;
+        }
+        bool Passed() const
+        {
+            return (i_expiryTime <= 0);
+        }
+        void Reset(time_t interval)
+        {
+            i_expiryTime = interval;
+        }
+        time_t GetExpiry() const
+        {
+            return i_expiryTime;
+        }
 
     private:
         time_t i_expiryTime;
@@ -141,10 +183,22 @@ struct ShortTimeTracker
 {
     public:
         ShortTimeTracker(int32 expiry = 0) : i_expiryTime(expiry) {}
-        void Update(int32 diff) { i_expiryTime -= diff; }
-        bool Passed() const { return (i_expiryTime <= 0); }
-        void Reset(int32 interval) { i_expiryTime = interval; }
-        int32 GetExpiry() const { return i_expiryTime; }
+        void Update(int32 diff)
+        {
+            i_expiryTime -= diff;
+        }
+        bool Passed() const
+        {
+            return (i_expiryTime <= 0);
+        }
+        void Reset(int32 interval)
+        {
+            i_expiryTime = interval;
+        }
+        int32 GetExpiry() const
+        {
+            return i_expiryTime;
+        }
 
     private:
         int32 i_expiryTime;

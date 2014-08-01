@@ -1876,12 +1876,14 @@ void Player::Regenerate(Powers power)
             {
                 addvalue = m_modManaRegen * ManaIncreaseRate * 2.00f;
             }
-        }   break;
+        }
+        break;
         case POWER_RAGE:                                    // Regenerate rage
         {
             float RageDecreaseRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_RAGE_LOSS);
             addvalue = 20 * RageDecreaseRate;               // 2 rage by tick (= 2 seconds => 1 rage/sec)
-        }   break;
+        }
+        break;
         case POWER_ENERGY:                                  // Regenerate energy (rogue)
         {
             float EnergyRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_ENERGY);
@@ -2159,9 +2161,12 @@ bool Player::IsGroupVisibleFor(Player* p) const
 {
     switch (sWorld.getConfig(CONFIG_UINT32_GROUP_VISIBILITY))
     {
-        default: return IsInSameGroupWith(p);
-        case 1:  return IsInSameRaidWith(p);
-        case 2:  return GetTeam() == p->GetTeam();
+        default:
+            return IsInSameGroupWith(p);
+        case 1:
+            return IsInSameRaidWith(p);
+        case 2:
+            return GetTeam() == p->GetTeam();
     }
 }
 
@@ -4443,7 +4448,8 @@ void Player::UpdateLocalChannels(uint32 newZone)
 
     for (JoinedChannelsList::iterator i = m_channels.begin(), next; i != m_channels.end(); i = next)
     {
-        next = i; ++next;
+        next = i;
+        ++next;
 
         // skip non built-in channels
         if (!(*i)->IsConstant())
@@ -4527,9 +4533,14 @@ void Player::HandleBaseModValue(BaseModGroup modGroup, BaseModType modType, floa
 
     switch (modGroup)
     {
-        case CRIT_PERCENTAGE:              UpdateCritPercentage(BASE_ATTACK);                          break;
-        case RANGED_CRIT_PERCENTAGE:       UpdateCritPercentage(RANGED_ATTACK);                        break;
-        default: break;
+        case CRIT_PERCENTAGE:
+            UpdateCritPercentage(BASE_ATTACK);
+            break;
+        case RANGED_CRIT_PERCENTAGE:
+            UpdateCritPercentage(RANGED_ATTACK);
+            break;
+        default:
+            break;
     }
 }
 
@@ -4577,16 +4588,28 @@ float Player::GetMeleeCritFromAgility()
     // critical
     switch (getClass())
     {
-        case CLASS_PALADIN: classrate = 19.77f; break;
-        case CLASS_SHAMAN:  classrate = 19.7f;  break;
-        case CLASS_MAGE:    classrate = 19.44f; break;
-        case CLASS_ROGUE:   classrate = 29.0f;  break;
-        case CLASS_HUNTER:  classrate = 53.0f;  break;      // in 2.0.x = 33
+        case CLASS_PALADIN:
+            classrate = 19.77f;
+            break;
+        case CLASS_SHAMAN:
+            classrate = 19.7f;
+            break;
+        case CLASS_MAGE:
+            classrate = 19.44f;
+            break;
+        case CLASS_ROGUE:
+            classrate = 29.0f;
+            break;
+        case CLASS_HUNTER:
+            classrate = 53.0f;
+            break;      // in 2.0.x = 33
         case CLASS_PRIEST:
         case CLASS_WARLOCK:
         case CLASS_DRUID:
         case CLASS_WARRIOR:
-        default:            classrate = 20.0f; break;
+        default:
+            classrate = 20.0f;
+            break;
     }
 
     val = GetStat(STAT_AGILITY) / classrate;
@@ -4712,15 +4735,33 @@ float Player::OCTRegenHPPerSpirit()
 
     switch (Class)
     {
-        case CLASS_DRUID:   regen = (Spirit * 0.11 + 1);    break;
-        case CLASS_HUNTER:  regen = (Spirit * 0.43 - 5.5);  break;
-        case CLASS_MAGE:    regen = (Spirit * 0.11 + 1);    break;
-        case CLASS_PALADIN: regen = (Spirit * 0.25);        break;
-        case CLASS_PRIEST:  regen = (Spirit * 0.15 + 1.4);  break;
-        case CLASS_ROGUE:   regen = (Spirit * 0.84 - 13);   break;
-        case CLASS_SHAMAN:  regen = (Spirit * 0.28 - 3.6);  break;
-        case CLASS_WARLOCK: regen = (Spirit * 0.12 + 1.5);  break;
-        case CLASS_WARRIOR: regen = (Spirit * 1.26 - 22.6); break;
+        case CLASS_DRUID:
+            regen = (Spirit * 0.11 + 1);
+            break;
+        case CLASS_HUNTER:
+            regen = (Spirit * 0.43 - 5.5);
+            break;
+        case CLASS_MAGE:
+            regen = (Spirit * 0.11 + 1);
+            break;
+        case CLASS_PALADIN:
+            regen = (Spirit * 0.25);
+            break;
+        case CLASS_PRIEST:
+            regen = (Spirit * 0.15 + 1.4);
+            break;
+        case CLASS_ROGUE:
+            regen = (Spirit * 0.84 - 13);
+            break;
+        case CLASS_SHAMAN:
+            regen = (Spirit * 0.28 - 3.6);
+            break;
+        case CLASS_WARLOCK:
+            regen = (Spirit * 0.12 + 1.5);
+            break;
+        case CLASS_WARRIOR:
+            regen = (Spirit * 1.26 - 22.6);
+            break;
     }
 
     return regen;
@@ -4735,13 +4776,27 @@ float Player::OCTRegenMPPerSpirit()
 
     switch (Class)
     {
-        case CLASS_DRUID:   addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_HUNTER:  addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_MAGE:    addvalue = (Spirit / 4 + 12.5); break;
-        case CLASS_PALADIN: addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_PRIEST:  addvalue = (Spirit / 4 + 12.5); break;
-        case CLASS_SHAMAN:  addvalue = (Spirit / 5 + 17);   break;
-        case CLASS_WARLOCK: addvalue = (Spirit / 5 + 15);   break;
+        case CLASS_DRUID:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_HUNTER:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_MAGE:
+            addvalue = (Spirit / 4 + 12.5);
+            break;
+        case CLASS_PALADIN:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_PRIEST:
+            addvalue = (Spirit / 4 + 12.5);
+            break;
+        case CLASS_SHAMAN:
+            addvalue = (Spirit / 5 + 17);
+            break;
+        case CLASS_WARLOCK:
+            addvalue = (Spirit / 5 + 15);
+            break;
     }
 
     addvalue /= 2.0f;   // the above addvalue are given per tick which occurs every 2 seconds, hence this divide by 2
@@ -5591,8 +5646,10 @@ Team Player::TeamForRace(uint8 race)
 
     switch (rEntry->TeamID)
     {
-        case 7: return ALLIANCE;
-        case 1: return HORDE;
+        case 7:
+            return ALLIANCE;
+        case 1:
+            return HORDE;
     }
 
     sLog.outError("Race %u have wrong teamid %u in DBC: wrong DBC files?", uint32(race), rEntry->TeamID);
@@ -6254,7 +6311,7 @@ void Player::DuelComplete(DuelCompleteType type)
     GetSession()->SendPacket(&data);
 
     if (duel->opponent->GetSession())
-            duel->opponent->GetSession()->SendPacket(&data);
+        duel->opponent->GetSession()->SendPacket(&data);
 
     if (type != DUEL_INTERRUPTED)
     {
@@ -6485,10 +6542,17 @@ void Player::_ApplyWeaponDependentAuraCritMod(Item* item, WeaponAttackType attac
     BaseModGroup mod = BASEMOD_END;
     switch (attackType)
     {
-        case BASE_ATTACK:   mod = CRIT_PERCENTAGE;        break;
-        case OFF_ATTACK:    mod = OFFHAND_CRIT_PERCENTAGE; break;
-        case RANGED_ATTACK: mod = RANGED_CRIT_PERCENTAGE; break;
-        default: return;
+        case BASE_ATTACK:
+            mod = CRIT_PERCENTAGE;
+            break;
+        case OFF_ATTACK:
+            mod = OFFHAND_CRIT_PERCENTAGE;
+            break;
+        case RANGED_ATTACK:
+            mod = RANGED_CRIT_PERCENTAGE;
+            break;
+        default:
+            return;
     }
 
     if (item->IsFitToSpellRequirements(aura->GetSpellProto()))
@@ -6511,18 +6575,30 @@ void Player::_ApplyWeaponDependentAuraDamageMod(Item* item, WeaponAttackType att
     UnitMods unitMod = UNIT_MOD_END;
     switch (attackType)
     {
-        case BASE_ATTACK:   unitMod = UNIT_MOD_DAMAGE_MAINHAND; break;
-        case OFF_ATTACK:    unitMod = UNIT_MOD_DAMAGE_OFFHAND;  break;
-        case RANGED_ATTACK: unitMod = UNIT_MOD_DAMAGE_RANGED;   break;
-        default: return;
+        case BASE_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_MAINHAND;
+            break;
+        case OFF_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_OFFHAND;
+            break;
+        case RANGED_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_RANGED;
+            break;
+        default:
+            return;
     }
 
     UnitModifierType unitModType = TOTAL_VALUE;
     switch (modifier->m_auraname)
     {
-        case SPELL_AURA_MOD_DAMAGE_DONE:         unitModType = TOTAL_VALUE; break;
-        case SPELL_AURA_MOD_DAMAGE_PERCENT_DONE: unitModType = TOTAL_PCT;   break;
-        default: return;
+        case SPELL_AURA_MOD_DAMAGE_DONE:
+            unitModType = TOTAL_VALUE;
+            break;
+        case SPELL_AURA_MOD_DAMAGE_PERCENT_DONE:
+            unitModType = TOTAL_PCT;
+            break;
+        default:
+            return;
     }
 
     if (item->IsFitToSpellRequirements(aura->GetSpellProto()))
@@ -7028,8 +7104,8 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
                 loot->clear();
                 switch (loot_type)
                 {
-                    // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
-                    // this is overwrite fishinghole loot for example
+                        // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
+                        // this is overwrite fishinghole loot for example
                     case LOOT_FISHING_FAIL:
                         loot->FillLoot(0, LootTemplates_Fishing, this, true);
                         break;
@@ -7317,11 +7393,20 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
     // LOOT_SKINNING, LOOT_PROSPECTING, LOOT_INSIGNIA and LOOT_FISHINGHOLE unsupported by client
     switch (loot_type)
     {
-        case LOOT_SKINNING:     loot_type = LOOT_PICKPOCKETING; break;
-        case LOOT_INSIGNIA:     loot_type = LOOT_PICKPOCKETING; break;
-        case LOOT_FISHING_FAIL: loot_type = LOOT_FISHING;       break;
-        case LOOT_FISHINGHOLE:  loot_type = LOOT_FISHING;       break;
-        default: break;
+        case LOOT_SKINNING:
+            loot_type = LOOT_PICKPOCKETING;
+            break;
+        case LOOT_INSIGNIA:
+            loot_type = LOOT_PICKPOCKETING;
+            break;
+        case LOOT_FISHING_FAIL:
+            loot_type = LOOT_FISHING;
+            break;
+        case LOOT_FISHINGHOLE:
+            loot_type = LOOT_FISHING;
+            break;
+        default:
+            break;
     }
 
     WorldPacket data(SMSG_LOOT_RESPONSE, (9 + 50));         // we guess size
@@ -7478,7 +7563,8 @@ void Player::SetSheath(SheathState sheathed)
             SetVirtualItemSlot(0, GetWeaponForAttack(BASE_ATTACK, true, true));
             SetVirtualItemSlot(1, GetWeaponForAttack(OFF_ATTACK, true, true));
             SetVirtualItemSlot(2, NULL);
-        };  break;
+        };
+        break;
         case SHEATH_STATE_RANGED:                           // prepared ranged weapon
             SetVirtualItemSlot(0, NULL);
             SetVirtualItemSlot(1, NULL);
@@ -7763,7 +7849,7 @@ uint32 Player::GetItemCount(uint32 item, bool inBankAlso, Item* skipItem) const
 
 Item* Player::GetItemByEntry(uint32 item) const
 {
-     for (int i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; ++i)
+    for (int i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; ++i)
         if (Item* pItem = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
             if (pItem->GetEntry() == item)
                 return pItem;
@@ -7836,10 +7922,17 @@ Item* Player::GetWeaponForAttack(WeaponAttackType attackType, bool nonbroken, bo
     uint8 slot;
     switch (attackType)
     {
-        case BASE_ATTACK:   slot = EQUIPMENT_SLOT_MAINHAND; break;
-        case OFF_ATTACK:    slot = EQUIPMENT_SLOT_OFFHAND;  break;
-        case RANGED_ATTACK: slot = EQUIPMENT_SLOT_RANGED;   break;
-        default: return NULL;
+        case BASE_ATTACK:
+            slot = EQUIPMENT_SLOT_MAINHAND;
+            break;
+        case OFF_ATTACK:
+            slot = EQUIPMENT_SLOT_OFFHAND;
+            break;
+        case RANGED_ATTACK:
+            slot = EQUIPMENT_SLOT_RANGED;
+            break;
+        default:
+            return NULL;
     }
 
     Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
@@ -7874,10 +7967,14 @@ uint32 Player::GetAttackBySlot(uint8 slot)
 {
     switch (slot)
     {
-        case EQUIPMENT_SLOT_MAINHAND: return BASE_ATTACK;
-        case EQUIPMENT_SLOT_OFFHAND:  return OFF_ATTACK;
-        case EQUIPMENT_SLOT_RANGED:   return RANGED_ATTACK;
-        default:                      return MAX_ATTACK;
+        case EQUIPMENT_SLOT_MAINHAND:
+            return BASE_ATTACK;
+        case EQUIPMENT_SLOT_OFFHAND:
+            return OFF_ATTACK;
+        case EQUIPMENT_SLOT_RANGED:
+            return RANGED_ATTACK;
+        default:
+            return MAX_ATTACK;
     }
 }
 
@@ -13688,8 +13785,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_LOGIN_STATE))
         {
             default:
-            case 0:                      break;             // disable
-            case 1: SetGameMaster(true); break;             // enable
+            case 0:
+                break;             // disable
+            case 1:
+                SetGameMaster(true);
+                break;             // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_ON)
                     SetGameMaster(true);
@@ -13699,8 +13799,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_VISIBLE_STATE))
         {
             default:
-            case 0: SetGMVisible(false); break;             // invisible
-            case 1:                      break;             // visible
+            case 0:
+                SetGMVisible(false);
+                break;             // invisible
+            case 1:
+                break;             // visible
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_INVISIBLE)
                     SetGMVisible(false);
@@ -13710,8 +13813,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_ACCEPT_TICKETS))
         {
             default:
-            case 0:                        break;           // disable
-            case 1: SetAcceptTicket(true); break;           // enable
+            case 0:
+                break;           // disable
+            case 1:
+                SetAcceptTicket(true);
+                break;           // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_ACCEPT_TICKETS)
                     SetAcceptTicket(true);
@@ -13721,8 +13827,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_CHAT))
         {
             default:
-            case 0:                  break;                 // disable
-            case 1: SetGMChat(true); break;                 // enable
+            case 0:
+                break;                 // disable
+            case 1:
+                SetGMChat(true);
+                break;                 // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_CHAT)
                     SetGMChat(true);
@@ -13732,8 +13841,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_WISPERING_TO))
         {
             default:
-            case 0:                          break;         // disable
-            case 1: SetAcceptWhispers(true); break;         // enable
+            case 0:
+                break;         // disable
+            case 1:
+                SetAcceptWhispers(true);
+                break;         // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_ACCEPT_WHISPERS)
                     SetAcceptWhispers(true);
@@ -15971,9 +16083,9 @@ void Player::RemoveSpellMods(Spell const* spell)
     }
 }
 
-void Player::ResetSpellModsDueToCanceledSpell (Spell const* spell)
+void Player::ResetSpellModsDueToCanceledSpell(Spell const* spell)
 {
-    for(int i = 0; i < MAX_SPELLMOD; ++i )
+    for (int i = 0; i < MAX_SPELLMOD; ++i)
     {
         for (SpellModList::const_iterator itr = m_spellMods[i].begin(); itr != m_spellMods[i].end(); ++itr)
         {
@@ -17511,7 +17623,7 @@ float Player::GetReputationPriceDiscount(Creature const* pCreature) const
                 discount -=10;                                          // give 10% discount if grade is at least sergent
         }
     }
-    return float (discount / 100.0f);
+    return float(discount / 100.0f);
 }
 
 /**
@@ -17812,12 +17924,24 @@ uint32 Player::GetResurrectionSpellId()
         {
             switch ((*itr)->GetId())
             {
-                case 20707: spell_id =  3026; break;        // rank 1
-                case 20762: spell_id = 20758; break;        // rank 2
-                case 20763: spell_id = 20759; break;        // rank 3
-                case 20764: spell_id = 20760; break;        // rank 4
-                case 20765: spell_id = 20761; break;        // rank 5
-                case 27239: spell_id = 27240; break;        // rank 6
+                case 20707:
+                    spell_id =  3026;
+                    break;        // rank 1
+                case 20762:
+                    spell_id = 20758;
+                    break;        // rank 2
+                case 20763:
+                    spell_id = 20759;
+                    break;        // rank 3
+                case 20764:
+                    spell_id = 20760;
+                    break;        // rank 4
+                case 20765:
+                    spell_id = 20761;
+                    break;        // rank 5
+                case 27239:
+                    spell_id = 27240;
+                    break;        // rank 6
                 default:
                     sLog.outError("Unhandled spell %u: S.Resurrection", (*itr)->GetId());
                     continue;
@@ -18414,7 +18538,10 @@ uint32 Player::CalculateTalentsPoints() const
 struct DoPlayerLearnSpell
 {
     DoPlayerLearnSpell(Player& _player) : player(_player) {}
-    void operator()(uint32 spell_id) { player.learnSpell(spell_id, false); }
+    void operator()(uint32 spell_id)
+    {
+        player.learnSpell(spell_id, false);
+    }
     Player& player;
 };
 

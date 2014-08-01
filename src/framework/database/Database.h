@@ -61,13 +61,26 @@ class MANGOS_DLL_SPEC SqlConnection
         virtual bool Execute(const char* sql) = 0;
 
         // escape string generation
-        virtual unsigned long escape_string(char* to, const char* from, unsigned long length) { strncpy(to, from, length); return length; }
+        virtual unsigned long escape_string(char* to, const char* from, unsigned long length)
+        {
+            strncpy(to, from, length);
+            return length;
+        }
 
         // nothing do if DB not support transactions
-        virtual bool BeginTransaction() { return true; }
-        virtual bool CommitTransaction() { return true; }
+        virtual bool BeginTransaction()
+        {
+            return true;
+        }
+        virtual bool CommitTransaction()
+        {
+            return true;
+        }
         // can't rollback without transaction support
-        virtual bool RollbackTransaction() { return true; }
+        virtual bool RollbackTransaction()
+        {
+            return true;
+        }
 
         // methods to work with prepared statements
         bool ExecuteStmt(int nIndex, const SqlStmtParameters& id);
@@ -76,17 +89,29 @@ class MANGOS_DLL_SPEC SqlConnection
         class Lock
         {
             public:
-                Lock(SqlConnection* conn) : m_pConn(conn) { m_pConn->m_mutex.acquire(); }
-                ~Lock() { m_pConn->m_mutex.release(); }
+                Lock(SqlConnection* conn) : m_pConn(conn)
+                {
+                    m_pConn->m_mutex.acquire();
+                }
+                ~Lock()
+                {
+                    m_pConn->m_mutex.release();
+                }
 
-                SqlConnection* operator->() const { return m_pConn; }
+                SqlConnection* operator->() const
+                {
+                    return m_pConn;
+                }
 
             private:
                 SqlConnection* const m_pConn;
         };
 
         // get DB object
-        Database& DB() { return m_db; }
+        Database& DB()
+        {
+            return m_db;
+        }
 
     protected:
         SqlConnection(Database& db) : m_db(db) {}
@@ -205,7 +230,10 @@ class MANGOS_DLL_SPEC Database
         // get prepared statement format string
         std::string GetStmtString(const int stmtId) const;
 
-        operator bool () const { return m_pQueryConnections.size() && m_pAsyncConn != 0; }
+        operator bool () const
+        {
+            return m_pQueryConnections.size() && m_pAsyncConn != 0;
+        }
 
         // escape string generation
         void escape_string(std::string& str);
@@ -219,7 +247,10 @@ class MANGOS_DLL_SPEC Database
         void ProcessResultQueue();
 
         bool CheckRequiredField(char const* table_name, char const* required_name);
-        uint32 GetPingIntervall() { return m_pingIntervallms; }
+        uint32 GetPingIntervall()
+        {
+            return m_pingIntervallms;
+        }
 
         // function to ping database connections
         void Ping();
@@ -227,7 +258,10 @@ class MANGOS_DLL_SPEC Database
         // set this to allow async transactions
         // you should call it explicitly after your server successfully started up
         // NO ASYNC TRANSACTIONS DURING SERVER STARTUP - ONLY DURING RUNTIME!!!
-        void AllowAsyncTransactions() { m_bAllowAsyncTransactions = true; }
+        void AllowAsyncTransactions()
+        {
+            m_bAllowAsyncTransactions = true;
+        }
 
     protected:
         Database() :
@@ -254,7 +288,10 @@ class MANGOS_DLL_SPEC Database
                 // initializes new SqlTransaction object
                 SqlTransaction* init();
                 // gets pointer on current transaction object. Returns NULL if transaction was not initiated
-                SqlTransaction* get() const { return m_pTrans; }
+                SqlTransaction* get() const
+                {
+                    return m_pTrans;
+                }
                 // detaches SqlTransaction object allocated by init() function
                 // next call to get() function will return NULL!
                 // do not forget to destroy obtained SqlTransaction object!
@@ -275,7 +312,10 @@ class MANGOS_DLL_SPEC Database
         // round-robin connection selection
         SqlConnection* getQueryConnection();
         // for now return one single connection for async requests
-        SqlConnection* getAsyncConnection() const { return m_pAsyncConn; }
+        SqlConnection* getAsyncConnection() const
+        {
+            return m_pAsyncConn;
+        }
 
         friend class SqlStatement;
         // PREPARED STATEMENT API

@@ -44,9 +44,18 @@ class MANGOS_DLL_SPEC PointMovementGenerator
 
         void MovementInform(T&);
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return POINT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return POINT_MOTION_TYPE;
+        }
 
-        bool GetDestination(float& x, float& y, float& z) const { x = i_x; y = i_y; z = i_z; return true; }
+        bool GetDestination(float& x, float& y, float& z) const
+        {
+            x = i_x;
+            y = i_y;
+            z = i_z;
+            return true;
+        }
     private:
         uint32 id;
         float i_x, i_y, i_z;
@@ -60,7 +69,10 @@ class MANGOS_DLL_SPEC AssistanceMovementGenerator
         AssistanceMovementGenerator(float _x, float _y, float _z) :
             PointMovementGenerator<Creature>(0, _x, _y, _z, true) {}
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return ASSISTANCE_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return ASSISTANCE_MOTION_TYPE;
+        }
         void Finalize(Unit&) override;
 };
 
@@ -74,7 +86,10 @@ class EffectMovementGenerator : public MovementGenerator
         void Interrupt(Unit&) override {}
         void Reset(Unit&) override {}
         bool Update(Unit& u, const uint32&) override;
-        MovementGeneratorType GetMovementGeneratorType() const override { return EFFECT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return EFFECT_MOTION_TYPE;
+        }
     private:
         uint32 m_Id;
 };

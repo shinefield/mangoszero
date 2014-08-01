@@ -1110,10 +1110,18 @@ uint32 BattleGroundMgr::CreateBattleGround(BattleGroundTypeId bgTypeId, uint32 M
     BattleGround* bg = NULL;
     switch (bgTypeId)
     {
-        case BATTLEGROUND_AV: bg = new BattleGroundAV; break;
-        case BATTLEGROUND_WS: bg = new BattleGroundWS; break;
-        case BATTLEGROUND_AB: bg = new BattleGroundAB; break;
-        default:              bg = new BattleGround;   break;                           // placeholder for non implemented BG
+        case BATTLEGROUND_AV:
+            bg = new BattleGroundAV;
+            break;
+        case BATTLEGROUND_WS:
+            bg = new BattleGroundWS;
+            break;
+        case BATTLEGROUND_AB:
+            bg = new BattleGroundAB;
+            break;
+        default:
+            bg = new BattleGround;
+            break;                           // placeholder for non implemented BG
     }
 
     bg->SetMapId(MapID);
@@ -1395,10 +1403,14 @@ HolidayIds BattleGroundMgr::BGTypeToWeekendHolidayId(BattleGroundTypeId bgTypeId
 {
     switch (bgTypeId)
     {
-        case BATTLEGROUND_AV: return HOLIDAY_CALL_TO_ARMS_AV;
-        case BATTLEGROUND_WS: return HOLIDAY_CALL_TO_ARMS_WS;
-        case BATTLEGROUND_AB: return HOLIDAY_CALL_TO_ARMS_AB;
-        default: return HOLIDAY_NONE;
+        case BATTLEGROUND_AV:
+            return HOLIDAY_CALL_TO_ARMS_AV;
+        case BATTLEGROUND_WS:
+            return HOLIDAY_CALL_TO_ARMS_WS;
+        case BATTLEGROUND_AB:
+            return HOLIDAY_CALL_TO_ARMS_AB;
+        default:
+            return HOLIDAY_NONE;
     }
 }
 
@@ -1406,10 +1418,14 @@ BattleGroundTypeId BattleGroundMgr::WeekendHolidayIdToBGType(HolidayIds holiday)
 {
     switch (holiday)
     {
-        case HOLIDAY_CALL_TO_ARMS_AV: return BATTLEGROUND_AV;
-        case HOLIDAY_CALL_TO_ARMS_WS: return BATTLEGROUND_WS;
-        case HOLIDAY_CALL_TO_ARMS_AB: return BATTLEGROUND_AB;
-        default: return BATTLEGROUND_TYPE_NONE;
+        case HOLIDAY_CALL_TO_ARMS_AV:
+            return BATTLEGROUND_AV;
+        case HOLIDAY_CALL_TO_ARMS_WS:
+            return BATTLEGROUND_WS;
+        case HOLIDAY_CALL_TO_ARMS_AB:
+            return BATTLEGROUND_AB;
+        default:
+            return BATTLEGROUND_TYPE_NONE;
     }
 }
 

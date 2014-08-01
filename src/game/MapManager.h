@@ -50,7 +50,10 @@ struct MANGOS_DLL_DECL MapID
         return nMapId < val.nMapId;
     }
 
-    bool operator==(const MapID& val) const { return nMapId == val.nMapId && nInstanceId == val.nInstanceId; }
+    bool operator==(const MapID& val) const
+    {
+        return nMapId == val.nMapId && nInstanceId == val.nInstanceId;
+    }
 
     uint32 nMapId;
     uint32 nInstanceId;
@@ -147,7 +150,10 @@ class MANGOS_DLL_DECL MapManager : public MaNGOS::Singleton<MapManager, MaNGOS::
         typedef std::map<uint32, TransportSet> TransportMap;
         TransportMap m_TransportsByMap;
 
-        uint32 GenerateInstanceId() { return ++i_MaxInstanceId; }
+        uint32 GenerateInstanceId()
+        {
+            return ++i_MaxInstanceId;
+        }
         void InitMaxInstanceId();
         void InitializeVisibilityDistanceInfo();
 
@@ -157,7 +163,10 @@ class MANGOS_DLL_DECL MapManager : public MaNGOS::Singleton<MapManager, MaNGOS::
 
 
         // get list of all maps
-        const MapMapType& Maps() const { return i_maps; }
+        const MapMapType& Maps() const
+        {
+            return i_maps;
+        }
 
         template<typename Do>
         void DoForAllMapsWithMapId(uint32 mapId, Do& _do);

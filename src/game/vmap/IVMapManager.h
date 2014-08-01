@@ -82,16 +82,31 @@ namespace VMAP
             Enable/disable LOS calculation
             It is enabled by default. If it is enabled in mid game the maps have to loaded manualy
             */
-            void setEnableLineOfSightCalc(bool pVal) { iEnableLineOfSightCalc = pVal; }
+            void setEnableLineOfSightCalc(bool pVal)
+            {
+                iEnableLineOfSightCalc = pVal;
+            }
             /**
             Enable/disable model height calculation
             It is enabled by default. If it is enabled in mid game the maps have to loaded manualy
             */
-            void setEnableHeightCalc(bool pVal) { iEnableHeightCalc = pVal; }
+            void setEnableHeightCalc(bool pVal)
+            {
+                iEnableHeightCalc = pVal;
+            }
 
-            bool isLineOfSightCalcEnabled() const { return iEnableLineOfSightCalc; }
-            bool isHeightCalcEnabled() const { return iEnableHeightCalc; }
-            bool isMapLoadingEnabled() const { return iEnableLineOfSightCalc || iEnableHeightCalc; }
+            bool isLineOfSightCalcEnabled() const
+            {
+                return iEnableLineOfSightCalc;
+            }
+            bool isHeightCalcEnabled() const
+            {
+                return iEnableHeightCalc;
+            }
+            bool isMapLoadingEnabled() const
+            {
+                return iEnableLineOfSightCalc || iEnableHeightCalc;
+            }
 
             virtual std::string getDirFileName(unsigned int pMapId, int x, int y) const = 0;
             /**

@@ -67,7 +67,10 @@ class OutdoorPvP
         virtual void FillInitialWorldStates(WorldPacket& /*data*/, uint32& /*count*/) {}
 
         // Process Capture event
-        virtual bool HandleEvent(uint32 /*eventId*/, GameObject* /*go*/) { return false; }
+        virtual bool HandleEvent(uint32 /*eventId*/, GameObject* /*go*/)
+        {
+            return false;
+        }
 
         // handle capture objective complete
         virtual void HandleObjectiveComplete(uint32 /*eventId*/, std::list<Player*> /*players*/, Team /*team*/) {}
@@ -83,13 +86,22 @@ class OutdoorPvP
         virtual void HandleCreatureDeath(Creature* /*creature*/) {}
 
         // called when a player uses a gameobject related to outdoor pvp events
-        virtual bool HandleGameObjectUse(Player* /*player*/, GameObject* /*go*/) { return false; }
+        virtual bool HandleGameObjectUse(Player* /*player*/, GameObject* /*go*/)
+        {
+            return false;
+        }
 
         // called when a player triggers an areatrigger
-        virtual bool HandleAreaTrigger(Player* /*player*/, uint32 /*triggerId*/) { return false; }
+        virtual bool HandleAreaTrigger(Player* /*player*/, uint32 /*triggerId*/)
+        {
+            return false;
+        }
 
         // called when a player drops a flag
-        virtual bool HandleDropFlag(Player* /*player*/, uint32 /*spellId*/) { return false; }
+        virtual bool HandleDropFlag(Player* /*player*/, uint32 /*spellId*/)
+        {
+            return false;
+        }
 
         // update - called by the OutdoorPvPMgr
         virtual void Update(uint32 /*diff*/) {}

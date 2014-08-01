@@ -719,9 +719,15 @@ void Pet::TickLoyaltyChange()
 
     switch (GetHappinessState())
     {
-        case HAPPY:   addvalue =  20; break;
-        case CONTENT: addvalue =  10; break;
-        case UNHAPPY: addvalue = -20; break;
+        case HAPPY:
+            addvalue =  20;
+            break;
+        case CONTENT:
+            addvalue =  10;
+            break;
+        case UNHAPPY:
+            addvalue = -20;
+            break;
         default:
             return;
     }
@@ -863,7 +869,7 @@ void Pet::SetTP(int32 TP)
 int32 Pet::GetDispTP()
 {
     if (getPetType() != HUNTER_PET)
-        return(0);
+        return (0);
     if (m_TrainingPoints < 0)
         return -m_TrainingPoints;
     else

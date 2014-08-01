@@ -52,9 +52,18 @@ class WorldPacket : public ByteBuffer
             m_opcode = opcode;
         }
 
-        uint16 GetOpcode() const { return m_opcode; }
-        void SetOpcode(uint16 opcode) { m_opcode = opcode; }
-        inline const char* GetOpcodeName() const { return LookupOpcodeName(m_opcode); }
+        uint16 GetOpcode() const
+        {
+            return m_opcode;
+        }
+        void SetOpcode(uint16 opcode)
+        {
+            m_opcode = opcode;
+        }
+        inline const char* GetOpcodeName() const
+        {
+            return LookupOpcodeName(m_opcode);
+        }
 
     protected:
         uint16 m_opcode;

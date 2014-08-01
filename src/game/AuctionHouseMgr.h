@@ -75,8 +75,14 @@ struct AuctionEntry
     AuctionHouseEntry const* auctionHouseEntry;             // in AuctionHouse.dbc
 
     // helpers
-    uint32 GetHouseId() const { return auctionHouseEntry->houseId; }
-    uint32 GetHouseFaction() const { return auctionHouseEntry->faction; }
+    uint32 GetHouseId() const
+    {
+        return auctionHouseEntry->houseId;
+    }
+    uint32 GetHouseFaction() const
+    {
+        return auctionHouseEntry->faction;
+    }
     uint32 GetAuctionCut() const;
     uint32 GetAuctionOutBid() const;
     bool BuildAuctionInfo(WorldPacket& data) const;
@@ -96,10 +102,19 @@ class AuctionHouseObject
         typedef std::map<uint32, AuctionEntry*> AuctionEntryMap;
         typedef std::pair<AuctionEntryMap::const_iterator, AuctionEntryMap::const_iterator> AuctionEntryMapBounds;
 
-        uint32 GetCount() { return AuctionsMap.size(); }
+        uint32 GetCount()
+        {
+            return AuctionsMap.size();
+        }
 
-        AuctionEntryMap const& GetAuctions() const { return AuctionsMap; }
-        AuctionEntryMapBounds GetAuctionsBounds() const {return AuctionEntryMapBounds(AuctionsMap.begin(), AuctionsMap.end()); }
+        AuctionEntryMap const& GetAuctions() const
+        {
+            return AuctionsMap;
+        }
+        AuctionEntryMapBounds GetAuctionsBounds() const
+        {
+            return AuctionEntryMapBounds(AuctionsMap.begin(), AuctionsMap.end());
+        }
 
         void AddAuction(AuctionEntry* ah)
         {
@@ -148,7 +163,10 @@ class AuctionHouseMgr
 
         typedef UNORDERED_MAP<uint32, Item*> ItemMap;
 
-        AuctionHouseObject* GetAuctionsMap(AuctionHouseType houseType) { return &mAuctions[houseType]; }
+        AuctionHouseObject* GetAuctionsMap(AuctionHouseType houseType)
+        {
+            return &mAuctions[houseType];
+        }
         AuctionHouseObject* GetAuctionsMap(AuctionHouseEntry const* house);
 
         Item* GetAItem(uint32 id)

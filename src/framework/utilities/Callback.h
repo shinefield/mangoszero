@@ -50,7 +50,10 @@
 #define PARAMS_10 PARAMS_9, T10 param10
 
 // empty struct to use in templates instead of void type
-struct null { null() {} };
+struct null
+{
+    null() {}
+};
 /// ------------ BASE CLASSES ------------
 
 namespace MaNGOS
@@ -67,7 +70,10 @@ namespace MaNGOS
             ParamType2 m_param2;
             ParamType3 m_param3;
             ParamType4 m_param4;
-            void _Execute() { (m_object->*m_method)(m_param1, m_param2, m_param3, m_param4); }
+            void _Execute()
+            {
+                (m_object->*m_method)(m_param1, m_param2, m_param3, m_param4);
+            }
 
         public:
 
@@ -95,7 +101,10 @@ namespace MaNGOS
             ParamType1 m_param1;
             ParamType2 m_param2;
             ParamType3 m_param3;
-            void _Execute() { (m_object->*m_method)(m_param1, m_param2, m_param3); }
+            void _Execute()
+            {
+                (m_object->*m_method)(m_param1, m_param2, m_param3);
+            }
 
         public:
             _Callback(Class* object, Method method, ParamType1 param1, ParamType2 param2, ParamType3 param3)
@@ -121,7 +130,10 @@ namespace MaNGOS
             Method m_method;
             ParamType1 m_param1;
             ParamType2 m_param2;
-            void _Execute() { (m_object->*m_method)(m_param1, m_param2); }
+            void _Execute()
+            {
+                (m_object->*m_method)(m_param1, m_param2);
+            }
 
         public:
 
@@ -147,7 +159,10 @@ namespace MaNGOS
             Class* m_object;
             Method m_method;
             ParamType1 m_param1;
-            void _Execute() { (m_object->*m_method)(m_param1); }
+            void _Execute()
+            {
+                (m_object->*m_method)(m_param1);
+            }
 
         public:
 
@@ -172,7 +187,10 @@ namespace MaNGOS
             typedef void (Class::*Method)();
             Class* m_object;
             Method m_method;
-            void _Execute() { (m_object->*m_method)(); }
+            void _Execute()
+            {
+                (m_object->*m_method)();
+            }
 
         public:
             _Callback(Class* object, Method method)
@@ -198,7 +216,10 @@ namespace MaNGOS
             ParamType2 m_param2;
             ParamType3 m_param3;
             ParamType4 m_param4;
-            void _Execute() { (*m_method)(m_param1, m_param2, m_param3, m_param4); }
+            void _Execute()
+            {
+                (*m_method)(m_param1, m_param2, m_param3, m_param4);
+            }
 
         public:
 
@@ -225,7 +246,10 @@ namespace MaNGOS
             ParamType1 m_param1;
             ParamType2 m_param2;
             ParamType3 m_param3;
-            void _Execute() { (*m_method)(m_param1, m_param2, m_param3); }
+            void _Execute()
+            {
+                (*m_method)(m_param1, m_param2, m_param3);
+            }
 
         public:
             _SCallback(Method method, ParamType1 param1, ParamType2 param2, ParamType3 param3)
@@ -249,7 +273,10 @@ namespace MaNGOS
             Method m_method;
             ParamType1 m_param1;
             ParamType2 m_param2;
-            void _Execute() { (*m_method)(m_param1, m_param2); }
+            void _Execute()
+            {
+                (*m_method)(m_param1, m_param2);
+            }
 
         public:
             _SCallback(Method method, ParamType1 param1, ParamType2 param2)
@@ -273,7 +300,10 @@ namespace MaNGOS
             typedef void (*Method)(ParamType1);
             Method m_method;
             ParamType1 m_param1;
-            void _Execute() { (*m_method)(m_param1); }
+            void _Execute()
+            {
+                (*m_method)(m_param1);
+            }
 
         public:
             _SCallback(Method method, ParamType1 param1)
@@ -296,7 +326,10 @@ namespace MaNGOS
 
             typedef void (*Method)();
             Method m_method;
-            void _Execute() { (*m_method)(); }
+            void _Execute()
+            {
+                (*m_method)();
+            }
 
         public:
 
@@ -333,7 +366,10 @@ namespace MaNGOS
             {
             }
 
-            void Execute() { CB::_Execute(); }
+            void Execute()
+            {
+                CB::_Execute();
+            }
     };
 
     template < class Class, typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void, typename ParamType4 = void >
@@ -434,9 +470,18 @@ namespace MaNGOS
             {
             }
 
-            void Execute() { CB::_Execute(); }
-            void SetResult(QueryResult* result) { CB::m_param1 = result; }
-            QueryResult* GetResult() { return CB::m_param1; }
+            void Execute()
+            {
+                CB::_Execute();
+            }
+            void SetResult(QueryResult* result)
+            {
+                CB::m_param1 = result;
+            }
+            QueryResult* GetResult()
+            {
+                return CB::m_param1;
+            }
     };
 
     template < class Class, typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void >

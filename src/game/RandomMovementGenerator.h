@@ -46,7 +46,10 @@ class MANGOS_DLL_SPEC RandomMovementGenerator
         void Interrupt(T&);
         void Reset(T&);
         bool Update(T&, const uint32&);
-        MovementGeneratorType GetMovementGeneratorType() const override { return RANDOM_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return RANDOM_MOTION_TYPE;
+        }
     private:
         ShortTimeTracker i_nextMoveTime;
         float i_x, i_y, i_z;

@@ -273,7 +273,9 @@ bool WaypointMovementGenerator<Creature>::GetResetPosition(Creature&, float& x, 
 
     MANGOS_ASSERT(lastPoint != i_path->end());
 
-    x = lastPoint->second.x; y = lastPoint->second.y; z = lastPoint->second.z;
+    x = lastPoint->second.x;
+    y = lastPoint->second.y;
+    z = lastPoint->second.z;
     return true;
 }
 
@@ -409,6 +411,8 @@ void FlightPathMovementGenerator::SetCurrentNodeAfterTeleport()
 bool FlightPathMovementGenerator::GetResetPosition(Player&, float& x, float& y, float& z) const
 {
     const TaxiPathNodeEntry& node = (*i_path)[i_currentNode];
-    x = node.x; y = node.y; z = node.z;
+    x = node.x;
+    y = node.y;
+    z = node.z;
     return true;
 }

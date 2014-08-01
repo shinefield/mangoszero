@@ -42,7 +42,10 @@ using G3D::Ray;
 template<class Node>
 struct NodeCreator
 {
-    static Node* makeNode(int /*x*/, int /*y*/) { return new Node();}
+    static Node* makeNode(int /*x*/, int /*y*/)
+    {
+        return new Node();
+    }
 };
 
 template < class T,
@@ -104,13 +107,22 @@ class RegularGrid2D
                         n->balance();
         }
 
-        bool contains(const T& value) const { return memberTable.containsKey(&value); }
-        int size() const { return memberTable.size(); }
+        bool contains(const T& value) const
+        {
+            return memberTable.containsKey(&value);
+        }
+        int size() const
+        {
+            return memberTable.size();
+        }
 
         struct Cell
         {
             int x, y;
-            bool operator == (const Cell& c2) const { return x == c2.x && y == c2.y;}
+            bool operator == (const Cell& c2) const
+            {
+                return x == c2.x && y == c2.y;
+            }
 
             static Cell ComputeCell(float fx, float fy)
             {
@@ -118,7 +130,10 @@ class RegularGrid2D
                 return c;
             }
 
-            bool isValid() const { return x >= 0 && x < CELL_NUMBER && y >= 0 && y < CELL_NUMBER;}
+            bool isValid() const
+            {
+                return x >= 0 && x < CELL_NUMBER && y >= 0 && y < CELL_NUMBER;
+            }
         };
 
 

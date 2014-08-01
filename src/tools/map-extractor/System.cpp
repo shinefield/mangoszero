@@ -152,7 +152,7 @@ bool HandleArgs(int argc, char** argv)
 
     for (int i = 1; i < argc; ++i)
     {
-        if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0 )
+        if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -167,7 +167,7 @@ bool HandleArgs(int argc, char** argv)
                 strcat(input_path, "/");
             }
         }
-        else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0 )
+        else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -177,7 +177,7 @@ bool HandleArgs(int argc, char** argv)
 
             strcpy(output_path, param);
         }
-        else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--flat") == 0 )
+        else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--flat") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -191,7 +191,7 @@ bool HandleArgs(int argc, char** argv)
                 CONF_allow_float_to_int = convertFloatToInt;
             }
         }
-        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0 )
+        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -204,7 +204,7 @@ bool HandleArgs(int argc, char** argv)
             else
                 printf("invalid option for '--skipJunkMaps', using default\n");
         }
-        else if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--extract") == 0 )
+        else if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--extract") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -222,7 +222,7 @@ bool HandleArgs(int argc, char** argv)
                 Usage(argv[0]);
             }
         }
-        else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0 )
+        else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
         {
             Usage(argv[0]);
         }
@@ -761,10 +761,18 @@ bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x)
                 liquid_entry[i][j] = h->liquidType;
                 switch (LiqType[h->liquidType])
                 {
-                    case LIQUID_TYPE_WATER: liquid_flags[i][j] |= MAP_LIQUID_TYPE_WATER; break;
-                    case LIQUID_TYPE_OCEAN: liquid_flags[i][j] |= MAP_LIQUID_TYPE_OCEAN; break;
-                    case LIQUID_TYPE_MAGMA: liquid_flags[i][j] |= MAP_LIQUID_TYPE_MAGMA; break;
-                    case LIQUID_TYPE_SLIME: liquid_flags[i][j] |= MAP_LIQUID_TYPE_SLIME; break;
+                    case LIQUID_TYPE_WATER:
+                        liquid_flags[i][j] |= MAP_LIQUID_TYPE_WATER;
+                        break;
+                    case LIQUID_TYPE_OCEAN:
+                        liquid_flags[i][j] |= MAP_LIQUID_TYPE_OCEAN;
+                        break;
+                    case LIQUID_TYPE_MAGMA:
+                        liquid_flags[i][j] |= MAP_LIQUID_TYPE_MAGMA;
+                        break;
+                    case LIQUID_TYPE_SLIME:
+                        liquid_flags[i][j] |= MAP_LIQUID_TYPE_SLIME;
+                        break;
                     default:
                         printf("\nCan not find Liquid type %u for map %s\nchunk %d,%d\n", h->liquidType, filename, i, j);
                         break;

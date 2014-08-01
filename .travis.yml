@@ -25,8 +25,15 @@ before_install:
  # - sudo apt-get install cppcheck
 
 script:
-  # Disabled as it increases build test time
-  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 ./src/
+  # Disabled as it increases build test time, run only local
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/tools/map-extractor/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/tools/vmap-extractor/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/tools/vmap-assembler/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/tools/mmap-generator/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/framework/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/realmd/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/game/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/mangosd/
   - test -d _build || mkdir _build
   - test -d _install || mkdir _install
   - cd _build

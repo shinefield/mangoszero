@@ -330,9 +330,9 @@ bool AuthSocket::_HandleLogonChallenge()
 
     recv((char*)&buf[0], 4);
 
-    #ifdef MANGOS_BIGENDIAN
+#ifdef MANGOS_BIGENDIAN
     EndianConvert(*((uint16*)(buf[0])));
-    #endif
+#endif
 
     uint16 remaining = ((sAuthLogonChallenge_C*)&buf[0])->size;
     DEBUG_LOG("[AuthChallenge] got header, body is %#04x bytes", remaining);

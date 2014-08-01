@@ -219,7 +219,10 @@ class MANGOS_DLL_DECL TypeMapContainer
     public:
 
         template<class SPECIFIC_TYPE>
-        size_t Count() const { return MaNGOS::Count(i_elements, (SPECIFIC_TYPE*)NULL); }
+        size_t Count() const
+        {
+            return MaNGOS::Count(i_elements, (SPECIFIC_TYPE*)NULL);
+        }
 
         /// inserts a specific object into the container
         template<class SPECIFIC_TYPE>
@@ -237,8 +240,14 @@ class MANGOS_DLL_DECL TypeMapContainer
             return (t != NULL);
         }
 
-        ContainerMapList<OBJECT_TYPES>& GetElements() { return i_elements; }
-        const ContainerMapList<OBJECT_TYPES>& GetElements() const { return i_elements;}
+        ContainerMapList<OBJECT_TYPES>& GetElements()
+        {
+            return i_elements;
+        }
+        const ContainerMapList<OBJECT_TYPES>& GetElements() const
+        {
+            return i_elements;
+        }
 
     private:
 

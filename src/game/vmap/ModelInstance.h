@@ -58,10 +58,16 @@ namespace VMAP
             float iScale;
             G3D::AABox iBound;
             std::string name;
-            bool operator==(const ModelSpawn& other) const { return ID == other.ID; }
+            bool operator==(const ModelSpawn& other) const
+            {
+                return ID == other.ID;
+            }
             // uint32 hashCode() const { return ID; }
             // temp?
-            const G3D::AABox& getBounds() const { return iBound; }
+            const G3D::AABox& getBounds() const
+            {
+                return iBound;
+            }
 
 
             static bool readFromFile(FILE* rf, ModelSpawn& spawn);
@@ -73,7 +79,10 @@ namespace VMAP
         public:
             ModelInstance(): iModel(0) {}
             ModelInstance(const ModelSpawn& spawn, WorldModel* model);
-            void setUnloaded() { iModel = 0; }
+            void setUnloaded()
+            {
+                iModel = 0;
+            }
             bool intersectRay(const G3D::Ray& pRay, float& pMaxDist, bool pStopAtFirstHit) const;
             void intersectPoint(const G3D::Vector3& p, AreaInfo& info) const;
             bool GetLocationInfo(const G3D::Vector3& p, LocationInfo& info) const;

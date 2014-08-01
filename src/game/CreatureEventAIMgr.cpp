@@ -81,7 +81,8 @@ void CreatureEventAIMgr::CheckUnusedAITexts()
                                 idx_set.erase(action.text.TextId[k]);
                         break;
                     }
-                    default: break;
+                    default:
+                        break;
                 }
             }
         }
@@ -171,7 +172,8 @@ void CreatureEventAIMgr::CheckUnusedAISummons()
                             idx_set.erase(action.summon_id.spawnId);
                         break;
                     }
-                    default: break;
+                    default:
+                        break;
                 }
             }
         }
@@ -883,7 +885,9 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                         IsValidTargetType(temp.event_type, action.type, action.summon_unique.target, i, j + 1);
 
                         if (m_CreatureEventAI_Summon_Map.find(action.summon_unique.spawnId) == m_CreatureEventAI_Summon_Map.end())
-                            { sLog.outErrorEventAI("Event %u Action %u summons missing CreatureEventAI_Summon %u", i, j + 1, action.summon_unique.spawnId); }
+                        {
+                            sLog.outErrorEventAI("Event %u Action %u summons missing CreatureEventAI_Summon %u", i, j + 1, action.summon_unique.spawnId);
+                        }
                         break;
 
                     default:

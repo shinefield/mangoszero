@@ -114,21 +114,48 @@ class BattleGroundWS : public BattleGround
         virtual void StartingEventOpenDoors() override;
 
         /* BG Flags */
-        ObjectGuid GetAllianceFlagCarrierGuid() const { return m_flagCarrierAlliance; }
-        ObjectGuid GetHordeFlagCarrierGuid() const { return m_flagCarrierHorde; }
+        ObjectGuid GetAllianceFlagCarrierGuid() const
+        {
+            return m_flagCarrierAlliance;
+        }
+        ObjectGuid GetHordeFlagCarrierGuid() const
+        {
+            return m_flagCarrierHorde;
+        }
 
-        void SetAllianceFlagCarrier(ObjectGuid guid) { m_flagCarrierAlliance = guid; }
-        void SetHordeFlagCarrier(ObjectGuid guid) { m_flagCarrierHorde = guid; }
+        void SetAllianceFlagCarrier(ObjectGuid guid)
+        {
+            m_flagCarrierAlliance = guid;
+        }
+        void SetHordeFlagCarrier(ObjectGuid guid)
+        {
+            m_flagCarrierHorde = guid;
+        }
 
-        void ClearAllianceFlagCarrier() { m_flagCarrierAlliance.Clear(); }
-        void ClearHordeFlagCarrier() { m_flagCarrierHorde.Clear(); }
+        void ClearAllianceFlagCarrier()
+        {
+            m_flagCarrierAlliance.Clear();
+        }
+        void ClearHordeFlagCarrier()
+        {
+            m_flagCarrierHorde.Clear();
+        }
 
-        bool IsAllianceFlagPickedUp() const { return !m_flagCarrierAlliance.IsEmpty(); }
-        bool IsHordeFlagPickedUp() const { return !m_flagCarrierHorde.IsEmpty(); }
+        bool IsAllianceFlagPickedUp() const
+        {
+            return !m_flagCarrierAlliance.IsEmpty();
+        }
+        bool IsHordeFlagPickedUp() const
+        {
+            return !m_flagCarrierHorde.IsEmpty();
+        }
 
         void RespawnFlag(Team team, bool captured);
         void RespawnDroppedFlag(Team team);
-        uint8 GetFlagState(Team team) { return m_FlagState[GetTeamIndexByTeamId(team)]; }
+        uint8 GetFlagState(Team team)
+        {
+            return m_FlagState[GetTeamIndexByTeamId(team)];
+        }
 
         /* Battleground Events */
         virtual void EventPlayerDroppedFlag(Player* source) override;
@@ -145,9 +172,18 @@ class BattleGroundWS : public BattleGround
         void UpdateFlagState(Team team, uint32 value);
         void UpdateTeamScore(Team team);
         void UpdatePlayerScore(Player* source, uint32 type, uint32 value) override;
-        void SetDroppedFlagGuid(ObjectGuid guid, Team team)  { m_DroppedFlagGuid[GetTeamIndexByTeamId(team)] = guid;}
-        void ClearDroppedFlagGuid(Team team)  { m_DroppedFlagGuid[GetTeamIndexByTeamId(team)].Clear();}
-        ObjectGuid const& GetDroppedFlagGuid(Team team) const { return m_DroppedFlagGuid[GetTeamIndexByTeamId(team)];}
+        void SetDroppedFlagGuid(ObjectGuid guid, Team team)
+        {
+            m_DroppedFlagGuid[GetTeamIndexByTeamId(team)] = guid;
+        }
+        void ClearDroppedFlagGuid(Team team)
+        {
+            m_DroppedFlagGuid[GetTeamIndexByTeamId(team)].Clear();
+        }
+        ObjectGuid const& GetDroppedFlagGuid(Team team) const
+        {
+            return m_DroppedFlagGuid[GetTeamIndexByTeamId(team)];
+        }
         virtual void FillInitialWorldStates(WorldPacket& data, uint32& count) override;
 
     private:

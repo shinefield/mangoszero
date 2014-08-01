@@ -402,11 +402,26 @@ void CreatureLinkingHolder::DoCreatureLinkingEvent(CreatureLinkingEvent eventTyp
 
     switch (eventType)
     {
-        case LINKING_EVENT_AGGRO:   eventFlagFilter = EVENT_MASK_ON_AGGRO;   reverseEventFlagFilter = FLAG_TO_AGGRO_ON_AGGRO;   break;
-        case LINKING_EVENT_EVADE:   eventFlagFilter = EVENT_MASK_ON_EVADE;   reverseEventFlagFilter = FLAG_TO_RESPAWN_ON_EVADE; break;
-        case LINKING_EVENT_DIE:     eventFlagFilter = EVENT_MASK_ON_DIE;     reverseEventFlagFilter = 0;                        break;
-        case LINKING_EVENT_RESPAWN: eventFlagFilter = EVENT_MASK_ON_RESPAWN; reverseEventFlagFilter = FLAG_FOLLOW;              break;
-        case LINKING_EVENT_DESPAWN: eventFlagFilter = EVENT_MASK_ON_DESPAWN; reverseEventFlagFilter = 0;                        break;
+        case LINKING_EVENT_AGGRO:
+            eventFlagFilter = EVENT_MASK_ON_AGGRO;
+            reverseEventFlagFilter = FLAG_TO_AGGRO_ON_AGGRO;
+            break;
+        case LINKING_EVENT_EVADE:
+            eventFlagFilter = EVENT_MASK_ON_EVADE;
+            reverseEventFlagFilter = FLAG_TO_RESPAWN_ON_EVADE;
+            break;
+        case LINKING_EVENT_DIE:
+            eventFlagFilter = EVENT_MASK_ON_DIE;
+            reverseEventFlagFilter = 0;
+            break;
+        case LINKING_EVENT_RESPAWN:
+            eventFlagFilter = EVENT_MASK_ON_RESPAWN;
+            reverseEventFlagFilter = FLAG_FOLLOW;
+            break;
+        case LINKING_EVENT_DESPAWN:
+            eventFlagFilter = EVENT_MASK_ON_DESPAWN;
+            reverseEventFlagFilter = 0;
+            break;
     }
 
     // Process Slaves (by entry)

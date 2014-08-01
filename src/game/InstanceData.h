@@ -66,7 +66,10 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void Load(const char* /*data*/) {}
 
         // When save is needed, this function generates the data
-        virtual const char* Save() const { return ""; }
+        virtual const char* Save() const
+        {
+            return "";
+        }
 
         void SaveToDB() const;
 
@@ -74,7 +77,10 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void Update(uint32 /*diff*/) {}
 
         // This is to prevent players from entering during boss encounters.
-        virtual bool IsEncounterInProgress() const { return false; };
+        virtual bool IsEncounterInProgress() const
+        {
+            return false;
+        };
 
         // Called when a player successfully enters the instance (after really added to map)
         virtual void OnPlayerEnter(Player*) {}
@@ -101,15 +107,27 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void OnCreatureDeath(Creature* /*creature*/) {}
 
         // All-purpose data storage 64 bit
-        virtual uint64 GetData64(uint32 /*Data*/) const { return 0; }
+        virtual uint64 GetData64(uint32 /*Data*/) const
+        {
+            return 0;
+        }
         virtual void SetData64(uint32 /*Data*/, uint64 /*Value*/) { }
 
         // Guid data storage (wrapper for set/get from uint64 storage
-        ObjectGuid GetGuid(uint32 dataIdx) const { return ObjectGuid(GetData64(dataIdx)); }
-        void SetGuid(uint32 dataIdx, ObjectGuid value) { SetData64(dataIdx, value.GetRawValue()); }
+        ObjectGuid GetGuid(uint32 dataIdx) const
+        {
+            return ObjectGuid(GetData64(dataIdx));
+        }
+        void SetGuid(uint32 dataIdx, ObjectGuid value)
+        {
+            SetData64(dataIdx, value.GetRawValue());
+        }
 
         // All-purpose data storage 32 bit
-        virtual uint32 GetData(uint32 /*Type*/) const { return 0; }
+        virtual uint32 GetData(uint32 /*Type*/) const
+        {
+            return 0;
+        }
         virtual void SetData(uint32 /*Type*/, uint32 /*Data*/) {}
 
         // Condition criteria additional requirements check

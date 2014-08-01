@@ -128,7 +128,7 @@ void ReadLiquidTypeTableDBC()
 
 bool shouldSkipMap(uint32 mapID)
 {
-    if(skipJunkMaps)
+    if (skipJunkMaps)
     {
         switch (mapID)
         {
@@ -272,7 +272,7 @@ void ParseMapFiles()
 
         if (WDT.init(id, map_ids[i].id))
         {
-            if(shouldSkipMap(map_ids[i].id))
+            if (shouldSkipMap(map_ids[i].id))
             {
                 printf("Skipping   map %u - %s (%d/%d)\n", map_ids[i].id, map_ids[i].name, i + 1, map_count);
                 continue;
@@ -331,7 +331,7 @@ bool scan_patches(char* scanmatch, std::vector<std::string>& pArchiveNames)
         }
     }
 
-    return(true);
+    return (true);
 }
 
 bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
@@ -356,7 +356,7 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
     // now, scan for the patch levels
     sprintf(path, "%sData/patch", input_path);
     if (!scan_patches(path, pArchiveNames))
-        return(false);
+        return (false);
 
     printf("\n");
 
@@ -390,22 +390,22 @@ bool processArgv(int argc, char** argv)
 
     for (int i = 1; i < argc; ++i)
     {
-        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0 )
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
         {
             result = false;
             break;
         }
-        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--small") == 0 )
+        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--small") == 0)
         {
             result = true;
             preciseVectorData = false;
         }
-        else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--large") == 0 )
+        else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--large") == 0)
         {
             result = true;
             preciseVectorData = true;
         }
-        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0 )
+        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0)
         {
             param = argv[++i];
             if (!param)
@@ -420,7 +420,7 @@ bool processArgv(int argc, char** argv)
             else
                 printf("invalid option for '--skipJunkMaps', using default\n");
         }
-        else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0 )
+        else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0)
         {
             param = argv[++i];
             if (!param)

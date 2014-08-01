@@ -32,18 +32,30 @@
 
 template<> struct HashTrait< GameObjectModel>
 {
-    static size_t hashCode(const GameObjectModel& g) { return (size_t)(void*)&g; }
+    static size_t hashCode(const GameObjectModel& g)
+    {
+        return (size_t)(void*)&g;
+    }
 };
 
 template<> struct PositionTrait< GameObjectModel>
 {
-    static void getPosition(const GameObjectModel& g, Vector3& p) { p = g.getPosition(); }
+    static void getPosition(const GameObjectModel& g, Vector3& p)
+    {
+        p = g.getPosition();
+    }
 };
 
 template<> struct BoundsTrait< GameObjectModel>
 {
-    static void getBounds(const GameObjectModel& g, G3D::AABox& out) { out = g.getBounds();}
-    static void getBounds2(const GameObjectModel* g, G3D::AABox& out) { out = g->getBounds();}
+    static void getBounds(const GameObjectModel& g, G3D::AABox& out)
+    {
+        out = g.getBounds();
+    }
+    static void getBounds2(const GameObjectModel* g, G3D::AABox& out)
+    {
+        out = g->getBounds();
+    }
 };
 
 /*
@@ -154,7 +166,10 @@ struct DynamicTreeIntersectionCallback
         did_hit = obj.intersectRay(r, distance, true);
         return did_hit;
     }
-    bool didHit() const { return did_hit;}
+    bool didHit() const
+    {
+        return did_hit;
+    }
 };
 
 struct DynamicTreeIntersectionCallback_WithLogger
@@ -175,7 +190,10 @@ struct DynamicTreeIntersectionCallback_WithLogger
         }
         return hit;
     }
-    bool didHit() const { return did_hit;}
+    bool didHit() const
+    {
+        return did_hit;
+    }
 };
 
 //=========================================================

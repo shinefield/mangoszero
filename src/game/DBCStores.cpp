@@ -767,10 +767,31 @@ uint32 GetCreatureModelRace(uint32 model_id)
 }
 
 // script support functions
-MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>  const* GetSoundEntriesStore()   { return &sSoundEntriesStore;   }
-MANGOS_DLL_SPEC DBCStorage <SpellEntry>         const* GetSpellStore()          { return &sSpellStore;          }
-MANGOS_DLL_SPEC DBCStorage <SpellRangeEntry>    const* GetSpellRangeStore()     { return &sSpellRangeStore;     }
-MANGOS_DLL_SPEC DBCStorage <FactionEntry>       const* GetFactionStore()        { return &sFactionStore;        }
-MANGOS_DLL_SPEC DBCStorage <CreatureDisplayInfoEntry> const* GetCreatureDisplayStore() { return &sCreatureDisplayInfoStore; }
-MANGOS_DLL_SPEC DBCStorage <EmotesEntry>        const* GetEmotesStore()         { return &sEmotesStore;         }
-MANGOS_DLL_SPEC DBCStorage <EmotesTextEntry>    const* GetEmotesTextStore()     { return &sEmotesTextStore;     }
+MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>  const* GetSoundEntriesStore()
+{
+    return &sSoundEntriesStore;
+}
+MANGOS_DLL_SPEC DBCStorage <SpellEntry>         const* GetSpellStore()
+{
+    return &sSpellStore;
+}
+MANGOS_DLL_SPEC DBCStorage <SpellRangeEntry>    const* GetSpellRangeStore()
+{
+    return &sSpellRangeStore;
+}
+MANGOS_DLL_SPEC DBCStorage <FactionEntry>       const* GetFactionStore()
+{
+    return &sFactionStore;
+}
+MANGOS_DLL_SPEC DBCStorage <CreatureDisplayInfoEntry> const* GetCreatureDisplayStore()
+{
+    return &sCreatureDisplayInfoStore;
+}
+MANGOS_DLL_SPEC DBCStorage <EmotesEntry>        const* GetEmotesStore()
+{
+    return &sEmotesStore;
+}
+MANGOS_DLL_SPEC DBCStorage <EmotesTextEntry>    const* GetEmotesTextStore()
+{
+    return &sEmotesTextStore;
+}

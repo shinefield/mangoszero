@@ -93,8 +93,14 @@ class OutdoorPvPMgr
         void Update(uint32 diff);
 
         // Save and load capture point slider
-        CapturePointSliderMap const* GetCapturePointSliderMap() const { return &m_capturePointSlider; }
-        void SetCapturePointSlider(uint32 entry, CapturePointSlider value) { m_capturePointSlider[entry] = value; }
+        CapturePointSliderMap const* GetCapturePointSliderMap() const
+        {
+            return &m_capturePointSlider;
+        }
+        void SetCapturePointSlider(uint32 entry, CapturePointSlider value)
+        {
+            m_capturePointSlider[entry] = value;
+        }
 
     private:
         // return assigned outdoor pvp script

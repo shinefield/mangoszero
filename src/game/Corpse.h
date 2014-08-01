@@ -72,17 +72,35 @@ class Corpse : public WorldObject
         void DeleteBonesFromWorld();
         void DeleteFromDB();
 
-        ObjectGuid const& GetOwnerGuid() const { return GetGuidValue(CORPSE_FIELD_OWNER); }
+        ObjectGuid const& GetOwnerGuid() const
+        {
+            return GetGuidValue(CORPSE_FIELD_OWNER);
+        }
 
-        time_t const& GetGhostTime() const { return m_time; }
-        void ResetGhostTime() { m_time = time(NULL); }
-        CorpseType GetType() const { return m_type; }
+        time_t const& GetGhostTime() const
+        {
+            return m_time;
+        }
+        void ResetGhostTime()
+        {
+            m_time = time(NULL);
+        }
+        CorpseType GetType() const
+        {
+            return m_type;
+        }
 
         bool IsHostileTo(Unit const* unit) const override;
         bool IsFriendlyTo(Unit const* unit) const override;
 
-        GridPair const& GetGrid() const { return m_grid; }
-        void SetGrid(GridPair const& grid) { m_grid = grid; }
+        GridPair const& GetGrid() const
+        {
+            return m_grid;
+        }
+        void SetGrid(GridPair const& grid)
+        {
+            m_grid = grid;
+        }
 
         bool isVisibleForInState(Player const* u, WorldObject const* viewPoint, bool inVisibleList) const override;
 
@@ -90,7 +108,10 @@ class Corpse : public WorldObject
         Player* lootRecipient;
         bool lootForBody;
 
-        GridReference<Corpse>& GetGridRef() { return m_gridRef; }
+        GridReference<Corpse>& GetGridRef()
+        {
+            return m_gridRef;
+        }
 
         bool IsExpired(time_t t) const;
     private:

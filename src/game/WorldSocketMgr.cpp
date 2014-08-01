@@ -97,7 +97,10 @@ class ReactorRunnable : protected ACE_Task_Base
             return (m_ThreadId = activate());
         }
 
-        void Wait() { ACE_Task_Base::wait(); }
+        void Wait()
+        {
+            ACE_Task_Base::wait();
+        }
 
         long Connections()
         {

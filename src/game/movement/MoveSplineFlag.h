@@ -85,31 +85,76 @@ namespace Movement
                 Mask_CatmullRom = Flying,
             };
 
-            inline uint32& raw() { return (uint32&) * this;}
-            inline const uint32& raw() const { return (const uint32&) * this;}
+            inline uint32& raw()
+            {
+                return (uint32&) * this;
+            }
+            inline const uint32& raw() const
+            {
+                return (const uint32&) * this;
+            }
 
-            MoveSplineFlag() { raw() = 0; }
-            MoveSplineFlag(uint32 f) { raw() = f; }
-            MoveSplineFlag(const MoveSplineFlag& f) { raw() = f.raw(); }
+            MoveSplineFlag()
+            {
+                raw() = 0;
+            }
+            MoveSplineFlag(uint32 f)
+            {
+                raw() = f;
+            }
+            MoveSplineFlag(const MoveSplineFlag& f)
+            {
+                raw() = f.raw();
+            }
 
             // Constant interface
 
-            bool isSmooth() const { return raw() & Mask_CatmullRom;}
-            bool isFacing() const { return raw() & Mask_Final_Facing;}
+            bool isSmooth() const
+            {
+                return raw() & Mask_CatmullRom;
+            }
+            bool isFacing() const
+            {
+                return raw() & Mask_Final_Facing;
+            }
 
-            bool hasAllFlags(uint32 f) const { return (raw() & f) == f;}
-            uint32 operator & (uint32 f) const { return (raw() & f);}
-            uint32 operator | (uint32 f) const { return (raw() | f);}
+            bool hasAllFlags(uint32 f) const
+            {
+                return (raw() & f) == f;
+            }
+            uint32 operator & (uint32 f) const
+            {
+                return (raw() & f);
+            }
+            uint32 operator | (uint32 f) const
+            {
+                return (raw() | f);
+            }
             std::string ToString() const;
 
             // Not constant interface
 
-            void operator &= (uint32 f) { raw() &= f;}
-            void operator |= (uint32 f) { raw() |= f;}
+            void operator &= (uint32 f)
+            {
+                raw() &= f;
+            }
+            void operator |= (uint32 f)
+            {
+                raw() |= f;
+            }
 
-            void EnableFacingPoint()    { raw() = (raw() & ~Mask_Final_Facing) | Final_Point;}
-            void EnableFacingAngle()    { raw() = (raw() & ~Mask_Final_Facing) | Final_Angle;}
-            void EnableFacingTarget()   { raw() = (raw() & ~Mask_Final_Facing) | Final_Target;}
+            void EnableFacingPoint()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Point;
+            }
+            void EnableFacingAngle()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Angle;
+            }
+            void EnableFacingTarget()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Target;
+            }
 
             bool done          : 1;
             bool falling       : 1;

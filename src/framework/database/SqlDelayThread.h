@@ -53,7 +53,11 @@ class SqlDelayThread : public ACE_Based::Runnable
         ~SqlDelayThread();
 
         ///< Put sql statement to delay queue
-        bool Delay(SqlOperation* sql) { m_sqlQueue.add(sql); return true; }
+        bool Delay(SqlOperation* sql)
+        {
+            m_sqlQueue.add(sql);
+            return true;
+        }
 
         virtual void Stop();                                ///< Stop event
         virtual void run();                                 ///< Main Thread loop

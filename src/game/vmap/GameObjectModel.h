@@ -58,15 +58,27 @@ class GameObjectModel
     public:
         std::string name;
 
-        const G3D::AABox& getBounds() const { return iBound; }
+        const G3D::AABox& getBounds() const
+        {
+            return iBound;
+        }
 
         ~GameObjectModel();
 
-        const G3D::Vector3& getPosition() const { return iPos;}
+        const G3D::Vector3& getPosition() const
+        {
+            return iPos;
+        }
 
         /** Enables\disables collision. */
-        void disable() { collision_enabled = false;}
-        void enable(bool enabled) { collision_enabled = enabled;}
+        void disable()
+        {
+            collision_enabled = false;
+        }
+        void enable(bool enabled)
+        {
+            collision_enabled = enabled;
+        }
 
         bool intersectRay(const G3D::Ray& Ray, float& MaxDist, bool StopAtFirstHit) const;
 

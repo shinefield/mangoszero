@@ -1374,7 +1374,9 @@ uint8 ObjectMgr::GetPlayerClassByGUID(ObjectGuid guid) const
 {
     // prevent DB access for online player
     if (Player* player = GetPlayer(guid))
-    { return player->getClass(); }
+    {
+        return player->getClass();
+    }
 
     uint32 lowguid = guid.GetCounter();
 
@@ -2775,9 +2777,12 @@ HonorStandingList ObjectMgr::GetStandingListBySide(uint32 side)
 {
     switch (side)
     {
-        case ALLIANCE: return AllyHonorStandingList;
-        case HORDE:    return HordeHonorStandingList;
-        default:       return AllyHonorStandingList; // mustn't happen
+        case ALLIANCE:
+            return AllyHonorStandingList;
+        case HORDE:
+            return HordeHonorStandingList;
+        default:
+            return AllyHonorStandingList; // mustn't happen
     }
 }
 
@@ -2929,18 +2934,54 @@ void ObjectMgr::BuildPlayerLevelInfo(uint8 race, uint8 _class, uint8 level, Play
 /* ********************************************************************************************* */
 /* *                                Static Wrappers                                              */
 /* ********************************************************************************************* */
-GameObjectInfo const* ObjectMgr::GetGameObjectInfo(uint32 id) { return sGOStorage.LookupEntry<GameObjectInfo>(id); }
-Player* ObjectMgr::GetPlayer(const char* name) { return ObjectAccessor::FindPlayerByName(name); }
-Player* ObjectMgr::GetPlayer(ObjectGuid guid, bool inWorld /*=true*/) { return ObjectAccessor::FindPlayer(guid, inWorld); }
-CreatureInfo const* ObjectMgr::GetCreatureTemplate(uint32 id) { return sCreatureStorage.LookupEntry<CreatureInfo>(id); }
-CreatureModelInfo const* ObjectMgr::GetCreatureModelInfo(uint32 modelid) { return sCreatureModelStorage.LookupEntry<CreatureModelInfo>(modelid); }
-EquipmentInfo const* ObjectMgr::GetEquipmentInfo(uint32 entry) { return sEquipmentStorage.LookupEntry<EquipmentInfo>(entry); }
-EquipmentInfoRaw const* ObjectMgr::GetEquipmentInfoRaw(uint32 entry) { return sEquipmentStorageRaw.LookupEntry<EquipmentInfoRaw>(entry); }
-CreatureDataAddon const* ObjectMgr::GetCreatureAddon(uint32 lowguid) { return sCreatureDataAddonStorage.LookupEntry<CreatureDataAddon>(lowguid); }
-CreatureDataAddon const* ObjectMgr::GetCreatureTemplateAddon(uint32 entry) { return sCreatureInfoAddonStorage.LookupEntry<CreatureDataAddon>(entry); }
-ItemPrototype const* ObjectMgr::GetItemPrototype(uint32 id) { return sItemStorage.LookupEntry<ItemPrototype>(id); }
-InstanceTemplate const* ObjectMgr::GetInstanceTemplate(uint32 map) { return sInstanceTemplate.LookupEntry<InstanceTemplate>(map); }
-WorldTemplate const* ObjectMgr::GetWorldTemplate(uint32 map) { return sWorldTemplate.LookupEntry<WorldTemplate>(map); }
+GameObjectInfo const* ObjectMgr::GetGameObjectInfo(uint32 id)
+{
+    return sGOStorage.LookupEntry<GameObjectInfo>(id);
+}
+Player* ObjectMgr::GetPlayer(const char* name)
+{
+    return ObjectAccessor::FindPlayerByName(name);
+}
+Player* ObjectMgr::GetPlayer(ObjectGuid guid, bool inWorld /*=true*/)
+{
+    return ObjectAccessor::FindPlayer(guid, inWorld);
+}
+CreatureInfo const* ObjectMgr::GetCreatureTemplate(uint32 id)
+{
+    return sCreatureStorage.LookupEntry<CreatureInfo>(id);
+}
+CreatureModelInfo const* ObjectMgr::GetCreatureModelInfo(uint32 modelid)
+{
+    return sCreatureModelStorage.LookupEntry<CreatureModelInfo>(modelid);
+}
+EquipmentInfo const* ObjectMgr::GetEquipmentInfo(uint32 entry)
+{
+    return sEquipmentStorage.LookupEntry<EquipmentInfo>(entry);
+}
+EquipmentInfoRaw const* ObjectMgr::GetEquipmentInfoRaw(uint32 entry)
+{
+    return sEquipmentStorageRaw.LookupEntry<EquipmentInfoRaw>(entry);
+}
+CreatureDataAddon const* ObjectMgr::GetCreatureAddon(uint32 lowguid)
+{
+    return sCreatureDataAddonStorage.LookupEntry<CreatureDataAddon>(lowguid);
+}
+CreatureDataAddon const* ObjectMgr::GetCreatureTemplateAddon(uint32 entry)
+{
+    return sCreatureInfoAddonStorage.LookupEntry<CreatureDataAddon>(entry);
+}
+ItemPrototype const* ObjectMgr::GetItemPrototype(uint32 id)
+{
+    return sItemStorage.LookupEntry<ItemPrototype>(id);
+}
+InstanceTemplate const* ObjectMgr::GetInstanceTemplate(uint32 map)
+{
+    return sInstanceTemplate.LookupEntry<InstanceTemplate>(map);
+}
+WorldTemplate const* ObjectMgr::GetWorldTemplate(uint32 map)
+{
+    return sWorldTemplate.LookupEntry<WorldTemplate>(map);
+}
 
 /* ********************************************************************************************* */
 /* *                                Loading Functions                                            */
@@ -7034,9 +7075,12 @@ bool PlayerCondition::Meets(Player const* player, Map const* map, WorldObject co
         {
             switch (m_value2)
             {
-                case 0: return player->getLevel() == m_value1;
-                case 1: return player->getLevel() >= m_value1;
-                case 2: return player->getLevel() <= m_value1;
+                case 0:
+                    return player->getLevel() == m_value1;
+                case 1:
+                    return player->getLevel() >= m_value1;
+                case 2:
+                    return player->getLevel() <= m_value1;
             }
             return false;
         }
@@ -7046,8 +7090,10 @@ bool PlayerCondition::Meets(Player const* player, Map const* map, WorldObject co
         {
             switch (m_value2)
             {
-                case 0: return player->HasSpell(m_value1);
-                case 1: return !player->HasSpell(m_value1);
+                case 0:
+                    return player->HasSpell(m_value1);
+                case 1:
+                    return !player->HasSpell(m_value1);
             }
             return false;
         }
@@ -7168,9 +7214,12 @@ bool PlayerCondition::Meets(Player const* player, Map const* map, WorldObject co
             uint32 lastReachedWp = ((Creature*)source)->GetMotionMaster()->getLastReachedWaypoint();
             switch (m_value2)
             {
-                case 0: return m_value1 == lastReachedWp;
-                case 1: return m_value1 <= lastReachedWp;
-                case 2: return m_value1 > lastReachedWp;
+                case 0:
+                    return m_value1 == lastReachedWp;
+                case 1:
+                    return m_value1 <= lastReachedWp;
+                case 2:
+                    return m_value1 > lastReachedWp;
             }
             return false;
         }
@@ -7654,7 +7703,8 @@ SkillRangeType GetSkillRangeType(SkillLineEntry const* pSkill, bool racial)
 {
     switch (pSkill->categoryId)
     {
-        case SKILL_CATEGORY_LANGUAGES: return SKILL_RANGE_LANGUAGE;
+        case SKILL_CATEGORY_LANGUAGES:
+            return SKILL_RANGE_LANGUAGE;
         case SKILL_CATEGORY_WEAPON:
             if (pSkill->id != SKILL_FIST_WEAPONS)
                 return SKILL_RANGE_LEVEL;
@@ -8562,7 +8612,7 @@ void ObjectMgr::GetItemLocaleStrings(uint32 entry, int32 loc_idx, std::string* n
 {
     if (loc_idx >= 0)
     {
-        if(ItemLocale const *il = GetItemLocale(entry))
+        if (ItemLocale const *il = GetItemLocale(entry))
         {
             if (namePtr && il->Name.size() > size_t(loc_idx) && !il->Name[loc_idx].empty())
                 *namePtr = il->Name[loc_idx];
@@ -8577,7 +8627,7 @@ void ObjectMgr::GetQuestLocaleStrings(uint32 entry, int32 loc_idx, std::string* 
 {
     if (loc_idx >= 0)
     {
-        if(QuestLocale const *il = GetQuestLocale(entry))
+        if (QuestLocale const *il = GetQuestLocale(entry))
         {
             if (titlePtr && il->Title.size() > size_t(loc_idx) && !il->Title[loc_idx].empty())
                 *titlePtr = il->Title[loc_idx];

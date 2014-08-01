@@ -130,7 +130,10 @@ class PlayerSocial
         // Misc
         bool HasFriend(ObjectGuid friend_guid);
         bool HasIgnore(ObjectGuid ignore_guid);
-        void SetPlayerGuid(ObjectGuid guid) { m_playerLowGuid = guid.GetCounter(); }
+        void SetPlayerGuid(ObjectGuid guid)
+        {
+            m_playerLowGuid = guid.GetCounter();
+        }
         uint32 GetNumberOfSocialsWithFlag(SocialFlag flag);
     private:
         PlayerSocialMap m_playerSocialMap;
@@ -143,7 +146,10 @@ class SocialMgr
         SocialMgr();
         ~SocialMgr();
         // Misc
-        void RemovePlayerSocial(uint32 guid) { m_socialMap.erase(guid); }
+        void RemovePlayerSocial(uint32 guid)
+        {
+            m_socialMap.erase(guid);
+        }
 
         void GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo& friendInfo);
         // Packet management

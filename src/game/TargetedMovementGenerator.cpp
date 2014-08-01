@@ -178,9 +178,15 @@ bool TargetedMovementGeneratorMedium<T, D>::RequiresNewPosition(T& owner, float 
 
 //-----------------------------------------------//
 template<class T>
-void ChaseMovementGenerator<T>::_clearUnitStateMove(T& u) { u.clearUnitState(UNIT_STAT_CHASE_MOVE); }
+void ChaseMovementGenerator<T>::_clearUnitStateMove(T& u)
+{
+    u.clearUnitState(UNIT_STAT_CHASE_MOVE);
+}
 template<class T>
-void ChaseMovementGenerator<T>::_addUnitStateMove(T& u) { u.addUnitState(UNIT_STAT_CHASE_MOVE); }
+void ChaseMovementGenerator<T>::_addUnitStateMove(T& u)
+{
+    u.addUnitState(UNIT_STAT_CHASE_MOVE);
+}
 
 template<class T>
 bool ChaseMovementGenerator<T>::_lostTarget(T& u) const
@@ -244,9 +250,15 @@ float ChaseMovementGenerator<T>::GetDynamicTargetDistance(T& owner, bool forRang
 
 //-----------------------------------------------//
 template<class T>
-void FollowMovementGenerator<T>::_clearUnitStateMove(T& u) { u.clearUnitState(UNIT_STAT_FOLLOW_MOVE); }
+void FollowMovementGenerator<T>::_clearUnitStateMove(T& u)
+{
+    u.clearUnitState(UNIT_STAT_FOLLOW_MOVE);
+}
 template<class T>
-void FollowMovementGenerator<T>::_addUnitStateMove(T& u) { u.addUnitState(UNIT_STAT_FOLLOW_MOVE); }
+void FollowMovementGenerator<T>::_addUnitStateMove(T& u)
+{
+    u.addUnitState(UNIT_STAT_FOLLOW_MOVE);
+}
 
 template<>
 bool FollowMovementGenerator<Creature>::EnableWalking() const

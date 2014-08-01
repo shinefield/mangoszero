@@ -42,7 +42,10 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         explicit HostileRefManager(Unit* pOwner);
         ~HostileRefManager();
 
-        Unit* getOwner() { return iOwner; }
+        Unit* getOwner()
+        {
+            return iOwner;
+        }
 
         // send threat to all my hateres for the pVictim
         // The pVictim is hated than by them as well
@@ -58,7 +61,10 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         // Remove specific faction references
         void deleteReferencesForFaction(uint32 faction);
 
-        HostileReference* getFirst() { return ((HostileReference*) RefManager<Unit, ThreatManager>::getFirst()); }
+        HostileReference* getFirst()
+        {
+            return ((HostileReference*) RefManager<Unit, ThreatManager>::getFirst());
+        }
 
         void updateThreatTables();
 

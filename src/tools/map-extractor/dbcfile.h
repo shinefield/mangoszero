@@ -46,7 +46,10 @@ class DBCFile
                 { }
                 virtual ~Exception()
                 { }
-                const std::string& getMessage() {return message;}
+                const std::string& getMessage()
+                {
+                    return message;
+                }
             private:
                 std::string message;
         };
@@ -115,7 +118,10 @@ class DBCFile
                     return *this;
                 }
                 /// Return address of current instance
-                Record const& operator*() const { return record; }
+                Record const& operator*() const
+                {
+                    return record;
+                }
                 const Record* operator->() const
                 {
                     return &record;
@@ -140,8 +146,14 @@ class DBCFile
         /// Get begin iterator over records
         Iterator end();
         /// Trivial
-        size_t getRecordCount() const { return recordCount;}
-        size_t getFieldCount() const { return fieldCount; }
+        size_t getRecordCount() const
+        {
+            return recordCount;
+        }
+        size_t getFieldCount() const
+        {
+            return fieldCount;
+        }
         size_t getMaxId();
 
     private:

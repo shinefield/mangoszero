@@ -36,8 +36,14 @@ class MANGOS_DLL_SPEC IdleMovementGenerator : public MovementGenerator
         void Finalize(Unit&) override {}
         void Interrupt(Unit&) override {}
         void Reset(Unit&) override;
-        bool Update(Unit&, const uint32&) override { return true; }
-        MovementGeneratorType GetMovementGeneratorType() const override { return IDLE_MOTION_TYPE; }
+        bool Update(Unit&, const uint32&) override
+        {
+            return true;
+        }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return IDLE_MOTION_TYPE;
+        }
 };
 
 extern IdleMovementGenerator si_idleMovement;
@@ -52,7 +58,10 @@ class MANGOS_DLL_SPEC DistractMovementGenerator : public MovementGenerator
         void Interrupt(Unit&) override;
         void Reset(Unit&) override;
         bool Update(Unit& owner, const uint32& time_diff) override;
-        MovementGeneratorType GetMovementGeneratorType() const override { return DISTRACT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return DISTRACT_MOTION_TYPE;
+        }
 
     private:
         uint32 m_timer;
@@ -64,7 +73,10 @@ class MANGOS_DLL_SPEC AssistanceDistractMovementGenerator : public DistractMovem
         AssistanceDistractMovementGenerator(uint32 timer) :
             DistractMovementGenerator(timer) {}
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return ASSISTANCE_DISTRACT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return ASSISTANCE_DISTRACT_MOTION_TYPE;
+        }
         void Finalize(Unit& unit) override;
 };
 

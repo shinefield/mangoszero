@@ -32,7 +32,10 @@ using G3D::Ray;
 
 template<> struct BoundsTrait<VMAP::GroupModel>
 {
-    static void getBounds(const VMAP::GroupModel& obj, G3D::AABox& out) { out = obj.GetBound(); }
+    static void getBounds(const VMAP::GroupModel& obj, G3D::AABox& out)
+    {
+        out = obj.GetBound();
+    }
 };
 
 namespace VMAP

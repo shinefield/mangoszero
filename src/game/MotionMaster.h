@@ -78,14 +78,23 @@ class MANGOS_DLL_SPEC MotionMaster : private std::stack<MovementGenerator*>
 
         void Initialize();
 
-        MovementGenerator* operator->(void) { return top(); }
+        MovementGenerator* operator->(void)
+        {
+            return top();
+        }
 
         using Impl::top;
         using Impl::empty;
 
         typedef Impl::container_type::const_iterator const_iterator;
-        const_iterator begin() const { return Impl::c.begin(); }
-        const_iterator end() const { return Impl::c.end(); }
+        const_iterator begin() const
+        {
+            return Impl::c.begin();
+        }
+        const_iterator end() const
+        {
+            return Impl::c.end();
+        }
 
         void UpdateMotion(uint32 diff);
         void Clear(bool reset = true, bool all = false)

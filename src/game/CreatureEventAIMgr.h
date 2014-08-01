@@ -39,8 +39,14 @@ class CreatureEventAIMgr
         void LoadCreatureEventAI_Summons(bool check_entry_use);
         void LoadCreatureEventAI_Scripts();
 
-        CreatureEventAI_Event_Map  const& GetCreatureEventAIMap()       const { return m_CreatureEventAI_Event_Map; }
-        CreatureEventAI_Summon_Map const& GetCreatureEventAISummonMap() const { return m_CreatureEventAI_Summon_Map; }
+        CreatureEventAI_Event_Map  const& GetCreatureEventAIMap()       const
+        {
+            return m_CreatureEventAI_Event_Map;
+        }
+        CreatureEventAI_Summon_Map const& GetCreatureEventAISummonMap() const
+        {
+            return m_CreatureEventAI_Summon_Map;
+        }
 
     private:
         void CheckUnusedAITexts();

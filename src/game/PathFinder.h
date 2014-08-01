@@ -70,16 +70,37 @@ class PathFinder
         bool calculate(float destX, float destY, float destZ, bool forceDest = false);
 
         // option setters - use optional
-        void setUseStrightPath(bool useStraightPath) { m_useStraightPath = useStraightPath; };
-        void setPathLengthLimit(float distance) { m_pointPathLimit = std::min<uint32>(uint32(distance / SMOOTH_PATH_STEP_SIZE), MAX_POINT_PATH_LENGTH); };
+        void setUseStrightPath(bool useStraightPath)
+        {
+            m_useStraightPath = useStraightPath;
+        };
+        void setPathLengthLimit(float distance)
+        {
+            m_pointPathLimit = std::min<uint32>(uint32(distance / SMOOTH_PATH_STEP_SIZE), MAX_POINT_PATH_LENGTH);
+        };
 
         // result getters
-        Vector3 getStartPosition()      const { return m_startPosition; }
-        Vector3 getEndPosition()        const { return m_endPosition; }
-        Vector3 getActualEndPosition()  const { return m_actualEndPosition; }
+        Vector3 getStartPosition()      const
+        {
+            return m_startPosition;
+        }
+        Vector3 getEndPosition()        const
+        {
+            return m_endPosition;
+        }
+        Vector3 getActualEndPosition()  const
+        {
+            return m_actualEndPosition;
+        }
 
-        PointsArray& getPath() { return m_pathPoints; }
-        PathType getPathType() const { return m_type; }
+        PointsArray& getPath()
+        {
+            return m_pathPoints;
+        }
+        PathType getPathType() const
+        {
+            return m_type;
+        }
 
     private:
 
@@ -103,9 +124,19 @@ class PathFinder
 
         dtQueryFilter m_filter;                     // use single filter for all movements, update it when needed
 
-        void setStartPosition(Vector3 point) { m_startPosition = point; }
-        void setEndPosition(Vector3 point) { m_actualEndPosition = point; m_endPosition = point; }
-        void setActualEndPosition(Vector3 point) { m_actualEndPosition = point; }
+        void setStartPosition(Vector3 point)
+        {
+            m_startPosition = point;
+        }
+        void setEndPosition(Vector3 point)
+        {
+            m_actualEndPosition = point;
+            m_endPosition = point;
+        }
+        void setActualEndPosition(Vector3 point)
+        {
+            m_actualEndPosition = point;
+        }
 
         void clear()
         {

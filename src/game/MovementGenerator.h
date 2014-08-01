@@ -60,10 +60,16 @@ class MANGOS_DLL_SPEC MovementGenerator
         virtual void unitSpeedChanged() { }
 
         // used by Evade code for select point to evade with expected restart default movement
-        virtual bool GetResetPosition(Unit&, float& /*x*/, float& /*y*/, float& /*z*/) const { return false; }
+        virtual bool GetResetPosition(Unit&, float& /*x*/, float& /*y*/, float& /*z*/) const
+        {
+            return false;
+        }
 
         // given destination unreachable? due to pathfinsing or other
-        virtual bool IsReachable() const { return true; }
+        virtual bool IsReachable() const
+        {
+            return true;
+        }
 
         // used for check from Update call is movegen still be active (top movement generator)
         // after some not safe for this calls
@@ -113,7 +119,10 @@ class MANGOS_DLL_SPEC MovementGeneratorMedium : public MovementGenerator
         bool Update(T& u, const uint32& time_diff);
 
         // not need always overwrites
-        bool GetResetPosition(T& /*u*/, float& /*x*/, float& /*y*/, float& /*z*/) const { return false; }
+        bool GetResetPosition(T& /*u*/, float& /*x*/, float& /*y*/, float& /*z*/) const
+        {
+            return false;
+        }
 };
 
 struct SelectableMovement : public FactoryHolder<MovementGenerator, MovementGeneratorType>

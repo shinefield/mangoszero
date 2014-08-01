@@ -70,9 +70,18 @@ class RealmList
 
         void UpdateIfNeed();
 
-        RealmMap::const_iterator begin() const { return m_realms.begin(); }
-        RealmMap::const_iterator end() const { return m_realms.end(); }
-        uint32 size() const { return m_realms.size(); }
+        RealmMap::const_iterator begin() const
+        {
+            return m_realms.begin();
+        }
+        RealmMap::const_iterator end() const
+        {
+            return m_realms.end();
+        }
+        uint32 size() const
+        {
+            return m_realms.size();
+        }
     private:
         void UpdateRealms(bool init);
         void UpdateRealm(uint32 ID, const std::string& name, const std::string& address, uint32 port, uint8 icon, RealmFlags realmflags, uint8 timezone, AccountTypes allowedSecurityLevel, float popu, const std::string& builds);

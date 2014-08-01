@@ -61,7 +61,8 @@ ObjectGridRespawnMover::Visit(CreatureMapType& m)
     // move to respawn point to prevent this case. For player view in respawn grid this will be normal respawn.
     for (CreatureMapType::iterator iter = m.begin(), next; iter != m.end(); iter = next)
     {
-        next = iter; ++next;
+        next = iter;
+        ++next;
 
         Creature* c = iter->getSource();
 
@@ -236,7 +237,9 @@ ObjectGridLoader::Load(GridType& grid)
 
 void ObjectGridLoader::LoadN(void)
 {
-    i_gameObjects = 0; i_creatures = 0; i_corpses = 0;
+    i_gameObjects = 0;
+    i_creatures = 0;
+    i_corpses = 0;
     i_cell.data.Part.cell_y = 0;
     for (unsigned int x = 0; x < MAX_NUMBER_OF_CELLS; ++x)
     {
