@@ -1436,6 +1436,11 @@ OutdoorPvp.EPEnabled = 1
 #         Default: 0 - do not kick
 #                  1 - kick
 #
+#    Network.Timeout
+#         How long the reactor should run before it resets.
+#         Low values may cause higher CPU usage.
+#         Default: 100000 (100 milliseconds)
+#
 ###################################################################################################################
 
 Network.Threads = 1
@@ -1443,6 +1448,7 @@ Network.OutKBuff = -1
 Network.OutUBuff = 65536
 Network.TcpNodelay = 1
 Network.KickOnBadPacket = 0
+Network.Timeout = 100000
 
 ###################################################################################################################
 # CONSOLE, REMOTE ACCESS AND SOAP

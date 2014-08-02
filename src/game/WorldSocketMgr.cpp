@@ -150,19 +150,20 @@ class ReactorRunnable : protected ACE_Task_Base
 
         virtual int svc()
         {
-            DEBUG_LOG("Network Thread Starting");
+            DEBUG_LOG("Network Thread starting");
 
             WorldDatabase.ThreadStart();
 
             MANGOS_ASSERT(m_Reactor);
 
             SocketSet::iterator i, t;
+            const int timeout = sConfig.GetIntDefault("Network.Timeout", 100000);
 
             while (!m_Reactor->reactor_event_loop_done())
             {
-                // dont be too smart to move this outside the loop
+                // don't be too smart to move this outside the loop
                 // the run_reactor_event_loop will modify interval
-                ACE_Time_Value interval(0, 10000);
+                ACE_Time_Value interval(0, timeout);
 
                 if (m_Reactor->run_reactor_event_loop(interval) == -1)
                     break;
@@ -187,7 +188,7 @@ class ReactorRunnable : protected ACE_Task_Base
 
             WorldDatabase.ThreadEnd();
 
-            DEBUG_LOG("Network Thread Exitting");
+            DEBUG_LOG("Network Thread exiting");
 
             return 0;
         }
@@ -230,7 +231,7 @@ int WorldSocketMgr::StartReactiveIO(ACE_UINT16 port, const char* address)
 
     if (num_threads <= 0)
     {
-        sLog.outError("Network.Threads is wrong in your config file");
+        sLog.outError("Network.Threads is wrong in your configuration file");
         return -1;
     }
 
@@ -247,7 +248,7 @@ int WorldSocketMgr::StartReactiveIO(ACE_UINT16 port, const char* address)
 
     if (m_SockOutUBuff <= 0)
     {
-        sLog.outError("Network.OutUBuff is wrong in your config file");
+        sLog.outError("Network.OutUBuff is wrong in your configuration file");
         return -1;
     }
 
