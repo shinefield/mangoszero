@@ -85,14 +85,14 @@ bool WDTFile::init(char* map_id, unsigned int mapID)
                 WDT.read(buf, size);
                 char* p = buf;
                 int q = 0;
-                gWmoInstansName = new string[size];
+                gWmoInstanceName = new string[size];
                 while (p < buf + size)
                 {
                     string path(p);
                     char* s = wdtGetPlainName(p);
                     fixnamen(s, strlen(s));
                     p = p + strlen(p) + 1;
-                    gWmoInstansName[q++] = s;
+                    gWmoInstanceName[q++] = s;
                 }
                 delete[] buf;
             }
@@ -112,9 +112,9 @@ bool WDTFile::init(char* map_id, unsigned int mapID)
                 {
                     int id;
                     WDT.read(&id, 4);
-                    WMOInstance inst(WDT, gWmoInstansName[id].c_str(), mapID, 65, 65, dirfile);
+                    WMOInstance inst(WDT, gWmoInstanceName[id].c_str(), mapID, 65, 65, dirfile);
                 }
-                delete[] gWmoInstansName;
+                delete[] gWmoInstanceName;
             }
         }
         WDT.seek((int)nextpos);

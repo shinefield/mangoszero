@@ -124,8 +124,8 @@ class ADTFile
         ~ADTFile();
         int nWMO;
         int nMDX;
-        string* WmoInstansName;
-        string* ModelInstansName;
+        string* WmoInstanceName;
+        string* ModelInstanceName;
         bool init(uint32 map_num, uint32 tileX, uint32 tileY, StringSet& failedPaths);
         //void LoadMapChunks();
 

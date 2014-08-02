@@ -41,7 +41,7 @@ class WDTFile
         ~WDTFile(void);
         bool init(char* map_id, unsigned int mapID);
 
-        string* gWmoInstansName;
+        string* gWmoInstanceName;
         int gnWMO, nMaps;
 
         ADTFile* GetMap(int x, int z);
