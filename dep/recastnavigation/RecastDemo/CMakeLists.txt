@@ -52,6 +52,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../DetourCrowd/Include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../DetourTileCache/Include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../Recast/Include/
+    ${CMAKE_SOURCE_DIR}/src/tools/mmap-generator/
 )
 
 #-----------------------------------------------------------------------------

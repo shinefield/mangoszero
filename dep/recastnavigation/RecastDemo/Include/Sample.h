@@ -66,6 +66,12 @@ enum SamplePartitionType
 	SAMPLE_PARTITION_LAYERS,
 };
 
+enum SampleType
+{
+    ORIGINAL_SAMPLE,
+    CMANGOS_MAP_SAMPLE
+};
+
 struct SampleTool
 {
 	virtual ~SampleTool() {}
@@ -114,23 +120,24 @@ protected:
 	float m_detailSampleDist;
 	float m_detailSampleMaxError;
 	int m_partitionType;
-	
+
 	SampleTool* m_tool;
 	SampleToolState* m_toolStates[MAX_TOOLS];
-	
+
 	BuildContext* m_ctx;
-	
+
 public:
 	Sample();
 	virtual ~Sample();
-	
+
 	void setContext(BuildContext* ctx) { m_ctx = ctx; }
-	
+
 	void setTool(SampleTool* tool);
 	SampleToolState* getToolState(int type) { return m_toolStates[type]; }
 	void setToolState(int type, SampleToolState* s) { m_toolStates[type] = s; }
-	
+
 	virtual void handleSettings();
+	virtual bool ShowLevel(int, int) { return false; };
 	virtual void handleTools();
 	virtual void handleDebugMode();
 	virtual void handleClick(const float* s, const float* p, bool shift);
@@ -141,6 +148,9 @@ public:
 	virtual void handleMeshChanged(class InputGeom* geom);
 	virtual bool handleBuild();
 	virtual void handleUpdate(const float dt);
+    virtual SampleType getSampleType() { return ORIGINAL_SAMPLE; };
+    virtual const char* getFolder() { return "Meshes"; };
+    virtual const char* getExtension() { return "*.obj"; };
 
 	virtual class InputGeom* getInputGeom() { return m_geom; }
 	virtual class dtNavMesh* getNavMesh() { return m_navMesh; }
@@ -151,7 +161,7 @@ public:
 	virtual float getAgentClimb() { return m_agentMaxClimb; }
 	virtual const float* getBoundsMin();
 	virtual const float* getBoundsMax();
-	
+
 	inline unsigned char getNavMeshDrawFlags() const { return m_navMeshDrawFlags; }
 	inline void setNavMeshDrawFlags(unsigned char flags) { m_navMeshDrawFlags = flags; }
 

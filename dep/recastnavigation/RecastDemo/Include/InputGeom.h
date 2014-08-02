@@ -33,10 +33,13 @@ struct ConvexVolume
 
 class InputGeom
 {
+    bool loadObj(rcContext* ctx, const char* filepath);
+    bool loadMap(rcContext* ctx, const char* filepath);
+
 	rcChunkyTriMesh* m_chunkyMesh;
 	rcMeshLoaderObj* m_mesh;
 	float m_meshBMin[3], m_meshBMax[3];
-	
+
 	/// @name Off-Mesh connections.
 	///@{
 	static const int MAX_OFFMESH_CONNECTIONS = 256;
@@ -55,18 +58,18 @@ class InputGeom
 	ConvexVolume m_volumes[MAX_VOLUMES];
 	int m_volumeCount;
 	///@}
-	
+
 public:
 	InputGeom();
 	~InputGeom();
-	
-	bool loadMesh(class rcContext* ctx, const char* filepath);
-	
+
+	bool loadMesh(class rcContext* ctx, const char* filepath, SampleType type = ORIGINAL_SAMPLE);
+
 	bool load(class rcContext* ctx, const char* filepath);
 	bool save(const char* filepath);
-	
+
 	/// Method to return static mesh data.
-	inline const rcMeshLoaderObj* getMesh() const { return m_mesh; }
+	inline const MeshLoader* getMesh() const { return m_mesh; }
 	inline const float* getMeshBoundsMin() const { return m_meshBMin; }
 	inline const float* getMeshBoundsMax() const { return m_meshBMax; }
 	inline const rcChunkyTriMesh* getChunkyMesh() const { return m_chunkyMesh; }
