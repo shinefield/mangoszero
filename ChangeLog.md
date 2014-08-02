@@ -34,6 +34,8 @@ awesome things such as these:
 * core: the recast demo application now is able to preview generated data
   visually,
 * core: random movement will now switch between short and long reset timers,
+* core: polymorphed or feared creatures will no longer attack or chase,
+* core: trap game objects will despawn with their parent game object,
 * EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
 * scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
 * quest: when quests reward spell casts, they will now display the correct spell,
