@@ -1062,7 +1062,7 @@ void ExtractDBCFiles()
     CreateDir(path);
 
     // extract client database files
-    int count = 0;
+    uint32 count = 0;
     for (set<string>::iterator iter = dbcfiles.begin(); iter != dbcfiles.end(); ++iter)
     {
         string filename = path;
