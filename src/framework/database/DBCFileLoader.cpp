@@ -33,6 +33,7 @@ DBCFileLoader::DBCFileLoader()
 {
     data = NULL;
     fieldsOffset = NULL;
+    stringTable = NULL;
 }
 
 bool DBCFileLoader::Load(const char* filename, const char* fmt)
@@ -44,7 +45,10 @@ bool DBCFileLoader::Load(const char* filename, const char* fmt)
     if (!f)return false;
 
     if (fread(&header, 4, 1, f) != 1)                       // Number of records
+    {
+        fclose(f);
         return false;
+    }
 
     EndianConvert(header);
     if (header != 0x43424457)                               //'WDBC'

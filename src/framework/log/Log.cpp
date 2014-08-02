@@ -1019,7 +1019,7 @@ void Log::WaitBeforeContinueIfNeed()
     }
     else if (mode > 0)
     {
-        printf("\nWait %u secs for continue.\n", mode);
+        printf("\nWait %d secs for continue.\n", mode);
         BarGoLink bar(mode);
         for (int i = 0; i < mode; ++i)
         {
