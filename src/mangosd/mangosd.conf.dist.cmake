@@ -399,7 +399,7 @@ LogColors = "13 7 11 9"
 #
 #    GameType
 #        Server realm style
-#        0 = NORMAL; 1 = PVP; 4 = NORMAL; 6 = RP; 8 = RPPVP
+#        0 = NORMAL; 1 = PVP; 6 = RP, 8 = RP-PVP;
 #
 #    RealmZone
 #        Server realm zone (set allowed alphabet in character names, etc.). See also Strict*Names options.
