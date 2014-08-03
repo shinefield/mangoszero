@@ -39,7 +39,6 @@ awesome things such as these:
 * EventAI: added ACTION_T_SUMMON_UNIQUE for unique creature summons,
 * scripts: added SCRIPT_COMMAND_TURN_TO for turning units to face a target,
 * quest: when quests reward spell casts, they will now display the correct spell,
-* database: the commands `goname`/`namego` have been renamed to `appear`/`summon`,
 * documentation has been moved to [Read The Docs](http://readthedocs.org/) and
   the latest version is available on [docs.getmangos.com](http://docs.getmangos.com),
 * Eluna Lua Engine: thanks to the [Eluna project](https://github.com/ElunaLuaEngine)
@@ -83,6 +82,8 @@ Also numerous minor fixes and improvements have been added, such as:
 * core: fixed SMSG_LOGOUT_RESPONSE,
 * core: SMSG_AUTH_RESPONSE for full queue,
 * core: spell family max corrected to 13 (aka potions),
+* core: chat channel spam is gone,
+* database: the commands `goname`/`namego` have been renamed to `appear`/`summon`,
 * database: the honor commands had their access levels reset,
 * database: the flying command has been removed (lacking support in vanilla WoW),
 * tools: the list of contributed tools has been slimmed, as we killed of

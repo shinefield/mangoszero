@@ -626,7 +626,6 @@ uint32 GetAreaFlagByMapId(uint32 mapid)
         return i->second;
 }
 
-
 ChatChannelsEntry const* GetChannelEntryFor(uint32 channel_id)
 {
     // not sorted, numbering index from 0
@@ -638,6 +637,29 @@ ChatChannelsEntry const* GetChannelEntryFor(uint32 channel_id)
     }
     return NULL;
 }
+
+ChatChannelsEntry const* GetChannelEntryFor(const std::string& name)
+{
+   // not sorted, numbering index from 0
+   for (uint32 i = 0; i < sChatChannelsStore.GetNumRows(); ++i)
+   {
+       ChatChannelsEntry const* ch = sChatChannelsStore.LookupEntry(i);
+       if (ch)
+       {
+           // need to remove %s from entryName if it exists before we match
+           std::string entryName (ch->pattern[0]);
+           std::size_t removeString = entryName.find("%s");
+
+           if (removeString != std::string::npos)
+               entryName.replace(removeString, 2, "");
+
+           if (name.find(entryName) != std::string::npos)
+               return ch;
+       }
+   }
+   return NULL;
+}
+
 /*[-ZERO]
 bool IsTotemCategoryCompatiableWith(uint32 itemTotemCategoryId, uint32 requiredTotemCategoryId)
 {
@@ -667,9 +689,9 @@ bool Zone2MapCoordinates(float& x, float& y, uint32 zone)
     if (!maEntry || maEntry->x2 == maEntry->x1 || maEntry->y2 == maEntry->y1)
         return false;
 
-    std::swap(x, y);                                        // at client map coords swapped
+    std::swap(x, y);                                            // at client map coords swapped
     x = x * ((maEntry->x2 - maEntry->x1) / 100) + maEntry->x1;
-    y = y * ((maEntry->y2 - maEntry->y1) / 100) + maEntry->y1; // client y coord from top to down
+    y = y * ((maEntry->y2 - maEntry->y1) / 100) + maEntry->y1;  // client y coord from top to down
 
     return true;
 }
@@ -683,8 +705,8 @@ bool Map2ZoneCoordinates(float& x, float& y, uint32 zone)
         return false;
 
     x = (x - maEntry->x1) / ((maEntry->x2 - maEntry->x1) / 100);
-    y = (y - maEntry->y1) / ((maEntry->y2 - maEntry->y1) / 100); // client y coord from top to down
-    std::swap(x, y);                                        // client have map coords swapped
+    y = (y - maEntry->y1) / ((maEntry->y2 - maEntry->y1) / 100);    // client y coord from top to down
+    std::swap(x, y);                                                // client have map coords swapped
 
     return true;
 }
