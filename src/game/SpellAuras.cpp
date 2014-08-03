@@ -4313,6 +4313,10 @@ void Aura::PeriodicTick()
             if (!target->isAlive())
                 return;
 
+            // Don't heal target if it is already at max health.
+            if (target->GetHealth() == target->GetMaxHealth())
+                return;
+
             Unit* pCaster = GetCaster();
             if (!pCaster)
                 return;
