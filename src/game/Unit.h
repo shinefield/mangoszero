@@ -2319,7 +2319,6 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
             return !(hasUnitState(UNIT_STAT_MOVING));
         }
         void StopMoving(bool forceSendStop = false);
-        void InterruptMoving(bool forceSendStop = false);
 
         void SetFeared(bool apply, ObjectGuid casterGuid = ObjectGuid(), uint32 spellID = 0, uint32 time = 0);
         void SetConfused(bool apply, ObjectGuid casterGuid = ObjectGuid(), uint32 spellID = 0);
