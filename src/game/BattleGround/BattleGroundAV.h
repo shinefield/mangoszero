@@ -29,18 +29,18 @@
 #include "Common.h"
 #include "BattleGround.h"
 
-#define BG_AV_MAX_NODE_DISTANCE             25              // distance in which players are still counted in range of a banner (for alliance towers this is calculated from the center of the tower)
+#define BG_AV_MAX_NODE_DISTANCE             25              // distance in which players are still counted in range of a banner (for alliance towers this is calculated from the centre of the tower)
 
 #define BG_AV_BOSS_KILL_QUEST_SPELL         23658
 
 #define BG_AV_CAPTIME                       240000          // 4 minutes
-#define BG_AV_SNOWFALL_FIRSTCAP             300000          // 5 minutes but i also have seen 4:05
+#define BG_AV_SNOWFALL_FIRSTCAP             300000          // 5 minutes but I also have seen 4:05
 
 #define BG_AV_SCORE_INITIAL_POINTS          600
 #define BG_AV_SCORE_NEAR_LOSE               120
 
 // description: KILL = bonushonor kill one kill is 21honor worth at 0
-// REP reputation, RES = ressources a team will lose
+// REP reputation, RES = resources a team will lose
 #define BG_AV_KILL_BOSS                     4
 #define BG_AV_REP_BOSS                      350
 #define BG_AV_REP_BOSS_HOLIDAY              525
@@ -55,7 +55,7 @@
 #define BG_AV_REP_TOWER_HOLIDAY             18
 #define BG_AV_RES_TOWER                     75
 
-#define BG_AV_KILL_GET_COMMANDER            1               // for a safely returned wingcommander TODO implement it
+#define BG_AV_KILL_GET_COMMANDER            1               // for a safely returned wing commander TODO implement it
 
 // bonushonor at the end
 #define BG_AV_KILL_SURVIVING_TOWER          2
@@ -85,7 +85,7 @@ enum BG_AV_Sounds
     BG_AV_SOUND_HORDE_GOOD              = 8213,
     BG_AV_SOUND_BOTH_TOWER_DEFEND       = 8192,
 
-    BG_AV_SOUND_ALLIANCE_CAPTAIN        = 8232,             // gets called when someone attacks them and at the beginning after 3min + rand(x) * 10sec (maybe buff)
+    BG_AV_SOUND_ALLIANCE_CAPTAIN        = 8232,             // gets called when someone attacks them and at the beginning after 3 min + rand(x) * 10 sec (maybe buff)
     BG_AV_SOUND_HORDE_CAPTAIN           = 8333,
 };
 
@@ -272,11 +272,11 @@ enum BG_AV_QuestIds
     BG_AV_QUEST_H_SCRAPS2       = 6741,
     BG_AV_QUEST_A_COMMANDER1    = 6942,                     // soldier
     BG_AV_QUEST_H_COMMANDER1    = 6825,
-    BG_AV_QUEST_A_COMMANDER2    = 6941,                     // leutnant
+    BG_AV_QUEST_A_COMMANDER2    = 6941,                     // lieutenant
     BG_AV_QUEST_H_COMMANDER2    = 6826,
     BG_AV_QUEST_A_COMMANDER3    = 6943,                     // commander
     BG_AV_QUEST_H_COMMANDER3    = 6827,
-    BG_AV_QUEST_A_BOSS1         = 7386,                     // 5 cristal/blood
+    BG_AV_QUEST_A_BOSS1         = 7386,                     // 5 crystal/blood
     BG_AV_QUEST_H_BOSS1         = 7385,
     BG_AV_QUEST_A_BOSS2         = 6881,                     // 1
     BG_AV_QUEST_H_BOSS2         = 6801,
@@ -396,7 +396,7 @@ class BattleGroundAV : public BattleGround
 
         BG_AV_NodeInfo m_Nodes[BG_AV_NODES_MAX];
 
-        // only for worldstates needed
+        // only needed for worldstates
         BattleGroundAVTeamIndex m_Mine_Owner[BG_AV_MAX_MINES];
         BattleGroundAVTeamIndex m_Mine_PrevOwner[BG_AV_MAX_MINES];
         int32 m_Mine_Timer[BG_AV_MAX_MINES];
