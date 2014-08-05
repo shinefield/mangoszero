@@ -28,14 +28,12 @@
 #ifndef MANGOS_H_QUERYRESULTMYSQL
 #define MANGOS_H_QUERYRESULTMYSQL
 
-#include "Common.h"
-
 #ifdef WIN32
 #include <winsock2.h>
-#include <mysql/mysql.h>
-#else
-#include <mysql.h>
 #endif
+#include <mysql.h>
+
+#include "Common.h"
 
 class QueryResultMysql : public QueryResult
 {

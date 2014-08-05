@@ -30,13 +30,10 @@
 
 #include <ace/Thread_Mutex.h>
 #include <ace/Guard_T.h>
-
 #ifdef WIN32
 #include <winsock2.h>
-#include <mysql/mysql.h>
-#else
-#include <mysql.h>
 #endif
+#include <mysql.h>
 
 #include "policies/Singleton.h"
 #include "Database.h"
