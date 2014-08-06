@@ -65,18 +65,18 @@ uint32 realmID;                                             ///< Id of the realm
 void usage(const char* prog)
 {
     sLog.outString("Usage: \n %s [<options>]\n"
-                   "    -v, --version            print version and exist\n\r"
-                   "    -c config_file           use config_file as configuration file\n\r"
-                   "    -a, --ahbot config_file  use config_file as ahbot configuration file\n\r"
+                   "    -v, --version            print version and exit\r\n"
+                   "    -c config_file           use config_file as configuration file\r\n"
+                   "    -a, --ahbot config_file  use config_file as auction house bot configuration file\r\n"
 #ifdef WIN32
-                   "    Running as service functions:\n\r"
-                   "    -s run                   run as service\n\r"
-                   "    -s install               install service\n\r"
-                   "    -s uninstall             uninstall service\n\r"
+                   "    Running as service functions:\r\n"
+                   "    -s run                   run as service\r\n"
+                   "    -s install               install service\r\n"
+                   "    -s remove                remove service\r\n"
 #else
-                   "    Running as daemon functions:\n\r"
-                   "    -s run                   run as daemon\n\r"
-                   "    -s stop                  stop daemon\n\r"
+                   "    Running as daemon functions:\r\n"
+                   "    -s run                   run as daemon\r\n"
+                   "    -s stop                  stop daemon\r\n"
 #endif
                    , prog);
 }
@@ -119,7 +119,7 @@ extern int main(int argc, char** argv)
 #ifdef WIN32
                 else if (!strcmp(mode, "install"))
                     serviceDaemonMode = 'i';
-                else if (!strcmp(mode, "uninstall"))
+                else if (!strcmp(mode, "remove"))
                     serviceDaemonMode = 'u';
 #else
                 else if (!strcmp(mode, "stop"))
@@ -140,14 +140,14 @@ extern int main(int argc, char** argv)
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
             default:
-                sLog.outError("Runtime-Error: bad format of commandline arguments");
+                sLog.outError("Runtime-Error: bad format of command line arguments");
                 usage(argv[0]);
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
         }
     }
 
-#ifdef WIN32                                                // windows service command need execute before config read
+#ifdef WIN32                                                // windows service command need execute before configuration read
     switch (serviceDaemonMode)
     {
         case 'i':
@@ -156,7 +156,7 @@ extern int main(int argc, char** argv)
             return 1;
         case 'u':
             if (WinServiceUninstall())
-                sLog.outString("Uninstalling service");
+                sLog.outString("Removing service");
             return 1;
         case 'r':
             WinServiceRun();
@@ -171,7 +171,7 @@ extern int main(int argc, char** argv)
         return 1;
     }
 
-#ifndef WIN32                                               // posix daemon commands need apply after config read
+#ifndef WIN32                                               // POSIX daemon commands need apply after configuration read
     switch (serviceDaemonMode)
     {
         case 'r':

@@ -73,17 +73,17 @@ DatabaseType LoginDatabase;                                 ///< Accessor to the
 void usage(const char* prog)
 {
     sLog.outString("Usage: \n %s [<options>]\n"
-                   "    -v, --version            print version and exist\n\r"
-                   "    -c config_file           use config_file as configuration file\n\r"
+                   "    -v, --version            print version and exit\r\n"
+                   "    -c config_file           use config_file as configuration file\r\n"
 #ifdef WIN32
-                   "    Running as service functions:\n\r"
-                   "    -s run                   run as service\n\r"
-                   "    -s install               install service\n\r"
-                   "    -s uninstall             uninstall service\n\r"
+                   "    Running as service functions:\r\n"
+                   "    -s run                   run as service\r\n"
+                   "    -s install               install service\r\n"
+                   "    -s remove                remove service\r\n"
 #else
-                   "    Running as daemon functions:\n\r"
-                   "    -s run                   run as daemon\n\r"
-                   "    -s stop                  stop daemon\n\r"
+                   "    Running as daemon functions:\r\n"
+                   "    -s run                   run as daemon\r\n"
+                   "    -s stop                  stop daemon\r\n"
 #endif
                    , prog);
 }
@@ -122,7 +122,7 @@ extern int main(int argc, char** argv)
 #ifdef WIN32
                 else if (!strcmp(mode, "install"))
                     serviceDaemonMode = 'i';
-                else if (!strcmp(mode, "uninstall"))
+                else if (!strcmp(mode, "remove"))
                     serviceDaemonMode = 'u';
 #else
                 else if (!strcmp(mode, "stop"))
@@ -143,14 +143,14 @@ extern int main(int argc, char** argv)
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
             default:
-                sLog.outError("Runtime-Error: bad format of commandline arguments");
+                sLog.outError("Runtime-Error: bad format of command line arguments");
                 usage(argv[0]);
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
         }
     }
 
-#ifdef WIN32                                                // windows service command need execute before config read
+#ifdef WIN32                                                // windows service command need execute before configuration read
     switch (serviceDaemonMode)
     {
         case 'i':
@@ -159,7 +159,7 @@ extern int main(int argc, char** argv)
             return 1;
         case 'u':
             if (WinServiceUninstall())
-                sLog.outString("Uninstalling service");
+                sLog.outString("Removing service");
             return 1;
         case 'r':
             WinServiceRun();
@@ -174,7 +174,7 @@ extern int main(int argc, char** argv)
         return 1;
     }
 
-#ifndef WIN32                                               // posix daemon commands need apply after config read
+#ifndef WIN32                                               // POSIX daemon commands need apply after configuration read
     switch (serviceDaemonMode)
     {
         case 'r':
@@ -197,7 +197,7 @@ extern int main(int argc, char** argv)
     if (confVersion < _REALMDCONFVERSION)
     {
         sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your realmd.conf version indicates your conf file is out of date!");
+        sLog.outError(" WARNING: Your configuration is outdated.");
         sLog.outError("          Please check for updates, as your current default values may cause");
         sLog.outError("          strange behavior.");
         sLog.outError("*****************************************************************************");
@@ -228,7 +228,7 @@ extern int main(int argc, char** argv)
         uint32 pid = CreatePIDFile(pidfile);
         if (!pid)
         {
-            sLog.outError("Cannot create PID file %s.\n", pidfile.c_str());
+            sLog.outError("Can't create PID file %s.\n", pidfile.c_str());
             Log::WaitBeforeContinueIfNeed();
             return 1;
         }
@@ -252,7 +252,7 @@ extern int main(int argc, char** argv)
         return 1;
     }
 
-    // cleanup query
+    // clean up query
     // set expired bans to inactive
     LoginDatabase.BeginTransaction();
     LoginDatabase.Execute("UPDATE account_banned SET active = 0 WHERE unbandate<=UNIX_TIMESTAMP() AND unbandate<>bandate");
@@ -269,7 +269,7 @@ extern int main(int argc, char** argv)
 
     if (acceptor.open(bind_addr, ACE_Reactor::instance(), ACE_NONBLOCK) == -1)
     {
-        sLog.outError("MaNGOS realmd can not bind to %s:%d", bind_ip.c_str(), rmport);
+        sLog.outError("MaNGOS realmd can't bind to %s:%d", bind_ip.c_str(), rmport);
         Log::WaitBeforeContinueIfNeed();
         return 1;
     }
@@ -333,7 +333,7 @@ extern int main(int argc, char** argv)
     ///- Wait for termination signal
     while (!stopEvent)
     {
-        // dont move this outside the loop, the reactor will modify it
+        // don't move this outside the loop, the reactor will modify it
         ACE_Time_Value interval(0, 100000);
 
         if (ACE_Reactor::instance()->run_reactor_event_loop(interval) == -1)
@@ -395,7 +395,7 @@ bool StartDB()
 
     if (!LoginDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to database");
+        sLog.outError("Can't connect to database");
         return false;
     }
 

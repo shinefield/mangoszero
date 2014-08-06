@@ -290,8 +290,8 @@ CleanCharacterDB = 1
 #
 #    WorldLogFile
 #        Packet logging file for the world server
-#        Default: "world-packets.log" - recommended name to create a log file
-#                 ""                  - no log file created
+#        Default: ""                  - no log file created
+#                 "world-packets.log" - recommended name to create a log file
 #
 #    WorldLogTimestamp
 #        Logfile with timestamp of server start in name
@@ -380,7 +380,7 @@ LogFilter_PlayerStats = 0
 LogFilter_Damage = 0
 LogFilter_Combat = 0
 LogFilter_SpellCast = 0
-WorldLogFile = "world-packets.log"
+WorldLogFile = ""
 WorldLogTimestamp = 0
 DBErrorLogFile = "database-errors.log"
 ElunaErrorLogFile = "eluna-errors.log"
@@ -403,36 +403,15 @@ LogColors = "13 7 11 9"
 #
 #    RealmZone
 #        Server realm zone (set allowed alphabet in character names, etc.). See also Strict*Names options.
-#
-#    1 Development    - any language (Default)
-#    2 United States  - extended-Latin
-#    3 Oceanic        - extended-Latin
-#    4 Latin America  - extended-Latin
-#    5 Tournament     - basic-Latin at create, any at login
-#    6 Korea          - East-Asian
-#    7 Tournament     - basic-Latin at create, any at login
-#    8 English        - extended-Latin
-#    9 German         - extended-Latin
-#    10 French        - extended-Latin
-#    11 Spanish       - extended-Latin
-#    12 Russian       - Cyrillic
-#    13 Tournament    - basic-Latin at create, any at login
-#    14 Taiwan        - East-Asian
-#    15 Tournament    - basic-Latin at create, any at login
-#    16 China         - East-Asian
-#    17 CN1           - basic-Latin at create, any at login
-#    18 CN2           - basic-Latin at create, any at login
-#    19 CN3           - basic-Latin at create, any at login
-#    20 CN4           - basic-Latin at create, any at login
-#    21 CN5           - basic-Latin at create, any at login
-#    22 CN6           - basic-Latin at create, any at login
-#    23 CN7           - basic-Latin at create, any at login
-#    24 CN8           - basic-Latin at create, any at login
-#    25 Tournament    - basic-Latin at create, any at login
-#    26 Test Server   - any language
-#    27 Tournament    - basic-Latin at create, any at login
-#    28 QA Server     - any language
-#    29 CN9           - basic-Latin at create, any at login
+#        1      - United States (default)
+#        2      - Korea
+#        3      - English
+#        3      - German
+#        3      - French
+#        4      - Taiwan
+#        5      - China
+#        99     - Test Server
+#        101    - QA Server
 #
 #    DBC.Locale
 #        DBC Language Settings
@@ -442,29 +421,29 @@ LogColors = "13 7 11 9"
 #    StrictPlayerNames
 #        Limit player name to language specific symbols set, not allow create characters, and set rename request and disconnect at not allowed symbols name
 #        Default: 0 disable (but limited server time zone dependent client check)
-#                 1 basic latin characters  (strict)
+#                 1 basic Latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
 #                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server time zone specific
+#                 3 basic Latin characters + server time zone specific
 #
 #    StrictCharterNames
 #        Limit guild team charter names to language specific symbols set, not allow create charters with not allowed symbols in name
 #        Default: 0 disable
-#                 1 basic latin characters  (strict)
+#                 1 basic Latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
 #                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server time zone specific
+#                 3 basic Latin characters + server time zone specific
 #
 #    StrictPetNames
 #        Limit pet names to language specific symbols set
 #        Default: 0 disable
-#                 1 basic latin characters  (strict)
+#                 1 basic Latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
 #                   Note: In any case if you want correctly see character name at client this client must have appropriate fonts
 #                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
-#                 3 basic latin characters + server time zone specific
+#                 3 basic Latin characters + server time zone specific
 #
 #    MinPlayerName
 #        Minimal name length (1..12)
@@ -534,7 +513,7 @@ LogColors = "13 7 11 9"
 #        Default: 3 (Wednesday in EU)
 #
 #    InstantLogout
-#        Enable or disable instant logout for security level (0..4) or high (NOT in combat/while duelling/while falling)
+#        Enable or disable instant logout for security level (0..4) or high (NOT in combat/while dueling/while falling)
 #        Default: 1 (Mods/GMs/Admins)
 #
 #    AllFlightPaths
@@ -543,7 +522,7 @@ LogColors = "13 7 11 9"
 #                 1 (false)
 #
 #    AlwaysMaxSkillForLevel
-#        Players will automatically gain max level dependent (weapon/defence) skill when logging in, levelling up etc.
+#        Players will automatically gain max level dependent (weapon/defense) skill when logging in, leveling up etc.
 #        Default: 0 (false)
 #                 1 (true)
 #
@@ -668,7 +647,7 @@ LogColors = "13 7 11 9"
 #
 #    MassMailer.SendPerTick
 #        Max amount mail send each tick from mails list scheduled for mass mailer processing.
-#        More mails increase server load but speed-up mass mail process. Normal tick length: 50 msecs, so 20 ticks in sec and 200 mails in sec by default.
+#        More mails increase server load but speed-up mass mail process. Normal tick length: 50 milliseconds, so 20 ticks in sec and 200 mails in sec by default.
 #        Default: 10
 #
 #    PetUnsummonAtMount
@@ -795,7 +774,7 @@ PlayerCommands = 1
 #                 1 (Allowed)
 #
 #    TalentsInspecting
-#        Allow other players see character talents in inspect dialogue (Characters in Gamemaster mode can
+#        Allow other players see character talents in inspect dialog (Characters in Gamemaster mode can
 #        inspect talents always)
 #        Default: 1 (allow)
 #                 0 (not allow)
@@ -969,7 +948,7 @@ GuidReserveSize.GameObject = 100
 #        Default: 0 (disable link checking)
 #                 1 (check if only valid pipe commands are used. This prevents posting pictures for example)
 #                 2 (verify that pipe commands are used in a correct order)
-#                 3 (check if colour, entry and name don't contradict each other. For correct work, please assure
+#                 3 (check if color, entry and name don't contradict each other. For correct work, please assure
 #                    that you have extracted locale DBCs of every language specific client playing on this server.)
 #
 #    ChatStrictLinkChecking.Kick
@@ -1098,7 +1077,7 @@ GM.InvisibleAura         = 31748
 #    Visibility.Distance.Instances
 #    Visibility.Distance.BG
 #        Visibility distance for different in-game object in different maps.
-#        Visibility on continents on offy ~90 yards. In BG ~180. For instances default ~120.
+#        Visibility on continents on official ~90 yards. In BG ~180. For instances default ~120.
 #        Max limited by active player zone: ~ 333
 #        Min limit is max aggro radius (45) * Rate.Creature.Aggro
 #
@@ -1107,14 +1086,14 @@ GM.InvisibleAura         = 31748
 #        Min limit is 0 (not show any objects)
 #
 #    Visibility.Distance.Grey.Unit
-#        Visibility grey distance for creatures/players (fast changing objects)
+#        Visibility gray distance for creatures/players (fast changing objects)
 #        addition to appropriate object type Visibility.Distance.* use in case visibility removing to
 #        object (except corpse around distances) If D is distance and G is grey distance then object
 #        make visible if distance to it <= D but make non visible if distance > D+G
 #        Default: 1 (yard)
 #
 #    Visibility.Distance.Grey.Object
-#        Visibility grey distance for dynobjects/gameobjects/corpses/creature bodies
+#        Visibility gray distance for dynobjects/gameobjects/corpses/creature bodies
 #        Default: 10 (yards)
 #
 #    Visibility.RelocationLowerLimit
@@ -1207,7 +1186,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #         Default: 1
 #
 #    Rate.Reputation.LowLevel.Kill
-#         Reputation Gain form low level kill (grey creature)
+#         Reputation Gain form low level kill (gray creature)
 #         Default: 0.2
 #
 #    Rate.Reputation.LowLevel.Quest
@@ -1222,7 +1201,7 @@ Visibility.AIRelocationNotifyDelay = 1000
 #    SkillGain.Defense
 #    SkillGain.Gathering
 #    SkillGain.Weapon
-#         crafting/defence/gathering/weapon skills gain at skill grow (1,2,...)
+#         crafting/defense/gathering/weapon skills gain at skill grow (1,2,...)
 #         Default: 1
 #
 #    SkillChance.Orange
@@ -1258,8 +1237,8 @@ Visibility.AIRelocationNotifyDelay = 1000
 #         Default: 0.5 (100/0.5 = 200) Each 200 damage apply one from 19 possible equipped items
 #
 #    DurabilityLossChance.Absorb
-#         Chance lost one from armour items durability point at damage absorb.
-#         Default: 0.5 (100/0.5 = 200) Each 200 absorbs apply one from 15 possible armour equipped items
+#         Chance lost one from armor items durability point at damage absorb.
+#         Default: 0.5 (100/0.5 = 200) Each 200 absorbs apply one from 15 possible armor equipped items
 #
 #    DurabilityLossChance.Parry
 #         Chance lost weapon durability point at parry.
@@ -1419,7 +1398,7 @@ OutdoorPvp.EPEnabled = 1
 #         Default: 1
 #
 #    Network.OutKBuff
-#         The size of the output kernel buffer used ( SO_SNDBUF socket option, tcp manual ).
+#         The size of the output kernel buffer used ( SO_SNDBUF socket option, TCP manual ).
 #         Default: -1 (Use system default setting)
 #
 #    Network.OutUBuff
@@ -1514,7 +1493,7 @@ SOAP.Port = 7878
 
 ###################################################################################################################
 #    CharDelete.Method
-#        Character deletion behaviour
+#        Character deletion behavior
 #        Default: 0  - Completely remove the character from the database
 #                 1  - Unlinking, the character gets unlinked from the account,
 #                      the name gets freed up and appears as deleted in-game

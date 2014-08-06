@@ -287,7 +287,6 @@ int Master::Run()
 
         bool Prio = sConfig.GetBoolDefault("ProcessPriority", false);
 
-//        if(Prio && (m_ServiceStatus == -1)/* need set to default process priority class in service mode*/)
         if (Prio)
         {
             if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
@@ -333,10 +332,10 @@ int Master::Run()
 
     if (sWorldSocketMgr->StartNetwork(wsport, bind_ip) == -1)
     {
+        // go down and shutdown the server
         sLog.outError("Failed to start network");
         Log::WaitBeforeContinueIfNeed();
         World::StopNow(ERROR_EXIT_CODE);
-        // go down and shutdown the server
     }
 
     sWorldSocketMgr->Wait();
@@ -455,7 +454,7 @@ bool Master::_StartDB()
     }
     sLog.outString("World Database total connections: %i", nConnections + 1);
 
-    ///- Initialise the world database
+    ///- Initialize the world database
     if (!WorldDatabase.Initialize(dbstring.c_str(), nConnections))
     {
         sLog.outError("Cannot connect to world database %s", dbstring.c_str());
@@ -481,7 +480,7 @@ bool Master::_StartDB()
     }
     sLog.outString("Character Database total connections: %i", nConnections + 1);
 
-    ///- Initialise the Character database
+    ///- Initialize the Character database
     if (!CharacterDatabase.Initialize(dbstring.c_str(), nConnections))
     {
         sLog.outError("Cannot connect to Character database %s", dbstring.c_str());
@@ -512,7 +511,7 @@ bool Master::_StartDB()
         return false;
     }
 
-    ///- Initialise the login database
+    ///- Initialize the login database
     sLog.outString("Login Database total connections: %i", nConnections + 1);
     if (!LoginDatabase.Initialize(dbstring.c_str(), nConnections))
     {

@@ -573,7 +573,7 @@ bool ChatHandler::HandleServerLogLevelCommand(char* args)
 /// @}
 
 #ifdef linux
-// Non-blocking keypress detector, when return pressed, return 1, else always return 0
+// Non-blocking key press detector, when return pressed, return 1, else always return 0
 int kb_hit_return()
 {
     struct timeval tv;
@@ -590,7 +590,7 @@ int kb_hit_return()
 /// %Thread start
 void CliRunnable::run()
 {
-    ///- Init new SQL thread for the world database (one connection call enough)
+    ///- Initialize new SQL thread for the world database (one connection call enough)
     WorldDatabase.ThreadStart();                            // let thread do safe mySQL requests
 
     char commandbuf[256];
@@ -611,7 +611,7 @@ void CliRunnable::run()
         fflush(stdout);
 #ifdef linux
         while (!kb_hit_return() && !World::IsStopped())
-            // With this, we limit CLI to 10commands/second
+            // With this, we limit CLI to 10 commands/second
             usleep(100);
         if (World::IsStopped())
             break;
@@ -634,7 +634,7 @@ void CliRunnable::run()
             }
 
             std::string command;
-            if (!consoleToUtf8(command_str, command))       // convert from console encoding to utf8
+            if (!consoleToUtf8(command_str, command))       // convert from console encoding to UTF8
             {
                 printf("mangos>");
                 continue;

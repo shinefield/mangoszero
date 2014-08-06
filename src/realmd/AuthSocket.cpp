@@ -52,7 +52,7 @@ enum AccountFlags
     ACCOUNT_FLAG_PROPASS    = 0x00800000,
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack(N) syntax and old GCC version not support pack(push,N), also any GCC version not support it at some platform
 #if defined( __GNUC__ )
 #pragma pack(1)
 #else
@@ -158,7 +158,7 @@ typedef struct AuthHandler
     bool (AuthSocket::*handler)(void);
 } AuthHandler;
 
-// GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack() syntax and old GCC version not support pack(pop), also any GCC version not support it at some platform
 #if defined( __GNUC__ )
 #pragma pack()
 #else
@@ -399,7 +399,7 @@ bool AuthSocket::_HandleLogonChallenge()
         {
             ///- If the IP is 'locked', check that the player comes indeed from the correct IP address
             bool locked = false;
-            if ((*result)[2].GetUInt8() == 1)               // if ip is locked
+            if ((*result)[2].GetUInt8() == 1)               // if IP is locked
             {
                 DEBUG_LOG("[AuthChallenge] Account '%s' is locked to IP - '%s'", _login.c_str(), (*result)[3].GetString());
                 DEBUG_LOG("[AuthChallenge] Player address is '%s'", get_remote_address().c_str());
@@ -541,7 +541,7 @@ bool AuthSocket::_HandleLogonProof()
         if (this->patch_ != ACE_INVALID_HANDLE)
             return false;
 
-        ///- Check if we have the apropriate patch on the disk
+        ///- Check if we have the appropriate patch on the disk
         // file looks like: 65535enGB.mpq
         char tmp[64];
 

@@ -67,8 +67,8 @@ ConfVersion=2010062001
 #        Color for messages (format "normal_color details_color debug_color error_color)
 #        Colors: 0 - BLACK, 1 - RED, 2 - GREEN,  3 - BROWN, 4 - BLUE, 5 - MAGENTA, 6 -  CYAN, 7 - GREY,
 #                8 - YELLOW, 9 - LRED, 10 - LGREEN, 11 - LBLUE, 12 - LMAGENTA, 13 - LCYAN, 14 - WHITE
-#        Default: "13 7 11 9" - coloured
-#                 ""          - no colours
+#        Default: "13 7 11 9" - colored
+#                 ""          - no colors
 #
 #    UseProcessors
 #        Used processors mask for multi-processors system (Used only at Windows)
@@ -76,7 +76,7 @@ ConfVersion=2010062001
 #                 number (bitmask value of selected processors)
 #
 #    ProcessPriority
-#        Process proirity setting (Used only at Windows)
+#        Process priority setting (Used only at Windows)
 #        Default: 1 (HIGH)
 #                 0 (Normal)
 #
@@ -92,7 +92,7 @@ ConfVersion=2010062001
 #                 0  (Disabled)
 #
 #    WrongPass.MaxCount
-#        Number of login attemps with wrong password before the account or IP is banned
+#        Number of login attempts with wrong password before the account or IP is banned
 #        Default: 0  (Never ban)
 #
 #    WrongPass.BanTime
@@ -106,22 +106,22 @@ ConfVersion=2010062001
 #
 ###################################################################################################################
 
-LoginDatabaseInfo = "127.0.0.1;3306;mangos;mangos;realmd"
-LogsDir = "${CMAKE_INSTALL_PREFIX}/logs/${APPLICATION_NAME}"
-MaxPingTime = 30
-RealmServerPort = 3724
-BindIP = "0.0.0.0"
-PidFile = ""
-LogLevel = 0
-LogTime = 0
-LogFile = "realm-server.log"
-LogTimestamp = 0
-LogFileLevel = 0
-LogColors = "13 7 11 9"
-UseProcessors = 0
-ProcessPriority = 1
-WaitAtStartupError = 0
+LoginDatabaseInfo      = "127.0.0.1;3306;mangos;mangos;realmd"
+LogsDir                = "${CMAKE_INSTALL_PREFIX}/logs/${APPLICATION_NAME}"
+MaxPingTime            = 30
+RealmServerPort        = 3724
+BindIP                 = "0.0.0.0"
+PidFile                = ""
+LogLevel               = 0
+LogTime                = 0
+LogFile                = "realm-server.log"
+LogTimestamp           = 0
+LogFileLevel           = 0
+LogColors              = "13 7 11 9"
+UseProcessors          = 0
+ProcessPriority        = 1
+WaitAtStartupError     = 0
 RealmsStateUpdateDelay = 20
-WrongPass.MaxCount = 0
-WrongPass.BanTime = 600
-WrongPass.BanType = 0
+WrongPass.MaxCount     = 0
+WrongPass.BanTime      = 600
+WrongPass.BanType      = 0

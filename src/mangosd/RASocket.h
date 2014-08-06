@@ -82,15 +82,15 @@ class RASocket: protected RAHandler
 
         uint32 accId;
         AccountTypes accAccessLevel;
-        bool bSecure;                                       // kick on wrong pass, non exist. user OR user with no priv
-        // will protect from DOS, bruteforce attacks
-        bool bStricted;                                     // not allow execute console only commands (SEC_CONSOLE) remotly
+        bool bSecure;                                       // kick on wrong pass, non exist. user OR user with no privilege
+                                                            // will protect from DOS, brute force attacks
+        bool bStricted;                                     // not allow execute console only commands (SEC_CONSOLE) remotely
         AccountTypes iMinLevel;
         enum
         {
             NONE,                                           // initial value
             LG,                                             // only login was entered
-            OK,                                             // both login and pass were given, they were correct and user has enough priv.
+            OK,                                             // both login and pass were given, they were correct and user has sufficient privileges
         } stage;
 
         static void zprint(void* callbackArg, const char* szText);

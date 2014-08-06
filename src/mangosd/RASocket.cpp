@@ -43,7 +43,7 @@ RASocket::RASocket()
       outputBufferLen(0),
       stage(NONE)
 {
-    ///- Get the config parameters
+    ///- Get the configuration parameters
     bSecure = sConfig.GetBoolDefault("RA.Secure", true);
     bStricted = sConfig.GetBoolDefault("RA.Stricted", false);
     iMinLevel = AccountTypes(sConfig.GetIntDefault("RA.MinLevel", SEC_ADMINISTRATOR));
@@ -183,7 +183,7 @@ int RASocket::handle_input(ACE_HANDLE)
         inputBufferLen = 0;
         switch (stage)
         {
-                /// <ul> <li> If the input is '<username>'
+            /// If the input is '<username>'
             case NONE:
             {
                 std::string szLogin = inputBuffer;
@@ -207,7 +207,7 @@ int RASocket::handle_input(ACE_HANDLE)
 
                 accAccessLevel = sAccountMgr.GetSecurity(accId);
 
-                ///- if gmlevel is too low, deny access
+                ///- if access level is too low, deny access
                 if (accAccessLevel < iMinLevel)
                 {
                     sendf("-Not enough privileges.\r\n");
@@ -222,7 +222,7 @@ int RASocket::handle_input(ACE_HANDLE)
                     break;
                 }
 
-                ///- allow by remotely connected admin use console level commands dependent from config setting
+                ///- allow by remotely connected admin use console level commands dependent from configuration setting
                 if (accAccessLevel >= SEC_ADMINISTRATOR && !bStricted)
                     accAccessLevel = SEC_CONSOLE;
 
@@ -230,10 +230,10 @@ int RASocket::handle_input(ACE_HANDLE)
                 sendf(sObjectMgr.GetMangosStringForDBCLocale(LANG_RA_PASS));
                 break;
             }
-            ///<li> If the input is '<password>' (and the user already gave his username)
+            /// If the input is '<password>' (and the user already gave his username)
             case LG:
             {
-                // login+pass ok
+                // login + password okay
                 std::string pw = inputBuffer;
 
                 if (sAccountMgr.CheckPassword(accId, pw))
@@ -259,7 +259,7 @@ int RASocket::handle_input(ACE_HANDLE)
                 }
                 break;
             }
-            ///<li> If user is logged, parse and execute the command
+            /// If user is logged, parse and execute the command
             case OK:
                 if (strlen(inputBuffer))
                 {
@@ -276,10 +276,11 @@ int RASocket::handle_input(ACE_HANDLE)
                 else
                     sendf("mangos>");
                 break;
-                ///</ul>
+                ///
         };
     }
-    // no enter yet? wait for next input...
+
+    // wait for next input...
     return 0;
 }
 
