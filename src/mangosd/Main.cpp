@@ -196,6 +196,18 @@ extern int main(int argc, char** argv)
                   );
     sLog.outString("Using configuration file %s.", cfg_file);
 
+    ///- Check the version of the configuration file
+    uint32 confVersion = sConfig.GetIntDefault("ConfVersion", 0);
+    if (confVersion < _MANGOSDCONFVERSION)
+    {
+        sLog.outError("*****************************************************************************");
+        sLog.outError(" WARNING: Your configuration is outdated.");
+        sLog.outError("          Please check for updates, as your current default values may cause");
+        sLog.outError("          strange behavior.");
+        sLog.outError("*****************************************************************************");
+        Log::WaitBeforeContinueIfNeed();
+    }
+
     DETAIL_LOG("%s (Library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));
     if (SSLeay() < 0x009080bfL)
     {
