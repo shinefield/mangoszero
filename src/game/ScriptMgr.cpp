@@ -682,7 +682,16 @@ void ScriptMgr::LoadScripts(ScriptMapMapName& scripts, const char* tablename)
                 }
                 break;
             }
-            case SCRIPT_COMMAND_TURN_TO:                    // 35
+            case SCRIPT_COMMAND_SEND_AI_EVENT_AROUND:       // 35
+            {
+                if (tmp.sendAIEvent.eventType >= MAXIMAL_AI_EVENT_EVENTAI)
+                {
+                    sLog.outErrorDb("Table `%s` has invalid AI event (datalong = %u) in SCRIPT_COMMAND_SEND_AI_EVENT for script id %u", tablename, tmp.sendAIEvent.eventType, tmp.id);
+                    continue;
+                }
+                break;
+            }
+            case SCRIPT_COMMAND_TURN_TO:                    // 36
                 break;
             default:
             {
@@ -1794,7 +1803,17 @@ bool ScriptAction::HandleScriptStep()
             }
             return terminateResult;
         }
-        case SCRIPT_COMMAND_TURN_TO:                        // 35
+        case SCRIPT_COMMAND_SEND_AI_EVENT_AROUND:           // 35
+        {
+            if (LogIfNotCreature(pSource))
+                return false;
+            if (LogIfNotUnit(pTarget))
+                break;
+
+            ((Creature*)pSource)->AI()->SendAIEventAround(AIEventType(m_script->sendAIEvent.eventType), (Unit*)pTarget, 0, float(m_script->sendAIEvent.radius));
+            break;
+        }
+        case SCRIPT_COMMAND_TURN_TO:                        // 36
         {
             if (LogIfNotUnit(pSource))
                 break;

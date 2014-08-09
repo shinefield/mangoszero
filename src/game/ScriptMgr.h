@@ -108,7 +108,10 @@ enum ScriptCommand                                          // resSource, resTar
     SCRIPT_COMMAND_JOIN_LFG                 = 33,           // datalong = zoneId;
     SCRIPT_COMMAND_TERMINATE_COND           = 34,           // datalong = condition_id, datalong2 = if != 0 then quest_id of quest that will be failed for player's group if the script is terminated
                                                             // data_flags & SCRIPT_FLAG_COMMAND_ADDITIONAL terminate when condition is false ELSE terminate when condition is true
-    SCRIPT_COMMAND_TURN_TO                  = 35,           // resSource = Unit, resTarget = Unit/none
+    SCRIPT_COMMAND_SEND_AI_EVENT_AROUND     = 35,           // resSource = Creature, resTarget = Unit
+                                                            // datalong = AIEventType
+                                                            // datalong2 = radius
+    SCRIPT_COMMAND_TURN_TO                  = 36,           // resSource = Unit, resTarget = Unit/none
 };
 
 #define MAX_TEXT_ID 4                                       // used for SCRIPT_COMMAND_TALK
@@ -336,7 +339,13 @@ struct ScriptInfo
             uint32 data[2];
         } raw;
 
-        struct                                              // SCRIPT_COMMAND_TURN_TO (35)
+        struct                                              // SCRIPT_COMMAND_SEND_AI_EVENT_AROUND (35)
+        {
+            uint32 eventType;                               // datalong
+            uint32 radius;                                  // datalong2
+        } sendAIEvent;
+
+        struct                                              // SCRIPT_COMMAND_TURN_TO (36)
         {
             uint32 targetId;                                // datalong
             uint32 empty1;                                  // datalong2
