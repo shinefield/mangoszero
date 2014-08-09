@@ -551,7 +551,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
             // Magic Absorption
             if (dummySpell->SpellIconID == 459)             // only this spell have SpellIconID == 459 and dummy aura
             {
-                if (getPowerType() != POWER_MANA)
+                if (GetPowerType() != POWER_MANA)
                     return SPELL_AURA_PROC_FAILED;
 
                 // mana reward
@@ -1395,7 +1395,7 @@ SpellAuraProcResult Unit::HandleOverrideClassScriptAuraProc(Unit* pVictim, uint3
             if (!roll_chance_i(50))
                 return SPELL_AURA_PROC_FAILED;
 
-            switch (pVictim->getPowerType())
+            switch (pVictim->GetPowerType())
             {
                 case POWER_MANA:
                     triggered_spell_id = 28722;

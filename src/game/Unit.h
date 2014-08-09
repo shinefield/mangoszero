@@ -1432,14 +1432,14 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
         void SetHealthPercent(float percent);
         int32 ModifyHealth(int32 val);
 
-        Powers getPowerType() const
+        Powers GetPowerType() const
         {
             return Powers(GetByteValue(UNIT_FIELD_BYTES_0, 3));
         }
-        void setPowerType(Powers power);
+        void SetPowerType(Powers power);
         uint32 GetPower(Powers power) const
         {
-            return GetUInt32Value(UNIT_FIELD_POWER1   + power);
+            return GetUInt32Value(UNIT_FIELD_POWER1 + power);
         }
         uint32 GetMaxPower(Powers power) const
         {
