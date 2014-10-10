@@ -52,6 +52,7 @@ extern int m_ServiceStatus;
 #include "World.h"
 #include "MassMailMgr.h"
 #include "DBCStores.h"
+#include "LuaEngine.h"
 #include "CliRunnable.h"
 #include "RASocket.h"
 #ifdef ENABLE_SOAP
@@ -338,7 +339,13 @@ int Master::Run()
         World::StopNow(ERROR_EXIT_CODE);
     }
 
+    ///- Used by Eluna
+    sEluna->OnStartup();
+
     sWorldSocketMgr->Wait();
+
+    ///- Used by Eluna
+    sEluna->OnShutdown();
 
     ///- Stop freeze protection before shutdown tasks
     if (freeze_thread)

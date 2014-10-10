@@ -4,32 +4,40 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_UTIL
-#define ELUNA_H_UTIL
+#ifndef _ELUNA_UTIL_H
+#define _ELUNA_UTIL_H
 
 #include "Common.h"
 #include "SharedDefines.h"
+#include "ObjectGuid.h"
 #ifdef TRINITY
+#include "QueryResult.h"
 #ifdef CATA
 #include "Object.h"
 #endif
 #else
-#include "ObjectGuid.h"
+#include "database/QueryResult.h"
+#endif
+
+// Some dummy includes containing BOOST_VERSION:
+// ObjectAccessor.h Config.h Log.h
+#ifdef BOOST_VERSION
+#define USING_BOOST
+#endif
+
+#ifdef USING_BOOST
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #endif
 
 #ifdef TRINITY
-#ifndef CATA
-typedef uint64 ObjectGuid;
-#endif
+typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
 #define GET_GUID                GetGUID
 #else
-#define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
-#define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
-#define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
-#define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
+typedef QueryNamedResult ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT
 #define ELUNA_LOG_INFO(...)     sLog.outString(__VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    sLog.outErrorEluna(__VA_ARGS__);
@@ -41,7 +49,25 @@ typedef uint64 ObjectGuid;
 #endif
 
 #ifndef UNORDERED_MAP
+#include <unordered_map>
 #define UNORDERED_MAP std::unordered_map
+#endif
+#ifndef UNORDERED_SET
+#include <unordered_set>
+#define UNORDERED_SET std::unordered_set
+#endif
+
+#ifndef MAKE_NEW_GUID
+#define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
+#endif
+#ifndef GUID_ENPART
+#define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
+#endif
+#ifndef GUID_LOPART
+#define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
+#endif
+#ifndef GUID_HIPART
+#define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
 #endif
 
 class Unit;
@@ -88,8 +114,35 @@ namespace ElunaUtil
         uint16 i_typeMask;
         uint32 i_entry;
         uint32 i_hostile;
+    };
 
-        WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
+    /*
+     * Usage:
+     * Inherit this class, then when needing lock, use
+     * ReadGuard lock(_lock);
+     * or
+     * WriteGuard lock(_lock);
+     *
+     * The lock is automatically released at end of scope
+     */
+    class RWLockable
+    {
+    public:
+
+#ifdef USING_BOOST
+        typedef boost::shared_mutex LockType;
+        typedef boost::shared_lock<boost::shared_mutex> ReadGuard;
+        typedef boost::unique_lock<boost::shared_mutex> WriteGuard;
+#else
+        typedef ACE_RW_Thread_Mutex LockType;
+        typedef ACE_Read_Guard<LockType> ReadGuard;
+        typedef ACE_Write_Guard<LockType> WriteGuard;
+#endif
+
+        LockType& GetLock() { return _lock; }
+
+    private:
+        LockType _lock;
     };
 };
 

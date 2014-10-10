@@ -26,7 +26,7 @@ extern "C"
 #include "GroupMethods.h"
 #include "GuildMethods.h"
 #include "GameObjectMethods.h"
-#include "QueryMethods.h"
+#include "ElunaQueryMethods.h"
 #include "AuraMethods.h"
 #include "ItemMethods.h"
 #include "WorldPacketMethods.h"
@@ -36,6 +36,7 @@ extern "C"
 #include "CorpseMethods.h"
 #include "WeatherMethods.h"
 #include "VehicleMethods.h"
+#include "BattleGroundMethods.h"
 
 void RegisterGlobals(lua_State* L)
 {
@@ -52,68 +53,69 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent);                           // RegisterItemEvent(entry, event, function)
     lua_register(L, "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent);               // RegisterItemGossipEvent(entry, event, function)
     lua_register(L, "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent);           // RegisterPlayerGossipEvent(menu_id, event, function)
+    lua_register(L, "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent);                               // RegisterBGEvent(event, function)
 
     // Getters
-    lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
-    lua_register(L, "GetCoreName", &LuaGlobalFunctions::GetCoreName);                                       // GetCoreName() - Returns core name
-    lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);                                 // GetCoreVersion() - Returns core version string
-    lua_register(L, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion);                             // GetCoreExpansion() - Returns core expansion number (0 for classic, 1 for tbc, 2 for wotlk, 3 for cata), returns nil if not found.
-    lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);                                             // GetQuest(questId) - Returns quest object
-    lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);                               // GetPlayerByGUID(guid) - Returns player object by GUID
-    lua_register(L, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName);                               // GetPlayerByName(name) - Returns player object by player name
-    lua_register(L, "GetGameTime", &LuaGlobalFunctions::GetGameTime);                                       // GetGameTime() - Returns game time
-    lua_register(L, "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld);                           // GetPlayersInWorld([team, onlyGM]) - Returns a table with all player objects. Team can be 0 for ally, 1 for horde and 2 for neutral
-    lua_register(L, "GetPlayersInMap", &LuaGlobalFunctions::GetPlayersInMap);                               // GetPlayersInWorld(mapId[, instanceId, team]) - Returns a table with all player objects in map. Team can be 0 for ally, 1 for horde and 2 for neutral
-    lua_register(L, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName);                                 // GetGuildByName(name) - Returns guild object by the guild name
-    lua_register(L, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID);                     // GetGuildByLeaderGUID(guid) - Returns guild by it's leader's guid
-    lua_register(L, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount);                                 // GetPlayerCount() - Returns the server's player count
-    lua_register(L, "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID);                                   // GetPlayerGUID(lowguid) - Generates GUID (uint64) string from player lowguid UNDOCUMENTED
-    lua_register(L, "GetItemGUID", &LuaGlobalFunctions::GetItemGUID);                                       // GetItemGUID(lowguid) - Generates GUID (uint64) string from item lowguid UNDOCUMENTED
-    lua_register(L, "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID);                                   // GetObjectGUID(lowguid, entry) - Generates GUID (uint64) string from gameobject lowguid and entry UNDOCUMENTED
-    lua_register(L, "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID);                                       // GetUnitGUID(lowguid, entry) - Generates GUID (uint64) string from unit (creature) lowguid and entry UNDOCUMENTED
-    lua_register(L, "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow);                                         // GetGUIDLow(guid) - Returns GUIDLow (uint32) from guid (uint64 as string) UNDOCUMENTED
-    lua_register(L, "GetGUIDType", &LuaGlobalFunctions::GetGUIDType);                                       // GetGUIDType(guid) - Returns Type (uint32) from guid (uint64 as string) UNDOCUMENTED
-    lua_register(L, "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry);                                     // GetGUIDEntry(guid) - Returns Entry (uint32) from guid (uint64 as string), may be always 0 UNDOCUMENTED
-    lua_register(L, "GetAreaName", &LuaGlobalFunctions::GetAreaName);                                       // GetAreaName(area or zone ID[, locale]) - Returns area or zone (string) name by area or zone ID. Locale is optional (Default = 0 (enUS))
-    lua_register(L, "bit_not", &LuaGlobalFunctions::bit_not);                                               // bit_not(a) - Returns ~a UNDOCUMENTED
-    lua_register(L, "bit_xor", &LuaGlobalFunctions::bit_xor);                                               // bit_xor(a, b) - Returns a ^ b UNDOCUMENTED
-    lua_register(L, "bit_rshift", &LuaGlobalFunctions::bit_rshift);                                         // bit_rshift(a, b) - Returns a >> b UNDOCUMENTED
-    lua_register(L, "bit_lshift", &LuaGlobalFunctions::bit_lshift);                                         // bit_lshift(a, b) - Returns a << b UNDOCUMENTED
-    lua_register(L, "bit_or", &LuaGlobalFunctions::bit_or);                                                 // bit_or(a, b) - Returns a | b UNDOCUMENTED
-    lua_register(L, "bit_and", &LuaGlobalFunctions::bit_and);                                               // bit_and(a, b) - Returns a & b UNDOCUMENTED
-    lua_register(L, "GetItemLink", &LuaGlobalFunctions::GetItemLink);                                       // GetItemLink(entry[, localeIndex]) - Returns the shift clickable link of the item. Item name translated if translate available for provided locale index UNDOCUMENTED
-    lua_register(L, "GetMapById", &LuaGlobalFunctions::GetMapById);                                         // GetMapById(mapId, instance) - Returns map object of id specified. UNDOCUMENTED
+    lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);
+    lua_register(L, "GetCoreName", &LuaGlobalFunctions::GetCoreName);
+    lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);
+    lua_register(L, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion);
+    lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);
+    lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);
+    lua_register(L, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName);
+    lua_register(L, "GetGameTime", &LuaGlobalFunctions::GetGameTime);
+    lua_register(L, "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld);
+    lua_register(L, "GetPlayersInMap", &LuaGlobalFunctions::GetPlayersInMap);
+    lua_register(L, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName);
+    lua_register(L, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID);
+    lua_register(L, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount);
+    lua_register(L, "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID);
+    lua_register(L, "GetItemGUID", &LuaGlobalFunctions::GetItemGUID);
+    lua_register(L, "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID);
+    lua_register(L, "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID);
+    lua_register(L, "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow);
+    lua_register(L, "GetGUIDType", &LuaGlobalFunctions::GetGUIDType);
+    lua_register(L, "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry);
+    lua_register(L, "GetAreaName", &LuaGlobalFunctions::GetAreaName);
+    lua_register(L, "bit_not", &LuaGlobalFunctions::bit_not);
+    lua_register(L, "bit_xor", &LuaGlobalFunctions::bit_xor);
+    lua_register(L, "bit_rshift", &LuaGlobalFunctions::bit_rshift);
+    lua_register(L, "bit_lshift", &LuaGlobalFunctions::bit_lshift);
+    lua_register(L, "bit_or", &LuaGlobalFunctions::bit_or);
+    lua_register(L, "bit_and", &LuaGlobalFunctions::bit_and);
+    lua_register(L, "GetItemLink", &LuaGlobalFunctions::GetItemLink);
+    lua_register(L, "GetMapById", &LuaGlobalFunctions::GetMapById);
 
     // Other
-    lua_register(L, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna);                                       // ReloadEluna() - Reload's Eluna engine. Warning! Reloading should be used only for testing.
-    lua_register(L, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage);                             // SendWorldMessage(msg) - Sends a broadcast message to everyone
-    lua_register(L, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery);                                     // WorldDBQuery(sql) - Executes given SQL query to world database instantly and returns a QueryResult object
-    lua_register(L, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute);                                 // WorldDBExecute(sql) - Executes given SQL query to world database (not instant)
-    lua_register(L, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery);                                       // CharDBQuery(sql) - Executes given SQL query to character database instantly and returns a QueryResult object
-    lua_register(L, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute);                                   // CharDBExecute(sql) - Executes given SQL query to character database (not instant)
-    lua_register(L, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery);                                       // AuthDBQuery(sql) - Executes given SQL query to auth/logon database instantly and returns a QueryResult object
-    lua_register(L, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute);                                   // AuthDBExecute(sql) - Executes given SQL query to auth/logon database (not instant)
-    lua_register(L, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent);                                 // CreateLuaEvent(function, delay, calls) - Creates a global timed event. Returns Event ID. Calls set to 0 calls infinitely.
-    lua_register(L, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById);                               // RemoveEventById(eventId, [all_events]) - Removes a global timed event by it's ID. If all_events is true, can remove any timed event by ID (unit, gameobject, global..)
-    lua_register(L, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents);                                     // RemoveEvents([all_events]) - Removes all global timed events. Removes all timed events (unit, gameobject, global) if all_events is true
-    lua_register(L, "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn);                         // PerformIngameSpawn(spawntype, entry, mapid, instanceid, x, y, z, o[, save, DurOrResptime, phase]) - spawntype: 1 Creature, 2 Object. DurOrResptime is respawntime for gameobjects and despawntime for creatures if creature is not saved. Returns spawned creature/gameobject
-    lua_register(L, "CreatePacket", &LuaGlobalFunctions::CreatePacket);                                     // CreatePacket(opcode, size) - Creates a new packet object
-    lua_register(L, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem);                                   // AddVendorItem(entry, itemId, maxcount, incrtime, extendedcost) - Adds an item to vendor entry.
-    lua_register(L, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem);                             // VendorRemoveItem(entry, item) - Removes an item from vendor entry
-    lua_register(L, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems);                     // VendorRemoveAllItems(entry) - Removes all items from vendor entry
-    lua_register(L, "Kick", &LuaGlobalFunctions::Kick);                                                     // Kick(player) - Kicks given player
-    lua_register(L, "Ban", &LuaGlobalFunctions::Ban);                                                       // Ban(banMode(integer), nameOrIP(string), duration(string), reason(string), whoBanned(string)) - Banmode: 0 account, 1 character, 2 IP
-    lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);                                 // SaveAllPlayers() - Saves all players
-    lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);                                             // SendMail(subject, text, receiverLowGUID[, senderLowGUID, stationary, delay, itemEntry, itemAmount, itemEntry2, itemAmount2...]) - Sends a mail to player with lowguid. use nil to use default values on optional arguments. UNDOCUMENTED
-    lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);                                       // AddTaxiPath(pathTable, mountA, mountH[, price, pathId]) - Adds a new taxi path. Returns the path's ID. Will replace an existing path if pathId provided and already used. mountIDs are NPC entries. path table structure: T = {{map, x, y, z[, actionFlag, delay, arrivalEvId, departEvId]}, {...}, ...}
-    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);                                           // AddCorpse(corpse) - Adds the player's corpse to the world. More specifically, the cell.
-    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);                                     // RemoveCorpse(corpse) - Removes the player's corpse from the world.
-    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);                 // ConvertCorpseFromPlayer(guid[, insignia]) - Converts the player's corpse to bones. Adding insignia for PvP is optional (true or false).
-    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);                             // RemoveOldCorpses() - Converts (removes) old corpses that aren't bones.
-    lua_register(L, "FindWeather", &LuaGlobalFunctions::FindWeather);                                       // FindWeather(zoneId) - Finds the weather by zoneId and returns the weather
-    lua_register(L, "AddWeather", &LuaGlobalFunctions::AddWeather);                                         // AddWeather(zoneId) - Adds weather to the following zone, also returns weather
-    lua_register(L, "RemoveWeather", &LuaGlobalFunctions::RemoveWeather);                                   // RemoveWeather(zoneId) - Removes weather from a zone
-    lua_register(L, "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer);               // SendFineWeatherToPlayer(player) - Sends WEATHER_STATE_FINE weather to the
+    lua_register(L, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna);
+    lua_register(L, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage);
+    lua_register(L, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery);
+    lua_register(L, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute);
+    lua_register(L, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery);
+    lua_register(L, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute);
+    lua_register(L, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery);
+    lua_register(L, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute);
+    lua_register(L, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent);
+    lua_register(L, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById);
+    lua_register(L, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents);
+    lua_register(L, "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn);
+    lua_register(L, "CreatePacket", &LuaGlobalFunctions::CreatePacket);
+    lua_register(L, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem);
+    lua_register(L, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem);
+    lua_register(L, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems);
+    lua_register(L, "Kick", &LuaGlobalFunctions::Kick);
+    lua_register(L, "Ban", &LuaGlobalFunctions::Ban);
+    lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);
+    lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);
+    lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);
+    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);
+    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);
+    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);
+    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);
+    lua_register(L, "FindWeather", &LuaGlobalFunctions::FindWeather);
+    lua_register(L, "AddWeather", &LuaGlobalFunctions::AddWeather);
+    lua_register(L, "RemoveWeather", &LuaGlobalFunctions::RemoveWeather);
+    lua_register(L, "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer);
 }
 
 ElunaRegister<Object> ObjectMethods[] =
@@ -181,8 +183,8 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer },            // :GetNearestPlayer([range]) - Returns nearest player in sight or given range.
     { "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject },    // :GetNearestGameObject([range, entry]) - Returns nearest gameobject with given entry in sight or given range entry can be 0 or nil for any.
     { "GetNearestCreature", &LuaWorldObject::GetNearestCreature },        // :GetNearestCreature([range, entry]) - Returns nearest creature with given entry in sight or given range entry can be 0 or nil for any.
-    { "GetNearObject", &LuaWorldObject::GetNearObject },                  // :GetNearObject([nearest, range, typemask, entry, hostile]) - Returns nearest WorldObject or table of objects in given range with given typemask (can contain several types) with given entry if given. Hostile can be 0 for any, 1 hostile, 2 friendly
-    { "GetWorldObject", &LuaWorldObject::GetWorldObject },                // :GetWorldObject(guid) - Returns a world object (creature, player, gameobject) from the guid. The world object returned must be on the same map as the world object in the arguments.
+    { "GetNearObject", &LuaWorldObject::GetNearObject },
+    { "GetNearObjects", &LuaWorldObject::GetNearObjects },
     { "GetDistance", &LuaWorldObject::GetDistance },                      // :GetDistance(WorldObject or x, y, z) - Returns the distance between 2 objects or location
     { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },            // :GetRelativePoint(dist, rad) - Returns the x, y and z of a point dist away from worldobject.
     { "GetAngle", &LuaWorldObject::GetAngle },                            // :GetAngle(WorldObject or x, y) - Returns angle between world object and target or x and y coords.
@@ -191,6 +193,9 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
     { "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
     { "SendPacket", &LuaWorldObject::SendPacket },                        // :SendPacket(packet) - Sends a specified packet to everyone around
+    { "RegisterEvent", &LuaWorldObject::RegisterEvent },
+    { "RemoveEventById", &LuaWorldObject::RemoveEventById },
+    { "RemoveEvents", &LuaWorldObject::RemoveEvents },
 
     { NULL, NULL },
 };
@@ -320,7 +325,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor },   // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
     { "IsVendor", &LuaUnit::IsVendor },                               // :IsVendor() - Returns if the unit is a vendor or not
     { "IsWithinLoS", &LuaUnit::IsWithinLoS },                         // :IsWithinLoS(x, y, z)
-    {"IsRooted", &LuaUnit::IsRooted},                                 // :IsRooted()
+    { "IsRooted", &LuaUnit::IsRooted },                               // :IsRooted()
     { "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
     { "IsStandState", &LuaUnit::IsStandState },                       // :IsStandState() - Returns true if the unit is standing
@@ -329,20 +334,17 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
 
     // Other
-    { "RegisterEvent", &LuaUnit::RegisterEvent },                     // :RegisterEvent(function, delay, repeats) - The timer ticks if this unit is visible to someone. The function is called with arguments (eventid, delay, repeats, unit) after the time has passed if the unit exists. Returns EventId
-    { "RemoveEventById", &LuaUnit::RemoveEventById },                 // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
-    { "RemoveEvents", &LuaUnit::RemoveEvents },                       // :RemoveEvents() - Removes all registered timed events
     { "AddAura", &LuaUnit::AddAura },                                 // :AddAura(spellId, target) - Adds an aura to the specified target
     { "RemoveAura", &LuaUnit::RemoveAura },                           // :RemoveAura(spellId[, casterGUID]) - Removes an aura from the unit by the spellId, casterGUID(Original caster) is optional
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },                   // :RemoveAllAuras() - Removes all the unit's auras
     { "ClearInCombat", &LuaUnit::ClearInCombat },                     // :ClearInCombat() - Clears the unit's combat list (unit will be out of combat), resets the timer to 0, etc
     { "DeMorph", &LuaUnit::DeMorph },                                 // :DeMorph() - Sets display back to native
-    { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },                 // :SendUnitWhisper(msg, receiver[, bossWhisper]) - Sends a whisper to the receiver
+    { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },                 // :SendUnitWhisper(msg, lang, receiver[, bossWhisper]) - Sends a whisper to the receiver
     { "SendUnitEmote", &LuaUnit::SendUnitEmote },                     // :SendUnitEmote(msg[, receiver, bossEmote]) - Sends a text emote
     { "SendUnitSay", &LuaUnit::SendUnitSay },                         // :SendUnitSay(msg, language) - Sends a "Say" message with the specified language (all languages: 0)
     { "SendUnitYell", &LuaUnit::SendUnitYell },                       // :SendUnitYell(msg, language) - Sends a "Yell" message with the specified language (all languages: 0)
     { "CastSpell", &LuaUnit::CastSpell },                             // :CastSpell(target, spellID[, triggered]) - Casts spell on target (player/npc/creature), if triggered is true then instant cast
-    { "CastCustomSpell", &LuaUnit::CastCustomSpell },                 // :CastCustomSpell(&Unit target, uint32 spell, bool triggered = false, int32 bp0 = nil, int32 bp1 = nil, int32 bp2 = nil, &Item castItem = nil, uint64 originalCaster = 0) - Casts spell on target (player/npc/creature), if triggered is true then instant cast. pb0, 1 and 2 are modifiers for the base points of the spell.
+    { "CastCustomSpell", &LuaUnit::CastCustomSpell },                 // :CastCustomSpell([Unit] target, uint32 spell, bool triggered = false, int32 bp0 = nil, int32 bp1 = nil, int32 bp2 = nil, [Item] castItem = nil, uint64 originalCaster = 0) - Casts spell on target (player/npc/creature), if triggered is true then instant cast. pb0, 1 and 2 are modifiers for the base points of the spell.
     { "CastSpellAoF", &LuaUnit::CastSpellAoF },                       // :CastSpellAoF(x, y, z, spellID[, triggered]) - Casts the spell on coordinates, if triggered is false has mana cost and cast time
     { "PlayDirectSound", &LuaUnit::PlayDirectSound },                 // :PlayDirectSound(soundId[, player]) - Unit plays soundID to player, or everyone around if no player
     { "PlayDistanceSound", &LuaUnit::PlayDistanceSound },             // :PlayDistanceSound(soundId[, player]) - Unit plays soundID to player, or everyone around if no player. The sound fades the further you are
@@ -381,6 +383,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "MoveClear", &LuaUnit::MoveClear },                             // :MoveClear([reset])
     { "DealDamage", &LuaUnit::DealDamage },                           // :DealDamage(target, amount[, durabilityloss]) - Deals damage to target, durabilityloss is true by default
     { "DealHeal", &LuaUnit::DealHeal },                               // :DealDamage(target, amount, spell[, critical]) - Heals target by given amount. This will be logged as being healed by spell as critical if true.
+    { "AddThreat", &LuaUnit::AddThreat },
 
     { NULL, NULL },
 };
@@ -609,7 +612,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },                     // :SendAreaTriggerMessage(message) - Sends a yellow message in the middle of your screen
     { "SendNotification", &LuaPlayer::SendNotification },                                 // :SendNotification(message) - Sends a red message in the middle of your screen
     { "SendPacket", &LuaPlayer::SendPacket },                                             // :SendPacket(packet, selfOnly) - Sends a packet to player or everyone around also if selfOnly is false
-    { "SendAddonMessage", &LuaPlayer::SendAddonMessage },                                 // :SendAddonMessage(prefix, message, channel, receiver) - Sends an addon message to the player.
+    { "SendAddonMessage", &LuaPlayer::SendAddonMessage },                                 // :SendAddonMessage(prefix, message, channel, receiver) - Sends an addon message to the player. 
     { "SendVendorWindow", &LuaPlayer::SendVendorWindow },                                 // :SendVendorWindow(unit) - Sends the unit's vendor window to the player
     { "ModifyMoney", &LuaPlayer::ModifyMoney },                                           // :ModifyMoney(amount[, sendError]) - Modifies (does not set) money (copper count) of the player. Amount can be negative to remove copper
     { "LearnSpell", &LuaPlayer::LearnSpell },                                             // :LearnSpell(id) - learns the given spell
@@ -628,7 +631,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "Say", &LuaPlayer::Say },                                                           // :Say(text, lang) - The player says the text
     { "Yell", &LuaPlayer::Yell },                                                         // :Yell(text, lang) - The player yells the text
     { "TextEmote", &LuaPlayer::TextEmote },                                               // :TextEmote(text) - The player does a textemote with the text
-    { "Whisper", &LuaPlayer::Whisper },                                                   // :Whisper(text, lang, receiverGuid) - The player whispers the text to the guid
+    { "Whisper", &LuaPlayer::Whisper },                                                   // :Whisper(text, lang, receiver) - The player whispers the text to the receiver
     { "CompleteQuest", &LuaPlayer::CompleteQuest },                                       // :CompleteQuest(entry) - Completes a quest by entry
     { "IncompleteQuest", &LuaPlayer::IncompleteQuest },                                   // :IncompleteQuest(entry) - Uncompletes the quest by entry for the player
     { "FailQuest", &LuaPlayer::FailQuest },                                               // :FailQuest(entry) - Player fails the quest entry
@@ -706,90 +709,102 @@ ElunaRegister<Player> PlayerMethods[] =
 ElunaRegister<Creature> CreatureMethods[] =
 {
     // Getters
-    { "GetAITarget", &LuaCreature::GetAITarget },                                     // :GetAITarget(type[, playeronly, position, distance, aura]) - Get an unit in threat list. type can be 0 (random), 1 (topaggro), 2 (botaggro), 3 (nearest), 4 (farthest). If for example type 1 is used and position is 4, the 5th top aggro is selected, 0 is the top aggro (default). For random target position means the amount of top targets to choose from. positive distance tells that target should be within given radius, negative means target shouldnt be inside given radius. positive aura means target needs to have the aura, negative means target should not have the aura
-    { "GetAITargets", &LuaCreature::GetAITargets },                                   // :GetAITargets() - Get units in threat list
-    { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },                         // :GetAITargetsCount() - Get threat list size
-    { "GetHomePosition", &LuaCreature::GetHomePosition },                             // :GetHomePosition() - Returns x,y,z,o of spawn position
-    { "GetCorpseDelay", &LuaCreature::GetCorpseDelay },                               // :GetCorpseDelay() - Returns corpse delay
-    { "GetCreatureSpellCooldownDelay", &LuaCreature::GetCreatureSpellCooldownDelay }, // :GetCreatureSpellCooldownDelay(spellId) - Returns spell cooldown delay
-    { "GetScriptId", &LuaCreature::GetScriptId },                                     // :GetScriptId() - Returns creature's script ID
-    { "GetAIName", &LuaCreature::GetAIName },                                         // :GetAIName() - Returns creature's AI name
-    { "GetScriptName", &LuaCreature::GetScriptName },                                 // :GetScriptName() - Returns creature's script name
-    { "GetAttackDistance", &LuaCreature::GetAttackDistance },                         // :GetAttackDistance(unit) - Returns attack distance to unit
-    { "GetAggroRange", &LuaCreature::GetAggroRange },                                 // :GetAggroRange(unit) - Returns aggro distance to unit
-    { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },               // :GetDefaultMovementType() - Returns default movement type
-    { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },                             // :GetRespawnDelay() - Returns respawn delay
-    { "GetRespawnRadius", &LuaCreature::GetRespawnRadius },                           // :GetRespawnRadius() - Returns respawn radius
-    // {"GetWaypointPath", &LuaCreature::GetWaypointPath},                          // :GetWaypointPath() - Returns waypoint path ID
-    // {"GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId},                // :GetCurrentWaypointId() - Returns waypoint ID
-    // {"GetLootMode", &LuaCreature::GetLootMode},                                  // :GetLootMode() - Returns loot mode
-    { "GetLootRecipient", &LuaCreature::GetLootRecipient },                           // :GetLootRecipient() - Returns loot receiver
-    { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },                 // :GetLootRecipientGroup() - Returns loot receiver group
-    { "GetNPCFlags", &LuaCreature::GetNPCFlags },                                     // :GetNPCFlags() - Returns NPC flags
+    { "GetAITarget", &LuaCreature::GetAITarget },
+    { "GetAITargets", &LuaCreature::GetAITargets },
+    { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },
+    { "GetHomePosition", &LuaCreature::GetHomePosition },
+    { "GetCorpseDelay", &LuaCreature::GetCorpseDelay },
+    { "GetCreatureSpellCooldownDelay", &LuaCreature::GetCreatureSpellCooldownDelay },
+    { "GetScriptId", &LuaCreature::GetScriptId },
+    { "GetAIName", &LuaCreature::GetAIName },
+    { "GetScriptName", &LuaCreature::GetScriptName },
+    { "GetAttackDistance", &LuaCreature::GetAttackDistance },
+    { "GetAggroRange", &LuaCreature::GetAggroRange },
+    { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },
+    { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
+    { "GetWanderRadius", &LuaCreature::GetWanderRadius },
+    { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
+#ifdef TRINITY
+    { "GetWaypointPath", &LuaCreature::GetWaypointPath },
+    { "GetLootMode", &LuaCreature::GetLootMode },
+#endif
+    { "GetLootRecipient", &LuaCreature::GetLootRecipient },
+    { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
+    { "GetNPCFlags", &LuaCreature::GetNPCFlags },
 #ifndef CATA
-    { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },                     // :GetShieldBlockValue() - Returns block value
+    { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
 
     // Setters
-    { "SetHover", &LuaCreature::SetHover },                                   // :SetHover([enable]) - Sets hover on or off
-    // {"SetDisableGravity", &LuaCreature::SetDisableGravity},              // :SetDisableGravity([disable, packetOnly]) - Disables or enables gravity
-    { "SetAllowedCombat", &LuaCreature::SetAllowedCombat },                   // :SetAllowedCombat(allow) - Allows the creature to attack or not
-    { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },             // :SetNoCallAssistance([noCall]) - Sets call assistance to false or true
-    { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },         // :SetNoSearchAssistance([noSearch]) - Sets assistance searhing to false or true
-    { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },       // :SetDefaultMovementType(type) - Sets default movement type
-    { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },                     // :SetRespawnDelay(delay) - Sets the respawn delay
-    { "SetRespawnRadius", &LuaCreature::SetRespawnRadius },                   // :SetRespawnRadius(dist) - Sets the respawn radius
-    { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },             // :SetInCombatWithZone() - Sets the creature in combat with everyone in zone
-    { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },   // :SetDisableReputationGain([disable]) - Disables or enables reputation gain from creature
-    // {"SetLootMode", &LuaCreature::SetLootMode},                          // :SetLootMode(lootMode) - Sets the lootmode
-    { "SetNPCFlags", &LuaCreature::SetNPCFlags },                             // :SetNPCFlags(flags) - Sets NPC flags
-    { "SetDeathState", &LuaCreature::SetDeathState },                         // :SetDeathState(value) - 0 = alive 1 = just died 2 = corpse 3 = dead
-    { "SetWalk", &LuaCreature::SetWalk },                                     // :SetWalk([enable]) - If false, creature runs, otherwise walks
+    { "SetHover", &LuaCreature::SetHover },
+    { "SetDisableGravity", &LuaCreature::SetDisableGravity },
+    { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
+    { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },
+    { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },
+    { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },
+    { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },
+    { "SetWanderRadius", &LuaCreature::SetWanderRadius },
+    { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
+    { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
+#ifdef TRINITY
+    { "SetLootMode", &LuaCreature::SetLootMode },
+#endif
+    { "SetNPCFlags", &LuaCreature::SetNPCFlags },
+    { "SetDeathState", &LuaCreature::SetDeathState },
+    { "SetWalk", &LuaCreature::SetWalk },
+    { "SetHomePosition", &LuaCreature::SetHomePosition },
 
     // Booleans
-    { "IsWorldBoss", &LuaCreature::IsWorldBoss },                                                 // :IsWorldBoss() - Returns true if the creature is a WorldBoss, false if not
-    { "IsRacialLeader", &LuaCreature::IsRacialLeader },                                           // :IsRacialLeader() - Returns true if the creature is a racial leader, false if not
-    { "IsCivilian", &LuaCreature::IsCivilian },                                                   // :IsCivilian() - Returns true if the creature is a civilian, false if not
-    // {"IsTrigger", &LuaCreature::IsTrigger},                                                  // :IsTrigger() - Returns true if the creature is a trigger, false if not
-    { "IsGuard", &LuaCreature::IsGuard },                                                         // :IsGuard() - Returns true if the creature is a guard, false if not
-    { "IsElite", &LuaCreature::IsElite },                                                         // :IsElite() - Returns true if the creature is an elite, false if not
-    { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },                                             // :IsInEvadeMode() - Returns true if the creature is in evade mode, false if not
-    { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },                                 // :HasCategoryCooldown(spellId) - Returns true if the creature has a cooldown for the spell's category
-    { "CanWalk", &LuaCreature::CanWalk },                                                         // :CanWalk() - Returns true if the creature can walk
-    { "CanSwim", &LuaCreature::CanSwim },                                                         // :CanSwim() - Returns true if the creature can swim
-    { "IsCombatAllowed", &LuaCreature::IsCombatAllowed },                                         // :IsCombatAllowed() - Returns true if the creature has combat allowed
-    // {"CanStartAttack", &LuaCreature::CanStartAttack},                                        // :CanStartAttack(unit[, force]) - Returns true if the creature can attack the unit
-    { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },                             // :HasSearchedAssistance() - Returns true if the creature has searched assistance
-    { "IsTappedBy", &LuaCreature::IsTappedBy },                                                   // :IsTappedBy(player)
-    { "HasLootRecipient", &LuaCreature::HasLootRecipient },                                       // :HasLootRecipient() - Returns true if the creature has a loot recipient
-    { "CanAssistTo", &LuaCreature::CanAssistTo },                                                 // :CanAssistTo(unit, enemy[, checkfaction]) - Returns true if the creature can assist unit with enemy
-    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },                             // :IsTargetableForAttack([inversAlive]) - Returns true if the creature can be attacked
-    { "HasInvolvedQuest", &LuaCreature::HasInvolvedQuest },                                       // :HasInvolvedQuest(questId) - Returns true if the creature can finish the quest for players
-    { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },                               // :IsRegeneratingHealth() - Returns true if the creature is regenerating health
-    { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },                       // :IsReputationGainDisabled() - Returns true if the creature has reputation gain disabled
-    // {"IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward},  // :IsDamageEnoughForLootingAndReward()
-    // {"HasLootMode", &LuaCreature::HasLootMode},
-    { "HasSpell", &LuaCreature::HasSpell },                                                       // :HasSpell(id)
-    { "HasQuest", &LuaCreature::HasQuest },                                                       // :HasQuest(id)
-    { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },                                       // :HasSpellCooldown(spellId) - Returns true if the spell is on cooldown
-    { "CanFly", &LuaCreature::CanFly },                                                           // :CanFly() - Returns true if the creature can fly
+    { "IsWorldBoss", &LuaCreature::IsWorldBoss },
+    { "IsRacialLeader", &LuaCreature::IsRacialLeader },
+    { "IsCivilian", &LuaCreature::IsCivilian },
+#ifdef TRINITY
+    { "IsTrigger", &LuaCreature::IsTrigger },
+#endif
+    { "IsGuard", &LuaCreature::IsGuard },
+    { "IsElite", &LuaCreature::IsElite },
+    { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
+    { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },
+    { "CanWalk", &LuaCreature::CanWalk },
+    { "CanSwim", &LuaCreature::CanSwim },
+    { "CanAggro", &LuaCreature::CanAggro },
+#ifdef TRINITY
+    { "CanStartAttack", &LuaCreature::CanStartAttack },
+#endif
+    { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
+    { "IsTappedBy", &LuaCreature::IsTappedBy },
+    { "HasLootRecipient", &LuaCreature::HasLootRecipient },
+    { "CanAssistTo", &LuaCreature::CanAssistTo },
+    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
+    { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
+    { "CanRegenerateHealth", &LuaCreature::CanRegenerateHealth },
+    { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
+#ifdef TRINITY
+    { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
+    { "HasLootMode", &LuaCreature::HasLootMode },
+#endif
+    { "HasSpell", &LuaCreature::HasSpell },
+    { "HasQuest", &LuaCreature::HasQuest },
+    { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
+    { "CanFly", &LuaCreature::CanFly },
 
     // Other
-    { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },     // :FleeToGetAssistance() - Creature flees for assistance
-    { "CallForHelp", &LuaCreature::CallForHelp },                     // :CallForHelp(radius) - Creature calls for help from units in radius
-    { "CallAssistance", &LuaCreature::CallAssistance },               // :CallAssistance() - Creature calls for assistance
-    { "RemoveCorpse", &LuaCreature::RemoveCorpse },                   // :RemoveCorpse([setSpawnTime]) - Removes corpse
-    { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },         // :DespawnOrUnsummon([Delay]) - Despawns the creature after delay if given
-    { "Respawn", &LuaCreature::Respawn },                             // :Respawn([force]) - Respawns the creature
-    // {"AddLootMode", &LuaCreature::AddLootMode},                  // :AddLootMode(lootMode)
-    // {"SendCreatureTalk", &LuaCreature::SendCreatureTalk},        // :SendCreatureTalk(id, playerGUID) - Sends a chat message to a playerGUID (player) by id. Id can be found in creature_text under the 'group_id' column
-    { "AttackStart", &LuaCreature::AttackStart },                     // :AttackStart(target) - Creature attacks the specified target
-    // {"ResetLootMode", &LuaCreature::ResetLootMode},
-    // {"RemoveLootMode", &LuaCreature::RemoveLootMode},
-    { "SaveToDB", &LuaCreature::SaveToDB },                           // :SaveToDB() - Saves to database
-    { "SelectVictim", &LuaCreature::SelectVictim },                   // :SelectVictim() - Selects a victim
-    { "MoveWaypoint", &LuaCreature::MoveWaypoint },                   // :MoveWaypoint()
-    { "UpdateEntry", &LuaCreature::UpdateEntry },                     // :UpdateEntry(entry[, dataGuidLow]) - Sets the creature's data from the given entry and guid. Guid can be left out.
+    { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },
+    { "CallForHelp", &LuaCreature::CallForHelp },
+    { "CallAssistance", &LuaCreature::CallAssistance },
+    { "RemoveCorpse", &LuaCreature::RemoveCorpse },
+    { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
+    { "Respawn", &LuaCreature::Respawn },
+    { "AttackStart", &LuaCreature::AttackStart },
+#ifdef TRINITY
+    { "AddLootMode", &LuaCreature::AddLootMode },
+    { "ResetLootMode", &LuaCreature::ResetLootMode },
+    { "RemoveLootMode", &LuaCreature::RemoveLootMode },
+#endif
+    { "SaveToDB", &LuaCreature::SaveToDB },
+    { "SelectVictim", &LuaCreature::SelectVictim },
+    { "MoveWaypoint", &LuaCreature::MoveWaypoint },
+    { "UpdateEntry", &LuaCreature::UpdateEntry },
 
     { NULL, NULL },
 };
@@ -797,30 +812,27 @@ ElunaRegister<Creature> CreatureMethods[] =
 ElunaRegister<GameObject> GameObjectMethods[] =
 {
     // Getters
-    { "GetDisplayId", &LuaGameObject::GetDisplayId },         // :GetDisplayId()
-    { "GetGoState", &LuaGameObject::GetGoState },             // :GetGoState() - Returns state
-    { "GetLootState", &LuaGameObject::GetLootState },         // :GetLootState() - Returns loot state
+    { "GetDisplayId", &LuaGameObject::GetDisplayId },
+    { "GetGoState", &LuaGameObject::GetGoState },
+    { "GetLootState", &LuaGameObject::GetLootState },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },
     { "SetLootState", &LuaGameObject::SetLootState },
 
     // Boolean
-    { "IsTransport", &LuaGameObject::IsTransport },           // :IsTransport()
-    // {"IsDestructible", &LuaGameObject::IsDestructible},  // :IsDestructible()
-    { "IsActive", &LuaGameObject::IsActive },                 // :IsActive()
-    { "HasQuest", &LuaGameObject::HasQuest },                 // :HasQuest(questId)
-    { "IsSpawned", &LuaGameObject::IsSpawned },               // :IsSpawned()
+    { "IsTransport", &LuaGameObject::IsTransport },
+    // {"IsDestructible", &LuaGameObject::IsDestructible},    // :IsDestructible()
+    { "IsActive", &LuaGameObject::IsActive },
+    { "HasQuest", &LuaGameObject::HasQuest },
+    { "IsSpawned", &LuaGameObject::IsSpawned },
 
     // Other
-    { "RegisterEvent", &LuaGameObject::RegisterEvent },       // :RegisterEvent(function, delay, calls) - The timer ticks if this gameobject is visible to someone. The function is called with arguments (eventid, delay, repeats, gameobject) after the time has passed if the gameobject exists. Returns EventId
-    { "RemoveEventById", &LuaGameObject::RemoveEventById },   // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
-    { "RemoveEvents", &LuaGameObject::RemoveEvents },         // :RemoveEvents() - Removes all registered timed events
-    { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },   // :RemoveFromWorld(del)
-    { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },   // :UseDoorOrButton(delay) - Activates/closes/opens after X delay UNDOCUMENTED
-    { "Despawn", &LuaGameObject::Despawn },                   // :Despawn([delay]) - Despawns the object after delay
-    { "Respawn", &LuaGameObject::Respawn },                   // :Respawn([delay]) - respawns the object after delay
-    { "SaveToDB", &LuaGameObject::SaveToDB },                 // :SaveToDB() - Saves to database
+    { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
+    { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
+    { "Despawn", &LuaGameObject::Despawn },
+    { "Respawn", &LuaGameObject::Respawn },
+    { "SaveToDB", &LuaGameObject::SaveToDB },
 
     { NULL, NULL },
 };
@@ -927,24 +939,24 @@ ElunaRegister<Aura> AuraMethods[] =
 ElunaRegister<Spell> SpellMethods[] =
 {
     // Getters
-    { "GetCaster", &LuaSpell::GetCaster },                // :GetCaster() - Returns the spell's caster (UNIT)
-    { "GetCastTime", &LuaSpell::GetCastTime },            // :GetCastTime() - Returns the spell cast time
-    { "GetEntry", &LuaSpell::GetEntry },                     // :GetEntry() - Returns the spell's ID
-    { "GetDuration", &LuaSpell::GetDuration },            // :GetDuration() - Returns the spell's duration
-    { "GetPowerCost", &LuaSpell::GetPowerCost },          // :GetPowerCost() - Returns the spell's power cost (mana, energy, rage, etc)
-    { "GetTargetDest", &LuaSpell::GetTargetDest },        // :GetTargetDest() - Returns the target destination (x,y,z,o,map) or nil. Orientation and map may be 0.
-    { "GetTarget", &LuaSpell::GetTarget },                // :GetTarget() - Returns spell cast target (item, worldobject)
+    { "GetCaster", &LuaSpell::GetCaster },
+    { "GetCastTime", &LuaSpell::GetCastTime },
+    { "GetEntry", &LuaSpell::GetEntry },
+    { "GetDuration", &LuaSpell::GetDuration },
+    { "GetPowerCost", &LuaSpell::GetPowerCost },
+    { "GetTargetDest", &LuaSpell::GetTargetDest },
+    { "GetTarget", &LuaSpell::GetTarget },
 
     // Setters
-    { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },        // :SetAutoRepeat(boolean)
+    { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
 
     // Boolean
-    { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },          // :IsAutoRepeat()
+    { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
 
     // Other
-    { "Cancel", &LuaSpell::Cancel },                      // :Cancel() - Cancels the spell casting
-    { "Cast", &LuaSpell::Cast },                          // :Cast(skipCheck) - Casts the spell (if true, removes the check for instant spells, etc)
-    { "Finish", &LuaSpell::Finish },                      // :Finish() - Finishes the spell (SPELL_STATE_FINISH)
+    { "Cancel", &LuaSpell::Cancel },
+    { "Cast", &LuaSpell::Cast },
+    { "Finish", &LuaSpell::Finish },
 
     { NULL, NULL },
 };
@@ -952,22 +964,22 @@ ElunaRegister<Spell> SpellMethods[] =
 ElunaRegister<Quest> QuestMethods[] =
 {
     // Getters
-    { "GetId", &LuaQuest::GetId },                                // :GetId() - Returns the quest's Id
-    { "GetLevel", &LuaQuest::GetLevel },                          // :GetLevel() - Returns the quest's level
-    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                 // :GetMaxLevel() - Returns the quest's max level
-    { "GetMinLevel", &LuaQuest::GetMinLevel },                    // :GetMinLevel() - Returns the quest's min level
-    { "GetNextQuestId", &LuaQuest::GetNextQuestId },              // :GetNextQuestId() - Returns the quest's next quest ID
-    { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },              // :GetPrevQuestId() - Returns the quest's previous quest ID
-    { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },    // :GetNexQuestInChain() - Returns the next quest in its chain
-    { "GetFlags", &LuaQuest::GetFlags },                          // :GetFlags() - Returns the quest's flags
-    { "GetType", &LuaQuest::GetType },                            // :GetType() - Returns the quest's type
+    { "GetId", &LuaQuest::GetId },
+    { "GetLevel", &LuaQuest::GetLevel },
+    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                   // :GetMaxLevel() - Returns the quest's max level
+    { "GetMinLevel", &LuaQuest::GetMinLevel },
+    { "GetNextQuestId", &LuaQuest::GetNextQuestId },
+    { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
+    { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },
+    { "GetFlags", &LuaQuest::GetFlags },
+    { "GetType", &LuaQuest::GetType },
 
     // Boolean
-    { "HasFlag", &LuaQuest::HasFlag },                            // :HasFlag(flag) - Returns true or false if the quest has the specified flag
+    { "HasFlag", &LuaQuest::HasFlag },
 #ifndef CLASSIC
-    { "IsDaily", &LuaQuest::IsDaily },                            // :IsDaily() - Returns true or false if the quest is a daily
+    { "IsDaily", &LuaQuest::IsDaily },
 #endif
-    { "IsRepeatable", &LuaQuest::IsRepeatable },                  // :IsRepeatable() - Returns true or false if the quest is repeatable
+    { "IsRepeatable", &LuaQuest::IsRepeatable },
 
     { NULL, NULL },
 };
@@ -975,38 +987,38 @@ ElunaRegister<Quest> QuestMethods[] =
 ElunaRegister<Group> GroupMethods[] =
 {
     // Getters
-    { "GetMembers", &LuaGroup::GetMembers },                      // :GetMembers() - returns a table the players in this group. (Online?)
+    { "GetMembers", &LuaGroup::GetMembers },
     { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
     { "GetLeader", &LuaGroup::GetLeader },
     { "GetGUID", &LuaGroup::GetGUID },
-    { "GetMemberGroup", &LuaGroup::GetMemberGroup },              // :GetMemberGroup(player) - Returns the player's subgroup ID
-    { "GetMemberGUID", &LuaGroup::GetMemberGUID },                // :GetMemberGUID("name") - Returns the member's GUID
-    { "GetMembersCount", &LuaGroup::GetMembersCount },            // :GetMembersCount() - Returns the member count of the group
+    { "GetMemberGroup", &LuaGroup::GetMemberGroup },
+    { "GetMemberGUID", &LuaGroup::GetMemberGUID },
+    { "GetMembersCount", &LuaGroup::GetMembersCount },
 
     // Setters
-    { "SetLeader", &LuaGroup::SetLeader },                     // :SetLeader(Player) - Sets the player as the new leader
-    { "SetMembersGroup", &LuaGroup::SetMembersGroup },         // :ChangeMembersGroup(player, subGroup) - Changes the member's subgroup
-    { "SetTargetIcon", &LuaGroup::SetTargetIcon },                // :SetTargetIcon(icon, targetguid[, setterguid]) - Sets target's icon for group. target 0 to clear.
+    { "SetLeader", &LuaGroup::SetLeader },
+    { "SetMembersGroup", &LuaGroup::SetMembersGroup },
+    { "SetTargetIcon", &LuaGroup::SetTargetIcon },
 
     // Boolean
-    { "IsLeader", &LuaGroup::IsLeader },                          // :IsLeader(GUID)
-    { "AddInvite", &LuaGroup::AddInvite },                        // :AddInvite(player) - Adds a an invite to player. Returns true if succesful
-    { "RemoveMember", &LuaGroup::RemoveMember },                  // :RemoveMember(player) - Removes player from group. Returns true on success
-    { "Disband", &LuaGroup::Disband },                            // :Disband() - Disbands the group
-    { "IsFull", &LuaGroup::IsFull },                              // :IsFull() - Returns true if the group is full
-    // {"IsLFGGroup", &LuaGroup::IsLFGGroup},                   // :IsLFGGroup() - Returns true if the group is an LFG group
-    { "IsRaidGroup", &LuaGroup::IsRaidGroup },                    // :IsRaidGroup() - Returns true if the group is a raid group
-    { "IsBGGroup", &LuaGroup::IsBGGroup },                        // :IsBGGroup() - Returns true if the group is a battleground group
-    // {"IsBFGroup", &LuaGroup::IsBFGroup},                     // :IsBFGroup() - Returns true if the group is a battlefield group
-    { "IsMember", &LuaGroup::IsMember },                          // :IsMember(player) - Returns true if the player is a member of the group
-    { "IsAssistant", &LuaGroup::IsAssistant },                    // :IsAssistant(player) - returns true if the player is an assistant in the group
-    { "SameSubGroup", &LuaGroup::SameSubGroup },                  // :SameSubGroup(player1, player2) - Returns true if the players are in the same subgroup in the group
-    { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },    // :HasFreeSlotSubGroup(subGroup) - Returns true if the subgroupID has free slots
+    { "IsLeader", &LuaGroup::IsLeader },
+    { "AddInvite", &LuaGroup::AddInvite },
+    { "RemoveMember", &LuaGroup::RemoveMember },
+    { "Disband", &LuaGroup::Disband },
+    { "IsFull", &LuaGroup::IsFull },
+    // {"IsLFGGroup", &LuaGroup::IsLFGGroup},                     // :IsLFGGroup() - Returns true if the group is an LFG group
+    { "IsRaidGroup", &LuaGroup::IsRaidGroup },
+    { "IsBGGroup", &LuaGroup::IsBGGroup },
+    // {"IsBFGroup", &LuaGroup::IsBFGroup},                       // :IsBFGroup() - Returns true if the group is a battlefield group
+    { "IsMember", &LuaGroup::IsMember },
+    { "IsAssistant", &LuaGroup::IsAssistant },
+    { "SameSubGroup", &LuaGroup::SameSubGroup },
+    { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
 
     // Other
-    { "SendPacket", &LuaGroup::SendPacket },                      // :SendPacket(packet, sendToPlayersInBattleground[, ignoreguid]) - Sends a specified packet to the group with the choice (true/false) to send it to players in a battleground. Optionally ignores given player guid
-    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},               // :ConvertToLFG() - Converts the group to an LFG group
-    { "ConvertToRaid", &LuaGroup::ConvertToRaid },                // :ConvertToRaid() - Converts the group to a raid group
+    { "SendPacket", &LuaGroup::SendPacket },
+    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},                 // :ConvertToLFG() - Converts the group to an LFG group
+    { "ConvertToRaid", &LuaGroup::ConvertToRaid },
 
     { NULL, NULL },
 };
@@ -1069,11 +1081,12 @@ ElunaRegister<Vehicle> VehicleMethods[] =
 #endif
 #endif
 
-ElunaRegister<QueryResult> QueryMethods[] =
+ElunaRegister<ElunaQuery> QueryMethods[] =
 {
     { "NextRow", &LuaQuery::NextRow },                        // :NextRow() - Advances to next rown in the query. Returns true if there is a next row, otherwise false
     { "GetColumnCount", &LuaQuery::GetColumnCount },          // :GetColumnCount() - Gets the column count of the query
     { "GetRowCount", &LuaQuery::GetRowCount },                // :GetRowCount() - Gets the row count of the query
+    { "GetRow", &LuaQuery::GetRow },
 
     { "GetBool", &LuaQuery::GetBool },                        // :GetBool(column) - returns a bool from a number column (for example tinyint)
     { "GetUInt8", &LuaQuery::GetUInt8 },                      // :GetUInt8(column) - returns the value of an unsigned tinyint column
@@ -1096,23 +1109,23 @@ ElunaRegister<QueryResult> QueryMethods[] =
 ElunaRegister<WorldPacket> PacketMethods[] =
 {
     // Getters
-    { "GetOpcode", &LuaPacket::GetOpcode },                   // :GetOpcode() - Returns an opcode
-    { "GetSize", &LuaPacket::GetSize },                       // :GetSize() - Returns the packet size
+    { "GetOpcode", &LuaPacket::GetOpcode },
+    { "GetSize", &LuaPacket::GetSize },
 
     // Setters
-    { "SetOpcode", &LuaPacket::SetOpcode },                   // :SetOpcode(opcode) - Sets the opcode by specifying an opcode
+    { "SetOpcode", &LuaPacket::SetOpcode },
 
     // Readers
-    { "ReadByte", &LuaPacket::ReadByte },                     // :ReadByte() - Reads an int8 value
-    { "ReadUByte", &LuaPacket::ReadUByte },                   // :ReadUByte() - Reads an uint8 value
-    { "ReadShort", &LuaPacket::ReadShort },                   // :ReadShort() - Reads an int16 value
-    { "ReadUShort", &LuaPacket::ReadUShort },                 // :ReadUShort() - Reads an uint16 value
-    { "ReadLong", &LuaPacket::ReadLong },                     // :ReadLong() - Reads an int32 value
-    { "ReadULong", &LuaPacket::ReadULong },                   // :ReadULong() - Reads an uint32 value
-    { "ReadGUID", &LuaPacket::ReadGUID },                     // :ReadGUID() - Reads an uint64 value
-    { "ReadString", &LuaPacket::ReadString },                 // :ReadString() - Reads a string value
-    { "ReadFloat", &LuaPacket::ReadFloat },                   // :ReadFloat() - Reads a float value
-    { "ReadDouble", &LuaPacket::ReadDouble },                 // :ReadDouble() - Reads a double value
+    { "ReadByte", &LuaPacket::ReadByte },
+    { "ReadUByte", &LuaPacket::ReadUByte },
+    { "ReadShort", &LuaPacket::ReadShort },
+    { "ReadUShort", &LuaPacket::ReadUShort },
+    { "ReadLong", &LuaPacket::ReadLong },
+    { "ReadULong", &LuaPacket::ReadULong },
+    { "ReadGUID", &LuaPacket::ReadGUID },
+    { "ReadString", &LuaPacket::ReadString },
+    { "ReadFloat", &LuaPacket::ReadFloat },
+    { "ReadDouble", &LuaPacket::ReadDouble },
 
     // Writers
     { "WriteByte", &LuaPacket::WriteByte },                   // :WriteByte(val) - Writes an int8 value
@@ -1158,12 +1171,12 @@ ElunaRegister<Map> MapMethods[] =
 
 ElunaRegister<Corpse> CorpseMethods[] =
 {
-    { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },                     // :GetOwnerGUID() - Returns the corpse owner GUID
-    { "GetGhostTime", &LuaCorpse::GetGhostTime },                     // :GetGhostTime() - Returns the ghost time of a corpse
-    { "GetType", &LuaCorpse::GetType },                               // :GetType() - Returns the (CorpseType) of a corpse
-    { "ResetGhostTime", &LuaCorpse::ResetGhostTime },                 // :ResetGhostTime() - Resets the corpse's ghost time
-    { "SaveToDB", &LuaCorpse::SaveToDB },                             // :SaveToDB() - Saves to database
-    { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },     // :DeleteBonesFromWorld() - Deletes all bones from the world
+    { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
+    { "GetGhostTime", &LuaCorpse::GetGhostTime },
+    { "GetType", &LuaCorpse::GetType },
+    { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
+    { "SaveToDB", &LuaCorpse::SaveToDB },
+    { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
 
     { NULL, NULL }
 };
@@ -1171,23 +1184,50 @@ ElunaRegister<Corpse> CorpseMethods[] =
 ElunaRegister<Weather> WeatherMethods[] =
 {
     // Getters
-    { "GetZoneId", &LuaWeather::GetZoneId },                                  // :GetZoneId() - Returns the weather's zoneId
+    { "GetZoneId", &LuaWeather::GetZoneId },
 
     // Setters
-    { "SetWeather", &LuaWeather::SetWeather },                                // :SetWeather(weatherType, grade) - Sets the weather by weather type and grade
+    { "SetWeather", &LuaWeather::SetWeather },
 
     // Boolean
-    { "Regenerate", &LuaWeather::Regenerate },                                // :Regenerate() - Calculates weather, returns true if the weather changed
-    { "UpdateWeather", &LuaWeather::UpdateWeather },                          // :UpdateWeather() - Updates the weather in a zone that has players in it, returns false if players aren't found
+    { "Regenerate", &LuaWeather::Regenerate },
+    { "UpdateWeather", &LuaWeather::UpdateWeather },
 
     // Other
-    { "SendWeatherUpdateToPlayer", &LuaWeather::SendWeatherUpdateToPlayer },  // :SendWeatherUpdateToPlayer(player) - Sends weather update to the player
+    { "SendWeatherUpdateToPlayer", &LuaWeather::SendWeatherUpdateToPlayer },
 
     { NULL, NULL }
 };
 
 ElunaRegister<AuctionHouseObject> AuctionMethods[] =
 {
+    { NULL, NULL }
+};
+
+ElunaRegister<BattleGround> BattleGroundMethods[] =
+{
+    // Getters
+    { "GetName", &LuaBattleGround::GetName },
+    { "GetAlivePlayersCountByTeam", &LuaBattleGround::GetAlivePlayersCountByTeam },
+    { "GetMap", &LuaBattleGround::GetMap },
+    { "GetBonusHonorFromKillCount", &LuaBattleGround::GetBonusHonorFromKillCount },
+    { "GetBracketId", &LuaBattleGround::GetBracketId },
+    { "GetEndTime", &LuaBattleGround::GetEndTime },
+    { "GetFreeSlotsForTeam", &LuaBattleGround::GetFreeSlotsForTeam },
+    { "GetInstanceId", &LuaBattleGround::GetInstanceId },
+    { "GetMapId", &LuaBattleGround::GetMapId },
+    { "GetTypeId", &LuaBattleGround::GetTypeId },
+    { "GetMaxLevel", &LuaBattleGround::GetMaxLevel },
+    { "GetMinLevel", &LuaBattleGround::GetMinLevel },
+    { "GetMaxPlayers", &LuaBattleGround::GetMaxPlayers },
+    { "GetMinPlayers", &LuaBattleGround::GetMinPlayers },
+    { "GetMaxPlayersPerTeam", &LuaBattleGround::GetMaxPlayersPerTeam },
+    { "GetMinPlayersPerTeam", &LuaBattleGround::GetMinPlayersPerTeam },
+    { "GetWinner", &LuaBattleGround::GetWinner },
+    { "GetStatus", &LuaBattleGround::GetStatus },
+
+    // Setters
+
     { NULL, NULL }
 };
 
@@ -1279,9 +1319,12 @@ void RegisterFunctions(lua_State* L)
     ElunaTemplate<AuctionHouseObject>::Register(L, "AuctionHouseObject");
     ElunaTemplate<AuctionHouseObject>::SetMethods(L, AuctionMethods);
 
+    ElunaTemplate<BattleGround>::Register(L, "BattleGround");
+    ElunaTemplate<BattleGround>::SetMethods(L, BattleGroundMethods);
+
     ElunaTemplate<WorldPacket>::Register(L, "WorldPacket", true);
     ElunaTemplate<WorldPacket>::SetMethods(L, PacketMethods);
 
-    ElunaTemplate<QueryResult>::Register(L, "QueryResult", true);
-    ElunaTemplate<QueryResult>::SetMethods(L, QueryMethods);
+    ElunaTemplate<ElunaQuery>::Register(L, "ElunaQuery", true);
+    ElunaTemplate<ElunaQuery>::SetMethods(L, QueryMethods);
 }

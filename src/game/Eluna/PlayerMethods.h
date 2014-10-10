@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_PLAYERMETHODS
-#define ELUNA_H_PLAYERMETHODS
+#ifndef PLAYERMETHODS_H
+#define PLAYERMETHODS_H
 
 namespace LuaPlayer
 {
@@ -1176,14 +1176,14 @@ namespace LuaPlayer
         Gender gender;
         switch (_gender)
         {
-        case 0:
-            gender = GENDER_MALE;
-            break;
-        case 1:
-            gender = GENDER_FEMALE;
-            break;
-        default:
-            return luaL_argerror(L, 2, "valid Gender expected");
+            case 0:
+                gender = GENDER_MALE;
+                break;
+            case 1:
+                gender = GENDER_FEMALE;
+                break;
+            default:
+                return luaL_argerror(L, 2, "valid Gender expected");
         }
 
         player->SetByteValue(UNIT_FIELD_BYTES_0, 2, gender);
@@ -1626,7 +1626,7 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetNextResetTalentsCost());
 #else
 #ifdef TRINITY
-+        Eluna::Push(L, player->ResetTalentsCost());
+        Eluna::Push(L, player->ResetTalentsCost());
 #else
         Eluna::Push(L, player->resetTalentsCost());
 #endif
@@ -1744,9 +1744,16 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
+#ifdef TRINITY
+        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
+#else
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 4);
-
+#endif
+#ifdef TRINITY
+        player->Whisper(text, (Language)lang, receiver);
+#else
         player->Whisper(text, lang, ObjectGuid(guid));
+#endif
         return 0;
     }
 
@@ -1762,8 +1769,11 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-
+#ifdef TRINITY
+        player->Yell(text, (Language)lang);
+#else
         player->Yell(text, lang);
+#endif
         return 0;
     }
 
@@ -1771,8 +1781,11 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-
+#ifdef TRINITY
+        player->Say(text, (Language)lang);
+#else
         player->Say(text, lang);
+#endif
         return 0;
     }
 
@@ -1959,10 +1972,23 @@ namespace LuaPlayer
     {
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3);
+
 #ifndef TRINITY
-        Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount) ? true : false);
+        Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount));
 #else
-        Eluna::Push(L, player->AddItem(itemId, itemCount));
+        uint32 noSpaceForCount = 0;
+        ItemPosCountVec dest;
+        InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, itemCount, &noSpaceForCount);
+        if (msg != EQUIP_ERR_OK)
+            itemCount -= noSpaceForCount;
+
+        if (itemCount == 0 || dest.empty())
+            return 1;
+
+        Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+        if (item)
+            player->SendNewItem(item, itemCount, true, false);
+        Eluna::Push(L, item);
 #endif
         return 1;
     }
@@ -2352,5 +2378,4 @@ namespace LuaPlayer
     return 0;
     }*/
 };
-
 #endif

@@ -4,26 +4,38 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_WORLDPACKETMETHODS
-#define ELUNA_H_WORLDPACKETMETHODS
+#ifndef WORLDPACKETMETHODS_H
+#define WORLDPACKETMETHODS_H
 
 namespace LuaPacket
 {
-    // GetOpcode()
+    /**
+     * Returns the opcode of the [WorldPacket].
+     *
+     * @return uint16 opcode
+     */
     int GetOpcode(lua_State* L, WorldPacket* packet)
     {
         Eluna::Push(L, packet->GetOpcode());
         return 1;
     }
 
-    // GetSize()
+    /**
+     * Returns the size of the [WorldPacket].
+     *
+     * @return uint32 size : size of [WorldPacket]
+     */
     int GetSize(lua_State* L, WorldPacket* packet)
     {
         Eluna::Push(L, packet->size());
         return 1;
     }
 
-    // SetOpcode(opcode)
+    /**
+     * Sets the opcode of the [WorldPacket] by specifying an opcode.
+     *
+     * @param uint32 opcode : the opcode specified to be set for the [WorldPacket]
+     */
     int SetOpcode(lua_State* L, WorldPacket* packet)
     {
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 2);
@@ -33,25 +45,37 @@ namespace LuaPacket
         return 0;
     }
 
-    // ReadByte()
+    /**
+     * Reads and returns an int8 value from the [WorldPacket].
+     *
+     * @return int8 value
+     */
     int ReadByte(lua_State* L, WorldPacket* packet)
     {
-        int8 byte;
-        (*packet) >> byte;
-        Eluna::Push(L, byte);
+        int8 _byte;
+        (*packet) >> _byte;
+        Eluna::Push(L, _byte);
         return 1;
     }
 
-    // ReadUByte()
+    /**
+     * Reads and returns a uint8 value from the [WorldPacket].
+     *
+     * @return uint8 value
+     */
     int ReadUByte(lua_State* L, WorldPacket* packet)
     {
-        uint8 byte;
-        (*packet) >> byte;
-        Eluna::Push(L, byte);
+        uint8 _ubyte;
+        (*packet) >> _ubyte;
+        Eluna::Push(L, _ubyte);
         return 1;
     }
 
-    // ReadShort()
+    /**
+     * Reads and returns an int16 value from the [WorldPacket].
+     *
+     * @return int16 value
+     */
     int ReadShort(lua_State* L, WorldPacket* packet)
     {
         int16 _short;
@@ -60,7 +84,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadUShort()
+    /**
+     * Reads and returns a uint16 value from the [WorldPacket].
+     *
+     * @return uint16 value
+     */
     int ReadUShort(lua_State* L, WorldPacket* packet)
     {
         uint16 _ushort;
@@ -69,7 +97,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadLong()
+    /**
+     * Reads and returns an int32 value from the [WorldPacket].
+     *
+     * @return int32 value
+     */
     int ReadLong(lua_State* L, WorldPacket* packet)
     {
         int32 _long;
@@ -78,7 +110,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadULong()
+    /**
+     * Reads and returns a uint32 value from the [WorldPacket].
+     *
+     * @return uint32 value
+     */
     int ReadULong(lua_State* L, WorldPacket* packet)
     {
         uint32 _ulong;
@@ -87,7 +123,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadFloat()
+    /**
+     * Reads and returns a float value from the [WorldPacket].
+     *
+     * @return float value
+     */
     int ReadFloat(lua_State* L, WorldPacket* packet)
     {
         float _val;
@@ -96,7 +136,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadDouble()
+    /**
+     * Reads and returns a double value from the [WorldPacket].
+     *
+     * @return double value
+     */
     int ReadDouble(lua_State* L, WorldPacket* packet)
     {
         double _val;
@@ -105,7 +149,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadGUID()
+    /**
+     * Reads and returns a uint64 value from the [WorldPacket].
+     *
+     * @return uint64 value : value returned as string
+     */
     int ReadGUID(lua_State* L, WorldPacket* packet)
     {
         uint64 guid;
@@ -114,7 +162,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // ReadString()
+    /**
+     * Reads and returns a string value from the [WorldPacket].
+     *
+     * @return string value
+     */
     int ReadString(lua_State* L, WorldPacket* packet)
     {
         std::string _val;
@@ -123,7 +175,11 @@ namespace LuaPacket
         return 1;
     }
 
-    // WriteGUID(guid)
+    /**
+     * Writes an uint64 value to the [WorldPacket].
+     *
+     * @param uint64 value : the value to be written to the [WorldPacket]
+     */
     int WriteGUID(lua_State* L, WorldPacket* packet)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -131,7 +187,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteString(string)
+    /**
+     * Writes a string to the [WorldPacket].
+     *
+     * @param string value : the string to be written to the [WorldPacket]
+     */
     int WriteString(lua_State* L, WorldPacket* packet)
     {
         std::string _val = Eluna::CHECKVAL<std::string>(L, 2);
@@ -139,7 +199,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteBye(byte)
+    /**
+     * Writes an int8 value to the [WorldPacket].
+     *
+     * @param int8 value : the int8 value to be written to the [WorldPacket]
+     */
     int WriteByte(lua_State* L, WorldPacket* packet)
     {
         int8 byte = Eluna::CHECKVAL<int8>(L, 2);
@@ -147,7 +211,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteUByte(byte)
+    /**
+     * Writes an uint8 value to the [WorldPacket].
+     *
+     * @param uint8 value : the uint8 value to be written to the [WorldPacket]
+     */
     int WriteUByte(lua_State* L, WorldPacket* packet)
     {
         uint8 byte = Eluna::CHECKVAL<uint8>(L, 2);
@@ -155,15 +223,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteUShort(short)
-    int WriteUShort(lua_State* L, WorldPacket* packet)
-    {
-        uint16 _ushort = Eluna::CHECKVAL<uint16>(L, 2);
-        (*packet) << _ushort;
-        return 0;
-    }
-
-    // WriteShort(short)
+    /**
+     * Writes an int16 value to the [WorldPacket].
+     *
+     * @param int16 value : the int16 value to be written to the [WorldPacket]
+     */
     int WriteShort(lua_State* L, WorldPacket* packet)
     {
         int16 _short = Eluna::CHECKVAL<int16>(L, 2);
@@ -171,7 +235,23 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteLong(long)
+    /**
+     * Writes an uint16 value to the [WorldPacket].
+     *
+     * @param uint16 value : the uint16 value to be written to the [WorldPacket]
+     */
+    int WriteUShort(lua_State* L, WorldPacket* packet)
+    {
+        uint16 _ushort = Eluna::CHECKVAL<uint16>(L, 2);
+        (*packet) << _ushort;
+        return 0;
+    }
+
+    /**
+     * Writes an int32 value to the [WorldPacket].
+     *
+     * @param int32 value : the int32 value to be written to the [WorldPacket]
+     */
     int WriteLong(lua_State* L, WorldPacket* packet)
     {
         int32 _long = Eluna::CHECKVAL<int32>(L, 2);
@@ -179,7 +259,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteULong(long)
+    /**
+     * Writes an uint32 value to the [WorldPacket].
+     *
+     * @param uint32 value : the uint32 value to be written to the [WorldPacket]
+     */
     int WriteULong(lua_State* L, WorldPacket* packet)
     {
         uint32 _ulong = Eluna::CHECKVAL<uint32>(L, 2);
@@ -187,7 +271,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteFloat(float)
+    /**
+     * Writes a float value to the [WorldPacket].
+     *
+     * @param float value : the float value to be written to the [WorldPacket]
+     */
     int WriteFloat(lua_State* L, WorldPacket* packet)
     {
         float _val = Eluna::CHECKVAL<float>(L, 2);
@@ -195,7 +283,11 @@ namespace LuaPacket
         return 0;
     }
 
-    // WriteDouble(double)
+    /**
+     * Writes a double value to the [WorldPacket].
+     *
+     * @param double value : the double value to be written to the [WorldPacket]
+     */
     int WriteDouble(lua_State* L, WorldPacket* packet)
     {
         double _val = Eluna::CHECKVAL<double>(L, 2);

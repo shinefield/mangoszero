@@ -42,7 +42,8 @@ awesome things such as these:
 * documentation has been moved to [Read The Docs](http://readthedocs.org/) and
   the latest version is available on [docs.getmangos.com](http://docs.getmangos.com),
 * Eluna Lua Engine: thanks to the [Eluna project](https://github.com/ElunaLuaEngine)
-  we now have working support for scripting based on [Lua 5.2.3](http://lua.org),
+  we now have working support for scripting based on [Lua 5.2.3](http://lua.org)
+  which is enabled by default and ready for you to enjoy,
 * platforms: support for compiling using clang on FreeBSD has been added,
 * tools: all map tools have received documentation, their parameters have been
   cleaned up, and you will now see map version information,

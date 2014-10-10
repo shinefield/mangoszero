@@ -4,9 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_VEHICLEMETHODS
-#define ELUNA_H_VEHICLEMETHODS
-
+#ifndef VEHICLEMETHODS_H
+#define VEHICLEMETHODS_H
 #ifndef CLASSIC
 #ifndef TBC
 
@@ -80,5 +79,4 @@ namespace LuaVehicle
 
 #endif
 #endif
-
 #endif

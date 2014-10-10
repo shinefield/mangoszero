@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_ITEMMETHODS
-#define ELUNA_H_ITEMMETHODS
+#ifndef ITEMMETHODS_H
+#define ITEMMETHODS_H
 
 namespace LuaItem
 {
@@ -137,12 +137,12 @@ namespace LuaItem
     }
 
     /*
-    int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
-    {
-        Eluna::Push(L, item->IsRefundExpired());
-        return 1;
-    }
-    */
+     * int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
+     * {
+     *     Eluna::Push(L, item->IsRefundExpired());
+     *     return 1;
+     * }
+     */
 
     /* GETTERS */
     int GetItemLink(lua_State* L, Item* item)
@@ -492,5 +492,4 @@ namespace LuaItem
         return 0;
     }
 };
-
 #endif
