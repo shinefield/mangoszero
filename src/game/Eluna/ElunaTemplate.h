@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_TEMPLATE
-#define ELUNA_H_TEMPLATE
+#ifndef _ELUNA_TEMPLATE_H
+#define _ELUNA_TEMPLATE_H
 
 extern "C"
 {
@@ -42,6 +42,8 @@ public:
     // that will only be needed on lua side and will not be managed by TC/mangos/<core>
     static void Register(lua_State* L, const char* name, bool gc = false)
     {
+        ASSERT(!tname || name);
+
         tname = name;
         manageMemory = gc;
 

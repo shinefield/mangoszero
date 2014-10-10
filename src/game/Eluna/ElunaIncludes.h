@@ -4,9 +4,6 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_INCLUDES
-#define ELUNA_H_INCLUDES
-
 // Required
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
@@ -36,7 +33,7 @@
 #include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
-#include "network/WorldPacket.h"
+#include "WorldPacket.h"
 #include "WorldSession.h"
 
 #ifdef TRINITY
@@ -44,10 +41,12 @@
 #include "ScriptedCreature.h"
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
+#include "Battleground.h"
 #else
-#include "configuration/Config.h"
+#include "Config/Config.h"
 #include "ReactorAI.h"
 #include "revision_nr.h"
+#include "BattleGroundMgr.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -122,6 +121,4 @@ enum SelectAggroTarget
     SELECT_TARGET_NEAREST,
     SELECT_TARGET_FARTHEST
 };
-#endif
-
 #endif

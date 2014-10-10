@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_UNITMETHODS
-#define ELUNA_H_UNITMETHODS
+#ifndef UNITMETHODS_H
+#define UNITMETHODS_H
 
 namespace LuaUnit
 {
@@ -558,17 +558,7 @@ namespace LuaUnit
 #ifdef TRINITY
         if (powerType == -1)
             return unit->getPowerType();
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        if (powerType == -1)
-            return unit->GetPowerType();
 #else
-        if (powerType == -1)
-            return unit->getPowerType();
-#endif
-#endif
-#ifdef CMANGOS
         if (powerType == -1)
             return unit->GetPowerType();
 #endif
@@ -615,15 +605,7 @@ namespace LuaUnit
     {
 #ifdef TRINITY
         Eluna::Push(L, unit->getPowerType());
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        Eluna::Push(L, unit->GetPowerType());
 #else
-        Eluna::Push(L, unit->getPowerType());
-#endif
-#endif
-#ifdef CMANGOS
         Eluna::Push(L, unit->GetPowerType());
 #endif
         return 1;
@@ -674,39 +656,39 @@ namespace LuaUnit
         const char* str = NULL;
         switch (unit->getClass())
         {
-        case 1:
-            str = "Warrior";
-            break;
-        case 2:
-            str = "Paladin";
-            break;
-        case 3:
-            str = "Hunter";
-            break;
-        case 4:
-            str = "Rogue";
-            break;
-        case 5:
-            str = "Priest";
-            break;
-        case 6:
-            str = "Death Knight";
-            break;
-        case 7:
-            str = "Shaman";
-            break;
-        case 8:
-            str = "Mage";
-            break;
-        case 9:
-            str = "Warlock";
-            break;
-        case 11:
-            str = "Druid";
-            break;
-        default:
-            str = NULL;
-            break;
+            case 1:
+                str = "Warrior";
+                break;
+            case 2:
+                str = "Paladin";
+                break;
+            case 3:
+                str = "Hunter";
+                break;
+            case 4:
+                str = "Rogue";
+                break;
+            case 5:
+                str = "Priest";
+                break;
+            case 6:
+                str = "Death Knight";
+                break;
+            case 7:
+                str = "Shaman";
+                break;
+            case 8:
+                str = "Mage";
+                break;
+            case 9:
+                str = "Warlock";
+                break;
+            case 11:
+                str = "Druid";
+                break;
+            default:
+                str = NULL;
+                break;
         }
 
         Eluna::Push(L, str);
@@ -940,15 +922,7 @@ namespace LuaUnit
 
 #ifdef TRINITY
         unit->setPowerType((Powers)type);
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        unit->SetPowerType((Powers)type);
 #else
-        unit->setPowerType((Powers)type);
-#endif
-#endif
-#ifdef CMANGOS
         unit->SetPowerType((Powers)type);
 #endif
         return 0;
@@ -1333,10 +1307,15 @@ namespace LuaUnit
     int SendUnitWhisper(lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
-        Player* receiver = Eluna::CHECKOBJ<Player>(L, 3);
-        bool bossWhisper = Eluna::CHECKVAL<bool>(L, 4, false);
+        uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
+        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
+        bool bossWhisper = Eluna::CHECKVAL<bool>(L, 5, false);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Whisper(msg, (Language)lang, receiver, bossWhisper);
+#else
             unit->MonsterWhisper(msg, receiver, bossWhisper);
+#endif
         return 0;
     }
 
@@ -1346,7 +1325,11 @@ namespace LuaUnit
         Unit* receiver = Eluna::CHECKOBJ<Unit>(L, 3, false);
         bool bossEmote = Eluna::CHECKVAL<bool>(L, 4, false);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->TextEmote(msg, receiver, bossEmote);
+#else
             unit->MonsterTextEmote(msg, receiver, bossEmote);
+#endif
         return 0;
     }
 
@@ -1355,7 +1338,11 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Say(msg, (Language)language, unit);
+#else
             unit->MonsterSay(msg, language, unit);
+#endif
         return 0;
     }
 
@@ -1364,7 +1351,11 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Yell(msg, (Language)language, unit);
+#else
             unit->MonsterYell(msg, language, unit);
+#endif
         return 0;
     }
 
@@ -1388,28 +1379,28 @@ namespace LuaUnit
     }
 
     /**
-    Casts the spell at target.
-    pb0, 1 and 2 are modifiers for the base points of the spell.
-
-    @param &Unit target
-    @param uint32 spell
-    @param bool triggered = false
-    @param int32 bp0 = nil
-    @param int32 bp1 = nil
-    @param int32 bp2 = nil
-    @param &Item castItem = nil
-    @param uint64 originalCaster = 0
-    */
+     * Casts the [Spell] at target [Unit] with custom basepoints or casters.
+     * See also [Unit:CastSpell].
+     *
+     * @param [Unit] target
+     * @param uint32 spell
+     * @param bool triggered = false
+     * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
+     * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
+     * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
+     * @param [Item] castItem = nil
+     * @param uint64 originalCaster = 0
+     */
     int CastCustomSpell(lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
-        bool has_bp0 = lua_isnoneornil(L, 5);
+        bool has_bp0 = !lua_isnoneornil(L, 5);
         int32 bp0 = Eluna::CHECKVAL<int32>(L, 5, 0);
-        bool has_bp1 = lua_isnoneornil(L, 6);
+        bool has_bp1 = !lua_isnoneornil(L, 6);
         int32 bp1 = Eluna::CHECKVAL<int32>(L, 6, 0);
-        bool has_bp2 = lua_isnoneornil(L, 7);
+        bool has_bp2 = !lua_isnoneornil(L, 7);
         int32 bp2 = Eluna::CHECKVAL<int32>(L, 7, 0);
         Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
         uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
@@ -1448,20 +1439,20 @@ namespace LuaUnit
         bool delayed = Eluna::CHECKVAL<bool>(L, 3, true);
         switch (spellType)
         {
-        case 0:
-            spellType = CURRENT_MELEE_SPELL;
-            break;
-        case 1:
-            spellType = CURRENT_GENERIC_SPELL;
-            break;
-        case 2:
-            spellType = CURRENT_CHANNELED_SPELL;
-            break;
-        case 3:
-            spellType = CURRENT_AUTOREPEAT_SPELL;
-            break;
-        default:
-            return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
+            case 0:
+                spellType = CURRENT_MELEE_SPELL;
+                break;
+            case 1:
+                spellType = CURRENT_GENERIC_SPELL;
+                break;
+            case 2:
+                spellType = CURRENT_CHANNELED_SPELL;
+                break;
+            case 3:
+                spellType = CURRENT_AUTOREPEAT_SPELL;
+                break;
+            default:
+                return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
         }
 
         unit->InterruptSpell((CurrentSpellTypes)spellType, delayed);
@@ -1487,8 +1478,8 @@ namespace LuaUnit
             uint8 eff = spellInfo->Effect[i];
             if (eff >= TOTAL_SPELL_EFFECTS)
                 continue;
-            if (IsAreaAuraEffect(eff)           ||
-                eff == SPELL_EFFECT_APPLY_AURA  ||
+            if (IsAreaAuraEffect(eff) ||
+                eff == SPELL_EFFECT_APPLY_AURA ||
                 eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
             {
                 Aura* aur = CreateAura(spellInfo, SpellEffIndex(i), NULL, holder, target);
@@ -1540,33 +1531,6 @@ namespace LuaUnit
             unit->PlayDistanceSound(soundId, player);
         else
             unit->PlayDistanceSound(soundId);
-        return 0;
-    }
-
-    int RegisterEvent(lua_State* L, Unit* unit)
-    {
-        luaL_checktype(L, 2, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
-
-        lua_pushvalue(L, 2);
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        functionRef = sEluna->m_EventMgr->AddEvent(&unit->m_Events, functionRef, delay, repeats, unit);
-        if (functionRef)
-            Eluna::Push(L, functionRef);
-        return 1;
-    }
-
-    int RemoveEventById(lua_State* L, Unit* unit)
-    {
-        int eventId = Eluna::CHECKVAL<int>(L, 2);
-        sEluna->m_EventMgr->RemoveEvent(&unit->m_Events, eventId);
-        return 0;
-    }
-
-    int RemoveEvents(lua_State* /*L*/, Unit* unit)
-    {
-        sEluna->m_EventMgr->RemoveEvents(&unit->m_Events);
         return 0;
     }
 
@@ -1641,6 +1605,48 @@ namespace LuaUnit
         unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
         unit->Kill(target, durLoss);
+#endif
+        return 0;
+    }
+
+    /**
+     * Adds threat to the [Unit] from the victim.
+     *
+     * <pre>
+     * enum SpellSchoolMask
+     * {
+     *     SPELL_SCHOOL_MASK_NONE    = 0,
+     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
+     *     SPELL_SCHOOL_MASK_HOLY    = 2,
+     *     SPELL_SCHOOL_MASK_FIRE    = 4,
+     *     SPELL_SCHOOL_MASK_NATURE  = 8,
+     *     SPELL_SCHOOL_MASK_FROST   = 16,
+     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
+     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
+     * }
+     * </pre>
+     *
+     * @param [Unit] victim : [Unit] that caused the threat
+     * @param float threat : threat amount
+     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
+     * @param uint32 spell = 0 : spell entry used for threat
+     */
+    int AddThreat(lua_State* L, Unit* unit)
+    {
+        Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
+        float threat = Eluna::CHECKVAL<float>(L, 3, true);
+        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3, 0);
+
+        if (schoolMask > SPELL_SCHOOL_MASK_ALL)
+        {
+            return luaL_argerror(L, 3, "valid SpellSchoolMask expected");
+        }
+
+#ifdef TRINITY
+        unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
+#else
+        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spell ? sSpellStore.LookupEntry(spell) : NULL);
 #endif
         return 0;
     }
@@ -1720,5 +1726,4 @@ namespace LuaUnit
     return 1;
     }*/
 };
-
 #endif

@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_GUILDMETHODS
-#define ELUNA_H_GUILDMETHODS
+#ifndef GUILDMETHODS_H
+#define GUILDMETHODS_H
 
 namespace LuaGuild
 {
@@ -206,5 +206,4 @@ namespace LuaGuild
     }
 #endif
 };
-
 #endif

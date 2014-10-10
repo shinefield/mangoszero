@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef ELUNA_H_LUAHOOKS
-#define ELUNA_H_LUAHOOKS
+#ifndef LUAHOOKS_H
+#define LUAHOOKS_H
 
 namespace HookMgr
 {
@@ -24,6 +24,7 @@ namespace HookMgr
         REGTYPE_ITEM,
         REGTYPE_ITEM_GOSSIP,
         REGTYPE_PLAYER_GOSSIP,
+        REGTYPE_BG,
         REGTYPE_COUNT
     };
 
@@ -49,10 +50,10 @@ namespace HookMgr
         SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
         SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
 
-        // World // Not implemented on mangos
-        WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open)
+        // World
+        WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
         WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
-        // UNUSED                               =     10,       // (event)
+        // UNUSED                               =     10,
         WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
         WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
         WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)
@@ -60,7 +61,8 @@ namespace HookMgr
         WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
 
         // Eluna
-        ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event)
+        ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
+        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
 
         // Map
         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
@@ -85,7 +87,7 @@ namespace HookMgr
 
 	    // AddOns
         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
-
+        
         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
 
@@ -224,7 +226,7 @@ namespace HookMgr
         CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
         CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
         // UNUSED                                         = 32, // (event, creature)
-        CREATURE_EVENT_ON_QUEST_COMPLETE                  = 33, // (event, player, creature, quest)
+        // UNUSED                                         = 33, // (event, creature)
         CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt)
         CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
         CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
@@ -245,7 +247,7 @@ namespace HookMgr
         GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, player)
         GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state)
         GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)
-        GAMEOBJECT_EVENT_ON_QUEST_COMPLETE              = 11,   // (event, player, go, quest)
+        // UNUSED                                       = 11,   // (event, gameobject)
         GAMEOBJECT_EVENT_ON_ADD                         = 12,   // (event, gameobject)
         GAMEOBJECT_EVENT_ON_REMOVE                      = 13,   // (event, gameobject)
         GAMEOBJECT_EVENT_COUNT
@@ -272,6 +274,15 @@ namespace HookMgr
         GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip
         GOSSIP_EVENT_COUNT
     };
-};
 
+    // RegisterBGEvent(EventId, function)
+    enum BGEvents
+    {
+        BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
+        BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_COUNT
+    };
+};
 #endif
