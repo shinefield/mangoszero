@@ -26,13 +26,15 @@
 #ifndef MANGOS_H_FIELD
 #define MANGOS_H_FIELD
 
+#include <mysql.h>
+
 #include "Common.h"
 
 class Field
 {
     public:
 
-        enum DataTypes
+        enum SimpleDataTypes
         {
             DB_TYPE_UNKNOWN = 0x00,
             DB_TYPE_STRING  = 0x01,
@@ -41,12 +43,12 @@ class Field
             DB_TYPE_BOOL    = 0x04
         };
 
-        Field() : mValue(NULL), mType(DB_TYPE_UNKNOWN) {}
-        Field(const char* value, enum DataTypes type) : mValue(value), mType(type) {}
+        Field() : mValue(NULL), mType(MYSQL_TYPE_NULL) {}
+        Field(const char* value, enum_field_types type) : mValue(value), mType(type) {}
 
         ~Field() {}
 
-        enum DataTypes GetType() const
+        enum enum_field_types GetType() const
         {
             return mType;
         }
@@ -117,7 +119,7 @@ class Field
             return value;
         }
 
-        void SetType(enum DataTypes type)
+        void SetType(enum_field_types type)
         {
             mType = type;
         }
@@ -133,6 +135,6 @@ class Field
         Field& operator=(Field const&);
 
         const char* mValue;
-        enum DataTypes mType;
+        enum_field_types mType;
 };
 #endif
