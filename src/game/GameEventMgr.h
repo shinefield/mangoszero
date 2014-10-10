@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GAMEEVENT_MGR_H
-#define MANGOS_GAMEEVENT_MGR_H
+#ifndef MANGOS_H_GAMEEVENT_MGR
+#define MANGOS_H_GAMEEVENT_MGR
 
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
 
 #define max_ge_check_delay 86400                            // 1 day in seconds
 
@@ -40,7 +47,10 @@ struct GameEventData
     HolidayIds holiday_id;
     std::string description;
 
-    bool isValid() const { return length > 0; }
+    bool isValid() const
+    {
+        return length > 0;
+    }
 };
 
 struct GameEventCreatureData
@@ -73,15 +83,27 @@ class GameEventMgr
         ~GameEventMgr() {};
         typedef std::set<uint16> ActiveEvents;
         typedef std::vector<GameEventData> GameEventDataMap;
-        ActiveEvents const& GetActiveEventList() const { return m_ActiveEvents; }
-        GameEventDataMap const& GetEventMap() const { return mGameEvent; }
+        ActiveEvents const& GetActiveEventList() const
+        {
+            return m_ActiveEvents;
+        }
+        GameEventDataMap const& GetEventMap() const
+        {
+            return mGameEvent;
+        }
         bool CheckOneGameEvent(uint16 entry, time_t currenttime) const;
         uint32 NextCheck(uint16 entry) const;
         void LoadFromDB();
         void Initialize(MapPersistentState* state);         // called at new MapPersistentState object create
         uint32 Update(ActiveEvents const* activeAtShutdown = NULL);
-        bool IsValidEvent(uint16 event_id) const { return event_id < mGameEvent.size() && mGameEvent[event_id].isValid(); }
-        bool IsActiveEvent(uint16 event_id) const { return (m_ActiveEvents.find(event_id) != m_ActiveEvents.end()); }
+        bool IsValidEvent(uint16 event_id) const
+        {
+            return event_id < mGameEvent.size() && mGameEvent[event_id].isValid();
+        }
+        bool IsActiveEvent(uint16 event_id) const
+        {
+            return (m_ActiveEvents.find(event_id) != m_ActiveEvents.end());
+        }
         bool IsActiveHoliday(HolidayIds id);
         uint32 Initialize();
         void StartEvent(uint16 event_id, bool overwrite = false, bool resume = false);

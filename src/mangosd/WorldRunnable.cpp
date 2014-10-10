@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,33 +18,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup mangosd
-*/
-
-#include "WorldSocketMgr.h"
 #include "Common.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Timer.h"
+#include "WorldSocketMgr.h"
 #include "World.h"
 #include "WorldRunnable.h"
-#include "Timer.h"
 #include "ObjectAccessor.h"
 #include "MapManager.h"
-
-#include "Database/DatabaseEnv.h"
 
 #define WORLD_SLEEP_CONST 50
 
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 extern int m_ServiceStatus;
 #endif
 
 /// Heartbeat for the World
 void WorldRunnable::run()
 {
-    ///- Init new SQL thread for the world database
+    ///- Initialize new SQL thread for the world database
     WorldDatabase.ThreadStart();                            // let thread do safe mySQL requests (one connection call enough)
     sWorld.InitResultQueue();
 

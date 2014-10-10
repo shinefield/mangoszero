@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "Opcodes.h"
@@ -26,9 +34,9 @@
 #include "GuildMgr.h"
 #include "Chat.h"
 #include "SocialMgr.h"
-#include "Util.h"
 #include "Language.h"
 #include "World.h"
+#include "LuaEngine.h"
 
 //// MemberSlot ////////////////////////////////////////////
 void MemberSlot::SetMemberStats(Player* player)
@@ -97,6 +105,7 @@ Guild::Guild()
 
 Guild::~Guild()
 {
+    Eluna::RemoveRef(this);
 }
 
 bool Guild::Create(Player* leader, std::string gname)
@@ -140,6 +149,9 @@ bool Guild::Create(Player* leader, std::string gname)
     CharacterDatabase.CommitTransaction();
 
     CreateDefaultGuildRanks(lSession->GetSessionDbLocaleIndex());
+
+    // used by eluna
+    sEluna->OnCreate(this, leader, gname.c_str());
 
     return AddMember(m_LeaderGuid, (uint32)GR_GUILDMASTER);
 }
@@ -235,6 +247,9 @@ bool Guild::AddMember(ObjectGuid plGuid, uint32 plRank)
 
     UpdateAccountsNumber();
 
+    // used by eluna
+    sEluna->OnAddMember(this, pl, newmember.RankId);
+
     return true;
 }
 
@@ -245,6 +260,9 @@ void Guild::SetMOTD(std::string motd)
     // motd now can be used for encoding to DB
     CharacterDatabase.escape_string(motd);
     CharacterDatabase.PExecute("UPDATE guild SET motd='%s' WHERE guildid='%u'", motd.c_str(), m_Id);
+
+    // used by eluna
+    sEluna->OnMOTDChanged(this, motd);
 }
 
 void Guild::SetGINFO(std::string ginfo)
@@ -254,6 +272,9 @@ void Guild::SetGINFO(std::string ginfo)
     // ginfo now can be used for encoding to DB
     CharacterDatabase.escape_string(ginfo);
     CharacterDatabase.PExecute("UPDATE guild SET info='%s' WHERE guildid='%u'", ginfo.c_str(), m_Id);
+
+    // used by eluna
+    sEluna->OnInfoChanged(this, ginfo);
 }
 
 bool Guild::LoadGuildFromDB(QueryResult* guildDataResult)
@@ -538,7 +559,21 @@ bool Guild::DelMember(ObjectGuid guid, bool isDisbanding)
     if (!isDisbanding)
         UpdateAccountsNumber();
 
+    // used by eluna
+    sEluna->OnRemoveMember(this, player, isDisbanding); // IsKicked not a part of Mangos, implement?
+
     return members.empty();
+}
+
+bool Guild::ChangeMemberRank(ObjectGuid guid, uint8 newRank)
+{
+    if (newRank <= GetLowestRank())                    // Validate rank (allow only existing ranks)
+        if (MemberSlot* member = GetMemberSlot(guid))
+        {
+            member->ChangeRank(newRank);
+            return true;
+        }
+    return false;
 }
 
 void Guild::BroadcastToGuild(WorldSession* session, const std::string& msg, uint32 language)
@@ -689,6 +724,10 @@ void Guild::Disband()
     CharacterDatabase.PExecute("DELETE FROM guild_rank WHERE guildid = '%u'", m_Id);
     CharacterDatabase.PExecute("DELETE FROM guild_eventlog WHERE guildid = '%u'", m_Id);
     CharacterDatabase.CommitTransaction();
+
+    // used by eluna
+    sEluna->OnDisband(this);
+
     sGuildMgr.RemoveGuild(m_Id);
 }
 

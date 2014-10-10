@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _GROUPREFERENCE_H
-#define _GROUPREFERENCE_H
+#ifndef MANGOS_H_GROUPREFERENCE
+#define MANGOS_H_GROUPREFERENCE
 
-#include "Utilities/LinkedReference/Reference.h"
+#include "utilities/LinkedReference/Reference.h"
 
 class Group;
 class Player;
@@ -33,10 +40,25 @@ class MANGOS_DLL_SPEC GroupReference : public Reference<Group, Player>
         void sourceObjectDestroyLink() override;
     public:
         GroupReference() : Reference<Group, Player>(), iSubGroup(0) {}
-        ~GroupReference() { unlink(); }
-        GroupReference* next() { return (GroupReference*)Reference<Group, Player>::next(); }
-        GroupReference const* next() const { return (GroupReference const*)Reference<Group, Player>::next(); }
-        uint8 getSubGroup() const { return iSubGroup; }
-        void setSubGroup(uint8 pSubGroup) { iSubGroup = pSubGroup; }
+        ~GroupReference()
+        {
+            unlink();
+        }
+        GroupReference* next()
+        {
+            return (GroupReference*)Reference<Group, Player>::next();
+        }
+        GroupReference const* next() const
+        {
+            return (GroupReference const*)Reference<Group, Player>::next();
+        }
+        uint8 getSubGroup() const
+        {
+            return iSubGroup;
+        }
+        void setSubGroup(uint8 pSubGroup)
+        {
+            iSubGroup = pSubGroup;
+        }
 };
 #endif

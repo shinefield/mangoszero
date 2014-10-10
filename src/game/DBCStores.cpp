@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <map>
+
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
 #include "DBCStores.h"
-#include "Policies/Singleton.h"
-#include "Log.h"
-#include "ProgressBar.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
-
 #include "DBCfmt.h"
-
-#include <map>
 
 typedef std::map<uint32, uint32> AreaIDByAreaFlag;
 typedef std::map<uint32, uint32> AreaFlagByMapID;
@@ -191,7 +197,7 @@ inline void LoadDBC(uint32& availableDbcLocales, BarGoLink& bar, StoreProblemLis
     }
     else
     {
-        // sort problematic dbc to (1) non compatible and (2) nonexistent
+        // sort problematic dbc to (1) non compatible and (2) non-existent
         FILE* f = fopen(dbc_filename.c_str(), "rb");
         if (f)
         {
@@ -303,7 +309,7 @@ void LoadDBCStores(const std::string& dataPath)
             continue;
 
         SpellEntry const* spellInfo = sSpellStore.LookupEntry(skillLine->spellId);
-        if (spellInfo && (spellInfo->Attributes & (SPELL_ATTR_UNK4 | SPELL_ATTR_PASSIVE | SPELL_ATTR_UNK7 | SPELL_ATTR_UNK8)) == (SPELL_ATTR_UNK4 | SPELL_ATTR_PASSIVE | SPELL_ATTR_UNK7 | SPELL_ATTR_UNK8))
+        if (spellInfo && (spellInfo->Attributes & (SPELL_ATTR_ABILITY | SPELL_ATTR_PASSIVE | SPELL_ATTR_HIDE_SPELL | SPELL_ATTR_HIDE_IN_COMBAT_LOG)) == (SPELL_ATTR_ABILITY | SPELL_ATTR_PASSIVE | SPELL_ATTR_HIDE_SPELL | SPELL_ATTR_HIDE_IN_COMBAT_LOG))
         {
             for (unsigned int i = 1; i < sCreatureFamilyStore.GetNumRows(); ++i)
             {
@@ -587,17 +593,20 @@ AreaTableEntry const* GetAreaEntryByAreaFlagAndMap(uint32 area_flag, uint32 map_
 {
     // 1.12.1 areatable have duplicates for areaflag
     AreaTableEntry const* aEntry = NULL;
-    for (uint32 i = 0 ; i <= sAreaStore.GetNumRows() ; i++)
+    for (uint32 i = 0; i <= sAreaStore.GetNumRows(); i++)
     {
-        if (AreaTableEntry const* AreaEntry = sAreaStore.LookupEntry(i))
+        if (area_flag != 0)
         {
-            if (AreaEntry->exploreFlag == area_flag)
+            if (AreaTableEntry const* AreaEntry = sAreaStore.LookupEntry(i))
             {
-                // area_flag found but it lets test map_id too
-                if (AreaEntry->mapid == map_id)
-                    return AreaEntry; // area_flag and map_id are ok so we can return value
-                // not same map_id so we store this entry and continue searching another better one
-                aEntry = AreaEntry;
+                if (AreaEntry->exploreFlag == area_flag)
+                {
+                    // area_flag found but it lets test map_id too
+                    if (AreaEntry->mapid == map_id)
+                        return AreaEntry; // area_flag and map_id are OK so we can return value
+                    // not same map_id so we store this entry and continue searching another better one
+                    aEntry = AreaEntry;
+                }
             }
         }
     }
@@ -620,7 +629,6 @@ uint32 GetAreaFlagByMapId(uint32 mapid)
         return i->second;
 }
 
-
 ChatChannelsEntry const* GetChannelEntryFor(uint32 channel_id)
 {
     // not sorted, numbering index from 0
@@ -632,6 +640,29 @@ ChatChannelsEntry const* GetChannelEntryFor(uint32 channel_id)
     }
     return NULL;
 }
+
+ChatChannelsEntry const* GetChannelEntryFor(const std::string& name)
+{
+   // not sorted, numbering index from 0
+   for (uint32 i = 0; i < sChatChannelsStore.GetNumRows(); ++i)
+   {
+       ChatChannelsEntry const* ch = sChatChannelsStore.LookupEntry(i);
+       if (ch)
+       {
+           // need to remove %s from entryName if it exists before we match
+           std::string entryName (ch->pattern[0]);
+           std::size_t removeString = entryName.find("%s");
+
+           if (removeString != std::string::npos)
+               entryName.replace(removeString, 2, "");
+
+           if (name.find(entryName) != std::string::npos)
+               return ch;
+       }
+   }
+   return NULL;
+}
+
 /*[-ZERO]
 bool IsTotemCategoryCompatiableWith(uint32 itemTotemCategoryId, uint32 requiredTotemCategoryId)
 {
@@ -661,9 +692,9 @@ bool Zone2MapCoordinates(float& x, float& y, uint32 zone)
     if (!maEntry || maEntry->x2 == maEntry->x1 || maEntry->y2 == maEntry->y1)
         return false;
 
-    std::swap(x, y);                                        // at client map coords swapped
+    std::swap(x, y);                                            // at client map coords swapped
     x = x * ((maEntry->x2 - maEntry->x1) / 100) + maEntry->x1;
-    y = y * ((maEntry->y2 - maEntry->y1) / 100) + maEntry->y1; // client y coord from top to down
+    y = y * ((maEntry->y2 - maEntry->y1) / 100) + maEntry->y1;  // client y coord from top to down
 
     return true;
 }
@@ -677,8 +708,8 @@ bool Map2ZoneCoordinates(float& x, float& y, uint32 zone)
         return false;
 
     x = (x - maEntry->x1) / ((maEntry->x2 - maEntry->x1) / 100);
-    y = (y - maEntry->y1) / ((maEntry->y2 - maEntry->y1) / 100); // client y coord from top to down
-    std::swap(x, y);                                        // client have map coords swapped
+    y = (y - maEntry->y1) / ((maEntry->y2 - maEntry->y1) / 100);    // client y coord from top to down
+    std::swap(x, y);                                                // client have map coords swapped
 
     return true;
 }
@@ -761,10 +792,31 @@ uint32 GetCreatureModelRace(uint32 model_id)
 }
 
 // script support functions
-MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>  const* GetSoundEntriesStore()   { return &sSoundEntriesStore;   }
-MANGOS_DLL_SPEC DBCStorage <SpellEntry>         const* GetSpellStore()          { return &sSpellStore;          }
-MANGOS_DLL_SPEC DBCStorage <SpellRangeEntry>    const* GetSpellRangeStore()     { return &sSpellRangeStore;     }
-MANGOS_DLL_SPEC DBCStorage <FactionEntry>       const* GetFactionStore()        { return &sFactionStore;        }
-MANGOS_DLL_SPEC DBCStorage <CreatureDisplayInfoEntry> const* GetCreatureDisplayStore() { return &sCreatureDisplayInfoStore; }
-MANGOS_DLL_SPEC DBCStorage <EmotesEntry>        const* GetEmotesStore()         { return &sEmotesStore;         }
-MANGOS_DLL_SPEC DBCStorage <EmotesTextEntry>    const* GetEmotesTextStore()     { return &sEmotesTextStore;     }
+MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>  const* GetSoundEntriesStore()
+{
+    return &sSoundEntriesStore;
+}
+MANGOS_DLL_SPEC DBCStorage <SpellEntry>         const* GetSpellStore()
+{
+    return &sSpellStore;
+}
+MANGOS_DLL_SPEC DBCStorage <SpellRangeEntry>    const* GetSpellRangeStore()
+{
+    return &sSpellRangeStore;
+}
+MANGOS_DLL_SPEC DBCStorage <FactionEntry>       const* GetFactionStore()
+{
+    return &sFactionStore;
+}
+MANGOS_DLL_SPEC DBCStorage <CreatureDisplayInfoEntry> const* GetCreatureDisplayStore()
+{
+    return &sCreatureDisplayInfoStore;
+}
+MANGOS_DLL_SPEC DBCStorage <EmotesEntry>        const* GetEmotesStore()
+{
+    return &sEmotesStore;
+}
+MANGOS_DLL_SPEC DBCStorage <EmotesTextEntry>    const* GetEmotesTextStore()
+{
+    return &sEmotesTextStore;
+}

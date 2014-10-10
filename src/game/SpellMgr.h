@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _SPELLMGR_H
-#define _SPELLMGR_H
+#ifndef MANGOS_H_SPELLMGR
+#define MANGOS_H_SPELLMGR
 
 // For static or at-server-startup loaded spell data
 // For more high level function for sSpellStore data
 
+#include <map>
+
+#include "utilities/UnorderedMapSet.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "SpellAuraDefines.h"
 #include "DBCStructure.h"
 #include "DBCStores.h"
-
-#include "Utilities/UnorderedMapSet.h"
-
-#include <map>
 
 class Player;
 class Spell;
@@ -75,13 +81,25 @@ enum SpellSpecific
 SpellSpecific GetSpellSpecific(uint32 spellId);
 
 // Different spell properties
-inline float GetSpellRadius(SpellRadiusEntry const* radius) { return (radius ? radius->Radius : 0); }
+inline float GetSpellRadius(SpellRadiusEntry const* radius)
+{
+    return (radius ? radius->Radius : 0);
+}
 uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell = NULL);
 uint32 GetSpellCastTimeForBonus(SpellEntry const* spellProto, DamageEffectType damagetype);
 float CalculateDefaultCoefficient(SpellEntry const* spellProto, DamageEffectType const damagetype);
-inline float GetSpellMinRange(SpellRangeEntry const* range) { return (range ? range->minRange : 0); }
-inline float GetSpellMaxRange(SpellRangeEntry const* range) { return (range ? range->maxRange : 0); }
-inline uint32 GetSpellRecoveryTime(SpellEntry const* spellInfo) { return spellInfo->RecoveryTime > spellInfo->CategoryRecoveryTime ? spellInfo->RecoveryTime : spellInfo->CategoryRecoveryTime; }
+inline float GetSpellMinRange(SpellRangeEntry const* range)
+{
+    return (range ? range->minRange : 0);
+}
+inline float GetSpellMaxRange(SpellRangeEntry const* range)
+{
+    return (range ? range->maxRange : 0);
+}
+inline uint32 GetSpellRecoveryTime(SpellEntry const* spellInfo)
+{
+    return spellInfo->RecoveryTime > spellInfo->CategoryRecoveryTime ? spellInfo->RecoveryTime : spellInfo->CategoryRecoveryTime;
+}
 int32 GetSpellDuration(SpellEntry const* spellInfo);
 int32 GetSpellMaxDuration(SpellEntry const* spellInfo);
 int32 CalculateSpellDuration(SpellEntry const* spellInfo, Unit const* caster = NULL);
@@ -111,7 +129,7 @@ inline bool IsAuraApplyEffect(SpellEntry const* spellInfo, SpellEffectIndex effe
 
 inline bool IsSpellAppliesAura(SpellEntry const* spellInfo, uint32 effectMask = ((1 << EFFECT_INDEX_0) | (1 << EFFECT_INDEX_1) | (1 << EFFECT_INDEX_2)))
 {
-    for(int i = 0; i < MAX_EFFECT_INDEX; ++i)
+    for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
         if (effectMask & (1 << i))
             if (IsAuraApplyEffect(spellInfo, SpellEffectIndex(i)))
                 return true;
@@ -199,7 +217,7 @@ inline bool IsPassiveSpellStackableWithRanks(SpellEntry const* spellProto)
 
 inline bool IsDeathOnlySpell(SpellEntry const* spellInfo)
 {
-    return spellInfo->HasAttribute(SPELL_ATTR_EX3_CAST_ON_DEAD) || spellInfo->Id == 2584;
+    return spellInfo->HasAttribute(SPELL_ATTR_EX3_ONLY_TARGET_GHOSTS) || spellInfo->Id == 2584;
 }
 
 inline bool IsDeathPersistentSpell(SpellEntry const* spellInfo)
@@ -227,20 +245,20 @@ inline bool IsCasterSourceTarget(uint32 target)
 {
     switch (target)
     {
-        case TARGET_SELF:
-        case TARGET_PET:
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_MASTER:
-        case TARGET_MINION:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
-        case TARGET_SELF_FISHING:
+        case TARGET_UNIT_CASTER:
+        case TARGET_UNIT_PET:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_UNIT_MASTER:
+        case TARGET_DEST_CASTER_SUMMON:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
+        case TARGET_DEST_CASTER_FISHING:
         case TARGET_TOTEM_EARTH:
         case TARGET_TOTEM_WATER:
         case TARGET_TOTEM_AIR:
         case TARGET_TOTEM_FIRE:
-        case TARGET_AREAEFFECT_GO_AROUND_DEST:
+        case TARGET_GAMEOBJECT_DEST_AREA:
             return true;
         default:
             break;
@@ -273,11 +291,11 @@ inline bool IsPointEffectTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_INNKEEPER_COORDINATES:
-        case TARGET_TABLE_X_Y_Z_COORDINATES:
-        case TARGET_CASTER_COORDINATES:
+        case TARGET_DEST_HOME:
+        case TARGET_DEST_DB:
+        case TARGET_SRC_CASTER:
         case TARGET_SCRIPT_COORDINATES:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_DEST_TARGET_ENEMY:
         case TARGET_DUELVSPLAYER_COORDINATES:
             return true;
         default:
@@ -290,14 +308,14 @@ inline bool IsAreaEffectPossitiveTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_IN_AREA:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_SRC_AREA_ALLY:
+        case TARGET_UNIT_DEST_AREA_ALLY:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
         case TARGET_AREAEFFECT_PARTY:
-        case TARGET_ALL_RAID_AROUND_CASTER:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_UNIT_CASTER_AREA_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -309,21 +327,21 @@ inline bool IsAreaEffectTarget(Targets target)
 {
     switch (target)
     {
-        case TARGET_AREAEFFECT_INSTANT:
-        case TARGET_AREAEFFECT_CUSTOM:
-        case TARGET_ALL_ENEMY_IN_AREA:
-        case TARGET_ALL_ENEMY_IN_AREA_INSTANT:
-        case TARGET_ALL_PARTY_AROUND_CASTER:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_ALL_ENEMY_IN_AREA_CHANNELED:
-        case TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER:
-        case TARGET_ALL_FRIENDLY_UNITS_IN_AREA:
-        case TARGET_ALL_PARTY:
-        case TARGET_ALL_PARTY_AROUND_CASTER_2:
+        case TARGET_UNIT_SRC_AREA_ENTRY:
+        case TARGET_UNIT_DEST_AREA_ENTRY:
+        case TARGET_UNIT_SRC_AREA_ENEMY:
+        case TARGET_UNIT_DEST_AREA_ENEMY:
+        case TARGET_UNIT_CASTER_AREA_PARTY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_DEST_DYNOBJ_ENEMY:
+        case TARGET_UNIT_SRC_AREA_ALLY:
+        case TARGET_UNIT_DEST_AREA_ALLY:
+        case TARGET_UNIT_SRC_AREA_PARTY:
+        case TARGET_UNIT_DEST_AREA_PARTY:
         case TARGET_AREAEFFECT_PARTY:
-        case TARGET_AREAEFFECT_GO_AROUND_DEST:
-        case TARGET_ALL_RAID_AROUND_CASTER:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_GAMEOBJECT_DEST_AREA:
+        case TARGET_UNIT_CASTER_AREA_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -382,14 +400,14 @@ inline bool IsOnlySelfTargeting(SpellEntry const* spellInfo)
 
         switch (spellInfo->EffectImplicitTargetA[i])
         {
-            case TARGET_SELF:
+            case TARGET_UNIT_CASTER:
                 break;
             default:
                 return false;
         }
         switch (spellInfo->EffectImplicitTargetB[i])
         {
-            case TARGET_SELF:
+            case TARGET_UNIT_CASTER:
             case TARGET_NONE:
                 break;
             default:
@@ -411,7 +429,7 @@ inline bool isSpellBreakStealth(SpellEntry const* spellInfo)
 
 inline bool IsAutoRepeatRangedSpell(SpellEntry const* spellInfo)
 {
-    return spellInfo->HasAttribute(SPELL_ATTR_RANGED) && spellInfo->HasAttribute(SPELL_ATTR_EX2_AUTOREPEAT_FLAG);
+    return spellInfo->HasAttribute(SPELL_ATTR_REQ_AMMO) && spellInfo->HasAttribute(SPELL_ATTR_EX2_AUTOREPEAT_FLAG);
 }
 
 inline bool IsSpellRequiresRangedAP(SpellEntry const* spellInfo)
@@ -428,7 +446,7 @@ inline bool IsChanneledSpell(SpellEntry const* spellInfo)
 
 inline bool IsNeedCastSpellAtFormApply(SpellEntry const* spellInfo, ShapeshiftForm form)
 {
-    if ((!spellInfo->HasAttribute(SPELL_ATTR_PASSIVE) && !spellInfo->HasAttribute(SPELL_ATTR_UNK7)) || !form)
+    if ((!spellInfo->HasAttribute(SPELL_ATTR_PASSIVE) && !spellInfo->HasAttribute(SPELL_ATTR_HIDE_SPELL)) || !form)
         return false;
 
     // passive spells with SPELL_ATTR_EX2_NOT_NEED_SHAPESHIFT are already active without shapeshift, do no recast!
@@ -436,7 +454,7 @@ inline bool IsNeedCastSpellAtFormApply(SpellEntry const* spellInfo, ShapeshiftFo
     return ((spellInfo->Stances & (1 << (form - 1))  || spellInfo->Id == 24864 && form == FORM_CAT) &&
             !spellInfo->HasAttribute(SPELL_ATTR_EX2_NOT_NEED_SHAPESHIFT));
 }
- 
+
 inline bool IsNeedCastSpellAtOutdoor(SpellEntry const* spellInfo)
 {
     return (spellInfo->HasAttribute(SPELL_ATTR_OUTDOORS_ONLY) && spellInfo->HasAttribute(SPELL_ATTR_PASSIVE));
@@ -655,7 +673,10 @@ struct SpellTargetEntry
     uint32 targetEntry;
     uint32 inverseEffectMask;
 
-    bool CanNotHitWithSpellEffect(SpellEffectIndex effect) const { return inverseEffectMask & (1 << effect); }
+    bool CanNotHitWithSpellEffect(SpellEffectIndex effect) const
+    {
+        return inverseEffectMask & (1 << effect);
+    }
 };
 
 // coordinates for spells (accessed using SpellMgr functions)
@@ -826,7 +847,10 @@ class SpellMgr
             return ClassFamilyMask();
         }
 
-        SpellElixirMap const& GetSpellElixirMap() const { return mSpellElixirs; }
+        SpellElixirMap const& GetSpellElixirMap() const
+        {
+            return mSpellElixirs;
+        }
 
         uint32 GetSpellElixirMask(uint32 spellid) const
         {
@@ -945,7 +969,10 @@ class SpellMgr
             return 0;
         }
 
-        SpellChainMapNext const& GetSpellChainNext() const { return mSpellChainsNext; }
+        SpellChainMapNext const& GetSpellChainNext() const
+        {
+            return mSpellChainsNext;
+        }
 
         template<typename Worker>
         void doForHighRanks(uint32 spellid, Worker& worker)

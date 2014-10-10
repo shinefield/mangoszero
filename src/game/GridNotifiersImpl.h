@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRIDNOTIFIERSIMPL_H
-#define MANGOS_GRIDNOTIFIERSIMPL_H
+#ifndef MANGOS_H_GRIDNOTIFIERSIMPL
+#define MANGOS_H_GRIDNOTIFIERSIMPL
 
 #include "GridNotifiers.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Corpse.h"
 #include "Player.h"
 #include "UpdateData.h"
@@ -286,6 +293,71 @@ void MaNGOS::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType& m)
         return;
 
     for (DynamicObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
+    {
+        if (i_check(itr->getSource()))
+        {
+            i_object = itr->getSource();
+            return;
+        }
+    }
+}
+
+template<class Check>
+void MaNGOS::WorldObjectLastSearcher<Check>::Visit(GameObjectMapType& m)
+{
+    for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
+    {
+        if (i_check(itr->getSource()))
+        {
+            i_object = itr->getSource();
+            return;
+        }
+    }
+}
+
+template<class Check>
+void MaNGOS::WorldObjectLastSearcher<Check>::Visit(PlayerMapType& m)
+{
+    for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
+    {
+        if (i_check(itr->getSource()))
+        {
+            i_object = itr->getSource();
+            return;
+        }
+    }
+}
+
+template<class Check>
+void MaNGOS::WorldObjectLastSearcher<Check>::Visit(CreatureMapType& m)
+{
+    for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
+    {
+        if (i_check(itr->getSource()))
+        {
+            i_object = itr->getSource();
+            return;
+        }
+    }
+}
+
+template<class Check>
+void MaNGOS::WorldObjectLastSearcher<Check>::Visit(CorpseMapType& m)
+{
+    for (CorpseMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
+    {
+        if (i_check(itr->getSource()))
+        {
+            i_object = itr->getSource();
+            return;
+        }
+    }
+}
+
+template<class Check>
+void MaNGOS::WorldObjectLastSearcher<Check>::Visit(DynamicObjectMapType& m)
+{
+    for (DynamicObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
         if (i_check(itr->getSource()))
         {

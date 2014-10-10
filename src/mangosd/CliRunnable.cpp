@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup mangosd
-/// @{
-/// \file
-
 #include "Common.h"
+#include "configuration/Config.h"
 #include "Language.h"
-#include "Log.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "WorldSession.h"
-#include "Config/Config.h"
-#include "Util.h"
 #include "AccountMgr.h"
 #include "CliRunnable.h"
 #include "MapManager.h"
@@ -136,7 +139,7 @@ bool ChatHandler::GetDeletedCharacterInfoList(DeletedInfoList& foundList, std::s
             info.name       = fields[1].GetCppString();
             info.accountId  = fields[2].GetUInt32();
 
-            // account name will be empty for nonexistent account
+            // account name will be empty for non-existent account
             sAccountMgr.GetName(info.accountId, info.accountName);
 
             info.deleteDate = time_t(fields[3].GetUInt64());
@@ -205,11 +208,11 @@ void ChatHandler::HandleCharacterDeletedListHelper(DeletedInfoList const& foundL
 
         if (!m_session)
             PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CONSOLE,
-                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<nonexistent>" : itr->accountName.c_str(),
+                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<non-existent>" : itr->accountName.c_str(),
                             itr->accountId, dateStr.c_str());
         else
             PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CHAT,
-                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<nonexistent>" : itr->accountName.c_str(),
+                            itr->lowguid, itr->name.c_str(), itr->accountName.empty() ? "<non-existent>" : itr->accountName.c_str(),
                             itr->accountId, dateStr.c_str());
     }
 
@@ -320,7 +323,7 @@ bool ChatHandler::HandleCharacterDeletedRestoreCommand(char* args)
 
     if (newCharName.empty())
     {
-        // Drop nonexistent account cases
+        // Drop non-existent account cases
         for (DeletedInfoList::iterator itr = foundList.begin(); itr != foundList.end(); ++itr)
             HandleCharacterDeletedRestoreHelper(*itr);
     }
@@ -490,7 +493,7 @@ bool ChatHandler::HandleAccountCreateCommand(char* args)
             SendSysMessage(LANG_ACCOUNT_TOO_LONG);
             SetSentErrorMessage(true);
             return false;
-        case AOR_NAME_ALREDY_EXIST:
+        case AOR_NAME_ALREADY_EXIST:
             SendSysMessage(LANG_ACCOUNT_ALREADY_EXIST);
             SetSentErrorMessage(true);
             return false;
@@ -570,7 +573,7 @@ bool ChatHandler::HandleServerLogLevelCommand(char* args)
 /// @}
 
 #ifdef linux
-// Non-blocking keypress detector, when return pressed, return 1, else always return 0
+// Non-blocking key press detector, when return pressed, return 1, else always return 0
 int kb_hit_return()
 {
     struct timeval tv;
@@ -587,7 +590,7 @@ int kb_hit_return()
 /// %Thread start
 void CliRunnable::run()
 {
-    ///- Init new SQL thread for the world database (one connection call enough)
+    ///- Initialize new SQL thread for the world database (one connection call enough)
     WorldDatabase.ThreadStart();                            // let thread do safe mySQL requests
 
     char commandbuf[256];
@@ -608,7 +611,7 @@ void CliRunnable::run()
         fflush(stdout);
 #ifdef linux
         while (!kb_hit_return() && !World::IsStopped())
-            // With this, we limit CLI to 10commands/second
+            // With this, we limit CLI to 10 commands/second
             usleep(100);
         if (World::IsStopped())
             break;
@@ -631,7 +634,7 @@ void CliRunnable::run()
             }
 
             std::string command;
-            if (!consoleToUtf8(command_str, command))       // convert from console encoding to utf8
+            if (!consoleToUtf8(command_str, command))       // convert from console encoding to UTF8
             {
                 printf("mangos>");
                 continue;

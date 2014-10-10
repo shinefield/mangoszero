@@ -57,17 +57,17 @@ static int cmp(const void* a, const void* b)
 {
 	return strcmp(*(const char**)a, *(const char**)b);
 }
-	
+
 void scanDirectory(const char* path, const char* ext, FileList& list)
 {
 	fileListClear(list);
-	
+
 #ifdef WIN32
 	_finddata_t dir;
 	char pathWithExt[260];
 	long fh;
 	strcpy(pathWithExt, path);
-	strcat(pathWithExt, "/*");
+	strcat(pathWithExt, "/");
 	strcat(pathWithExt, ext);
 	fh = _findfirst(pathWithExt, &dir);
 	if (fh == -1L)
@@ -83,7 +83,7 @@ void scanDirectory(const char* path, const char* ext, FileList& list)
 	DIR* dp = opendir(path);
 	if (!dp)
 		return;
-	
+
 	while ((current = readdir(dp)) != 0)
 	{
 		int len = strlen(current->d_name);

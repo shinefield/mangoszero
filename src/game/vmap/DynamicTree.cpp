@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +18,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "DynamicTree.h"
-#include "Log.h"
-#include "Timer.h"
+#include "log/Log.h"
+#include "utilities/Timer.h"
 #include "BIHWrap.h"
 #include "RegularGrid.h"
 #include "GameObjectModel.h"
 
 template<> struct HashTrait< GameObjectModel>
 {
-    static size_t hashCode(const GameObjectModel& g) { return (size_t)(void*)&g; }
+    static size_t hashCode(const GameObjectModel& g)
+    {
+        return (size_t)(void*)&g;
+    }
 };
 
 template<> struct PositionTrait< GameObjectModel>
 {
-    static void getPosition(const GameObjectModel& g, Vector3& p) { p = g.getPosition(); }
+    static void getPosition(const GameObjectModel& g, Vector3& p)
+    {
+        p = g.getPosition();
+    }
 };
 
 template<> struct BoundsTrait< GameObjectModel>
 {
-    static void getBounds(const GameObjectModel& g, G3D::AABox& out) { out = g.getBounds();}
-    static void getBounds2(const GameObjectModel* g, G3D::AABox& out) { out = g->getBounds();}
+    static void getBounds(const GameObjectModel& g, G3D::AABox& out)
+    {
+        out = g.getBounds();
+    }
+    static void getBounds2(const GameObjectModel* g, G3D::AABox& out)
+    {
+        out = g->getBounds();
+    }
 };
 
 /*
@@ -147,7 +166,10 @@ struct DynamicTreeIntersectionCallback
         did_hit = obj.intersectRay(r, distance, true);
         return did_hit;
     }
-    bool didHit() const { return did_hit;}
+    bool didHit() const
+    {
+        return did_hit;
+    }
 };
 
 struct DynamicTreeIntersectionCallback_WithLogger
@@ -168,7 +190,10 @@ struct DynamicTreeIntersectionCallback_WithLogger
         }
         return hit;
     }
-    bool didHit() const { return did_hit;}
+    bool didHit() const
+    {
+        return did_hit;
+    }
 };
 
 //=========================================================

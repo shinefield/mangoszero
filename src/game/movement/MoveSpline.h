@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_MOVEPLINE_H
-#define MANGOSSERVER_MOVEPLINE_H
+#ifndef MANGOS_H_MOVEPLINE
+#define MANGOS_H_MOVEPLINE
 
 #include "spline.h"
 #include "MoveSplineInitArgs.h"
 
 namespace Movement
 {
+    enum MonsterMoveType
+    {
+        MonsterMoveNormal = 0,
+        MonsterMoveStop = 1,
+        MonsterMoveFacingSpot = 2,
+        MonsterMoveFacingTarget = 3,
+        MonsterMoveFacingAngle = 4
+    };
+
     struct Location : public Vector3
     {
         Location() : orientation(0) {}
@@ -65,25 +81,52 @@ namespace Movement
             void init_spline(const MoveSplineInitArgs& args);
         protected:
 
-            const MySpline::ControlArray& getPath() const { return spline.getPoints();}
+            const MySpline::ControlArray& getPath() const
+            {
+                return spline.getPoints();
+            }
             void computeFallElevation(float& el) const;
 
             UpdateResult _updateState(int32& ms_time_diff);
-            int32 next_timestamp() const { return spline.length(point_Idx + 1);}
-            int32 segment_time_elapsed() const { return next_timestamp() - time_passed;}
-            int32 timeElapsed() const { return Duration() - time_passed;}
-            int32 timePassed() const { return time_passed;}
+            int32 next_timestamp() const
+            {
+                return spline.length(point_Idx + 1);
+            }
+            int32 segment_time_elapsed() const
+            {
+                return next_timestamp() - time_passed;
+            }
+            int32 timeElapsed() const
+            {
+                return Duration() - time_passed;
+            }
+            int32 timePassed() const
+            {
+                return time_passed;
+            }
 
         public:
-            const MySpline& _Spline() const { return spline;}
-            int32 _currentSplineIdx() const { return point_Idx;}
+            const MySpline& _Spline() const
+            {
+                return spline;
+            }
+            int32 _currentSplineIdx() const
+            {
+                return point_Idx;
+            }
             void _Finalize();
-            void _Interrupt() { splineflags.done = true;}
+            void _Interrupt()
+            {
+                splineflags.done = true;
+            }
 
         public:
 
             void Initialize(const MoveSplineInitArgs&);
-            bool Initialized() const { return !spline.empty();}
+            bool Initialized() const
+            {
+                return !spline.empty();
+            }
 
             explicit MoveSpline();
 
@@ -105,14 +148,32 @@ namespace Movement
 
             Location ComputePosition() const;
 
-            uint32 GetId() const { return m_Id;}
-            bool Finalized() const { return splineflags.done; }
-            bool isCyclic() const { return splineflags.cyclic;}
-            const Vector3 FinalDestination() const { return Initialized() ? spline.getPoint(spline.last()) : Vector3();}
-            const Vector3 CurrentDestination() const { return Initialized() ? spline.getPoint(point_Idx + 1) : Vector3();}
+            uint32 GetId() const
+            {
+                return m_Id;
+            }
+            bool Finalized() const
+            {
+                return splineflags.done;
+            }
+            bool isCyclic() const
+            {
+                return splineflags.cyclic;
+            }
+            const Vector3 FinalDestination() const
+            {
+                return Initialized() ? spline.getPoint(spline.last()) : Vector3();
+            }
+            const Vector3 CurrentDestination() const
+            {
+                return Initialized() ? spline.getPoint(point_Idx + 1) : Vector3();
+            }
             int32 currentPathIdx() const;
 
-            int32 Duration() const { return spline.length();}
+            int32 Duration() const
+            {
+                return spline.length();
+            }
 
             std::string ToString() const;
     };

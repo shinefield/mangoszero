@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _TILEASSEMBLER_H_
-#define _TILEASSEMBLER_H_
+#ifndef MANGOS_H_TILEASSEMBLER
+#define MANGOS_H_TILEASSEMBLER
 
-#include <G3D/Vector3.h>
-#include <G3D/Matrix3.h>
 #include <map>
 #include <set>
+#include <G3D/Vector3.h>
+#include <G3D/Matrix3.h>
 
 #include "ModelInstance.h"
 #include "WorldModel.h"
@@ -48,7 +55,10 @@ namespace VMAP
                 iRotation = G3D::Matrix3::fromEulerAnglesZYX(G3D::pi() * iDir.y / 180.f, G3D::pi() * iDir.x / 180.f, G3D::pi() * iDir.z / 180.f);
             }
             G3D::Vector3 transform(const G3D::Vector3& pIn) const;
-            void moveToBasePos(const G3D::Vector3& pBasePos) { iPos -= pBasePos; }
+            void moveToBasePos(const G3D::Vector3& pBasePos)
+            {
+                iPos -= pBasePos;
+            }
     };
 
     typedef std::map<uint32, ModelSpawn> UniqueEntryMap;
@@ -109,7 +119,10 @@ namespace VMAP
 
             void exportGameobjectModels();
             bool convertRawFile(const std::string& pModelFilename);
-            void setModelNameFilterMethod(bool (*pFilterMethod)(char* pName)) { iFilterMethod = pFilterMethod; }
+            void setModelNameFilterMethod(bool (*pFilterMethod)(char* pName))
+            {
+                iFilterMethod = pFilterMethod;
+            }
             std::string getDirEntryNameFromModName(unsigned int pMapId, const std::string& pModPosName);
             unsigned int getUniqueNameId(const std::string pName);
     };

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_POINTMOVEMENTGENERATOR_H
-#define MANGOS_POINTMOVEMENTGENERATOR_H
+#ifndef MANGOS_H_POINTMOVEMENTGENERATOR
+#define MANGOS_H_POINTMOVEMENTGENERATOR
 
 #include "MovementGenerator.h"
 
@@ -37,9 +44,18 @@ class MANGOS_DLL_SPEC PointMovementGenerator
 
         void MovementInform(T&);
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return POINT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return POINT_MOTION_TYPE;
+        }
 
-        bool GetDestination(float& x, float& y, float& z) const { x = i_x; y = i_y; z = i_z; return true; }
+        bool GetDestination(float& x, float& y, float& z) const
+        {
+            x = i_x;
+            y = i_y;
+            z = i_z;
+            return true;
+        }
     private:
         uint32 id;
         float i_x, i_y, i_z;
@@ -53,7 +69,10 @@ class MANGOS_DLL_SPEC AssistanceMovementGenerator
         AssistanceMovementGenerator(float _x, float _y, float _z) :
             PointMovementGenerator<Creature>(0, _x, _y, _z, true) {}
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return ASSISTANCE_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return ASSISTANCE_MOTION_TYPE;
+        }
         void Finalize(Unit&) override;
 };
 
@@ -67,7 +86,10 @@ class EffectMovementGenerator : public MovementGenerator
         void Interrupt(Unit&) override {}
         void Reset(Unit&) override {}
         bool Update(Unit& u, const uint32&) override;
-        MovementGeneratorType GetMovementGeneratorType() const override { return EFFECT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return EFFECT_MOTION_TYPE;
+        }
     private:
         uint32 m_Id;
 };

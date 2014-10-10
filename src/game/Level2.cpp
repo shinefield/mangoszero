@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cctype>
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <typeinfo>
+
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "Item.h"
@@ -41,12 +55,6 @@
 #include "GMTicketMgr.h"
 #include "WaypointManager.h"
 #include "DBCStores.h"
-#include "Util.h"
-#include <cctype>
-#include <iostream>
-#include <fstream>
-#include <map>
-#include <typeinfo>
 #include "Formulas.h"
 
 #include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand
@@ -2027,10 +2035,9 @@ bool ChatHandler::HandleNpcUnFollowCommand(char* /*args*/)
         return false;
     }
 
-    if (creature->GetMotionMaster()->empty() ||
-            creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != FOLLOW_MOTION_TYPE)
+    if (creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != FOLLOW_MOTION_TYPE)
     {
-        PSendSysMessage(LANG_CREATURE_NOT_FOLLOW_YOU);
+        PSendSysMessage(LANG_CREATURE_NOT_FOLLOW_YOU, creature->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -2040,7 +2047,7 @@ bool ChatHandler::HandleNpcUnFollowCommand(char* /*args*/)
 
     if (mgen->GetTarget() != player)
     {
-        PSendSysMessage(LANG_CREATURE_NOT_FOLLOW_YOU);
+        PSendSysMessage(LANG_CREATURE_NOT_FOLLOW_YOU, creature->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -5015,8 +5022,8 @@ bool ChatHandler::HandleMmapLocCommand(char* /*args*/)
     {
         const dtMeshTile* tile;
         const dtPoly* poly;
-        navmesh->getTileAndPolyByRef(polyRef, &tile, &poly);
-        if (tile)
+        dtStatus dtResult = navmesh->getTileAndPolyByRef(polyRef, &tile, &poly);
+        if ((dtStatusSucceed(dtResult)) && tile)
             PSendSysMessage("Dt     [%02i,%02i]", tile->header->x, tile->header->y);
         else
             PSendSysMessage("Dt     [??,??] (no tile loaded)");

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "database/DatabaseEnv.h"
+#include "utilities/Util.h"
 #include "GameObject.h"
 #include "QuestDef.h"
 #include "ObjectMgr.h"
@@ -24,9 +33,8 @@
 #include "Spell.h"
 #include "UpdateMask.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "World.h"
-#include "Database/DatabaseEnv.h"
 #include "LootMgr.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
@@ -37,10 +45,11 @@
 #include "BattleGround/BattleGround.h"
 #include "BattleGround/BattleGroundAV.h"
 #include "OutdoorPvP/OutdoorPvP.h"
-#include "Util.h"
 #include "ScriptMgr.h"
 #include "vmap/GameObjectModel.h"
+#include "CreatureAISelector.h"
 #include "SQLStorages.h"
+#include "LuaEngine.h"
 
 GameObject::GameObject() : WorldObject(),
     loot(this),
@@ -69,11 +78,16 @@ GameObject::GameObject() : WorldObject(),
 
 GameObject::~GameObject()
 {
+    Eluna::RemoveRef(this);
+
     delete m_model;
 }
 
 void GameObject::AddToWorld()
 {
+    if (!IsInWorld())
+        sEluna->OnAddToWorld(this);
+
     ///- Register the gameobject for guid lookup
     if (!IsInWorld())
         GetMap()->GetObjectsStore().insert<GameObject>(GetObjectGuid(), (GameObject*)this);
@@ -92,6 +106,8 @@ void GameObject::RemoveFromWorld()
     ///- Remove the gameobject from the accessor
     if (IsInWorld())
     {
+        sEluna->OnRemoveFromWorld(this);
+
         // Notify the outdoor pvp script
         if (OutdoorPvP* outdoorPvP = sOutdoorPvPMgr.GetScript(GetZoneId()))
             outdoorPvP->HandleGameObjectRemove(this);
@@ -115,6 +131,11 @@ void GameObject::RemoveFromWorld()
     }
 
     Object::RemoveFromWorld();
+}
+
+void GameObject::CleanupsBeforeDelete()
+{
+    WorldObject::CleanupsBeforeDelete();
 }
 
 bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state)
@@ -179,6 +200,8 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, float x, float
             break;
     }
 
+    sEluna->OnSpawn(this);
+
     // Notify the battleground or outdoor pvp script
     if (map->IsBattleGround())
         ((BattleGroundMap*)map)->GetBG()->HandleGameObjectCreate(this);
@@ -201,6 +224,9 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
         //((Transport*)this)->Update(p_time);
         return;
     }
+
+    // used by eluna
+    sEluna->UpdateAI(this, update_diff);
 
     switch (m_lootState)
     {
@@ -414,6 +440,43 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
                     m_UniqueUsers.clear();
                     SetLootState(GO_READY);
                     return; // SetLootState and return because go is treated as "burning flag" due to GetGoAnimProgress() being 100 and would be removed on the client
+                case GAMEOBJECT_TYPE_CHEST:
+                    {
+                        uint32 trapEntry = GetGOInfo()->GetLinkedGameObjectEntry();
+                        if (144064) // Special case for Gordunni Cobalt Visual
+                        {
+                            float range = 0.5f;
+                            GameObject* visualGO = NULL;
+
+                            MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, 177683, range); //177683 Visual Entry
+                            MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(visualGO, go_check);
+
+                            Cell::VisitGridObjects(this, checker, range);
+
+                            if (visualGO)
+                                visualGO->SetLootState(GO_JUST_DEACTIVATED);
+                        }
+
+                        if (!trapEntry)
+                            break;
+                        GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(trapEntry);
+                        if (!trapInfo || trapInfo->type != GAMEOBJECT_TYPE_TRAP)
+                            break;
+
+                        float range = 0.5f;
+
+                        GameObject* trapGO = NULL;
+
+                        MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, trapEntry, range);
+                        MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(trapGO, go_check);
+
+                        Cell::VisitGridObjects(this, checker, range);
+
+                        // found correct GO
+                        if (trapGO)
+                            trapGO->SetLootState(GO_JUST_DEACTIVATED);
+                    }
+
                 default:
                     break;
             }
@@ -968,6 +1031,12 @@ void GameObject::Use(Unit* user)
     uint32 spellId = 0;
     bool triggered = false;
 
+    if (Player* playerUser = user->ToPlayer())
+    {
+        if (sScriptMgr.OnGossipHello(playerUser, this))
+            return;
+    }
+
     // test only for exist cooldown data (cooldown timer used for door/buttons reset that not have use cooldown)
     if (uint32 cooldown = GetGOInfo()->GetCooldown())
     {
@@ -1079,7 +1148,7 @@ void GameObject::Use(Unit* user)
             // Some may have have animation and/or are expected to despawn.
 
             // TODO: Improve this when more information is available, currently these traps are known that must send the anim (Onyxia/ Heigan Fissures/ Trap in DireMaul)
-            if (GetDisplayId() == 4392 || GetDisplayId() == 4472 || GetDisplayId() == 6785 || GetDisplayId() == 3073)
+            if (GetDisplayId() == 4392 || GetDisplayId() == 4472 || GetDisplayId() == 4491 || GetDisplayId() == 6785 || GetDisplayId() == 3073)
                 SendGameObjectCustomAnim(GetObjectGuid());
 
             // TODO: Despawning of traps? (Also related to code in ::Update)
@@ -1452,34 +1521,6 @@ void GameObject::Use(Unit* user)
             AddUse();
             break;
         }
-        case GAMEOBJECT_TYPE_MEETINGSTONE:                  // 23
-        {
-            GameObjectInfo const* info = GetGOInfo();
-
-            if (user->GetTypeId() != TYPEID_PLAYER)
-                return;
-
-            Player* player = (Player*)user;
-
-            Player* targetPlayer = ObjectAccessor::FindPlayer(player->GetSelectionGuid());
-
-            // accept only use by player from same group for caster except caster itself
-            if (!targetPlayer || targetPlayer == player || !targetPlayer->IsInSameGroupWith(player))
-                return;
-
-            // required lvl checks!
-            uint8 level = player->getLevel();
-            if (level < info->meetingstone.minLevel || level > info->meetingstone.maxLevel)
-                return;
-
-            level = targetPlayer->getLevel();
-            if (level < info->meetingstone.minLevel || level > info->meetingstone.maxLevel)
-                return;
-
-            spellId = 23598;
-
-            break;
-        }
         case GAMEOBJECT_TYPE_FLAGSTAND:                     // 24
         {
             if (user->GetTypeId() != TYPEID_PLAYER)
@@ -1694,12 +1735,14 @@ bool GameObject::IsFriendlyTo(Unit const* unit) const
 void GameObject::SetLootState(LootState state)
 {
     m_lootState = state;
+    sEluna->OnLootStateChanged(this, state);
     UpdateCollisionState();
 }
 
 void GameObject::SetGoState(GOState state)
 {
     SetByteValue(GAMEOBJECT_STATE, 0, state);
+    sEluna->OnGameObjectStateChanged(this, state);
     UpdateCollisionState();
 }
 

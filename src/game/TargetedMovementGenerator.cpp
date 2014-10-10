@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "network/ByteBuffer.h"
+#include "debugging/Errors.h"
 #include "TargetedMovementGenerator.h"
-#include "ByteBuffer.h"
-#include "Errors.h"
 #include "PathFinder.h"
 #include "Unit.h"
 #include "Creature.h"
@@ -171,9 +178,15 @@ bool TargetedMovementGeneratorMedium<T, D>::RequiresNewPosition(T& owner, float 
 
 //-----------------------------------------------//
 template<class T>
-void ChaseMovementGenerator<T>::_clearUnitStateMove(T& u) { u.clearUnitState(UNIT_STAT_CHASE_MOVE); }
+void ChaseMovementGenerator<T>::_clearUnitStateMove(T& u)
+{
+    u.clearUnitState(UNIT_STAT_CHASE_MOVE);
+}
 template<class T>
-void ChaseMovementGenerator<T>::_addUnitStateMove(T& u) { u.addUnitState(UNIT_STAT_CHASE_MOVE); }
+void ChaseMovementGenerator<T>::_addUnitStateMove(T& u)
+{
+    u.addUnitState(UNIT_STAT_CHASE_MOVE);
+}
 
 template<class T>
 bool ChaseMovementGenerator<T>::_lostTarget(T& u) const
@@ -212,7 +225,7 @@ void ChaseMovementGenerator<T>::Finalize(T& owner)
 template<class T>
 void ChaseMovementGenerator<T>::Interrupt(T& owner)
 {
-    owner.InterruptMoving();
+    owner.StopMoving();
     owner.clearUnitState(UNIT_STAT_CHASE | UNIT_STAT_CHASE_MOVE);
 }
 
@@ -237,9 +250,15 @@ float ChaseMovementGenerator<T>::GetDynamicTargetDistance(T& owner, bool forRang
 
 //-----------------------------------------------//
 template<class T>
-void FollowMovementGenerator<T>::_clearUnitStateMove(T& u) { u.clearUnitState(UNIT_STAT_FOLLOW_MOVE); }
+void FollowMovementGenerator<T>::_clearUnitStateMove(T& u)
+{
+    u.clearUnitState(UNIT_STAT_FOLLOW_MOVE);
+}
 template<class T>
-void FollowMovementGenerator<T>::_addUnitStateMove(T& u) { u.addUnitState(UNIT_STAT_FOLLOW_MOVE); }
+void FollowMovementGenerator<T>::_addUnitStateMove(T& u)
+{
+    u.addUnitState(UNIT_STAT_FOLLOW_MOVE);
+}
 
 template<>
 bool FollowMovementGenerator<Creature>::EnableWalking() const
@@ -297,7 +316,7 @@ void FollowMovementGenerator<T>::Finalize(T& owner)
 template<class T>
 void FollowMovementGenerator<T>::Interrupt(T& owner)
 {
-    owner.InterruptMoving();
+    owner.StopMoving();
     owner.clearUnitState(UNIT_STAT_FOLLOW | UNIT_STAT_FOLLOW_MOVE);
     _updateSpeed(owner);
 }
@@ -310,11 +329,11 @@ void FollowMovementGenerator<T>::Reset(T& owner)
 
 // This factor defines how much of the bounding-radius (as measurement of size) will be used for recalculating a new following position
 //   The smaller, the more micro movement, the bigger, possibly no proper movement updates
-#define FOLLOW_RECALCULATE_FACTOR                         0.1f
+#define FOLLOW_RECALCULATE_FACTOR                         1.0f
 // This factor defines when the distance of a follower will have impact onto following-position updates
 #define FOLLOW_DIST_GAP_FOR_DIST_FACTOR                   3.0f
 // This factor defines how much of the follow-distance will be used as sloppyness value (if the above distance is exceeded)
-#define FOLLOW_DIST_RECALCULATE_FACTOR                    0.1f
+#define FOLLOW_DIST_RECALCULATE_FACTOR                    1.0f
 
 template<class T>
 float FollowMovementGenerator<T>::GetDynamicTargetDistance(T& owner, bool forRangeCheck) const

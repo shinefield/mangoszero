@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +18,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "DBCStores.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "Opcodes.h"
 #include "Chat.h"
-#include "Log.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "Language.h"
 #include "CellImpl.h"
 #include "MapPersistentStateMgr.h"
 #include "Mail.h"
-#include "Util.h"
 #include "SpellMgr.h"
-#ifdef _DEBUG_VMAPS
+#ifdef VMAP_DEBUG
 #include "VMapFactory.h"
 #endif
 
@@ -353,7 +360,7 @@ bool ChatHandler::HandleGPSCommand(char* args)
     }
 
     // Additional vmap debugging help
-#ifdef _DEBUG_VMAPS
+#ifdef VMAP_DEBUG
     PSendSysMessage("Static terrain height (maps only): %f", obj->GetTerrain()->GetHeightStatic(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), false));
 
     if (VMAP::IVMapManager* vmgr = VMAP::VMapFactory::createOrGetVMapManager())
@@ -366,7 +373,7 @@ bool ChatHandler::HandleGPSCommand(char* args)
 }
 
 // Summon Player
-bool ChatHandler::HandleNamegoCommand(char* args)
+bool ChatHandler::HandleSummonCommand(char* args)
 {
     Player* target;
     ObjectGuid target_guid;
@@ -486,7 +493,7 @@ bool ChatHandler::HandleNamegoCommand(char* args)
 }
 
 // Teleport to Player
-bool ChatHandler::HandleGonameCommand(char* args)
+bool ChatHandler::HandleAppearCommand(char* args)
 {
     Player* target;
     ObjectGuid target_guid;
@@ -1655,7 +1662,7 @@ bool ChatHandler::HandleSendMailCommand(char* args)
     if (!HandleSendMailHelper(draft, args))
         return false;
 
-    // from console show nonexistent sender
+    // from console show non-existent sender
     MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetObjectGuid().GetCounter() : 0, MAIL_STATIONERY_GM);
 
     draft.SendMailTo(MailReceiver(target, target_guid), sender);

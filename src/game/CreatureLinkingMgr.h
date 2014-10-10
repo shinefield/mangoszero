@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,31 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup npc_linking System to link groups of NPCs together
- * This NPC-linking system in MaNGOS consists of 2 files:
- * - CreatureLinkingMgr.h
- * - CreatureLinkingMgr.cpp
- * as well of
- * - hooks in Creature.cpp, to trigger actions
- * - holder of the linked npcs for every map
- *
- * @{
- *
- * @file CreatureLinkingMgr.h
- * This file contains the the headers needed for MaNGOS to link NPCs together
- *
- */
+#ifndef MANGOS_H_CREATURE_LINKING_MGR
+#define MANGOS_H_CREATURE_LINKING_MGR
 
-#ifndef CREATURE_LINKING_MGR_H
-#define CREATURE_LINKING_MGR_H
-
-#include "Common.h"
-#include "Policies/Singleton.h"
-#include "ObjectGuid.h"
 #include <functional>
+
+#include "policies/Singleton.h"
+#include "Common.h"
+#include "ObjectGuid.h"
 
 class Unit;
 class Creature;
@@ -50,6 +42,7 @@ enum CreatureLinkingEvent
     LINKING_EVENT_EVADE         = 1,
     LINKING_EVENT_DIE           = 2,
     LINKING_EVENT_RESPAWN       = 3,
+    LINKING_EVENT_DESPAWN       = 4,
 };
 
 // enum describing possible flags action flags for NPCs linked to other NPCs
@@ -71,12 +64,13 @@ enum CreatureLinkingFlags
 
     // Dynamic behaviour, out of combat
     FLAG_FOLLOW                     = 0x0200,
+    FLAG_DESPAWN_ON_DESPAWN         = 0x2000,
 
     // Passive behaviour
     FLAG_CANT_SPAWN_IF_BOSS_DEAD    = 0x0400,
     FLAG_CANT_SPAWN_IF_BOSS_ALIVE   = 0x0800,
 
-    LINKING_FLAG_INVALID            = 0x2000,               // TODO adjust when other flags are implemented
+    LINKING_FLAG_INVALID            = 0x4000,               // TODO adjust when other flags are implemented
 };
 
 // Structure holding the information for an entry
@@ -199,4 +193,3 @@ class CreatureLinkingHolder
 #define sCreatureLinkingMgr MaNGOS::Singleton<CreatureLinkingMgr>::Instance()
 
 #endif
-/*! @} */

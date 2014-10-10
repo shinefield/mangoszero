@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _REGULAR_GRID_H
-#define _REGULAR_GRID_H
-
+#ifndef MANGOS_H_REGULAR_GRID
+#define MANGOS_H_REGULAR_GRID
 
 #include <G3D/Ray.h>
 #include <G3D/AABox.h>
@@ -26,7 +32,7 @@
 #include <G3D/BoundsTrait.h>
 #include <G3D/PositionTrait.h>
 
-#include "Errors.h"
+#include "debugging/Errors.h"
 
 using G3D::Vector2;
 using G3D::Vector3;
@@ -36,7 +42,10 @@ using G3D::Ray;
 template<class Node>
 struct NodeCreator
 {
-    static Node* makeNode(int /*x*/, int /*y*/) { return new Node();}
+    static Node* makeNode(int /*x*/, int /*y*/)
+    {
+        return new Node();
+    }
 };
 
 template < class T,
@@ -98,13 +107,22 @@ class RegularGrid2D
                         n->balance();
         }
 
-        bool contains(const T& value) const { return memberTable.containsKey(&value); }
-        int size() const { return memberTable.size(); }
+        bool contains(const T& value) const
+        {
+            return memberTable.containsKey(&value);
+        }
+        int size() const
+        {
+            return memberTable.size();
+        }
 
         struct Cell
         {
             int x, y;
-            bool operator == (const Cell& c2) const { return x == c2.x && y == c2.y;}
+            bool operator == (const Cell& c2) const
+            {
+                return x == c2.x && y == c2.y;
+            }
 
             static Cell ComputeCell(float fx, float fy)
             {
@@ -112,7 +130,10 @@ class RegularGrid2D
                 return c;
             }
 
-            bool isValid() const { return x >= 0 && x < CELL_NUMBER && y >= 0 && y < CELL_NUMBER;}
+            bool isValid() const
+            {
+                return x >= 0 && x < CELL_NUMBER && y >= 0 && y < CELL_NUMBER;
+            }
         };
 
 

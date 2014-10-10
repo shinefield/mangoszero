@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,22 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _BIH_H
-#define _BIH_H
-
-#include <G3D/Vector3.h>
-#include <G3D/Ray.h>
-#include <G3D/AABox.h>
-
-#include <Platform/Define.h>
+#ifndef MANGOS_H_BIH
+#define MANGOS_H_BIH
 
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 #include <limits>
 #include <cmath>
+#include <G3D/Vector3.h>
+#include <G3D/Ray.h>
+#include <G3D/AABox.h>
+
+#include "platform/Define.h"
 
 #define MAX_STACK_SIZE 64
 
@@ -90,7 +96,10 @@ class BIH
         }
 
     public:
-        BIH() {init_empty();}
+        BIH()
+        {
+            init_empty();
+        }
         template< class BoundsFunc, class PrimArray >
         void build(const PrimArray& primitives, BoundsFunc& getBounds, uint32 leafSize = 3, bool printStats = false)
         {
@@ -126,7 +135,10 @@ class BIH
             delete[] dat.primBound;
             delete[] dat.indices;
         }
-        uint32 primCount() { return objects.size(); }
+        uint32 primCount()
+        {
+            return objects.size();
+        }
 
         template<typename RayCallback>
         void intersectRay(const Ray& r, RayCallback& intersectCallback, float& maxDist, bool stopAtFirst = false) const
@@ -399,8 +411,14 @@ class BIH
                     for (int i = 0; i < 6; ++i) numLeavesN[i] = 0;
                 }
 
-                void updateInner() { ++numNodes; }
-                void updateBVH2() { ++numBVH2; }
+                void updateInner()
+                {
+                    ++numNodes;
+                }
+                void updateBVH2()
+                {
+                    ++numBVH2;
+                }
                 void updateLeaf(int depth, int n);
                 void printStats();
         };

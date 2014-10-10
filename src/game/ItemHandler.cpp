@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "Item.h"
@@ -290,12 +297,12 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket& recv_data)
     if (pProto)
     {
         int loc_idx = GetSessionDbLocaleIndex();
-        
+
         std::string name = pProto->Name1;
         std::string description = pProto->Description;
         sObjectMgr.GetItemLocaleStrings(pProto->ItemId, loc_idx, &name, &description);
 
-        
+
         // guess size
         WorldPacket data(SMSG_ITEM_QUERY_SINGLE_RESPONSE, 600);
         data << pProto->ItemId;
@@ -1030,10 +1037,10 @@ void WorldSession::HandleItemNameQueryOpcode(WorldPacket& recv_data)
     if (ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(itemid))
     {
         int loc_idx = GetSessionDbLocaleIndex();
-        
+
         std::string name = pProto->Name1;
         sObjectMgr.GetItemLocaleStrings(pProto->ItemId, loc_idx, &name);
-        
+
         // guess size
         WorldPacket data(SMSG_ITEM_NAME_QUERY_RESPONSE, (4 + 10));
         data << uint32(pProto->ItemId);
@@ -1129,12 +1136,24 @@ void WorldSession::HandleWrapItemOpcode(WorldPacket& recv_data)
 
     switch (item->GetEntry())
     {
-        case 5042:  item->SetEntry(5043); break;
-        case 5048:  item->SetEntry(5044); break;
-        case 17303: item->SetEntry(17302); break;
-        case 17304: item->SetEntry(17305); break;
-        case 17307: item->SetEntry(17308); break;
-        case 21830: item->SetEntry(21831); break;
+        case 5042:
+            item->SetEntry(5043);
+            break;
+        case 5048:
+            item->SetEntry(5044);
+            break;
+        case 17303:
+            item->SetEntry(17302);
+            break;
+        case 17304:
+            item->SetEntry(17305);
+            break;
+        case 17307:
+            item->SetEntry(17308);
+            break;
+        case 21830:
+            item->SetEntry(21831);
+            break;
     }
     item->SetGuidValue(ITEM_FIELD_GIFTCREATOR, _player->GetObjectGuid());
     item->SetUInt32Value(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_WRAPPED);

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Creature.h"
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ScriptMgr.h"
@@ -31,7 +41,6 @@
 #include "GameEventMgr.h"
 #include "PoolManager.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "LootMgr.h"
 #include "MapManager.h"
 #include "CreatureAI.h"
@@ -43,16 +52,12 @@
 #include "BattleGround/BattleGroundMgr.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "Spell.h"
-#include "Util.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "movement/MoveSplineInit.h"
 #include "CreatureLinkingMgr.h"
-
-// apply implementation of the singletons
-#include "Policies/Singleton.h"
-
+#include "LuaEngine.h"
 
 TrainerSpell const* TrainerSpellData::Find(uint32 spell_id) const
 {
@@ -139,8 +144,7 @@ Creature::Creature(CreatureSubtype subtype) : Unit(),
     m_corpseDecayTimer(0), m_respawnTime(0), m_respawnDelay(25), m_corpseDelay(60), m_aggroDelay(0), m_respawnradius(5.0f),
     m_subtype(subtype), m_defaultMovementType(IDLE_MOTION_TYPE), m_equipmentId(0),
     m_AlreadyCallAssistance(false), m_AlreadySearchedAssistance(false),
-    m_regenHealth(true), m_AI_locked(false), m_isDeadByDefault(false),
-    m_temporaryFactionFlags(TEMPFACTION_NONE),
+    m_AI_locked(false), m_isDeadByDefault(false), m_temporaryFactionFlags(TEMPFACTION_NONE),
     m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL), m_originalEntry(0),
     m_creatureInfo(NULL)
 {
@@ -152,12 +156,15 @@ Creature::Creature(CreatureSubtype subtype) : Unit(),
 
     m_CreatureSpellCooldowns.clear();
     m_CreatureCategoryCooldowns.clear();
+    DisableReputationGain = false;
 
     SetWalk(true, true);
 }
 
 Creature::~Creature()
 {
+    Eluna::RemoveRef(this);
+
     CleanupsBeforeDelete();
 
     m_vendorItemCounts.clear();
@@ -168,6 +175,9 @@ Creature::~Creature()
 
 void Creature::AddToWorld()
 {
+    if (!IsInWorld())
+        sEluna->OnAddToWorld(this);
+
     ///- Register the creature for guid lookup
     if (!IsInWorld() && GetObjectGuid().GetHigh() == HIGHGUID_UNIT)
         GetMap()->GetObjectsStore().insert<Creature>(GetObjectGuid(), (Creature*)this);
@@ -177,6 +187,9 @@ void Creature::AddToWorld()
 
 void Creature::RemoveFromWorld()
 {
+    if (IsInWorld())
+        sEluna->OnRemoveFromWorld(this);
+
     ///- Remove the creature from the accessor
     if (IsInWorld() && GetObjectGuid().GetHigh() == HIGHGUID_UNIT)
         GetMap()->GetObjectsStore().erase<Creature>(GetObjectGuid(), (Creature*)NULL);
@@ -210,6 +223,9 @@ void Creature::RemoveCorpse()
 
     if (AI())
         AI()->CorpseRemoved(respawnDelay);
+
+    if (m_isCreatureLinkingTrigger)
+        GetMap()->GetCreatureLinkingHolder()->DoCreatureLinkingEvent(LINKING_EVENT_DESPAWN, this);
 
     // script can set time (in seconds) explicit, override the original
     if (respawnDelay)
@@ -286,6 +302,24 @@ bool Creature::InitEntry(uint32 Entry, Team team, CreatureData const* data /*=NU
 
     SetByteValue(UNIT_FIELD_BYTES_0, 2, minfo->gender);
 
+    // set PowerType based on unit class
+    switch (cinfo->UnitClass)
+    {
+        case CLASS_WARRIOR:
+            SetPowerType(POWER_RAGE);
+            break;
+        case CLASS_PALADIN:
+        case CLASS_MAGE:
+            SetPowerType(POWER_MANA);
+            break;
+        case CLASS_ROGUE:
+            SetPowerType(POWER_ENERGY);
+            break;
+        default:
+            sLog.outErrorDb("Creature (Entry: %u) has unhandled unit class. Power type will not be set!", Entry);
+            break;
+    }
+
     // Load creature equipment
     if (eventData && eventData->equipment_id)
     {
@@ -322,8 +356,6 @@ bool Creature::UpdateEntry(uint32 Entry, Team team, const CreatureData* data /*=
 {
     if (!InitEntry(Entry, team, data, eventData))
         return false;
-
-    m_regenHealth = GetCreatureInfo()->RegenerateHealth;
 
     // creatures always have melee weapon ready if any
     SetSheath(SHEATH_STATE_MELEE);
@@ -590,36 +622,65 @@ void Creature::RegenerateAll(uint32 update_diff)
     if (!isInCombat() || IsPolymorphed())
         RegenerateHealth();
 
-    RegenerateMana();
+    RegeneratePower();
 
     m_regenTimer = REGEN_TIME_FULL;
 }
 
-void Creature::RegenerateMana()
+void Creature::RegeneratePower()
 {
-    uint32 curValue = GetPower(POWER_MANA);
-    uint32 maxValue = GetMaxPower(POWER_MANA);
+    if (!IsRegeneratingPower())
+        return;
+
+    Powers powerType = GetPowerType();
+    uint32 curValue = GetPower(powerType);
+    uint32 maxValue = GetMaxPower(powerType);
 
     if (curValue >= maxValue)
         return;
 
-    uint32 addvalue = 0;
+    float addValue = 0.0f;
 
-    // Combat and any controlled creature
-    if (isInCombat() || GetCharmerOrOwnerGuid())
+    switch (powerType)
     {
-        if (!IsUnderLastManaUseEffect())
-        {
-            float ManaIncreaseRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_MANA);
-            float Spirit = GetStat(STAT_SPIRIT);
+        case POWER_MANA:
+            // Combat and any controlled creature
+            if (isInCombat() || GetCharmerOrOwnerGuid())
+            {
+                if (!IsUnderLastManaUseEffect())
+                {
+                    float ManaIncreaseRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_MANA);
+                    float Spirit = GetStat(STAT_SPIRIT);
 
-            addvalue = uint32((Spirit / 5.0f + 17.0f) * ManaIncreaseRate);
-        }
+                    addValue = (Spirit / 5.0f + 17.0f) * ManaIncreaseRate;
+                }
+            }
+            else
+                addValue = maxValue / 3;
+            break;
+        case POWER_ENERGY:
+            // ToDo: for vehicle this is different - NEEDS TO BE FIXED!
+            addValue = 20 * sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_ENERGY);
+            break;
+        case POWER_FOCUS:
+            addValue = 24 * sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_FOCUS);
+            break;
+        default:
+            return;
     }
-    else
-        addvalue = maxValue / 3;
 
-    ModifyPower(POWER_MANA, addvalue);
+    // Apply modifiers (if any)
+    AuraList const& ModPowerRegenAuras = GetAurasByType(SPELL_AURA_MOD_POWER_REGEN);
+    for(AuraList::const_iterator i = ModPowerRegenAuras.begin(); i != ModPowerRegenAuras.end(); ++i)
+        if ((*i)->GetModifier()->m_miscvalue == int32(powerType))
+            addValue += (*i)->GetModifier()->m_amount;
+
+    AuraList const& ModPowerRegenPCTAuras = GetAurasByType(SPELL_AURA_MOD_POWER_REGEN_PERCENT);
+    for(AuraList::const_iterator i = ModPowerRegenPCTAuras.begin(); i != ModPowerRegenPCTAuras.end(); ++i)
+        if ((*i)->GetModifier()->m_miscvalue == int32(powerType))
+            addValue *= ((*i)->GetModifier()->m_amount + 100) / 100.0f;
+
+    ModifyPower(powerType, int32(addValue));
 }
 
 void Creature::RegenerateHealth()
@@ -776,15 +837,33 @@ bool Creature::IsTrainerOf(Player* pPlayer, bool msg) const
                     pPlayer->PlayerTalkClass->ClearMenus();
                     switch (GetCreatureInfo()->TrainerClass)
                     {
-                        case CLASS_DRUID:  pPlayer->PlayerTalkClass->SendGossipMenu(4913, GetObjectGuid()); break;
-                        case CLASS_HUNTER: pPlayer->PlayerTalkClass->SendGossipMenu(10090, GetObjectGuid()); break;
-                        case CLASS_MAGE:   pPlayer->PlayerTalkClass->SendGossipMenu(328, GetObjectGuid()); break;
-                        case CLASS_PALADIN: pPlayer->PlayerTalkClass->SendGossipMenu(1635, GetObjectGuid()); break;
-                        case CLASS_PRIEST: pPlayer->PlayerTalkClass->SendGossipMenu(4436, GetObjectGuid()); break;
-                        case CLASS_ROGUE:  pPlayer->PlayerTalkClass->SendGossipMenu(4797, GetObjectGuid()); break;
-                        case CLASS_SHAMAN: pPlayer->PlayerTalkClass->SendGossipMenu(5003, GetObjectGuid()); break;
-                        case CLASS_WARLOCK: pPlayer->PlayerTalkClass->SendGossipMenu(5836, GetObjectGuid()); break;
-                        case CLASS_WARRIOR: pPlayer->PlayerTalkClass->SendGossipMenu(4985, GetObjectGuid()); break;
+                        case CLASS_DRUID:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(4913, GetObjectGuid());
+                            break;
+                        case CLASS_HUNTER:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(10090, GetObjectGuid());
+                            break;
+                        case CLASS_MAGE:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(328, GetObjectGuid());
+                            break;
+                        case CLASS_PALADIN:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(1635, GetObjectGuid());
+                            break;
+                        case CLASS_PRIEST:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(4436, GetObjectGuid());
+                            break;
+                        case CLASS_ROGUE:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(4797, GetObjectGuid());
+                            break;
+                        case CLASS_SHAMAN:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5003, GetObjectGuid());
+                            break;
+                        case CLASS_WARLOCK:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5836, GetObjectGuid());
+                            break;
+                        case CLASS_WARRIOR:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(4985, GetObjectGuid());
+                            break;
                     }
                 }
                 return false;
@@ -816,14 +895,30 @@ bool Creature::IsTrainerOf(Player* pPlayer, bool msg) const
                     pPlayer->PlayerTalkClass->ClearMenus();
                     switch (GetCreatureInfo()->TrainerClass)
                     {
-                        case RACE_DWARF:        pPlayer->PlayerTalkClass->SendGossipMenu(5865, GetObjectGuid()); break;
-                        case RACE_GNOME:        pPlayer->PlayerTalkClass->SendGossipMenu(4881, GetObjectGuid()); break;
-                        case RACE_HUMAN:        pPlayer->PlayerTalkClass->SendGossipMenu(5861, GetObjectGuid()); break;
-                        case RACE_NIGHTELF:     pPlayer->PlayerTalkClass->SendGossipMenu(5862, GetObjectGuid()); break;
-                        case RACE_ORC:          pPlayer->PlayerTalkClass->SendGossipMenu(5863, GetObjectGuid()); break;
-                        case RACE_TAUREN:       pPlayer->PlayerTalkClass->SendGossipMenu(5864, GetObjectGuid()); break;
-                        case RACE_TROLL:        pPlayer->PlayerTalkClass->SendGossipMenu(5816, GetObjectGuid()); break;
-                        case RACE_UNDEAD:       pPlayer->PlayerTalkClass->SendGossipMenu(624, GetObjectGuid()); break;
+                        case RACE_DWARF:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5865, GetObjectGuid());
+                            break;
+                        case RACE_GNOME:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(4881, GetObjectGuid());
+                            break;
+                        case RACE_HUMAN:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5861, GetObjectGuid());
+                            break;
+                        case RACE_NIGHTELF:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5862, GetObjectGuid());
+                            break;
+                        case RACE_ORC:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5863, GetObjectGuid());
+                            break;
+                        case RACE_TAUREN:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5864, GetObjectGuid());
+                            break;
+                        case RACE_TROLL:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5816, GetObjectGuid());
+                            break;
+                        case RACE_UNDEAD:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(624, GetObjectGuid());
+                            break;
                     }
                 }
                 return false;
@@ -863,10 +958,17 @@ bool Creature::CanInteractWithBattleMaster(Player* pPlayer, bool msg) const
         pPlayer->PlayerTalkClass->ClearMenus();
         switch (bgTypeId)
         {
-            case BATTLEGROUND_AV:  pPlayer->PlayerTalkClass->SendGossipMenu(7616, GetObjectGuid()); break;
-            case BATTLEGROUND_WS:  pPlayer->PlayerTalkClass->SendGossipMenu(7599, GetObjectGuid()); break;
-            case BATTLEGROUND_AB:  pPlayer->PlayerTalkClass->SendGossipMenu(7642, GetObjectGuid()); break;
-            default: break;
+            case BATTLEGROUND_AV:
+                pPlayer->PlayerTalkClass->SendGossipMenu(7616, GetObjectGuid());
+                break;
+            case BATTLEGROUND_WS:
+                pPlayer->PlayerTalkClass->SendGossipMenu(7599, GetObjectGuid());
+                break;
+            case BATTLEGROUND_AB:
+                pPlayer->PlayerTalkClass->SendGossipMenu(7642, GetObjectGuid());
+                break;
+            default:
+                break;
         }
         return false;
     }
@@ -992,6 +1094,19 @@ void Creature::SetLootRecipient(Unit* unit)
     SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_TAPPED);
 }
 
+// return true if this creature is tapped by the player or by a member of his group.
+bool Creature::isTappedBy(Player const* player) const
+{
+    if (player == GetOriginalLootRecipient())
+        return true;
+
+    Group const* playerGroup = player->GetGroup();
+    if (!playerGroup || playerGroup != GetGroupLootRecipient()) // if we dont have a group we arent the recipient
+        return false;                                           // if creature doesnt have group bound it means it was solo killed by someone else
+
+    return true;
+}
+
 void Creature::SaveToDB()
 {
     // this should only be used when the creature has already been loaded
@@ -1103,7 +1218,7 @@ void Creature::SelectLevel(const CreatureInfo* cinfo, float percentHealth, float
         health = cCLS->BaseHealth * cinfo->HealthMultiplier;
 
         // mana
-        mana = cCLS->BaseMana * cinfo->ManaMultiplier;
+        mana = cCLS->BaseMana * cinfo->PowerMultiplier;
     }
     else
     {
@@ -1129,6 +1244,7 @@ void Creature::SelectLevel(const CreatureInfo* cinfo, float percentHealth, float
     // Set values
     //////////////////////////////////////////////////////////////////////////
 
+    // health
     SetCreateHealth(health);
     SetMaxHealth(health);
 
@@ -1137,13 +1253,36 @@ void Creature::SelectLevel(const CreatureInfo* cinfo, float percentHealth, float
     else
         SetHealthPercent(percentHealth);
 
-    SetCreateMana(mana);
-    SetMaxPower(POWER_MANA, mana);                          // MAX Mana
-    SetPower(POWER_MANA, mana);
-
-    // TODO: set UNIT_FIELD_POWER*, for some creature class case (energy, etc)
     SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, float(health));
-    SetModifierValue(UNIT_MOD_MANA, BASE_VALUE, float(mana));
+
+    // all power types
+    for (int i = POWER_MANA; i <= POWER_HAPPINESS; ++i)
+    {
+        uint32 maxValue;
+
+        switch (i)
+        {
+            case POWER_MANA:        maxValue = mana; break;
+            case POWER_RAGE:        maxValue = 0; break;
+            case POWER_FOCUS:       maxValue = POWER_FOCUS_DEFAULT; break;
+            case POWER_ENERGY:      maxValue = POWER_ENERGY_DEFAULT * cinfo->PowerMultiplier; break;
+            case POWER_HAPPINESS:   maxValue = POWER_HAPPINESS_DEFAULT; break;
+        }
+
+        uint32 value = maxValue;
+
+        // For non regenerating powers set 0
+        if ((i == POWER_ENERGY || i == POWER_MANA) && !IsRegeneratingPower())
+            value = 0;
+
+        // Mana requires an extra field to be set
+        if (i == POWER_MANA)
+            SetCreateMana(value);
+
+        SetMaxPower(Powers(i), maxValue);
+        SetPower(Powers(i), value);
+        SetModifierValue(UnitMods(UNIT_MOD_POWER_START + i), BASE_VALUE, float(value));
+    }
 
     // damage
     float damagemod = _GetDamageMod(rank);
@@ -1977,11 +2116,11 @@ bool Creature::MeetsSelectAttackingRequirement(Unit* pTarget, SpellEntry const* 
     if (selectFlags & SELECT_FLAG_PLAYER && pTarget->GetTypeId() != TYPEID_PLAYER)
         return false;
 
-    if (selectFlags & SELECT_FLAG_POWER_MANA && pTarget->getPowerType() != POWER_MANA)
+    if (selectFlags & SELECT_FLAG_POWER_MANA && pTarget->GetPowerType() != POWER_MANA)
         return false;
-    else if (selectFlags & SELECT_FLAG_POWER_RAGE && pTarget->getPowerType() != POWER_RAGE)
+    else if (selectFlags & SELECT_FLAG_POWER_RAGE && pTarget->GetPowerType() != POWER_RAGE)
         return false;
-    else if (selectFlags & SELECT_FLAG_POWER_ENERGY && pTarget->getPowerType() != POWER_ENERGY)
+    else if (selectFlags & SELECT_FLAG_POWER_ENERGY && pTarget->GetPowerType() != POWER_ENERGY)
         return false;
 
     if (selectFlags & SELECT_FLAG_IN_MELEE_RANGE && !CanReachWithMeleeAttack(pTarget))
@@ -1996,9 +2135,12 @@ bool Creature::MeetsSelectAttackingRequirement(Unit* pTarget, SpellEntry const* 
     {
         switch (pSpellInfo->rangeIndex)
         {
-            case SPELL_RANGE_IDX_SELF_ONLY: return false;
-            case SPELL_RANGE_IDX_ANYWHERE:  return true;
-            case SPELL_RANGE_IDX_COMBAT:    return CanReachWithMeleeAttack(pTarget);
+            case SPELL_RANGE_IDX_SELF_ONLY:
+                return false;
+            case SPELL_RANGE_IDX_ANYWHERE:
+                return true;
+            case SPELL_RANGE_IDX_COMBAT:
+                return CanReachWithMeleeAttack(pTarget);
         }
 
         SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(pSpellInfo->rangeIndex);
@@ -2104,6 +2246,13 @@ bool Creature::HasCategoryCooldown(uint32 spell_id) const
 
     CreatureSpellCooldowns::const_iterator itr = m_CreatureCategoryCooldowns.find(spellInfo->Category);
     return (itr != m_CreatureCategoryCooldowns.end() && time_t(itr->second + (spellInfo->CategoryRecoveryTime / IN_MILLISECONDS)) > time(NULL));
+}
+
+uint32 Creature::GetCreatureSpellCooldownDelay(uint32 spellId) const
+{
+    CreatureSpellCooldowns::const_iterator itr = m_CreatureSpellCooldowns.find(spellId);
+    time_t t = time(NULL);
+    return uint32(itr != m_CreatureSpellCooldowns.end() && itr->second > t ? itr->second - t : 0);
 }
 
 bool Creature::HasSpellCooldown(uint32 spell_id) const

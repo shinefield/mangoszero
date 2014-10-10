@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
+
+#include <cassert>
 
 #include "MotionMaster.h"
 #include "ConfusedMovementGenerator.h"
@@ -33,8 +42,6 @@
 #include "CreatureLinkingMgr.h"
 #include "Pet.h"
 #include "DBCStores.h"
-
-#include <cassert>
 
 inline bool isStatic(MovementGenerator* mv)
 {
@@ -287,6 +294,10 @@ void MotionMaster::MoveChase(Unit* target, float dist, float angle)
     if (!target)
         return;
 
+    // cannot chase if polymorphed or feared
+    if (m_owner->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED) || m_owner->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_FLEEING))
+        return;
+
     DEBUG_FILTER_LOG(LOG_FILTER_AI_AND_MOVEGENSS, "%s chase to %s", m_owner->GetGuidStr().c_str(), target->GetGuidStr().c_str());
 
     if (m_owner->GetTypeId() == TYPEID_PLAYER)
@@ -403,7 +414,7 @@ void MotionMaster::MoveTaxiFlight(uint32 path, uint32 pathnode)
         }
         else
         {
-            sLog.outError("%s attempt taxi to (nonexistent Path %u node %u)",
+            sLog.outError("%s attempt taxi to (non-existent Path %u node %u)",
                           m_owner->GetGuidStr().c_str(), path, pathnode);
         }
     }

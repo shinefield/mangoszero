@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <cmath>
+
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Player.h"
 #include "Language.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
 #include "Opcodes.h"
 #include "SpellMgr.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "UpdateMask.h"
 #include "QuestDef.h"
@@ -45,7 +55,6 @@
 #include "Guild.h"
 #include "GuildMgr.h"
 #include "Pet.h"
-#include "Util.h"
 #include "Transports.h"
 #include "Weather.h"
 #include "BattleGround/BattleGround.h"
@@ -53,15 +62,14 @@
 #include "BattleGround/BattleGroundAV.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "Chat.h"
-#include "Database/DatabaseImpl.h"
+#include "database/DatabaseImpl.h"
 #include "Spell.h"
 #include "ScriptMgr.h"
 #include "SocialMgr.h"
 #include "Mail.h"
 #include "DBCStores.h"
 #include "SQLStorages.h"
-
-#include <cmath>
+#include "LuaEngine.h"
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
@@ -521,6 +529,8 @@ Player::Player(WorldSession* session): Unit(), m_mover(this), m_camera(this), m_
 
 Player::~Player()
 {
+    Eluna::RemoveRef(this);
+
     CleanupsBeforeDelete();
 
     // it must be unloaded already in PlayerLogout and accessed only for loggined player
@@ -665,7 +675,7 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
     UpdateMaxHealth();                                      // Update max Health (for add bonus from stamina)
     SetHealth(GetMaxHealth());
 
-    if (getPowerType() == POWER_MANA)
+    if (GetPowerType() == POWER_MANA)
     {
         UpdateMaxPower(POWER_MANA);                         // Update max Mana (for add bonus from intellect)
         SetPower(POWER_MANA, GetMaxPower(POWER_MANA));
@@ -874,7 +884,11 @@ uint32 Player::EnvironmentalDamage(EnvironmentalDamageType type, uint32 damage)
     data << uint32(resist);
     SendMessageToSet(&data, true);
 
-    uint32 final_damage = DealDamage(this, damage, NULL, SELF_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+    DamageEffectType damageType = SELF_DAMAGE;
+    if (type == DAMAGE_FALL && getClass() == CLASS_ROGUE)
+        damageType = SELF_DAMAGE_ROGUE_FALL;
+
+    uint32 final_damage = DealDamage(this, damage, NULL, damageType, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
     if (type == DAMAGE_FALL && !isAlive())                  // DealDamage not apply item durability loss at self damage
     {
@@ -1227,6 +1241,8 @@ void Player::Update(uint32 update_diff, uint32 p_time)
         if (update_diff >= m_nextSave)
         {
             // m_nextSave reseted in SaveToDB call
+            // used by eluna
+            sEluna->OnSave(this);
             SaveToDB();
             DETAIL_LOG("Player '%s' (GUID: %u) saved", GetName(), GetGUIDLow());
         }
@@ -1864,12 +1880,14 @@ void Player::Regenerate(Powers power)
             {
                 addvalue = m_modManaRegen * ManaIncreaseRate * 2.00f;
             }
-        }   break;
+        }
+        break;
         case POWER_RAGE:                                    // Regenerate rage
         {
             float RageDecreaseRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_RAGE_LOSS);
             addvalue = 20 * RageDecreaseRate;               // 2 rage by tick (= 2 seconds => 1 rage/sec)
-        }   break;
+        }
+        break;
         case POWER_ENERGY:                                  // Regenerate energy (rogue)
         {
             float EnergyRate = sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_ENERGY);
@@ -2147,9 +2165,12 @@ bool Player::IsGroupVisibleFor(Player* p) const
 {
     switch (sWorld.getConfig(CONFIG_UINT32_GROUP_VISIBILITY))
     {
-        default: return IsInSameGroupWith(p);
-        case 1:  return IsInSameRaidWith(p);
-        case 2:  return GetTeam() == p->GetTeam();
+        default:
+            return IsInSameGroupWith(p);
+        case 1:
+            return IsInSameRaidWith(p);
+        case 2:
+            return GetTeam() == p->GetTeam();
     }
 }
 
@@ -2183,16 +2204,16 @@ void Player::UninviteFromGroup()
     }
 }
 
-void Player::RemoveFromGroup(Group* group, ObjectGuid guid)
+void Player::RemoveFromGroup(Group* group, ObjectGuid guid, uint8 removeMethod)
 {
     if (group)
     {
-        if (group->RemoveMember(guid, 0) <= 1)
+        if (group->RemoveMember(guid, removeMethod) <= 1)
         {
             // group->Disband(); already disbanded in RemoveMember
             sObjectMgr.RemoveGroup(group);
             delete group;
-            // removemember sets the player's group pointer to NULL
+            // RemoveMember sets the player's group pointer to NULL
         }
     }
 }
@@ -2220,6 +2241,9 @@ void Player::GiveXP(uint32 xp, Unit* victim)
         return;
 
     uint32 level = getLevel();
+
+    // used by eluna
+    sEluna->OnGiveXP(this, xp, victim);
 
     // XP to money conversion processed in Player::RewardQuest
     if (level >= sWorld.getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
@@ -2252,6 +2276,7 @@ void Player::GiveXP(uint32 xp, Unit* victim)
 // Current player experience not update (must be update by caller)
 void Player::GiveLevel(uint32 level)
 {
+    uint8 oldLevel = getLevel();
     if (level == getLevel())
         return;
 
@@ -2309,6 +2334,16 @@ void Player::GiveLevel(uint32 level)
     // update level to hunter/summon pet
     if (Pet* pet = GetPet())
         pet->SynchronizeLevelWithOwner();
+
+    // used by eluna
+    sEluna->OnLevelChanged(this, oldLevel);
+}
+
+void Player::SetFreeTalentPoints(uint32 points)
+{
+    // used by eluna
+    sEluna->OnFreeTalentPointsChanged(this, points);
+    SetUInt32Value(PLAYER_CHARACTER_POINTS1, points);
 }
 
 void Player::UpdateFreeTalentPoints(bool resetIfNeed)
@@ -2640,11 +2675,11 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool dependen
         // do character spell book cleanup (all characters)
         if (!IsInWorld() && !learning)                      // spell load case
         {
-            sLog.outError("Player::addSpell: nonexistent in SpellStore spell #%u request, deleting for all characters in `character_spell`.", spell_id);
+            sLog.outError("Player::addSpell: non-existent in SpellStore spell #%u request, deleting for all characters in `character_spell`.", spell_id);
             CharacterDatabase.PExecute("DELETE FROM character_spell WHERE spell = '%u'", spell_id);
         }
         else
-            sLog.outError("Player::addSpell: nonexistent in SpellStore spell #%u request.", spell_id);
+            sLog.outError("Player::addSpell: non-existent in SpellStore spell #%u request.", spell_id);
 
         return false;
     }
@@ -3343,6 +3378,9 @@ uint32 Player::resetTalentsCost() const
 
 bool Player::resetTalents(bool no_cost)
 {
+    // used by eluna
+    sEluna->OnTalentsReset(this, no_cost);
+
     // not need after this call
     if (HasAtLoginFlag(AT_LOGIN_RESET_TALENTS))
         RemoveAtLoginFlag(AT_LOGIN_RESET_TALENTS, true);
@@ -3686,7 +3724,7 @@ TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell
  */
 void Player::DeleteFromDB(ObjectGuid playerguid, uint32 accountId, bool updateRealmChars, bool deleteFinally)
 {
-    // for nonexistent account avoid update realm
+    // for non-existent account avoid update realm
     if (accountId == 0)
         updateRealmChars = false;
 
@@ -4031,6 +4069,8 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
     m_camera.UpdateVisibilityForOwner();
     // update visibility of player for nearby cameras
     UpdateObjectVisibility();
+
+    sEluna->OnResurrect(this);
 
     if (!applySickness)
         return;
@@ -4412,7 +4452,8 @@ void Player::UpdateLocalChannels(uint32 newZone)
 
     for (JoinedChannelsList::iterator i = m_channels.begin(), next; i != m_channels.end(); i = next)
     {
-        next = i; ++next;
+        next = i;
+        ++next;
 
         // skip non built-in channels
         if (!(*i)->IsConstant())
@@ -4471,7 +4512,7 @@ void Player::HandleBaseModValue(BaseModGroup modGroup, BaseModType modType, floa
 {
     if (modGroup >= BASEMOD_END || modType >= MOD_END)
     {
-        sLog.outError("ERROR in HandleBaseModValue(): nonexistent BaseModGroup of wrong BaseModType!");
+        sLog.outError("ERROR in HandleBaseModValue(): non-existent BaseModGroup of wrong BaseModType!");
         return;
     }
 
@@ -4496,9 +4537,14 @@ void Player::HandleBaseModValue(BaseModGroup modGroup, BaseModType modType, floa
 
     switch (modGroup)
     {
-        case CRIT_PERCENTAGE:              UpdateCritPercentage(BASE_ATTACK);                          break;
-        case RANGED_CRIT_PERCENTAGE:       UpdateCritPercentage(RANGED_ATTACK);                        break;
-        default: break;
+        case CRIT_PERCENTAGE:
+            UpdateCritPercentage(BASE_ATTACK);
+            break;
+        case RANGED_CRIT_PERCENTAGE:
+            UpdateCritPercentage(RANGED_ATTACK);
+            break;
+        default:
+            break;
     }
 }
 
@@ -4506,7 +4552,7 @@ float Player::GetBaseModValue(BaseModGroup modGroup, BaseModType modType) const
 {
     if (modGroup >= BASEMOD_END || modType > MOD_END)
     {
-        sLog.outError("trial to access nonexistent BaseModGroup or wrong BaseModType!");
+        sLog.outError("trial to access non-existent BaseModGroup or wrong BaseModType!");
         return 0.0f;
     }
 
@@ -4546,16 +4592,28 @@ float Player::GetMeleeCritFromAgility()
     // critical
     switch (getClass())
     {
-        case CLASS_PALADIN: classrate = 19.77f; break;
-        case CLASS_SHAMAN:  classrate = 19.7f;  break;
-        case CLASS_MAGE:    classrate = 19.44f; break;
-        case CLASS_ROGUE:   classrate = 29.0f;  break;
-        case CLASS_HUNTER:  classrate = 53.0f;  break;      // in 2.0.x = 33
+        case CLASS_PALADIN:
+            classrate = 19.77f;
+            break;
+        case CLASS_SHAMAN:
+            classrate = 19.7f;
+            break;
+        case CLASS_MAGE:
+            classrate = 19.44f;
+            break;
+        case CLASS_ROGUE:
+            classrate = 29.0f;
+            break;
+        case CLASS_HUNTER:
+            classrate = 53.0f;
+            break;      // in 2.0.x = 33
         case CLASS_PRIEST:
         case CLASS_WARLOCK:
         case CLASS_DRUID:
         case CLASS_WARRIOR:
-        default:            classrate = 20.0f; break;
+        default:
+            classrate = 20.0f;
+            break;
     }
 
     val = GetStat(STAT_AGILITY) / classrate;
@@ -4681,15 +4739,33 @@ float Player::OCTRegenHPPerSpirit()
 
     switch (Class)
     {
-        case CLASS_DRUID:   regen = (Spirit * 0.11 + 1);    break;
-        case CLASS_HUNTER:  regen = (Spirit * 0.43 - 5.5);  break;
-        case CLASS_MAGE:    regen = (Spirit * 0.11 + 1);    break;
-        case CLASS_PALADIN: regen = (Spirit * 0.25);        break;
-        case CLASS_PRIEST:  regen = (Spirit * 0.15 + 1.4);  break;
-        case CLASS_ROGUE:   regen = (Spirit * 0.84 - 13);   break;
-        case CLASS_SHAMAN:  regen = (Spirit * 0.28 - 3.6);  break;
-        case CLASS_WARLOCK: regen = (Spirit * 0.12 + 1.5);  break;
-        case CLASS_WARRIOR: regen = (Spirit * 1.26 - 22.6); break;
+        case CLASS_DRUID:
+            regen = (Spirit * 0.11 + 1);
+            break;
+        case CLASS_HUNTER:
+            regen = (Spirit * 0.43 - 5.5);
+            break;
+        case CLASS_MAGE:
+            regen = (Spirit * 0.11 + 1);
+            break;
+        case CLASS_PALADIN:
+            regen = (Spirit * 0.25);
+            break;
+        case CLASS_PRIEST:
+            regen = (Spirit * 0.15 + 1.4);
+            break;
+        case CLASS_ROGUE:
+            regen = (Spirit * 0.84 - 13);
+            break;
+        case CLASS_SHAMAN:
+            regen = (Spirit * 0.28 - 3.6);
+            break;
+        case CLASS_WARLOCK:
+            regen = (Spirit * 0.12 + 1.5);
+            break;
+        case CLASS_WARRIOR:
+            regen = (Spirit * 1.26 - 22.6);
+            break;
     }
 
     return regen;
@@ -4704,13 +4780,27 @@ float Player::OCTRegenMPPerSpirit()
 
     switch (Class)
     {
-        case CLASS_DRUID:   addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_HUNTER:  addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_MAGE:    addvalue = (Spirit / 4 + 12.5); break;
-        case CLASS_PALADIN: addvalue = (Spirit / 5 + 15);   break;
-        case CLASS_PRIEST:  addvalue = (Spirit / 4 + 12.5); break;
-        case CLASS_SHAMAN:  addvalue = (Spirit / 5 + 17);   break;
-        case CLASS_WARLOCK: addvalue = (Spirit / 5 + 15);   break;
+        case CLASS_DRUID:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_HUNTER:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_MAGE:
+            addvalue = (Spirit / 4 + 12.5);
+            break;
+        case CLASS_PALADIN:
+            addvalue = (Spirit / 5 + 15);
+            break;
+        case CLASS_PRIEST:
+            addvalue = (Spirit / 4 + 12.5);
+            break;
+        case CLASS_SHAMAN:
+            addvalue = (Spirit / 5 + 17);
+            break;
+        case CLASS_WARLOCK:
+            addvalue = (Spirit / 5 + 15);
+            break;
     }
 
     addvalue /= 2.0f;   // the above addvalue are given per tick which occurs every 2 seconds, hence this divide by 2
@@ -5386,13 +5476,11 @@ bool Player::SetPosition(float x, float y, float z, float orientation, bool tele
         // group update
         if (GetGroup() && (old_x != x || old_y != y))
             SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
-
-        if (GetTrader() && !IsWithinDistInMap(GetTrader(), INTERACTION_DISTANCE))
-            GetSession()->SendCancelTrade();   // will close both side trade windows
     }
 
     if (m_positionStatusUpdateTimer)                        // Update position's state only on interval
         return true;
+
     m_positionStatusUpdateTimer = 100;
 
     // code block for underwater state update
@@ -5562,8 +5650,10 @@ Team Player::TeamForRace(uint8 race)
 
     switch (rEntry->TeamID)
     {
-        case 7: return ALLIANCE;
-        case 1: return HORDE;
+        case 7:
+            return ALLIANCE;
+        case 1:
+            return HORDE;
     }
 
     sLog.outError("Race %u have wrong teamid %u in DBC: wrong DBC files?", uint32(race), rEntry->TeamID);
@@ -5659,6 +5749,9 @@ int32 Player::CalculateReputationGain(ReputationSource source, int32 rep, int32 
 void Player::RewardReputation(Unit* pVictim, float rate)
 {
     if (!pVictim || pVictim->GetTypeId() == TYPEID_PLAYER)
+        return;
+
+    if (((Creature*)pVictim)->IsReputationGainDisabled())
         return;
 
     ReputationOnKillEntry const* Rep = sObjectMgr.GetReputationOnKillEntry(((Creature*)pVictim)->GetEntry());
@@ -6111,6 +6204,9 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
         }
     }
 
+    // used by eluna
+    sEluna->OnUpdateZone(this, newZone, newArea);
+
     m_zoneUpdateId    = newZone;
     m_zoneUpdateTimer = ZONE_UPDATE_INTERVAL;
 
@@ -6217,7 +6313,9 @@ void Player::DuelComplete(DuelCompleteType type)
     WorldPacket data(SMSG_DUEL_COMPLETE, (1));
     data << (uint8)((type != DUEL_INTERRUPTED) ? 1 : 0);
     GetSession()->SendPacket(&data);
-    duel->opponent->GetSession()->SendPacket(&data);
+
+    if (duel->opponent->GetSession())
+        duel->opponent->GetSession()->SendPacket(&data);
 
     if (type != DUEL_INTERRUPTED)
     {
@@ -6227,6 +6325,9 @@ void Player::DuelComplete(DuelCompleteType type)
         data << GetName();
         SendMessageToSet(&data, true);
     }
+
+    // used by eluna
+    sEluna->OnDuelEnd(duel->opponent, this, type);
 
     // Remove Duel Flag object
     if (GameObject* obj = GetMap()->GetGameObject(GetGuidValue(PLAYER_DUEL_ARBITER)))
@@ -6445,10 +6546,17 @@ void Player::_ApplyWeaponDependentAuraCritMod(Item* item, WeaponAttackType attac
     BaseModGroup mod = BASEMOD_END;
     switch (attackType)
     {
-        case BASE_ATTACK:   mod = CRIT_PERCENTAGE;        break;
-        case OFF_ATTACK:    mod = OFFHAND_CRIT_PERCENTAGE; break;
-        case RANGED_ATTACK: mod = RANGED_CRIT_PERCENTAGE; break;
-        default: return;
+        case BASE_ATTACK:
+            mod = CRIT_PERCENTAGE;
+            break;
+        case OFF_ATTACK:
+            mod = OFFHAND_CRIT_PERCENTAGE;
+            break;
+        case RANGED_ATTACK:
+            mod = RANGED_CRIT_PERCENTAGE;
+            break;
+        default:
+            return;
     }
 
     if (item->IsFitToSpellRequirements(aura->GetSpellProto()))
@@ -6471,18 +6579,30 @@ void Player::_ApplyWeaponDependentAuraDamageMod(Item* item, WeaponAttackType att
     UnitMods unitMod = UNIT_MOD_END;
     switch (attackType)
     {
-        case BASE_ATTACK:   unitMod = UNIT_MOD_DAMAGE_MAINHAND; break;
-        case OFF_ATTACK:    unitMod = UNIT_MOD_DAMAGE_OFFHAND;  break;
-        case RANGED_ATTACK: unitMod = UNIT_MOD_DAMAGE_RANGED;   break;
-        default: return;
+        case BASE_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_MAINHAND;
+            break;
+        case OFF_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_OFFHAND;
+            break;
+        case RANGED_ATTACK:
+            unitMod = UNIT_MOD_DAMAGE_RANGED;
+            break;
+        default:
+            return;
     }
 
     UnitModifierType unitModType = TOTAL_VALUE;
     switch (modifier->m_auraname)
     {
-        case SPELL_AURA_MOD_DAMAGE_DONE:         unitModType = TOTAL_VALUE; break;
-        case SPELL_AURA_MOD_DAMAGE_PERCENT_DONE: unitModType = TOTAL_PCT;   break;
-        default: return;
+        case SPELL_AURA_MOD_DAMAGE_DONE:
+            unitModType = TOTAL_VALUE;
+            break;
+        case SPELL_AURA_MOD_DAMAGE_PERCENT_DONE:
+            unitModType = TOTAL_PCT;
+            break;
+        default:
+            return;
     }
 
     if (item->IsFitToSpellRequirements(aura->GetSpellProto()))
@@ -6988,8 +7108,8 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
                 loot->clear();
                 switch (loot_type)
                 {
-                    // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
-                    // this is overwrite fishinghole loot for example
+                        // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
+                        // this is overwrite fishinghole loot for example
                     case LOOT_FISHING_FAIL:
                         loot->FillLoot(0, LootTemplates_Fishing, this, true);
                         break;
@@ -7277,11 +7397,20 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
     // LOOT_SKINNING, LOOT_PROSPECTING, LOOT_INSIGNIA and LOOT_FISHINGHOLE unsupported by client
     switch (loot_type)
     {
-        case LOOT_SKINNING:     loot_type = LOOT_PICKPOCKETING; break;
-        case LOOT_INSIGNIA:     loot_type = LOOT_PICKPOCKETING; break;
-        case LOOT_FISHING_FAIL: loot_type = LOOT_FISHING;       break;
-        case LOOT_FISHINGHOLE:  loot_type = LOOT_FISHING;       break;
-        default: break;
+        case LOOT_SKINNING:
+            loot_type = LOOT_PICKPOCKETING;
+            break;
+        case LOOT_INSIGNIA:
+            loot_type = LOOT_PICKPOCKETING;
+            break;
+        case LOOT_FISHING_FAIL:
+            loot_type = LOOT_FISHING;
+            break;
+        case LOOT_FISHINGHOLE:
+            loot_type = LOOT_FISHING;
+            break;
+        default:
+            break;
     }
 
     WorldPacket data(SMSG_LOOT_RESPONSE, (9 + 50));         // we guess size
@@ -7438,7 +7567,8 @@ void Player::SetSheath(SheathState sheathed)
             SetVirtualItemSlot(0, GetWeaponForAttack(BASE_ATTACK, true, true));
             SetVirtualItemSlot(1, GetWeaponForAttack(OFF_ATTACK, true, true));
             SetVirtualItemSlot(2, NULL);
-        };  break;
+        };
+        break;
         case SHEATH_STATE_RANGED:                           // prepared ranged weapon
             SetVirtualItemSlot(0, NULL);
             SetVirtualItemSlot(1, NULL);
@@ -7721,6 +7851,21 @@ uint32 Player::GetItemCount(uint32 item, bool inBankAlso, Item* skipItem) const
     return count;
 }
 
+Item* Player::GetItemByEntry(uint32 item) const
+{
+    for (int i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; ++i)
+        if (Item* pItem = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+            if (pItem->GetEntry() == item)
+                return pItem;
+
+    for (int i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
+        if (Bag* pBag = (Bag*)GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+            if (Item* itemPtr = pBag->GetItemByEntry(item))
+                return itemPtr;
+
+    return NULL;
+}
+
 Item* Player::GetItemByGuid(ObjectGuid guid) const
 {
     for (int i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; ++i)
@@ -7781,10 +7926,17 @@ Item* Player::GetWeaponForAttack(WeaponAttackType attackType, bool nonbroken, bo
     uint8 slot;
     switch (attackType)
     {
-        case BASE_ATTACK:   slot = EQUIPMENT_SLOT_MAINHAND; break;
-        case OFF_ATTACK:    slot = EQUIPMENT_SLOT_OFFHAND;  break;
-        case RANGED_ATTACK: slot = EQUIPMENT_SLOT_RANGED;   break;
-        default: return NULL;
+        case BASE_ATTACK:
+            slot = EQUIPMENT_SLOT_MAINHAND;
+            break;
+        case OFF_ATTACK:
+            slot = EQUIPMENT_SLOT_OFFHAND;
+            break;
+        case RANGED_ATTACK:
+            slot = EQUIPMENT_SLOT_RANGED;
+            break;
+        default:
+            return NULL;
     }
 
     Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
@@ -7819,10 +7971,14 @@ uint32 Player::GetAttackBySlot(uint8 slot)
 {
     switch (slot)
     {
-        case EQUIPMENT_SLOT_MAINHAND: return BASE_ATTACK;
-        case EQUIPMENT_SLOT_OFFHAND:  return OFF_ATTACK;
-        case EQUIPMENT_SLOT_RANGED:   return RANGED_ATTACK;
-        default:                      return MAX_ATTACK;
+        case EQUIPMENT_SLOT_MAINHAND:
+            return BASE_ATTACK;
+        case EQUIPMENT_SLOT_OFFHAND:
+            return OFF_ATTACK;
+        case EQUIPMENT_SLOT_RANGED:
+            return RANGED_ATTACK;
+        default:
+            return MAX_ATTACK;
     }
 }
 
@@ -8164,7 +8320,7 @@ InventoryResult Player::_CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, It
     if (bag == skip_bag)
         return EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG;
 
-    // skip nonexistent bag or self targeted bag
+    // skip non-existent bag or self targeted bag
     Bag* pBag = (Bag*)GetItemByPos(INVENTORY_SLOT_BAG_0, bag);
     if (!pBag || pBag == pSrcItem)
         return EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG;
@@ -9589,8 +9745,13 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
 
         ApplyEquipCooldown(pItem2);
 
+        // used by eluna
+        sEluna->OnEquip(this, pItem2, bag, slot);
         return pItem2;
     }
+
+    // used by eluna
+    sEluna->OnEquip(this, pItem, bag, slot);
 
     return pItem;
 }
@@ -9790,6 +9951,7 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
         RemoveItemDurations(pItem);
 
         ItemRemovedQuestCheck(pItem->GetEntry(), pItem->GetCount());
+        sEluna->OnRemove(this, pItem);
 
         if (bag == INVENTORY_SLOT_BAG_0)
         {
@@ -11959,9 +12121,19 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
     switch (questGiver->GetTypeId())
     {
         case TYPEID_UNIT:
+            if (sEluna->OnQuestReward(this, (Creature*)questGiver, pQuest, reward))
+            {
+                handled = true;
+                break;
+            }
             handled = sScriptMgr.OnQuestRewarded(this, (Creature*)questGiver, pQuest);
             break;
         case TYPEID_GAMEOBJECT:
+            if (sEluna->OnQuestReward(this, (GameObject*)questGiver, pQuest, reward))
+            {
+                handled = true;
+                break;
+            }
             handled = sScriptMgr.OnQuestRewarded(this, (GameObject*)questGiver, pQuest);
             break;
     }
@@ -12948,8 +13120,10 @@ void Player::SendQuestCompleteEvent(uint32 quest_id)
     }
 }
 
-void Player::SendQuestReward(Quest const* pQuest, uint32 XP, Object* /*questGiver*/)
+void Player::SendQuestReward(Quest const* pQuest, uint32 XP, Object* questGiver)
 {
+    Player* pPlayer = m_session->GetPlayer();
+
     uint32 questid = pQuest->GetQuestId();
     DEBUG_LOG("WORLD: Sent SMSG_QUESTGIVER_QUEST_COMPLETE quest = %u", questid);
     WorldPacket data(SMSG_QUESTGIVER_QUEST_COMPLETE, (4 + 4 + 4 + 4 + 4 + pQuest->GetRewItemsCount() * 8));
@@ -13193,6 +13367,14 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
 
     SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_UNK3 | UNIT_BYTE2_FLAG_UNK5);
 
+    // check if race/class combination is valid
+    PlayerInfo const* info = sObjectMgr.GetPlayerInfo(getRace(), getClass());
+    if (!info)
+    {
+        DEBUG_FILTER_LOG(LOG_FILTER_PLAYER_STATS, "Player (GUID: %u) has wrong race/class (%u/%u), can't be loaded.", guid.GetCounter(), getRace(), getClass());
+        return false;
+    }
+
     SetUInt32Value(UNIT_FIELD_LEVEL, fields[6].GetUInt8());
     SetUInt32Value(PLAYER_XP, fields[7].GetUInt32());
 
@@ -13241,7 +13423,6 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
     // load home bind and check in same time class/race pair, it used later for restore broken positions
     if (!_LoadHomeBind(holder->GetResult(PLAYER_LOGIN_QUERY_LOADHOMEBIND)))
     {
-        delete result;
         return false;
     }
 
@@ -13478,7 +13659,7 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
     InitStatsForLevel();
 
     // is it need, only in pre-2.x used and field byte removed later?
-    if (getPowerType() == POWER_RAGE || getPowerType() == POWER_MANA)
+    if (GetPowerType() == POWER_RAGE || GetPowerType() == POWER_MANA)
         SetByteValue(UNIT_FIELD_BYTES_1, 1, 0xEE);
 
     // rest bonus can only be calculated after InitStatsForLevel()
@@ -13610,8 +13791,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_LOGIN_STATE))
         {
             default:
-            case 0:                      break;             // disable
-            case 1: SetGameMaster(true); break;             // enable
+            case 0:
+                break;             // disable
+            case 1:
+                SetGameMaster(true);
+                break;             // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_ON)
                     SetGameMaster(true);
@@ -13621,8 +13805,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_VISIBLE_STATE))
         {
             default:
-            case 0: SetGMVisible(false); break;             // invisible
-            case 1:                      break;             // visible
+            case 0:
+                SetGMVisible(false);
+                break;             // invisible
+            case 1:
+                break;             // visible
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_INVISIBLE)
                     SetGMVisible(false);
@@ -13632,8 +13819,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_ACCEPT_TICKETS))
         {
             default:
-            case 0:                        break;           // disable
-            case 1: SetAcceptTicket(true); break;           // enable
+            case 0:
+                break;           // disable
+            case 1:
+                SetAcceptTicket(true);
+                break;           // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_ACCEPT_TICKETS)
                     SetAcceptTicket(true);
@@ -13643,8 +13833,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_CHAT))
         {
             default:
-            case 0:                  break;                 // disable
-            case 1: SetGMChat(true); break;                 // enable
+            case 0:
+                break;                 // disable
+            case 1:
+                SetGMChat(true);
+                break;                 // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_GM_CHAT)
                     SetGMChat(true);
@@ -13654,8 +13847,11 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
         switch (sWorld.getConfig(CONFIG_UINT32_GM_WISPERING_TO))
         {
             default:
-            case 0:                          break;         // disable
-            case 1: SetAcceptWhispers(true); break;         // enable
+            case 0:
+                break;         // disable
+            case 1:
+                SetAcceptWhispers(true);
+                break;         // enable
             case 2:                                         // save state
                 if (extraflags & PLAYER_EXTRA_ACCEPT_WHISPERS)
                     SetAcceptWhispers(true);
@@ -14049,7 +14245,7 @@ void Player::_LoadItemLoot(QueryResult* result)
             if (!item)
             {
                 CharacterDatabase.PExecute("DELETE FROM item_loot WHERE guid = '%u'", item_guid);
-                sLog.outError("Player::_LoadItemLoot: Player %s has loot for nonexistent item (GUID: %u) in `item_loot`, deleted.", GetName(), item_guid);
+                sLog.outError("Player::_LoadItemLoot: Player %s has loot for non-existent item (GUID: %u) in `item_loot`, deleted.", GetName(), item_guid);
                 continue;
             }
 
@@ -14139,7 +14335,7 @@ void Player::_LoadMails(QueryResult* result)
 
         if (m->mailTemplateId && !sMailTemplateStore.LookupEntry(m->mailTemplateId))
         {
-            sLog.outError("Player::_LoadMail - Mail (%u) have nonexistent MailTemplateId (%u), remove at load", m->messageID, m->mailTemplateId);
+            sLog.outError("Player::_LoadMail - Mail (%u) have non-existent MailTemplateId (%u), remove at load", m->messageID, m->mailTemplateId);
             m->mailTemplateId = 0;
         }
 
@@ -14329,7 +14525,7 @@ void Player::_LoadBoundInstances(QueryResult* result)
             MapEntry const* mapEntry = sMapStore.LookupEntry(mapId);
             if (!mapEntry || !mapEntry->IsDungeon())
             {
-                sLog.outError("_LoadBoundInstances: player %s(%d) has bind to nonexistent or not dungeon map %d", GetName(), GetGUIDLow(), mapId);
+                sLog.outError("_LoadBoundInstances: player %s(%d) has bind to non-existent or not dungeon map %d", GetName(), GetGUIDLow(), mapId);
                 CharacterDatabase.PExecute("DELETE FROM character_instance WHERE guid = '%u' AND instance = '%u'", GetGUIDLow(), instanceId);
                 continue;
             }
@@ -14416,6 +14612,8 @@ InstancePlayerBind* Player::BindToInstance(DungeonPersistentState* state, bool p
         if (!load)
             DEBUG_LOG("Player::BindToInstance: %s(%d) is now bound to map %d, instance %d",
                       GetName(), GetGUIDLow(), state->GetMapId(), state->GetInstanceId());
+        // used by eluna
+        sEluna->OnBindToInstance(this, (Difficulty)0, state->GetMapId(), permanent);
         return &bind;
     }
     else
@@ -15557,6 +15755,9 @@ void Player::UpdateDuelFlag(time_t currTime)
     if (!duel || duel->startTimer == 0 || currTime < duel->startTimer + 3)
         return;
 
+    // used by eluna
+    sEluna->OnDuelStart(this, duel->opponent);
+
     SetUInt32Value(PLAYER_DUEL_TEAM, 1);
     duel->opponent->SetUInt32Value(PLAYER_DUEL_TEAM, 2);
 
@@ -15888,9 +16089,9 @@ void Player::RemoveSpellMods(Spell const* spell)
     }
 }
 
-void Player::ResetSpellModsDueToCanceledSpell (Spell const* spell)
+void Player::ResetSpellModsDueToCanceledSpell(Spell const* spell)
 {
-    for(int i = 0; i < MAX_SPELLMOD; ++i )
+    for (int i = 0; i < MAX_SPELLMOD; ++i)
     {
         for (SpellModList::const_iterator itr = m_spellMods[i].begin(); itr != m_spellMods[i].end(); ++itr)
         {
@@ -16303,8 +16504,8 @@ void Player::InitDataForForm(bool reapplyMods)
             SetAttackTime(BASE_ATTACK, 1000);               // Speed 1
             SetAttackTime(OFF_ATTACK, 1000);                // Speed 1
 
-            if (getPowerType() != POWER_ENERGY)
-                setPowerType(POWER_ENERGY);
+            if (GetPowerType() != POWER_ENERGY)
+                SetPowerType(POWER_ENERGY);
             break;
         }
         case FORM_BEAR:
@@ -16313,8 +16514,8 @@ void Player::InitDataForForm(bool reapplyMods)
             SetAttackTime(BASE_ATTACK, 2500);               // Speed 2.5
             SetAttackTime(OFF_ATTACK, 2500);                // Speed 2.5
 
-            if (getPowerType() != POWER_RAGE)
-                setPowerType(POWER_RAGE);
+            if (GetPowerType() != POWER_RAGE)
+                SetPowerType(POWER_RAGE);
             break;
         }
         default:                                            // 0, for example
@@ -16322,8 +16523,8 @@ void Player::InitDataForForm(bool reapplyMods)
             SetRegularAttackTime();
 
             ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(getClass());
-            if (cEntry && cEntry->powerType < MAX_POWERS && uint32(getPowerType()) != cEntry->powerType)
-                setPowerType(Powers(cEntry->powerType));
+            if (cEntry && cEntry->powerType < MAX_POWERS && uint32(GetPowerType()) != cEntry->powerType)
+                SetPowerType(Powers(cEntry->powerType));
 
             break;
         }
@@ -17175,6 +17376,11 @@ void Player::ApplyEquipCooldown(Item* pItem)
         if (spellData.SpellTrigger != ITEM_SPELLTRIGGER_ON_USE)
             continue;
 
+        //! Don't replace longer cooldowns by equip cooldown if we have any.
+        SpellCooldowns::iterator itr = m_spellCooldowns.find(spellData.SpellId);
+        if (itr != m_spellCooldowns.end() && itr->second.itemid == pItem->GetEntry() && itr->second.end > time(NULL) + 30)
+            break;
+
         AddSpellCooldown(spellData.SpellId, pItem->GetEntry(), time(NULL) + 30);
 
         WorldPacket data(SMSG_ITEM_COOLDOWN, 12);
@@ -17409,7 +17615,7 @@ float Player::GetReputationPriceDiscount(Creature const* pCreature) const
     FactionTemplateEntry const* vendor_faction = pCreature->getFactionTemplateEntry();
     if (!vendor_faction || !vendor_faction->faction)
         return 1.0f;
-    
+
     uint32 discount = 100;
     ReputationRank rank = GetReputationRank(vendor_faction->faction);   // get repution rank for that specific vendor faction
     if (rank >= REP_HONORED)                                            // give 10% reduction if rank is at least honored
@@ -17423,7 +17629,7 @@ float Player::GetReputationPriceDiscount(Creature const* pCreature) const
                 discount -=10;                                          // give 10% discount if grade is at least sergent
         }
     }
-    return float (discount / 100.0f);
+    return float(discount / 100.0f);
 }
 
 /**
@@ -17724,12 +17930,24 @@ uint32 Player::GetResurrectionSpellId()
         {
             switch ((*itr)->GetId())
             {
-                case 20707: spell_id =  3026; break;        // rank 1
-                case 20762: spell_id = 20758; break;        // rank 2
-                case 20763: spell_id = 20759; break;        // rank 3
-                case 20764: spell_id = 20760; break;        // rank 4
-                case 20765: spell_id = 20761; break;        // rank 5
-                case 27239: spell_id = 27240; break;        // rank 6
+                case 20707:
+                    spell_id =  3026;
+                    break;        // rank 1
+                case 20762:
+                    spell_id = 20758;
+                    break;        // rank 2
+                case 20763:
+                    spell_id = 20759;
+                    break;        // rank 3
+                case 20764:
+                    spell_id = 20760;
+                    break;        // rank 4
+                case 20765:
+                    spell_id = 20761;
+                    break;        // rank 5
+                case 27239:
+                    spell_id = 27240;
+                    break;        // rank 6
                 default:
                     sLog.outError("Unhandled spell %u: S.Resurrection", (*itr)->GetId());
                     continue;
@@ -18326,7 +18544,10 @@ uint32 Player::CalculateTalentsPoints() const
 struct DoPlayerLearnSpell
 {
     DoPlayerLearnSpell(Player& _player) : player(_player) {}
-    void operator()(uint32 spell_id) { player.learnSpell(spell_id, false); }
+    void operator()(uint32 spell_id)
+    {
+        player.learnSpell(spell_id, false);
+    }
     Player& player;
 };
 
@@ -18659,6 +18880,18 @@ void Player::_SaveBGData()
     }
 
     m_bgData.m_needSave = false;
+}
+
+void Player::ModifyMoney(int32 d)
+{
+    // used by eluna
+    sEluna->OnMoneyChanged(this, d);
+
+    if (d < 0)
+        SetMoney(GetMoney() > uint32(-d) ? GetMoney() + d : 0);
+    else
+        SetMoney(GetMoney() < uint32(MAX_MONEY_AMOUNT - d) ? GetMoney() + d : MAX_MONEY_AMOUNT);
+
 }
 
 void Player::RemoveAtLoginFlag(AtLoginFlags f, bool in_db_also /*= false*/)

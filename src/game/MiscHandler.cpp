@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,33 +18,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include <zlib.h>
+
 #include "Common.h"
+#include "cryptography/BigNumber.h"
+#include "cryptography/Sha1.h"
+#include "database/DatabaseEnv.h"
+#include "database/DatabaseImpl.h"
+#include "log/Log.h"
 #include "Language.h"
-#include "Database/DatabaseEnv.h"
-#include "Database/DatabaseImpl.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "Player.h"
 #include "World.h"
 #include "GuildMgr.h"
 #include "ObjectMgr.h"
 #include "WorldSession.h"
-#include "Auth/BigNumber.h"
-#include "Auth/Sha1.h"
 #include "UpdateData.h"
 #include "LootMgr.h"
 #include "Chat.h"
 #include "ScriptMgr.h"
-#include <zlib/zlib.h>
 #include "ObjectAccessor.h"
 #include "Object.h"
 #include "BattleGround/BattleGround.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "Pet.h"
 #include "SocialMgr.h"
+#include "LuaEngine.h"
 
 void WorldSession::HandleRepopRequestOpcode(WorldPacket& recv_data)
 {
@@ -61,6 +70,9 @@ void WorldSession::HandleRepopRequestOpcode(WorldPacket& recv_data)
         DEBUG_LOG("HandleRepopRequestOpcode: got request after player %s(%d) was killed and before he was updated", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow());
         GetPlayer()->KillPlayer();
     }
+
+    // used by eluna
+    sEluna->OnRepop(GetPlayer());
 
     // this is spirit release confirm?
     GetPlayer()->RemovePet(PET_SAVE_REAGENTS);
@@ -265,16 +277,26 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket& /*recv_data*/)
     if (ObjectGuid lootGuid = GetPlayer()->GetLootGuid())
         DoLootRelease(lootGuid);
 
-    // Can not logout if...
-    if (GetPlayer()->isInCombat() ||                        //...is in combat
-            GetPlayer()->duel         ||                    //...is in Duel
-            //...is jumping ...is falling
-            GetPlayer()->m_movementInfo.HasMovementFlag(MovementFlags(MOVEFLAG_FALLING | MOVEFLAG_FALLINGFAR)))
+    uint8 reason = 0;
+
+    if (GetPlayer()->isInCombat())
     {
-        WorldPacket data(SMSG_LOGOUT_RESPONSE, (2 + 4)) ;
-        data << (uint8)0xC;
+        reason = 1;
+    }
+    else if (GetPlayer()->m_movementInfo.HasMovementFlag(MovementFlags(MOVEFLAG_FALLING | MOVEFLAG_FALLINGFAR)))
+    {
+        reason = 3;                                         // is jumping or falling
+    }
+    else if (GetPlayer()->duel || GetPlayer()->HasAura(9454)) // is dueling or frozen by GM via freeze command
+    {
+        reason = 2;                                         // FIXME - Need the correct value
+    }
+
+    if (reason)
+    {
+        WorldPacket data(SMSG_LOGOUT_RESPONSE, 1+4);
+        data << uint8(reason);
         data << uint32(0);
-        data << uint8(0);
         SendPacket(&data);
         LogoutRequest(0);
         return;
@@ -284,6 +306,10 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket& /*recv_data*/)
     if (GetPlayer()->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING) || GetPlayer()->IsTaxiFlying() ||
             GetSecurity() >= (AccountTypes)sWorld.getConfig(CONFIG_UINT32_INSTANT_LOGOUT))
     {
+        WorldPacket data(SMSG_LOGOUT_RESPONSE, 1+4);
+        data << uint8(0);
+        data << uint32(16777216);
+        SendPacket(&data);
         LogoutPlayer(true);
         return;
     }
@@ -299,9 +325,9 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket& /*recv_data*/)
         GetPlayer()->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
     }
 
-    WorldPacket data(SMSG_LOGOUT_RESPONSE, 5);
-    data << uint32(0);
+    WorldPacket data(SMSG_LOGOUT_RESPONSE, 1 + 4);
     data << uint8(0);
+    data << uint32(0);
     SendPacket(&data);
     LogoutRequest(time(NULL));
 }

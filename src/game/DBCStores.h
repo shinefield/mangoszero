@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_DBCSTORES_H
-#define MANGOS_DBCSTORES_H
-
-#include "Common.h"
-#include "Database/DBCStore.h"
-#include "DBCStructure.h"
+#ifndef MANGOS_H_DBCSTORES
+#define MANGOS_H_DBCSTORES
 
 #include <list>
+
+#include "Common.h"
+#include "database/DBCStore.h"
+#include "DBCStructure.h"
 
 bool IsAcceptableClientBuild(uint32 build);
 std::string AcceptableClientBuildsListStr();
@@ -47,6 +54,7 @@ MANGOS_DLL_SPEC AreaTableEntry const* GetAreaEntryByAreaFlagAndMap(uint32 area_f
 uint32 GetVirtualMapForMapAndZone(uint32 mapid, uint32 zoneId);
 
 ChatChannelsEntry const* GetChannelEntryFor(uint32 channel_id);
+ChatChannelsEntry const* GetChannelEntryFor(const std::string& channel_id);
 
 // [-ZERO] bool IsTotemCategoryCompatiableWith(uint32 itemTotemCategoryId, uint32 requiredTotemCategoryId);
 

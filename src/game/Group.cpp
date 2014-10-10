@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
+#include "utilities/Util.h"
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "World.h"
@@ -30,8 +38,10 @@
 #include "BattleGround/BattleGround.h"
 #include "MapManager.h"
 #include "MapPersistentStateMgr.h"
-#include "Util.h"
 #include "LootMgr.h"
+#include "LFGMgr.h"
+#include "LFGHandler.h"
+#include "LuaEngine.h"
 
 #define LOOT_ROLL_TIMEOUT  (1*MINUTE*IN_MILLISECONDS)
 
@@ -51,12 +61,14 @@ void Roll::targetObjectBuildLink()
 
 Group::Group() : m_Id(0), m_groupType(GROUPTYPE_NORMAL),
     m_bgGroup(NULL), m_lootMethod(FREE_FOR_ALL), m_lootThreshold(ITEM_QUALITY_UNCOMMON),
-    m_subGroupsCounts(NULL)
+    m_subGroupsCounts(NULL), m_LFGAreaId(0)
 {
 }
 
 Group::~Group()
 {
+    Eluna::RemoveRef(this);
+
     if (m_bgGroup)
     {
         DEBUG_LOG("Group::~Group: battleground group being deleted.");
@@ -130,6 +142,9 @@ bool Group::Create(ObjectGuid guid, const char* name)
     if (!isBGGroup())
         CharacterDatabase.CommitTransaction();
 
+    // used by eluna
+    sEluna->OnCreate(this, m_leaderGuid, m_groupType);
+
     return true;
 }
 
@@ -167,7 +182,7 @@ bool Group::LoadMemberFromDB(uint32 guidLow, uint8 subgroup, bool assistant)
     MemberSlot member;
     member.guid      = ObjectGuid(HIGHGUID_PLAYER, guidLow);
 
-    // skip nonexistent member
+    // skip non-existent member
     if (!sObjectMgr.GetPlayerNameByGUID(member.guid, member.name))
         return false;
 
@@ -211,6 +226,9 @@ bool Group::AddInvite(Player* player)
     m_invitees.insert(player);
 
     player->SetGroupInvite(this);
+
+    // used by eluna
+    sEluna->OnInviteMember(this, player->GetObjectGuid());
 
     return true;
 }
@@ -260,7 +278,7 @@ Player* Group::GetInvited(const std::string& name) const
     return NULL;
 }
 
-bool Group::AddMember(ObjectGuid guid, const char* name)
+bool Group::AddMember(ObjectGuid guid, const char* name, uint8 joinMethod)
 {
     if (!_addMember(guid, name))
         return false;
@@ -278,15 +296,32 @@ bool Group::AddMember(ObjectGuid guid, const char* name)
         player->SetGroupUpdateFlag(GROUP_UPDATE_FULL);
         UpdatePlayerOutOfRange(player);
 
+        // used by eluna
+        sEluna->OnAddMember(this, player->GetObjectGuid());
+
         // quest related GO state dependent from raid membership
         if (isRaidGroup())
             player->UpdateForQuestWorldObjects();
+
+        if (isInLFG())
+        {
+            if (joinMethod == GROUP_LFG)
+            {
+
+            }
+            else
+            {
+                player->GetSession()->SendMeetingstoneSetqueue(m_LFGAreaId, MEETINGSTONE_STATUS_JOINED_QUEUE);
+
+                sLFGMgr.UpdateGroup(m_Id);
+            }
+        }
     }
 
     return true;
 }
 
-uint32 Group::RemoveMember(ObjectGuid guid, uint8 method)
+uint32 Group::RemoveMember(ObjectGuid guid, uint8 removeMethod)
 {
     // remove member and change leader (if need) only if strong more 2 members _before_ member remove
     if (GetMembersCount() > uint32(isBGGroup() ? 1 : 2))    // in BG group case allow 1 members group
@@ -301,10 +336,31 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 method)
 
             WorldPacket data;
 
-            if (method == 1)
+            if (removeMethod == GROUP_KICK)
             {
                 data.Initialize(SMSG_GROUP_UNINVITE, 0);
                 player->GetSession()->SendPacket(&data);
+
+                if (isInLFG())
+                {
+                    data.Initialize(SMSG_MEETINGSTONE_SETQUEUE, 5);
+                    data << 0 << uint8(MEETINGSTONE_STATUS_PARTY_MEMBER_REMOVED_PARTY_REMOVED);
+
+                    BroadcastPacket(&data, true);
+                    sLFGMgr.RemoveGroupFromQueue(m_Id);
+
+                    player->GetSession()->SendMeetingstoneSetqueue(m_LFGAreaId, MEETINGSTONE_STATUS_LOOKING_FOR_NEW_PARTY_IN_QUEUE);
+                    sLFGMgr.AddToQueue(player, m_LFGAreaId);
+                }
+            }
+
+            if (removeMethod == GROUP_LEAVE && isInLFG())
+            {
+                player->GetSession()->SendMeetingstoneSetqueue(0, MEETINGSTONE_STATUS_NONE);
+
+                data.Initialize(SMSG_MEETINGSTONE_SETQUEUE, 5);
+                data << m_LFGAreaId << uint8(MEETINGSTONE_STATUS_PARTY_MEMBER_LEFT_LFG);
+                BroadcastPacket(&data, true);
             }
 
             // we already removed player from group and in player->GetGroup() is his original group!
@@ -327,6 +383,13 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 method)
             WorldPacket data(SMSG_GROUP_SET_LEADER, (m_memberSlots.front().name.size() + 1));
             data << m_memberSlots.front().name;
             BroadcastPacket(&data, true);
+
+            sLFGMgr.RemoveGroupFromQueue(m_Id);
+        }
+
+        if (isInLFG())
+        {
+            sLFGMgr.UpdateGroup(m_Id);
         }
 
         SendUpdate();
@@ -334,6 +397,9 @@ uint32 Group::RemoveMember(ObjectGuid guid, uint8 method)
     // if group before remove <= 2 disband it
     else
         Disband(true);
+
+    // used by eluna
+    sEluna->OnRemoveMember(this, guid, removeMethod); // Kicker and Reason not a part of Mangos, implement?
 
     return m_memberSlots.size();
 }
@@ -343,6 +409,9 @@ void Group::ChangeLeader(ObjectGuid guid)
     member_citerator slot = _getMemberCSlot(guid);
     if (slot == m_memberSlots.end())
         return;
+
+    // used by eluna
+    sEluna->OnChangeLeader(this, guid, GetLeaderGuid());
 
     _setLeader(guid);
 
@@ -399,6 +468,16 @@ void Group::Disband(bool hideDestroy)
             data.Initialize(SMSG_GROUP_LIST, 24);
             data << uint64(0) << uint64(0) << uint64(0);
             player->GetSession()->SendPacket(&data);
+
+            if (isInLFG())
+            {
+                sLFGMgr.RemoveGroupFromQueue(m_Id);
+
+                data.Initialize(SMSG_MEETINGSTONE_SETQUEUE, 5);
+                data << 0 << MEETINGSTONE_STATUS_NONE;
+
+                player->GetSession()->SendPacket(&data);
+            }
         }
 
         _homebindIfInstance(player);
@@ -417,8 +496,133 @@ void Group::Disband(bool hideDestroy)
         ResetInstances(INSTANCE_RESET_GROUP_DISBAND, NULL);
     }
 
+    // used by eluna
+    sEluna->OnDisband(this);
+
     m_leaderGuid.Clear();
     m_leaderName = "";
+}
+
+/*********************************************************/
+/***                   LFG SYSTEM                      ***/
+/*********************************************************/
+
+void Group::CalculateLFGRoles(LFGGroupQueueInfo& data)
+{
+    uint32 m_initRoles = (LFG_ROLE_TANK | LFG_ROLE_DPS | LFG_ROLE_HEALER);
+    std::vector<ObjectGuid> m_processed;
+    uint32 dpsCount = 0;
+
+    for (member_citerator citr = GetMemberSlots().begin(); citr != GetMemberSlots().end(); ++citr)
+    {
+        ClassRoles lfgRole;
+
+        lfgRole = sLFGMgr.CalculateRoles((Classes)sObjectMgr.GetPlayerClassByGUID(citr->guid));
+
+        if ((sLFGMgr.canPerformRole(lfgRole, LFG_ROLE_TANK) & m_initRoles) == LFG_ROLE_TANK && !inLFGGroup(m_processed, citr->guid))
+        {
+            FillPremadeLFG(citr->guid, LFG_ROLE_TANK, m_initRoles, dpsCount, m_processed);
+        }
+
+        if ((sLFGMgr.canPerformRole(lfgRole, LFG_ROLE_HEALER) & m_initRoles) == LFG_ROLE_HEALER && !inLFGGroup(m_processed, citr->guid))
+        {
+            FillPremadeLFG(citr->guid, LFG_ROLE_HEALER, m_initRoles, dpsCount, m_processed);
+        }
+
+        if ((sLFGMgr.canPerformRole(lfgRole, LFG_ROLE_DPS) & m_initRoles) == LFG_ROLE_DPS && !inLFGGroup(m_processed, citr->guid))
+        {
+            FillPremadeLFG(citr->guid, LFG_ROLE_DPS, m_initRoles, dpsCount, m_processed);
+        }
+    }
+
+    data.availableRoles = (ClassRoles)m_initRoles;
+    data.dpsCount = dpsCount;
+}
+
+void Group::FillPremadeLFG(ObjectGuid plrGuid, ClassRoles requiredRole, uint32& InitRoles, uint32& DpsCount, std::vector<ObjectGuid>& playersProcessed)
+{
+    Classes plrClass = (Classes)sObjectMgr.GetPlayerClassByGUID(plrGuid);
+
+    if (sLFGMgr.getPriority(plrClass, requiredRole) >= LFG_PRIORITY_HIGH && !inLFGGroup(playersProcessed, plrGuid))
+    {
+        switch (requiredRole)
+        {
+            case LFG_ROLE_TANK:
+            {
+                InitRoles &= ~LFG_ROLE_TANK;
+                break;
+            }
+
+            case LFG_ROLE_HEALER:
+            {
+                InitRoles &= ~LFG_ROLE_HEALER;
+                break;
+            }
+
+            case LFG_ROLE_DPS:
+            {
+                if (DpsCount < 3)
+                {
+                    ++DpsCount;
+
+                    if (DpsCount >= 3)
+                        InitRoles &= ~LFG_ROLE_DPS;
+                }
+                break;
+            }
+        }
+        playersProcessed.push_back(plrGuid);
+    }
+    else if (sLFGMgr.getPriority(plrClass, requiredRole) < LFG_PRIORITY_HIGH && !inLFGGroup(playersProcessed, plrGuid))
+    {
+        bool hasFoundPriority = false;
+
+        for (member_citerator citr = GetMemberSlots().begin(); citr != GetMemberSlots().end(); ++citr)
+        {
+            if (plrGuid == citr->guid)
+                continue;
+
+            Classes memberClass = (Classes)sObjectMgr.GetPlayerClassByGUID(plrGuid);
+
+            if (sLFGMgr.getPriority(plrClass, requiredRole) < sLFGMgr.getPriority(memberClass, requiredRole) && !inLFGGroup(playersProcessed, plrGuid))
+            {
+                hasFoundPriority = true;
+            }
+        }
+
+        if (!hasFoundPriority)
+        {
+            switch (requiredRole)
+            {
+                case LFG_ROLE_TANK:
+                {
+                    InitRoles &= ~LFG_ROLE_TANK;
+                    break;
+                }
+
+                case LFG_ROLE_HEALER:
+                {
+                    InitRoles &= ~LFG_ROLE_HEALER;
+                    break;
+
+                }
+
+                case LFG_ROLE_DPS:
+                {
+                    if (DpsCount < 3)
+                    {
+                        ++DpsCount;
+
+                        if (DpsCount >= 3)
+                            InitRoles &= ~LFG_ROLE_DPS;
+                    }
+                    break;
+                }
+            }
+
+            playersProcessed.push_back(plrGuid);
+        }
+    }
 }
 
 /*********************************************************/

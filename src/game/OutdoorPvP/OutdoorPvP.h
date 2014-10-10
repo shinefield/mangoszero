@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,16 +12,19 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef OUTDOOR_PVP_H
-#define OUTDOOR_PVP_H
+#ifndef MANGOS_H_OUTDOOR_PVP
+#define MANGOS_H_OUTDOOR_PVP
 
 #include "Common.h"
 #include "ObjectGuid.h"
@@ -60,7 +67,10 @@ class OutdoorPvP
         virtual void FillInitialWorldStates(WorldPacket& /*data*/, uint32& /*count*/) {}
 
         // Process Capture event
-        virtual bool HandleEvent(uint32 /*eventId*/, GameObject* /*go*/) { return false; }
+        virtual bool HandleEvent(uint32 /*eventId*/, GameObject* /*go*/)
+        {
+            return false;
+        }
 
         // handle capture objective complete
         virtual void HandleObjectiveComplete(uint32 /*eventId*/, std::list<Player*> /*players*/, Team /*team*/) {}
@@ -76,13 +86,22 @@ class OutdoorPvP
         virtual void HandleCreatureDeath(Creature* /*creature*/) {}
 
         // called when a player uses a gameobject related to outdoor pvp events
-        virtual bool HandleGameObjectUse(Player* /*player*/, GameObject* /*go*/) { return false; }
+        virtual bool HandleGameObjectUse(Player* /*player*/, GameObject* /*go*/)
+        {
+            return false;
+        }
 
         // called when a player triggers an areatrigger
-        virtual bool HandleAreaTrigger(Player* /*player*/, uint32 /*triggerId*/) { return false; }
+        virtual bool HandleAreaTrigger(Player* /*player*/, uint32 /*triggerId*/)
+        {
+            return false;
+        }
 
         // called when a player drops a flag
-        virtual bool HandleDropFlag(Player* /*player*/, uint32 /*spellId*/) { return false; }
+        virtual bool HandleDropFlag(Player* /*player*/, uint32 /*spellId*/)
+        {
+            return false;
+        }
 
         // update - called by the OutdoorPvPMgr
         virtual void Update(uint32 /*diff*/) {}

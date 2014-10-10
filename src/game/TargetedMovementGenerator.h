@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_TARGETEDMOVEMENTGENERATOR_H
-#define MANGOS_TARGETEDMOVEMENTGENERATOR_H
+#ifndef MANGOS_H_TARGETEDMOVEMENTGENERATOR
+#define MANGOS_H_TARGETEDMOVEMENTGENERATOR
 
 #include "MovementGenerator.h"
 #include "FollowerReference.h"
@@ -27,7 +34,10 @@ class PathFinder;
 class MANGOS_DLL_SPEC TargetedMovementGeneratorBase
 {
     public:
-        TargetedMovementGeneratorBase(Unit& target) { i_target.link(&target, this); }
+        TargetedMovementGeneratorBase(Unit& target)
+        {
+            i_target.link(&target, this);
+        }
         void stopFollowing() { }
     protected:
         FollowerReference i_target;
@@ -46,21 +56,33 @@ class MANGOS_DLL_SPEC TargetedMovementGeneratorMedium
             i_path(NULL)
         {
         }
-        ~TargetedMovementGeneratorMedium() { delete i_path; }
+        ~TargetedMovementGeneratorMedium()
+        {
+            delete i_path;
+        }
 
     public:
         bool Update(T&, const uint32&);
 
         bool IsReachable() const;
 
-        Unit* GetTarget() const { return i_target.getTarget(); }
+        Unit* GetTarget() const
+        {
+            return i_target.getTarget();
+        }
 
-        void unitSpeedChanged() { m_speedChanged = true; }
+        void unitSpeedChanged()
+        {
+            m_speedChanged = true;
+        }
 
     protected:
         void _setTargetLocation(T&, bool updateDestination);
         bool RequiresNewPosition(T& owner, float x, float y, float z) const;
-        virtual float GetDynamicTargetDistance(T& /*owner*/, bool /*forRangeCheck*/) const { return i_offset; }
+        virtual float GetDynamicTargetDistance(T& /*owner*/, bool /*forRangeCheck*/) const
+        {
+            return i_offset;
+        }
 
         ShortTimeTracker i_recheckDistance;
         float i_offset;
@@ -79,7 +101,10 @@ class MANGOS_DLL_SPEC ChaseMovementGenerator : public TargetedMovementGeneratorM
             : TargetedMovementGeneratorMedium<T, ChaseMovementGenerator<T> >(target, offset, angle) {}
         ~ChaseMovementGenerator() {}
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return CHASE_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return CHASE_MOTION_TYPE;
+        }
 
         void Initialize(T&);
         void Finalize(T&);
@@ -88,7 +113,10 @@ class MANGOS_DLL_SPEC ChaseMovementGenerator : public TargetedMovementGeneratorM
 
         static void _clearUnitStateMove(T& u);
         static void _addUnitStateMove(T& u);
-        bool EnableWalking() const { return false;}
+        bool EnableWalking() const
+        {
+            return false;
+        }
         bool _lostTarget(T& u) const;
         void _reachTarget(T&);
 
@@ -106,7 +134,10 @@ class MANGOS_DLL_SPEC FollowMovementGenerator : public TargetedMovementGenerator
             : TargetedMovementGeneratorMedium<T, FollowMovementGenerator<T> >(target, offset, angle) {}
         ~FollowMovementGenerator() {}
 
-        MovementGeneratorType GetMovementGeneratorType() const override { return FOLLOW_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return FOLLOW_MOTION_TYPE;
+        }
 
         void Initialize(T&);
         void Finalize(T&);
@@ -116,7 +147,10 @@ class MANGOS_DLL_SPEC FollowMovementGenerator : public TargetedMovementGenerator
         static void _clearUnitStateMove(T& u);
         static void _addUnitStateMove(T& u);
         bool EnableWalking() const;
-        bool _lostTarget(T&) const { return false; }
+        bool _lostTarget(T&) const
+        {
+            return false;
+        }
         void _reachTarget(T&) {}
 
     private:

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include <ctime>
+#include <cassert>
 
 #include "WaypointMovementGenerator.h"
 #include "ObjectMgr.h"
@@ -24,12 +32,10 @@
 #include "Creature.h"
 #include "CreatureAI.h"
 #include "WaypointManager.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ScriptMgr.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"
-
-#include <cassert>
 
 //-----------------------------------------------//
 void WaypointMovementGenerator<Creature>::LoadPath(Creature& creature)
@@ -88,7 +94,7 @@ void WaypointMovementGenerator<Creature>::Finalize(Creature& creature)
 
 void WaypointMovementGenerator<Creature>::Interrupt(Creature& creature)
 {
-    creature.InterruptMoving();
+    creature.StopMoving();
     creature.clearUnitState(UNIT_STAT_ROAMING | UNIT_STAT_ROAMING_MOVE);
     creature.SetWalk(!creature.hasUnitState(UNIT_STAT_RUNNING_STATE), false);
 }
@@ -267,7 +273,9 @@ bool WaypointMovementGenerator<Creature>::GetResetPosition(Creature&, float& x, 
 
     MANGOS_ASSERT(lastPoint != i_path->end());
 
-    x = lastPoint->second.x; y = lastPoint->second.y; z = lastPoint->second.z;
+    x = lastPoint->second.x;
+    y = lastPoint->second.y;
+    z = lastPoint->second.z;
     return true;
 }
 
@@ -403,6 +411,8 @@ void FlightPathMovementGenerator::SetCurrentNodeAfterTeleport()
 bool FlightPathMovementGenerator::GetResetPosition(Player&, float& x, float& y, float& z) const
 {
     const TaxiPathNodeEntry& node = (*i_path)[i_currentNode];
-    x = node.x; y = node.y; z = node.z;
+    x = node.x;
+    y = node.y;
+    z = node.z;
     return true;
 }

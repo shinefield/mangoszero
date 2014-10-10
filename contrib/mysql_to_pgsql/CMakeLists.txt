@@ -1,4 +1,10 @@
-# This file is part of the Continued-MaNGOS Project
+# mangos-zero is a full featured server for World of Warcraft in its vanilla
+# version, supporting clients for patch 1.12.x.
+#
+# Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+# Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
+#
+# ***** BEGIN GPL LICENSE BLOCK *****
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,25 +19,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# ***** END GPL LICENSE BLOCK *****
+#
+# World of Warcraft, and all World of Warcraft or Warcraft art, images,
+# and lore are copyrighted by Blizzard Entertainment, Inc.
 
-SET(CMAKE_VERBOSE_MAKEFILE ON)
-cmake_minimum_required (VERSION 2.6)
+include(cmake/FindMySQL.cmake)
+include(cmake/FindPostgreSQL.cmake)
 
-INCLUDE(cmake/FindMySQL.cmake)
-INCLUDE(cmake/FindPostgreSQL.cmake)
-
-MESSAGE("-- Check PostgreSQL")
+message("-- Check PostgreSQL")
 FIND_PGSQL()
-ADD_DEFINITIONS(-DDO_POSTGRESQL)
+add_definitions(-DDO_POSTGRESQL)
 
-MESSAGE("-- Check MySQL")
+message("-- Check MySQL")
 FIND_MYSQL()
-ADD_DEFINITIONS(-DDO_MYSQL)
+add_definitions(-DDO_MYSQL)
 
-INCLUDE_DIRECTORIES(${MYSQL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${PGSQL_INCLUDE_DIR})
+include_directories(${MYSQL_INCLUDE_DIR})
+include_directories(${PGSQL_INCLUDE_DIR})
 
-ADD_EXECUTABLE (mysql2pgsql src/main.cpp)
+add_executable (mysql2pgsql src/main.cpp)
 
-TARGET_LINK_LIBRARIES(mysql2pgsql ${PGSQL_LIBRARIES})
-TARGET_LINK_LIBRARIES(mysql2pgsql ${MYSQL_LIBRARIES})
+target_link_libraries(mysql2pgsql ${PGSQL_LIBRARIES})
+target_link_libraries(mysql2pgsql ${MYSQL_LIBRARIES})

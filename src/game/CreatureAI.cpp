@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "CreatureAI.h"
@@ -217,10 +224,20 @@ void CreatureAI::SendAIEventAround(AIEventType eventType, Unit* pInvoker, uint32
     {
         std::list<Creature*> receiverList;
 
-        // Use this check here to collect only assitable creatures in case of CALL_ASSISTANCE, else be less strict
-        MaNGOS::AnyAssistCreatureInRangeCheck u_check(m_creature, eventType == AI_EVENT_CALL_ASSISTANCE ? pInvoker : NULL, fRadius);
-        MaNGOS::CreatureListSearcher<MaNGOS::AnyAssistCreatureInRangeCheck> searcher(receiverList, u_check);
-        Cell::VisitGridObjects(m_creature, searcher, fRadius);
+        // Allow sending custom AI events to all units in range
+        if (eventType == AI_EVENT_CUSTOM_EVENTAI_A || eventType == AI_EVENT_CUSTOM_EVENTAI_B)
+        {
+            MaNGOS::AnyUnitInObjectRangeCheck u_check(m_creature, fRadius);
+            MaNGOS::CreatureListSearcher<MaNGOS::AnyUnitInObjectRangeCheck> searcher(receiverList, u_check);
+            Cell::VisitGridObjects(m_creature, searcher, fRadius);
+        }
+        else
+        {
+            // Use this check here to collect only assitable creatures in case of CALL_ASSISTANCE, else be less strict
+            MaNGOS::AnyAssistCreatureInRangeCheck u_check(m_creature, eventType == AI_EVENT_CALL_ASSISTANCE ? pInvoker : NULL, fRadius);
+            MaNGOS::CreatureListSearcher<MaNGOS::AnyAssistCreatureInRangeCheck> searcher(receiverList, u_check);
+            Cell::VisitGridObjects(m_creature, searcher, fRadius);
+        }
 
         if (!receiverList.empty())
         {

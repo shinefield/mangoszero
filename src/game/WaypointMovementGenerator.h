@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_WAYPOINTMOVEMENTGENERATOR_H
-#define MANGOS_WAYPOINTMOVEMENTGENERATOR_H
+#ifndef MANGOS_H_WAYPOINTMOVEMENTGENERATOR
+#define MANGOS_H_WAYPOINTMOVEMENTGENERATOR
 
 /** @page PathMovementGenerator is used to generate movements
  * of waypoints and flight paths.  Each serves the purpose
@@ -25,12 +32,12 @@
  * packets for the players.
  */
 
+#include <vector>
+#include <set>
+
 #include "MovementGenerator.h"
 #include "WaypointManager.h"
 #include "DBCStructure.h"
-
-#include <vector>
-#include <set>
 
 #define FLIGHT_TRAVEL_UPDATE  100
 #define STOP_TIME_FOR_PLAYER  (3 * MINUTE * IN_MILLISECONDS)// 3 Minutes
@@ -44,7 +51,10 @@ class MANGOS_DLL_SPEC PathMovementBase
 
         // template pattern, not defined .. override required
         void LoadPath(T&);
-        uint32 GetCurrentNode() const { return i_currentNode; }
+        uint32 GetCurrentNode() const
+        {
+            return i_currentNode;
+        }
 
     protected:
         P i_path;
@@ -66,7 +76,10 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 {
     public:
         WaypointMovementGenerator(Creature&) : i_nextMoveTime(0), m_isArrivalDone(false), m_lastReachedWaypoint(0) {}
-        ~WaypointMovementGenerator() { i_path = NULL; }
+        ~WaypointMovementGenerator()
+        {
+            i_path = NULL;
+        }
         void Initialize(Creature& u);
         void Interrupt(Creature&);
         void Finalize(Creature&);
@@ -75,7 +88,10 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 
         void MovementInform(Creature&);
 
-        MovementGeneratorType GetMovementGeneratorType() const { return WAYPOINT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const
+        {
+            return WAYPOINT_MOTION_TYPE;
+        }
 
         // now path movement implmementation
         void LoadPath(Creature& c);
@@ -84,10 +100,16 @@ class MANGOS_DLL_SPEC WaypointMovementGenerator<Creature>
 
         void AddToWaypointPauseTime(int32 waitTimeDiff);
 
-        uint32 getLastReachedWaypoint() const { return m_lastReachedWaypoint; }
+        uint32 getLastReachedWaypoint() const
+        {
+            return m_lastReachedWaypoint;
+        }
 
     private:
-        void Stop(int32 time) { i_nextMoveTime.Reset(time); }
+        void Stop(int32 time)
+        {
+            i_nextMoveTime.Reset(time);
+        }
         bool Stopped(Creature& u);
         bool CanMove(int32 diff, Creature& u);
 
@@ -119,13 +141,25 @@ class MANGOS_DLL_SPEC FlightPathMovementGenerator
         void Interrupt(Player&);
         void Reset(Player&);
         bool Update(Player&, const uint32&);
-        MovementGeneratorType GetMovementGeneratorType() const override { return FLIGHT_MOTION_TYPE; }
+        MovementGeneratorType GetMovementGeneratorType() const override
+        {
+            return FLIGHT_MOTION_TYPE;
+        }
 
-        TaxiPathNodeList const& GetPath() { return *i_path; }
+        TaxiPathNodeList const& GetPath()
+        {
+            return *i_path;
+        }
         uint32 GetPathAtMapEnd() const;
-        bool HasArrived() const { return (i_currentNode >= i_path->size()); }
+        bool HasArrived() const
+        {
+            return (i_currentNode >= i_path->size());
+        }
         void SetCurrentNodeAfterTeleport();
-        void SkipCurrentNode() { ++i_currentNode; }
+        void SkipCurrentNode()
+        {
+            ++i_currentNode;
+        }
         bool GetResetPosition(Player&, float& x, float& y, float& z) const;
 };
 

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MAPMANAGER_H
-#define MANGOS_MAPMANAGER_H
+#ifndef MANGOS_H_MAPMANAGER
+#define MANGOS_H_MAPMANAGER
 
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "ace/Recursive_Thread_Mutex.h"
 #include "Map.h"
 #include "GridStates.h"
 
@@ -42,7 +50,10 @@ struct MANGOS_DLL_DECL MapID
         return nMapId < val.nMapId;
     }
 
-    bool operator==(const MapID& val) const { return nMapId == val.nMapId && nInstanceId == val.nInstanceId; }
+    bool operator==(const MapID& val) const
+    {
+        return nMapId == val.nMapId && nInstanceId == val.nInstanceId;
+    }
 
     uint32 nMapId;
     uint32 nInstanceId;
@@ -139,7 +150,10 @@ class MANGOS_DLL_DECL MapManager : public MaNGOS::Singleton<MapManager, MaNGOS::
         typedef std::map<uint32, TransportSet> TransportMap;
         TransportMap m_TransportsByMap;
 
-        uint32 GenerateInstanceId() { return ++i_MaxInstanceId; }
+        uint32 GenerateInstanceId()
+        {
+            return ++i_MaxInstanceId;
+        }
         void InitMaxInstanceId();
         void InitializeVisibilityDistanceInfo();
 
@@ -149,7 +163,10 @@ class MANGOS_DLL_DECL MapManager : public MaNGOS::Singleton<MapManager, MaNGOS::
 
 
         // get list of all maps
-        const MapMapType& Maps() const { return i_maps; }
+        const MapMapType& Maps() const
+        {
+            return i_maps;
+        }
 
         template<typename Do>
         void DoForAllMapsWithMapId(uint32 mapId, Do& _do);

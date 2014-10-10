@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,26 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing
- * @{
- *
- * @file MailHandler.cpp
- * This file contains handlers for mail opcodes.
- *
- */
-
+#include "log/Log.h"
 #include "Mail.h"
 #include "Language.h"
-#include "Log.h"
 #include "ObjectGuid.h"
 #include "ObjectMgr.h"
 #include "Item.h"
 #include "Player.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
 #include "Chat.h"
@@ -58,7 +56,7 @@ bool WorldSession::CheckMailBox(ObjectGuid guid)
  * - Creates a MailDraft and adds the needed items, money, cost data.
  * - Sends the mail.
  *
- * Depending on the outcome of the checks performed the player will recieve a different
+ * Depending on the outcome of the checks performed the player will receive a different
  * MailResponseResult.
  *
  * @see MailResponseResult
@@ -106,7 +104,7 @@ void WorldSession::HandleSendMail(WorldPacket& recv_data)
 
     if (!rc)
     {
-        DETAIL_LOG("%s is sending mail to %s (GUID: nonexistent!) with subject %s and body %s includes %u items, %u copper and %u COD copper with unk1 = %u, unk2 = %u",
+        DETAIL_LOG("%s is sending mail to %s (GUID: non-existent!) with subject %s and body %s includes %u items, %u copper and %u COD copper with unk1 = %u, unk2 = %u",
                    pl->GetGuidStr().c_str(), receiver.c_str(), subject.c_str(), body.c_str(), itemGuid ? 1 : 0, money, COD, unk1, unk2);
         pl->SendMailResult(0, MAIL_SEND, MAIL_ERR_RECIPIENT_NOT_FOUND);
         return;
@@ -753,5 +751,3 @@ void WorldSession::HandleQueryNextMailTime(WorldPacket& /**recv_data*/)
     }
     SendPacket(&data);
 }
-
-/*! @} */

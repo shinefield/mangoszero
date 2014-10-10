@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "packet_builder.h"
 #include "MoveSpline.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 
 namespace Movement
 {
@@ -31,15 +38,6 @@ namespace Movement
     {
         b >> v.x >> v.y >> v.z;
     }
-
-    enum MonsterMoveType
-    {
-        MonsterMoveNormal       = 0,
-        MonsterMoveStop         = 1,
-        MonsterMoveFacingSpot   = 2,
-        MonsterMoveFacingTarget = 3,
-        MonsterMoveFacingAngle  = 4
-    };
 
     void PacketBuilder::WriteCommonMonsterMovePart(const MoveSpline& move_spline, WorldPacket& data)
     {
@@ -86,6 +84,7 @@ namespace Movement
         const Vector3* real_path = &spline.getPoint(1);
         Vector3 destination = real_path[last_idx];
 
+        size_t lastIndexPos = data.wpos();
         data << last_idx;
         data << destination;
         if (last_idx > 1)
@@ -95,6 +94,14 @@ namespace Movement
             for (uint32 i = 1; i < last_idx; ++i)
             {
                 offset = destination - real_path[i];
+                // [-ZERO] The client freezes when it gets a zero offset.
+                // If the offset would be rounded to zero, skip it.
+                if (fabs(offset.x) < 0.25 && fabs(offset.y) < 0.25 && fabs(offset.z) < 0.25)
+                {
+                    last_idx--;
+                    data.put(lastIndexPos, last_idx);
+                    continue;
+                }
                 data.appendPackXYZ(offset.x, offset.y, offset.z);
             }
         }

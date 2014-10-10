@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _MOVE_MAP_H
-#define _MOVE_MAP_H
+#ifndef MANGOS_H_MOVE_MAP
+#define MANGOS_H_MOVE_MAP
 
-#include "Utilities/UnorderedMapSet.h"
+#include <DetourAlloc.h>
+#include <DetourNavMesh.h>
+#include <DetourNavMeshQuery.h>
 
-#include "../../dep/recastnavigation/Detour/Include/DetourAlloc.h"
-#include "../../dep/recastnavigation/Detour/Include/DetourNavMesh.h"
-#include "../../dep/recastnavigation/Detour/Include/DetourNavMeshQuery.h"
+#include "utilities/UnorderedMapSet.h"
 
 //  memory management
 inline void* dtCustomAlloc(int size, dtAllocHint /*hint*/)
@@ -82,8 +89,14 @@ namespace MMAP
             dtNavMeshQuery const* GetNavMeshQuery(uint32 mapId, uint32 instanceId);
             dtNavMesh const* GetNavMesh(uint32 mapId);
 
-            uint32 getLoadedTilesCount() const { return loadedTiles; }
-            uint32 getLoadedMapsCount() const { return loadedMMaps.size(); }
+            uint32 getLoadedTilesCount() const
+            {
+                return loadedTiles;
+            }
+            uint32 getLoadedMapsCount() const
+            {
+                return loadedMMaps.size();
+            }
         private:
             bool loadMapData(uint32 mapId);
             uint32 packTileID(int32 x, int32 y);

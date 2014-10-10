@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _SCRIPTMGR_H
-#define _SCRIPTMGR_H
+#ifndef MANGOS_H_SCRIPTMGR
+#define MANGOS_H_SCRIPTMGR
 
+#include <ace/Atomic_Op.h>
+
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Policies/Singleton.h"
 #include "ObjectGuid.h"
 #include "DBCEnums.h"
-#include "ace/Atomic_Op.h"
 
 struct AreaTriggerEntry;
 struct SpellEntry;
@@ -97,9 +105,13 @@ enum ScriptCommand                                          // resSource, resTar
                                                             // dataint=diff to change a waittime of current Waypoint Movement
     SCRIPT_COMMAND_PAUSE_WAYPOINTS          = 32,           // resSource = Creature
                                                             // datalong = 0: unpause waypoint 1: pause waypoint
-    SCRIPT_COMMAND_RESERVED_1               = 33,           // reserved for 3.x and later
+    SCRIPT_COMMAND_JOIN_LFG                 = 33,           // datalong = zoneId;
     SCRIPT_COMMAND_TERMINATE_COND           = 34,           // datalong = condition_id, datalong2 = if != 0 then quest_id of quest that will be failed for player's group if the script is terminated
                                                             // data_flags & SCRIPT_FLAG_COMMAND_ADDITIONAL terminate when condition is false ELSE terminate when condition is true
+    SCRIPT_COMMAND_SEND_AI_EVENT_AROUND     = 35,           // resSource = Creature, resTarget = Unit
+                                                            // datalong = AIEventType
+                                                            // datalong2 = radius
+    SCRIPT_COMMAND_TURN_TO                  = 36,           // resSource = Unit, resTarget = Unit/none
 };
 
 #define MAX_TEXT_ID 4                                       // used for SCRIPT_COMMAND_TALK
@@ -311,6 +323,11 @@ struct ScriptInfo
             uint32 empty;
         } pauseWaypoint;
 
+        struct                                              // SCRIPT_COMMAND_JOIN_LFG (33)
+        {
+            uint32 areaId;                                  // datalong
+        } joinLfg;
+
         struct                                              // SCRIPT_COMMAND_TERMINATE_COND (34)
         {
             uint32 conditionId;                             // datalong
@@ -321,6 +338,18 @@ struct ScriptInfo
         {
             uint32 data[2];
         } raw;
+
+        struct                                              // SCRIPT_COMMAND_SEND_AI_EVENT_AROUND (35)
+        {
+            uint32 eventType;                               // datalong
+            uint32 radius;                                  // datalong2
+        } sendAIEvent;
+
+        struct                                              // SCRIPT_COMMAND_TURN_TO (36)
+        {
+            uint32 targetId;                                // datalong
+            uint32 empty1;                                  // datalong2
+        } turnTo;
     };
 
     // Buddy system (entry can be npc or go entry, depending on command)
@@ -393,11 +422,26 @@ class ScriptAction
 
         bool HandleScriptStep();                            // return true IF AND ONLY IF the script should be terminated
 
-        const char* GetTableName() const { return m_table; }
-        uint32 GetId() const { return m_script->id; }
-        ObjectGuid GetSourceGuid() const { return m_sourceGuid; }
-        ObjectGuid GetTargetGuid() const { return m_targetGuid; }
-        ObjectGuid GetOwnerGuid() const { return m_ownerGuid; }
+        const char* GetTableName() const
+        {
+            return m_table;
+        }
+        uint32 GetId() const
+        {
+            return m_script->id;
+        }
+        ObjectGuid GetSourceGuid() const
+        {
+            return m_sourceGuid;
+        }
+        ObjectGuid GetTargetGuid() const
+        {
+            return m_targetGuid;
+        }
+        ObjectGuid GetOwnerGuid() const
+        {
+            return m_ownerGuid;
+        }
 
         bool IsSameScript(const char* table, uint32 id, ObjectGuid sourceGuid, ObjectGuid targetGuid, ObjectGuid ownerGuid) const
         {
@@ -471,18 +515,39 @@ class ScriptMgr
         uint32 GetAreaTriggerScriptId(uint32 triggerId) const;
         uint32 GetEventIdScriptId(uint32 eventId) const;
 
-        const char* GetScriptName(uint32 id) const { return id < m_scriptNames.size() ? m_scriptNames[id].c_str() : ""; }
+        const char* GetScriptName(uint32 id) const
+        {
+            return id < m_scriptNames.size() ? m_scriptNames[id].c_str() : "";
+        }
         uint32 GetScriptId(const char* name) const;
-        uint32 GetScriptIdsCount() const { return m_scriptNames.size(); }
+        uint32 GetScriptIdsCount() const
+        {
+            return m_scriptNames.size();
+        }
 
         ScriptLoadResult LoadScriptLibrary(const char* libName);
         void UnloadScriptLibrary();
-        bool IsScriptLibraryLoaded() const { return m_hScriptLib != NULL; }
+        bool IsScriptLibraryLoaded() const
+        {
+            return m_hScriptLib != NULL;
+        }
 
-        uint32 IncreaseScheduledScriptsCount() { return (uint32)++m_scheduledScripts; }
-        uint32 DecreaseScheduledScriptCount() { return (uint32)--m_scheduledScripts; }
-        uint32 DecreaseScheduledScriptCount(size_t count) { return (uint32)(m_scheduledScripts -= count); }
-        bool IsScriptScheduled() const { return m_scheduledScripts > 0; }
+        uint32 IncreaseScheduledScriptsCount()
+        {
+            return (uint32)++m_scheduledScripts;
+        }
+        uint32 DecreaseScheduledScriptCount()
+        {
+            return (uint32)--m_scheduledScripts;
+        }
+        uint32 DecreaseScheduledScriptCount(size_t count)
+        {
+            return (uint32)(m_scheduledScripts -= count);
+        }
+        bool IsScriptScheduled() const
+        {
+            return m_scheduledScripts > 0;
+        }
         static bool CanSpellEffectStartDBScript(SpellEntry const* spellinfo, SpellEffectIndex effIdx);
 
         CreatureAI* GetCreatureAI(Creature* pCreature);

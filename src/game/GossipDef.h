@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_GOSSIP_H
-#define MANGOSSERVER_GOSSIP_H
+#ifndef MANGOS_H_GOSSIP
+#define MANGOS_H_GOSSIP
 
 #include "Common.h"
 #include "QuestDef.h"
@@ -168,8 +175,14 @@ class MANGOS_DLL_SPEC GossipMenu
 
         void AddMenuItem(uint8 Icon, int32 itemText, uint32 dtSender, uint32 dtAction, int32 boxText, bool Coded = false);
 
-        void SetMenuId(uint32 menu_id) { m_gMenuId = menu_id; }
-        uint32 GetMenuId() { return m_gMenuId; }
+        void SetMenuId(uint32 menu_id)
+        {
+            m_gMenuId = menu_id;
+        }
+        uint32 GetMenuId()
+        {
+            return m_gMenuId;
+        }
 
         void AddGossipMenuItemData(int32 action_menu, uint32 action_poi, uint32 action_script);
 
@@ -199,7 +212,10 @@ class MANGOS_DLL_SPEC GossipMenu
 
         void ClearMenu();
 
-        WorldSession* GetMenuSession() const { return m_session; }
+        WorldSession* GetMenuSession() const
+        {
+            return m_session;
+        }
 
     protected:
         GossipMenuItemList      m_gItems;
@@ -251,12 +267,24 @@ class MANGOS_DLL_SPEC PlayerMenu
         explicit PlayerMenu(WorldSession* Session);
         ~PlayerMenu();
 
-        GossipMenu& GetGossipMenu() { return mGossipMenu; }
-        QuestMenu& GetQuestMenu() { return mQuestMenu; }
+        GossipMenu& GetGossipMenu()
+        {
+            return mGossipMenu;
+        }
+        QuestMenu& GetQuestMenu()
+        {
+            return mQuestMenu;
+        }
 
-        WorldSession* GetMenuSession() const { return mGossipMenu.GetMenuSession(); }
+        WorldSession* GetMenuSession() const
+        {
+            return mGossipMenu.GetMenuSession();
+        }
 
-        bool Empty() const { return mGossipMenu.Empty() && mQuestMenu.Empty(); }
+        bool Empty() const
+        {
+            return mGossipMenu.Empty() && mQuestMenu.Empty();
+        }
 
         void ClearMenus();
         uint32 GossipOptionSender(unsigned int Selection);

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include <ace/Message_Block.h>
@@ -27,23 +34,23 @@
 #include <ace/Reactor.h>
 #include <ace/Auto_Ptr.h>
 
-#include "WorldSocket.h"
 #include "Common.h"
-
-#include "Util.h"
+#include "network/ByteBuffer.h"
+#include "cryptography/BigNumber.h"
+#include "cryptography/Sha1.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "WorldSocket.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "SharedDefines.h"
-#include "ByteBuffer.h"
 #include "AddonHandler.h"
 #include "Opcodes.h"
-#include "Database/DatabaseEnv.h"
-#include "Auth/BigNumber.h"
-#include "Auth/Sha1.h"
 #include "WorldSession.h"
 #include "WorldSocketMgr.h"
-#include "Log.h"
 #include "DBCStores.h"
+#include "LuaEngine.h"
 
 #if defined( __GNUC__ )
 #pragma pack(1)
@@ -130,15 +137,20 @@ const std::string& WorldSocket::GetRemoteAddress(void) const
     return m_Address;
 }
 
-int WorldSocket::SendPacket(const WorldPacket& pct)
+int WorldSocket::SendPacket(const WorldPacket& pkt)
 {
     ACE_GUARD_RETURN(LockType, Guard, m_OutBufferLock, -1);
 
     if (closing_)
         return -1;
 
+    WorldPacket pct = pkt;
+
     // Dump outgoing packet.
     sLog.outWorldPacketDump(uint32(get_handle()), pct.GetOpcode(), pct.GetOpcodeName(), &pct, false);
+
+    if (!sEluna->OnPacketSend(m_Session, pct))
+        return 0;
 
     if (iSendPacket(pct) == -1)
     {
@@ -550,7 +562,7 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
 
     if (opcode >= NUM_MSG_TYPES)
     {
-        sLog.outError("SESSION: received nonexistent opcode 0x%.4X", opcode);
+        sLog.outError("SESSION: received non-existent opcode 0x%.4X", opcode);
         return -1;
     }
 
@@ -573,10 +585,13 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
                     return -1;
                 }
 
+                if (!sEluna->OnPacketReceive(m_Session, *new_pct))
+                    return 0;
                 return HandleAuthSession(*new_pct);
             case CMSG_KEEP_ALIVE:
                 DEBUG_LOG("CMSG_KEEP_ALIVE ,size: " SIZEFMTD " ", new_pct->size());
 
+                sEluna->OnPacketReceive(m_Session, *new_pct);
                 return 0;
             default:
             {

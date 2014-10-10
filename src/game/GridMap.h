@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_GRIDMAP_H
-#define MANGOS_GRIDMAP_H
+#ifndef MANGOS_H_GRIDMAP
+#define MANGOS_H_GRIDMAP
 
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include <bitset>
+#include <list>
+
+#include "platform/Define.h"
+#include "policies/Singleton.h"
 #include "DBCStructure.h"
 #include "GridDefines.h"
 #include "Object.h"
 #include "SharedDefines.h"
-
-#include <bitset>
-#include <list>
 
 class Creature;
 class Unit;
@@ -177,7 +184,10 @@ class GridMap
         static bool ExistVMap(uint32 mapid, int gx, int gy);
 
         uint16 getArea(float x, float y);
-        float getHeight(float x, float y) { return (this->*m_gridGetHeight)(x, y); }
+        float getHeight(float x, float y)
+        {
+            return (this->*m_gridGetHeight)(x, y);
+        }
         float getLiquidLevel(float x, float y);
         uint8 getTerrainType(float x, float y);
         GridMapLiquidStatus getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, GridMapLiquidData* data = 0);
@@ -187,11 +197,23 @@ template<typename Countable>
 class MANGOS_DLL_SPEC Referencable
 {
     public:
-        Referencable() { m_count = 0; }
+        Referencable()
+        {
+            m_count = 0;
+        }
 
-        void AddRef() { ++m_count; }
-        bool Release() { return (--m_count < 1); }
-        bool IsReferenced() const { return (m_count > 0); }
+        void AddRef()
+        {
+            ++m_count;
+        }
+        bool Release()
+        {
+            return (--m_count < 1);
+        }
+        bool IsReferenced() const
+        {
+            return (m_count > 0);
+        }
 
     private:
         Referencable(const Referencable&);
@@ -216,7 +238,10 @@ class MANGOS_DLL_SPEC TerrainInfo : public Referencable<AtomicLong>
         TerrainInfo(uint32 mapid);
         ~TerrainInfo();
 
-        uint32 GetMapId() const { return m_mapId; }
+        uint32 GetMapId() const
+        {
+            return m_mapId;
+        }
 
         // TODO: move all terrain/vmaps data info query functions
         // from 'Map' class into this class

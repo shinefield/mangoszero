@@ -1,5 +1,10 @@
+# mangos-zero is a full featured server for World of Warcraft in its vanilla
+# version, supporting clients for patch 1.12.x.
 #
-# This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+# Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+# Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
+#
+# ***** BEGIN GPL LICENSE BLOCK *****
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,109 +19,205 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# ***** END GPL LICENSE BLOCK *****
+#
+# World of Warcraft, and all World of Warcraft or Warcraft art, images,
+# and lore are copyrighted by Blizzard Entertainment, Inc.
 
-set(LIBRARY_NAME framework)
+include(MacroMangosSourceGroup)
 
-set(SRC_GRP_DYNAMIC
-    Dynamic/FactoryHolder.h
-    Dynamic/ObjectRegistry.h
+#-----------------------------------------------------------------------------
+# Define the framework library
+set(sources
+    Common.cpp
+
+    configuration/Config.cpp
+
+    cryptography/AuthCrypt.cpp
+    cryptography/BigNumber.cpp
+    cryptography/Hmac.cpp
+    cryptography/md5.c
+    cryptography/Sha1.cpp
+
+    database/Database.cpp
+    database/DBCFileLoader.cpp
+    database/Field.cpp
+    database/SqlDelayThread.cpp
+    database/SqlOperations.cpp
+    database/SqlPreparedStatement.cpp
+    database/SQLStorage.cpp
+
+    log/Log.cpp
+
+    network/ByteBuffer.cpp
+
+    policies/ObjectLifeTime.cpp
+
+    system/ProgressBar.cpp
+
+    threading/Threading.cpp
+
+    utilities/EventProcessor.cpp
+    utilities/Util.cpp
+)
+set(headers
+    Common.h
+    revision_nr.h
+    revision_sql.h
+
+    configuration/Config.h
+
+    cryptography/AuthCrypt.h
+    cryptography/BigNumber.h
+    cryptography/Hmac.h
+    cryptography/md5.h
+    cryptography/Sha1.h
+
+    database/Database.h
+    database/DatabaseEnv.h
+    database/DatabaseImpl.h
+    database/DBCFileLoader.h
+    database/DBCStore.h
+    database/Field.h
+    database/QueryResult.h
+    database/SqlDelayThread.h
+    database/SqlOperations.h
+    database/SqlPreparedStatement.h
+    database/SQLStorage.h
+    database/SQLStorageImpl.h
+
+    debugging/Errors.h
+
+    dynamic/FactoryHolder.h
+    dynamic/ObjectRegistry.h
+
+    game_system/Grid.h
+    game_system/GridLoader.h
+    game_system/GridReference.h
+    game_system/GridRefManager.h
+    game_system/NGrid.h
+    game_system/TypeContainer.h
+    game_system/TypeContainerFunctions.h
+    game_system/TypeContainerVisitor.h
+
+    log/Log.h
+
+    network/ByteBuffer.h
+    network/WorldPacket.h
+
+    platform/CompilerDefs.h
+    platform/Define.h
+
+    policies/CreationPolicy.h
+    policies/ObjectLifeTime.h
+    policies/Singleton.h
+    policies/ThreadingModel.h
+
+    system/ProgressBar.h
+
+    threading/LockedQueue.h
+    threading/Threading.h
+
+    utilities/ByteConverter.h
+    utilities/Callback.h
+    utilities/EventProcessor.h
+    utilities/LinkedList.h
+    utilities/LinkedReference/Reference.h
+    utilities/LinkedReference/RefManager.h
+    utilities/Timer.h
+    utilities/TypeList.h
+    utilities/UnorderedMapSet.h
+    utilities/Util.h
 )
 
-set(SRC_GRP_GAMESYSTEM
-    GameSystem/Grid.h
-    GameSystem/GridLoader.h
-    GameSystem/GridReference.h
-    GameSystem/GridRefManager.h
-    GameSystem/NGrid.h
-    GameSystem/TypeContainer.h
-    GameSystem/TypeContainerFunctions.h
-    GameSystem/TypeContainerVisitor.h
-)
+#-----------------------------------------------------------------------------
+# Add platform specific sources
+if(WIN32)
+    list(APPEND sources
+        system/ServiceWin32.cpp
+     )
+    list(APPEND headers
+        system/ServiceWin32.h
+    )
+else()
+    list(APPEND sources
+        system/PosixDaemon.cpp
+    )
+    list(APPEND headers
+        system/PosixDaemon.h
+    )
+endif()
 
-set(SRC_GRP_PLATFORM
-    Platform/CompilerDefs.h
-    Platform/Define.h
-)
+#-----------------------------------------------------------------------------
+# Add database library specific sources
+if(WITH_MYSQL AND MYSQL_FOUND)
+    include_directories(
+        ${MYSQL_INCLUDE_DIR}
+    )
+    list(APPEND sources
+        database/DatabaseMysql.cpp
+        database/QueryResultMysql.cpp
+    )
+    list(APPEND headers
+        database/DatabaseMysql.h
+        database/QueryResultMysql.h
+    )
+elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
+    include_directories(
+        ${PostgreSQL_INCLUDE_DIRS}
+    )
+    list(APPEND sources
+        database/DatabasePostgre.cpp
+        database/QueryResultPostgre.cpp
+    )
+    list(APPEND headers
+        database/DatabasePostgre.h
+        database/PGSQLDelayThread.h
+        database/QueryResultPostgre.h
+    )
+endif()
 
-set(SRC_GRP_POLICIES
-    Policies/CreationPolicy.h
-    Policies/MemoryManagement.cpp
-    Policies/ObjectLifeTime.cpp
-    Policies/ObjectLifeTime.h
-    Policies/Singleton.h
-    Policies/ThreadingModel.h
-)
+set(framework_LIB_SRCS ${sources} ${headers})
 
-set(SRC_GRP_UTIL
-    Utilities/ByteConverter.h
-    Utilities/Callback.h
-    Utilities/EventProcessor.cpp
-    Utilities/EventProcessor.h
-    Utilities/LinkedList.h
-    Utilities/TypeList.h
-    Utilities/UnorderedMapSet.h
-)
-
-set(SRC_GRP_LINKED_REFERENCE
-    Utilities/LinkedReference/Reference.h
-    Utilities/LinkedReference/RefManager.h
-)
-
-set(LIBRARY_SRCS
-    ${SRC_GRP_DYNAMIC}
-    ${SRC_GRP_GAMESYSTEM}
-    ${SRC_GRP_PLATFORM}
-    ${SRC_GRP_POLICIES}
-    ${SRC_GRP_UTIL}
-    ${SRC_GRP_LINKED_REFERENCE}
-)
-
-source_group("Dynamic"
-  FILES
-    ${SRC_GRP_DYNAMIC}
-)
-
-source_group("GameSystem"
-  FILES
-    ${SRC_GRP_GAMESYSTEM}
-)
-
-source_group("Platform"
-  FILES
-    ${SRC_GRP_PLATFORM}
-)
-
-source_group("Policies"
-  FILES
-    ${SRC_GRP_POLICIES}
-)
-
-source_group("Utilities"
-  FILES
-    ${SRC_GRP_UTIL}
-)
-
-source_group("Utilities\\LinkedReference"
-  FILES
-    ${SRC_GRP_LINKED_REFERENCE}
-)
+mangos_source_group(${framework_LIB_SRCS})
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${ACE_INCLUDE_DIR}
+    ${ACE_INCLUDE_DIRS}
+    ${OPENSSL_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/dep/include/mersennetwister/
+    ${CMAKE_SOURCE_DIR}/dep/include/utf8cpp/
+    ${CMAKE_SOURCE_DIR}/src/framework/
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}
 )
 
-add_library(${LIBRARY_NAME} STATIC
-  ${LIBRARY_SRCS}
-)
+#-----------------------------------------------------------------------------
+# Configure the framework library
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/system/SystemConfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/system/SystemConfig.h)
 
-if(NOT TBB_USE_EXTERNAL)
-  add_dependencies(${LIBRARY_NAME} TBB_Project)
+#-----------------------------------------------------------------------------
+# Build the framework library
+add_library(mangos-framework STATIC ${framework_LIB_SRCS})
+target_link_libraries(mangos-framework ${ACE_LIBRARIES})
+
+add_dependencies(mangos-framework revision.h)
+
+#-----------------------------------------------------------------------------
+# Append compile flags - if set by build definition
+set(BUILD_PROPERTIES "-DHAVE_CONFIG_H")
+
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
-if(NOT ACE_USE_EXTERNAL)
-  add_dependencies(${LIBRARY_NAME} ACE_Project)
+
+if(WITH_MYSQL AND MYSQL_FOUND)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_MYSQL")
+    target_link_libraries(mangos-framework ${MYSQL_LIBRARIES})
+elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
+    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_POSTGRESQL")
+    target_link_libraries(mangos-framework ${PostgreSQL_LIBRARIES})
 endif()
 
-target_link_libraries(${LIBRARY_NAME}
-  ${TBB_LIBRARIES}
-)
+set_target_properties(mangos-framework PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

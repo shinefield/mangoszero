@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "MoveSplineInit.h"
@@ -48,18 +55,18 @@ namespace Movement
         MoveSpline& move_spline = *unit.movespline;
 
         Vector3 real_position(unit.GetPositionX(), unit.GetPositionY(), unit.GetPositionZ());
-        // there is a big chane that current position is unknown if current state is not finalized, need compute it
+        // there is a big chance that current position is unknown if current state is not finalized, need compute it
         // this also allows calculate spline position and update map position in much greater intervals
         if (!move_spline.Finalized())
             real_position = move_spline.ComputePosition();
 
         if (args.path.empty())
         {
-            // should i do the things that user should do?
+            // should I do the things that user should do?
             MoveTo(real_position);
         }
 
-        // corrent first vertex
+        // current first vertex
         args.path[0] = real_position;
         uint32 moveFlags = unit.m_movementInfo.GetMovementFlags();
         if (args.flags.runmode)
@@ -84,6 +91,57 @@ namespace Movement
         unit.SendMessageToSet(&data, true);
 
         return move_spline.Duration();
+    }
+
+    void MoveSplineInit::Stop()
+    {
+        MoveSpline& move_spline = *unit.movespline;
+
+        // No need to stop if we are not moving
+        if (move_spline.Finalized())
+            return;
+
+        // ToDo: update transport info if required
+        // TransportInfo* transportInfo = unit.GetTransportInfo();
+
+        Location real_position(unit.GetPositionX(), unit.GetPositionY(), unit.GetPositionZ(), unit.GetOrientation());
+
+        // If boarded use current local position
+        // if (transportInfo)
+        //    transportInfo->GetLocalPosition(real_position.x, real_position.y, real_position.z, real_position.orientation);
+
+        // there is a big chance that current position is unknown if current state is not finalized, need compute it
+        // this also allows calculate spline position and update map position in much greater intervals
+        if (!move_spline.Finalized() /*&& !transportInfo*/)
+            real_position = move_spline.ComputePosition();
+
+        if (args.path.empty())
+        {
+            // should i do the things that user should do?
+            MoveTo(real_position);
+        }
+
+        // current first vertex
+        args.path[0] = real_position;
+
+        args.flags = MoveSplineFlag::Done;
+        unit.m_movementInfo.RemoveMovementFlag(MovementFlags(MOVEFLAG_FORWARD | MOVEFLAG_SPLINE_ENABLED));
+        move_spline.Initialize(args);
+
+        WorldPacket data(SMSG_MONSTER_MOVE, 64);
+        data << unit.GetPackGUID();
+
+        // ToDo: update transport info if required
+        /*if (transportInfo)
+        {
+            data.SetOpcode(SMSG_MONSTER_MOVE_TRANSPORT);
+            data << transportInfo->GetTransportGuid().WriteAsPacked();
+        }*/
+
+        data << real_position.x << real_position.y << real_position.z;
+        data << move_spline.GetId();
+        data << uint8(MonsterMoveStop);
+        unit.SendMessageToSet(&data, true);
     }
 
     MoveSplineInit::MoveSplineInit(Unit& m) : unit(m)

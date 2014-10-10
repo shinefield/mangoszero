@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `db_version`;
 CREATE TABLE `db_version` (
   `version` varchar(120) DEFAULT NULL,
   `creature_ai_version` varchar(120) DEFAULT NULL,
-  `required_z2478_xxxxx_01_mangos_spell_affect` bit(1) DEFAULT NULL
+  `required_z2482_s2128_12654_01_mangos_creature_template_power` bit(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Used DB version notes';
 
 --
@@ -390,7 +390,7 @@ INSERT INTO `command` VALUES
 ('ahbot items ratio alliance',3,'Syntax: .ahbot items ratio alliance $allianceratio\r\n\r\nSet ratio of items in alliance auction house.'),
 ('ahbot items ratio horde',3,'Syntax: .ahbot items ratio horde $horderatio\r\n\r\nSet ratio of items in horde auction house.'),
 ('ahbot items ratio neutral',3,'Syntax: .ahbot items ratio neutral $neutralratio\r\n\r\nSet ratio of items in $neutral auction house.'),
-('ahbot rebuild',3,'Syntax: .ahbot rebuild [all]\r\n\r\nExpire all actual auction of ahbot except bided by player. Binded auctions included to expire if \"all\" option used. Ahbot re-fill auctions base at current settings then.'),
+('ahbot rebuild',3,'Syntax: .ahbot rebuild [all]\r\n\r\nExpire all actual auction of ahbot except bided by player. Bided auctions could be forced to expire by using \"all\" option. AHBot will re-fill auctions using current settings.'),
 ('ahbot reload',3,'Syntax: .ahbot reload\r\n\r\nReload AHBot settings from configuration file.'),
 ('ahbot status',3,'Syntax: .ahbot status [all]\r\n\r\nShow current ahbot state data in short form, and with \"all\" with details.'),
 ('announce',1,'Syntax: .announce $MessageToBroadcast\r\n\r\nSend a global message to all players online in chat log.'),
@@ -398,7 +398,7 @@ INSERT INTO `command` VALUES
 ('auction alliance',3,'Syntax: .auction alliance\r\n\r\nShow alliance auction store independent from your team.'),
 ('auction goblin',3,'Syntax: .auction goblin\r\n\r\nShow goblin auction store common for all teams.'),
 ('auction horde',3,'Syntax: .auction horde\r\n\r\nShow horde auction store independent from your team.'),
-('auction item',3,'Syntax: .auction item (alliance|horde|goblin) #itemid[:#itemcount] [[[#minbid] #buyout] [short|long|verylong]\r\n\r\nAdd new item (in many stackes if amount grater stack size) to specific auction house at short|long|verylogn perios similar same settings in auction in game dialog. Created auction not have owner.'),
+('auction item',3,'Syntax: .auction item (alliance|horde|goblin) #itemid[:#itemcount] [[[#minbid] #buyout] [short|long|verylong]\r\n\r\nAdd new item to an specific auction house at short|long|verylong periods. Periods are the same as the ones in the in-game dialog. Created auction does not have an owner.'),
 ('aura',3,'Syntax: .aura #spellid\r\n\r\nAdd the aura from spell #spellid to the selected Unit.'),
 ('ban account',3,'Syntax: .ban account $Name $bantime $reason\r\nBan account kick player.\r\n$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\".'),
 ('ban character',3,'Syntax: .ban character $Name $bantime $reason\r\nBan account and kick player.\r\n$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\".'),
@@ -472,7 +472,7 @@ INSERT INTO `command` VALUES
 ('gobject near',2,'Syntax: .gobject near  [#distance]\r\n\r\nOutput gameobjects at distance #distance from player. Output gameobject guids and coordinates sorted by distance from character. If #distance not provided use 10 as default value.'),
 ('gobject target',2,'Syntax: .gobject target [#go_id|#go_name_part]\r\n\r\nLocate and show position nearest gameobject. If #go_id or #go_name_part provide then locate and show position of nearest gameobject with gameobject template id #go_id or name included #go_name_part as part.'),
 ('gobject turn',2,'Syntax: .gobject turn #goguid \r\n\r\nSet for gameobject #goguid orientation same as current character orientation.'),
-('goname',1,'Syntax: .goname [$charactername]\r\n\r\nTeleport to the given character. Either specify the character name or click on the character\'s portrait, e.g. when you are in a group. Character can be offline.'),
+('appear',1,'Syntax: .appear [$charactername]\r\n\r\nTeleport to the given character. Either specify the character name or click on the character\'s portrait, e.g. when you are in a group. Character can be offline.'),
 ('gps',1,'Syntax: .gps [$name|$shift-link]\r\n\r\nDisplay the position information for a selected character or creature (also if player name $name provided then for named player, or if creature/gameobject shift-link provided then pointed creature/gameobject if it loaded). Position information includes X, Y, Z, and orientation, map Id and zone Id'),
 ('groupgo',1,'Syntax: .groupgo [$charactername]\r\n\r\nTeleport the given character and his group to you. Teleported only online characters but original selected group member can be offline.'),
 ('guid',2,'Syntax: .guid\r\n\r\nDisplay the GUID for the selected character.'),
@@ -485,7 +485,7 @@ INSERT INTO `command` VALUES
 ('hidearea',3,'Syntax: .hidearea #areaid\r\n\r\nHide the area of #areaid to the selected character. If no character is selected, hide this area to you.'),
 ('honor add',2,'Syntax: .honor add $amount\r\n\r\nAdd a certain amount of honor (gained in lifetime) to the selected player.'),
 ('honor addkill',2,'Syntax: .honor addkill\r\n\r\nAdd the targeted unit as one of your pvp kills today (you only get honor if it\'s a racial leader or a player)'),
-('honor show',1,'Syntax: .honor show\r\n\r\nDisplay the honor stats of the selected player'),
+('honor show',2,'Syntax: .honor show\r\n\r\nDisplay the honor stats of the selected player'),
 ('honor update',2,'Syntax: .honor update\r\n\r\nForce honor to be update'),
 ('instance listbinds',3,'Syntax: .instance listbinds\r\n  Lists the binds of the selected player.'),
 ('instance savedata',3,'Syntax: .instance savedata\r\n  Save the InstanceData for the current player\'s map to the DB.'),
@@ -535,9 +535,8 @@ INSERT INTO `command` VALUES
 ('modify drunk',1,'Syntax: .modify drunk #value\r\n Set drunk level to #value (0..100). Value 0 remove drunk state, 100 is max drunked state.'),
 ('modify energy',1,'Syntax: .modify energy #energy\r\n\r\nModify the energy of the selected player. If no player is selected, modify your energy.'),
 ('modify faction',1,'Syntax: .modify faction #factionid #flagid #npcflagid #dynamicflagid\r\n\r\nModify the faction and flags of the selected creature. Without arguments, display the faction and flags of the selected creature.'),
-('modify fly',1,'Syntax: .modify fly #rate\r\n.fly #rate\r\n\r\nModify the flying speed of the selected player to \"normal base fly speed\"*rate. If no player is selected, modify your fly.\r\n\r\n #rate may range from 0.1 to 10.'),
 ('modify gender',2,'Syntax: .modify gender male/female\r\n\r\nChange gender of selected player.'),
-('modify honor',2,'Syntax: .modify honor $field $value\r\n\r\nAdd $value to an honor $field (it\'s just for debug , values won\'t be saved at player logout)\r\nField list: points / rank / todaykills / yesterdaykills / yesterdayhonor /\r\nthisweekkills / thisweekhonor / lastweekkills / lastweekhonor /\r\nlastweekstanding / lifetimedishonorablekills / lifetimehonorablekills '),
+('modify honor',1,'Syntax: .modify honor $field $value\r\n\r\nAdd $value to an honor $field (it\'s just for debug , values won\'t be saved at player logout)\r\nField list: points / rank / todaykills / yesterdaykills / yesterdayhonor /\r\nthisweekkills / thisweekhonor / lastweekkills / lastweekhonor /\r\nlastweekstanding / lifetimedishonorablekills / lifetimehonorablekills '),
 ('modify hp',1,'Syntax: .modify hp #newhp\r\n\r\nModify the hp of the selected player. If no player is selected, modify your hp.'),
 ('modify mana',1,'Syntax: .modify mana #newmana\r\n\r\nModify the mana of the selected player. If no player is selected, modify your mana.'),
 ('modify money',1,'Syntax: .modify money #money\r\n.money #money\r\n\r\nAdd or remove money to the selected player. If no player is selected, modify your money.\r\n\r\n #gold can be negative to remove money.'),
@@ -551,7 +550,7 @@ INSERT INTO `command` VALUES
 ('modify swim',1,'Syntax: .modify swim #rate\r\n\r\nModify the swim speed of the selected player to \"normal swim speed\"*rate. If no player is selected, modify your speed.\r\n\r\n #rate may range from 0.1 to 10.'),
 ('movegens',3,'Syntax: .movegens\r\n  Show movement generators stack for selected creature or player.'),
 ('mute',1,'Syntax: .mute [$playerName] $timeInMinutes\r\n\r\nDisible chat messaging for any character from account of character $playerName (or currently selected) at $timeInMinutes minutes. Player can be offline.'),
-('namego',1,'Syntax: .namego [$charactername]\r\n\r\nTeleport the given character to you. Character can be offline.'),
+('summon',1,'Syntax: .summon [$charactername]\r\n\r\nTeleport the given character to you. Character can be offline.'),
 ('neargrave',3,'Syntax: .neargrave [alliance|horde]\r\n\r\nFind nearest graveyard linked to zone (or only nearest from accepts alliance or horde faction ghosts).'),
 ('notify',1,'Syntax: .notify $MessageToBroadcast\r\n\r\nSend a global message to all players online in screen.'),
 ('npc add',2,'Syntax: .npc add #creatureid\r\n\r\nSpawn a creature by the given template id of #creatureid.'),
@@ -1194,7 +1193,7 @@ CREATE TABLE `creature_template` (
   `Family` tinyint(4) NOT NULL DEFAULT '0',
   `CreatureType` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `InhabitType` tinyint(3) unsigned NOT NULL DEFAULT '3',
-  `RegenerateHealth` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `RegenerateStats` tinyint(3) unsigned NOT NULL DEFAULT '3',
   `RacialLeader` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `NpcFlags` int(10) unsigned NOT NULL DEFAULT '0',
   `UnitFlags` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1206,7 +1205,7 @@ CREATE TABLE `creature_template` (
   `UnitClass` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `Rank` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `HealthMultiplier` float NOT NULL DEFAULT '1',
-  `ManaMultiplier` float NOT NULL DEFAULT '1',
+  `PowerMultiplier` float NOT NULL DEFAULT '1',
   `DamageMultiplier` float NOT NULL DEFAULT '1',
   `DamageVariance` float NOT NULL DEFAULT '1',
   `ArmorMultiplier` float NOT NULL DEFAULT '1',
@@ -1875,7 +1874,6 @@ CREATE TABLE `gameobject_template` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `displayId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` varchar(100) NOT NULL DEFAULT '',
-  `castBarCaption` varchar(100) NOT NULL DEFAULT '',
   `faction` smallint(5) unsigned NOT NULL DEFAULT '0',
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
   `size` float NOT NULL DEFAULT '1',
@@ -9552,23 +9550,23 @@ LOCK TABLES `scripted_areatrigger` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `scripted_event_id`
+-- Table structure for table `scripted_event`
 --
 
-DROP TABLE IF EXISTS `scripted_event_id`;
-CREATE TABLE `scripted_event_id` (
+DROP TABLE IF EXISTS `scripted_event`;
+CREATE TABLE `scripted_event` (
   `id` mediumint(8) NOT NULL,
   `ScriptName` char(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Script library scripted events';
 
 --
--- Dumping data for table `scripted_event_id`
+-- Dumping data for table `scripted_event`
 --
 
-LOCK TABLES `scripted_event_id` WRITE;
-/*!40000 ALTER TABLE `scripted_event_id` DISABLE KEYS */;
-/*!40000 ALTER TABLE `scripted_event_id` ENABLE KEYS */;
+LOCK TABLES `scripted_event` WRITE;
+/*!40000 ALTER TABLE `scripted_event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `scripted_event` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

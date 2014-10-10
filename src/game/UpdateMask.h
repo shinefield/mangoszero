@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __UPDATEMASK_H
-#define __UPDATEMASK_H
+#ifndef MANGOS_H_UPDATEMASK
+#define MANGOS_H_UPDATEMASK
 
+#include "debugging/Errors.h"
 #include "UpdateFields.h"
-#include "Errors.h"
 
 class UpdateMask
 {
     public:
         UpdateMask() : mCount(0), mBlocks(0), mUpdateMask(0) { }
-        UpdateMask(const UpdateMask& mask) : mUpdateMask(0) { *this = mask; }
+        UpdateMask(const UpdateMask& mask) : mUpdateMask(0)
+        {
+            *this = mask;
+        }
 
         ~UpdateMask()
         {
@@ -48,10 +58,22 @@ class UpdateMask
             return (((uint8*)mUpdateMask)[ index >> 3 ] & (1 << (index & 0x7))) != 0;
         }
 
-        uint32 GetBlockCount() const { return mBlocks; }
-        uint32 GetLength() const { return mBlocks << 2; }
-        uint32 GetCount() const { return mCount; }
-        uint8* GetMask() { return (uint8*)mUpdateMask; }
+        uint32 GetBlockCount() const
+        {
+            return mBlocks;
+        }
+        uint32 GetLength() const
+        {
+            return mBlocks << 2;
+        }
+        uint32 GetCount() const
+        {
+            return mCount;
+        }
+        uint8* GetMask()
+        {
+            return (uint8*)mUpdateMask;
+        }
 
         void SetCount(uint32 valuesCount)
         {

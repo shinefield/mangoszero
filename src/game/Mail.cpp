@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,22 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing
- * @{
- *
- * @file Mail.cpp
- * This file contains the code needed for MaNGOS to handle mails.
- *
- */
-
+#include "log/Log.h"
 #include "Mail.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
@@ -68,10 +66,12 @@ MailSender::MailSender(Object* sender, MailStationery stationery) : m_stationery
         case TYPEID_PLAYER:
             m_messageType = MAIL_NORMAL;
             m_senderId = sender->GetGUIDLow();
+            if (static_cast<Player*>(sender)->isGameMaster())   // official gm mail
+                m_stationery = MAIL_STATIONERY_GM;
             break;
         default:
             m_messageType = MAIL_NORMAL;
-            m_senderId = 0;                                 // will show mail from nonexistent player
+            m_senderId = 0;                                     // will show mail from non-existent player
             sLog.outError("MailSender::MailSender - Mail have unexpected sender typeid (%u)", sender->GetTypeId());
             break;
     }
@@ -414,5 +414,3 @@ void Mail::prepareTemplateItems(Player* receiver)
 
     CharacterDatabase.CommitTransaction();
 }
-
-/*! @} */

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
 #include "Player.h"
@@ -26,14 +34,13 @@
 #include "MapManager.h"
 #include "Map.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
+#include "system/ProgressBar.h"
 #include "Chat.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Language.h"
 #include "GameEventMgr.h"
-
-#include "Policies/Singleton.h"
+#include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(BattleGroundMgr);
 
@@ -661,7 +668,7 @@ void BattleGroundQueue::Update(BattleGroundTypeId bgTypeId, BattleGroundBracketI
         sLog.outError("Battleground: Update: bg template not found for %u", bgTypeId);
         return;
     }
-    
+
     // get the min. players per team, properly for larger arenas as well.
     uint32 MinPlayersPerTeam = bg_template->GetMinPlayersPerTeam();
     uint32 MaxPlayersPerTeam = bg_template->GetMaxPlayersPerTeam();
@@ -1104,10 +1111,18 @@ uint32 BattleGroundMgr::CreateBattleGround(BattleGroundTypeId bgTypeId, uint32 M
     BattleGround* bg = NULL;
     switch (bgTypeId)
     {
-        case BATTLEGROUND_AV: bg = new BattleGroundAV; break;
-        case BATTLEGROUND_WS: bg = new BattleGroundWS; break;
-        case BATTLEGROUND_AB: bg = new BattleGroundAB; break;
-        default:              bg = new BattleGround;   break;                           // placeholder for non implemented BG
+        case BATTLEGROUND_AV:
+            bg = new BattleGroundAV;
+            break;
+        case BATTLEGROUND_WS:
+            bg = new BattleGroundWS;
+            break;
+        case BATTLEGROUND_AB:
+            bg = new BattleGroundAB;
+            break;
+        default:
+            bg = new BattleGround;
+            break;                           // placeholder for non implemented BG
     }
 
     bg->SetMapId(MapID);
@@ -1123,6 +1138,8 @@ uint32 BattleGroundMgr::CreateBattleGround(BattleGroundTypeId bgTypeId, uint32 M
 
     // add bg to update list
     AddBattleGround(bg->GetInstanceID(), bg->GetTypeID(), bg);
+
+    sEluna->OnBGCreate(bg, bgTypeId, bg->GetInstanceID());
 
     // return some not-null value, bgTypeId is good enough for me
     return bgTypeId;
@@ -1177,7 +1194,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         }
         else
         {
-            sLog.outErrorDb("Table `battleground_template` for id %u have nonexistent WorldSafeLocs.dbc id %u in field `AllianceStartLoc`. BG not created.", bgTypeID, start1);
+            sLog.outErrorDb("Table `battleground_template` for id %u have non-existent WorldSafeLocs.dbc id %u in field `AllianceStartLoc`. BG not created.", bgTypeID, start1);
             continue;
         }
 
@@ -1204,7 +1221,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
             name = mapEntry->name[sWorld.GetDefaultDbcLocale()];
         else
         {
-            sLog.outErrorDb("Table `battleground_template` for id %u associated with nonexistent map id %u.", bgTypeID, mapId);
+            sLog.outErrorDb("Table `battleground_template` for id %u associated with non-existent map id %u.", bgTypeID, mapId);
             continue;
         }
 
@@ -1274,7 +1291,7 @@ void BattleGroundMgr::SendToBattleGround(Player* pl, uint32 instanceId, BattleGr
     }
     else
     {
-        sLog.outError("player %u trying to port to nonexistent bg instance %u", pl->GetGUIDLow(), instanceId);
+        sLog.outError("player %u trying to port to non-existent bg instance %u", pl->GetGUIDLow(), instanceId);
     }
 }
 
@@ -1371,7 +1388,7 @@ void BattleGroundMgr::LoadBattleMastersEntry()
         uint32 bgTypeId  = fields[1].GetUInt32();
         if (bgTypeId >= MAX_BATTLEGROUND_TYPE_ID)
         {
-            sLog.outErrorDb("Table `battlemaster_entry` contain entry %u for nonexistent battleground type %u, ignored.", entry, bgTypeId);
+            sLog.outErrorDb("Table `battlemaster_entry` contain entry %u for non-existent battleground type %u, ignored.", entry, bgTypeId);
             continue;
         }
 
@@ -1389,10 +1406,14 @@ HolidayIds BattleGroundMgr::BGTypeToWeekendHolidayId(BattleGroundTypeId bgTypeId
 {
     switch (bgTypeId)
     {
-        case BATTLEGROUND_AV: return HOLIDAY_CALL_TO_ARMS_AV;
-        case BATTLEGROUND_WS: return HOLIDAY_CALL_TO_ARMS_WS;
-        case BATTLEGROUND_AB: return HOLIDAY_CALL_TO_ARMS_AB;
-        default: return HOLIDAY_NONE;
+        case BATTLEGROUND_AV:
+            return HOLIDAY_CALL_TO_ARMS_AV;
+        case BATTLEGROUND_WS:
+            return HOLIDAY_CALL_TO_ARMS_WS;
+        case BATTLEGROUND_AB:
+            return HOLIDAY_CALL_TO_ARMS_AB;
+        default:
+            return HOLIDAY_NONE;
     }
 }
 
@@ -1400,10 +1421,14 @@ BattleGroundTypeId BattleGroundMgr::WeekendHolidayIdToBGType(HolidayIds holiday)
 {
     switch (holiday)
     {
-        case HOLIDAY_CALL_TO_ARMS_AV: return BATTLEGROUND_AV;
-        case HOLIDAY_CALL_TO_ARMS_WS: return BATTLEGROUND_WS;
-        case HOLIDAY_CALL_TO_ARMS_AB: return BATTLEGROUND_AB;
-        default: return BATTLEGROUND_TYPE_NONE;
+        case HOLIDAY_CALL_TO_ARMS_AV:
+            return BATTLEGROUND_AV;
+        case HOLIDAY_CALL_TO_ARMS_WS:
+            return BATTLEGROUND_WS;
+        case HOLIDAY_CALL_TO_ARMS_AB:
+            return BATTLEGROUND_AB;
+        default:
+            return BATTLEGROUND_TYPE_NONE;
     }
 }
 
@@ -1489,7 +1514,7 @@ void BattleGroundMgr::LoadBattleEventIndexes()
         // checking for NULL - through right outer join this will mean following:
         if (fields[5].GetUInt32() != dbTableGuidLow)
         {
-            sLog.outErrorDb("BattleGroundEvent: %s with nonexistent guid %u for event: map:%u, event1:%u, event2:%u (\"%s\")",
+            sLog.outErrorDb("BattleGroundEvent: %s with non-existent guid %u for event: map:%u, event1:%u, event2:%u (\"%s\")",
                             (gameobject) ? "gameobject" : "creature", dbTableGuidLow, map, events.event1, events.event2, description);
             continue;
         }
@@ -1506,7 +1531,7 @@ void BattleGroundMgr::LoadBattleEventIndexes()
             // we have an event which shouldn't exist
             else
             {
-                sLog.outErrorDb("BattleGroundEvent: %s with guid %u is registered, for a nonexistent event: map:%u, event1:%u, event2:%u",
+                sLog.outErrorDb("BattleGroundEvent: %s with guid %u is registered, for a non-existent event: map:%u, event1:%u, event2:%u",
                                 (gameobject) ? "gameobject" : "creature", dbTableGuidLow, map, events.event1, events.event2);
                 continue;
             }

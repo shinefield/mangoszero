@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_CORPSE_H
-#define MANGOSSERVER_CORPSE_H
+#ifndef MANGOS_H_CORPSE
+#define MANGOS_H_CORPSE
 
 #include "Common.h"
+#include "database/DatabaseEnv.h"
 #include "Object.h"
-#include "Database/DatabaseEnv.h"
 #include "GridDefines.h"
 #include "LootMgr.h"
 
@@ -65,17 +72,35 @@ class Corpse : public WorldObject
         void DeleteBonesFromWorld();
         void DeleteFromDB();
 
-        ObjectGuid const& GetOwnerGuid() const { return GetGuidValue(CORPSE_FIELD_OWNER); }
+        ObjectGuid const& GetOwnerGuid() const
+        {
+            return GetGuidValue(CORPSE_FIELD_OWNER);
+        }
 
-        time_t const& GetGhostTime() const { return m_time; }
-        void ResetGhostTime() { m_time = time(NULL); }
-        CorpseType GetType() const { return m_type; }
+        time_t const& GetGhostTime() const
+        {
+            return m_time;
+        }
+        void ResetGhostTime()
+        {
+            m_time = time(NULL);
+        }
+        CorpseType GetType() const
+        {
+            return m_type;
+        }
 
         bool IsHostileTo(Unit const* unit) const override;
         bool IsFriendlyTo(Unit const* unit) const override;
 
-        GridPair const& GetGrid() const { return m_grid; }
-        void SetGrid(GridPair const& grid) { m_grid = grid; }
+        GridPair const& GetGrid() const
+        {
+            return m_grid;
+        }
+        void SetGrid(GridPair const& grid)
+        {
+            m_grid = grid;
+        }
 
         bool isVisibleForInState(Player const* u, WorldObject const* viewPoint, bool inVisibleList) const override;
 
@@ -83,7 +108,10 @@ class Corpse : public WorldObject
         Player* lootRecipient;
         bool lootForBody;
 
-        GridReference<Corpse>& GetGridRef() { return m_gridRef; }
+        GridReference<Corpse>& GetGridRef()
+        {
+            return m_gridRef;
+        }
 
         bool IsExpired(time_t t) const;
     private:

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __BATTLEGROUNDWS_H
-#define __BATTLEGROUNDWS_H
+#ifndef MANGOS_H_BATTLEGROUNDWS
+#define MANGOS_H_BATTLEGROUNDWS
 
 #include "BattleGround.h"
 
@@ -107,21 +114,48 @@ class BattleGroundWS : public BattleGround
         virtual void StartingEventOpenDoors() override;
 
         /* BG Flags */
-        ObjectGuid GetAllianceFlagCarrierGuid() const { return m_flagCarrierAlliance; }
-        ObjectGuid GetHordeFlagCarrierGuid() const { return m_flagCarrierHorde; }
+        ObjectGuid GetAllianceFlagCarrierGuid() const
+        {
+            return m_flagCarrierAlliance;
+        }
+        ObjectGuid GetHordeFlagCarrierGuid() const
+        {
+            return m_flagCarrierHorde;
+        }
 
-        void SetAllianceFlagCarrier(ObjectGuid guid) { m_flagCarrierAlliance = guid; }
-        void SetHordeFlagCarrier(ObjectGuid guid) { m_flagCarrierHorde = guid; }
+        void SetAllianceFlagCarrier(ObjectGuid guid)
+        {
+            m_flagCarrierAlliance = guid;
+        }
+        void SetHordeFlagCarrier(ObjectGuid guid)
+        {
+            m_flagCarrierHorde = guid;
+        }
 
-        void ClearAllianceFlagCarrier() { m_flagCarrierAlliance.Clear(); }
-        void ClearHordeFlagCarrier() { m_flagCarrierHorde.Clear(); }
+        void ClearAllianceFlagCarrier()
+        {
+            m_flagCarrierAlliance.Clear();
+        }
+        void ClearHordeFlagCarrier()
+        {
+            m_flagCarrierHorde.Clear();
+        }
 
-        bool IsAllianceFlagPickedUp() const { return !m_flagCarrierAlliance.IsEmpty(); }
-        bool IsHordeFlagPickedUp() const { return !m_flagCarrierHorde.IsEmpty(); }
+        bool IsAllianceFlagPickedUp() const
+        {
+            return !m_flagCarrierAlliance.IsEmpty();
+        }
+        bool IsHordeFlagPickedUp() const
+        {
+            return !m_flagCarrierHorde.IsEmpty();
+        }
 
         void RespawnFlag(Team team, bool captured);
         void RespawnDroppedFlag(Team team);
-        uint8 GetFlagState(Team team) { return m_FlagState[GetTeamIndexByTeamId(team)]; }
+        uint8 GetFlagState(Team team)
+        {
+            return m_FlagState[GetTeamIndexByTeamId(team)];
+        }
 
         /* Battleground Events */
         virtual void EventPlayerDroppedFlag(Player* source) override;
@@ -138,9 +172,18 @@ class BattleGroundWS : public BattleGround
         void UpdateFlagState(Team team, uint32 value);
         void UpdateTeamScore(Team team);
         void UpdatePlayerScore(Player* source, uint32 type, uint32 value) override;
-        void SetDroppedFlagGuid(ObjectGuid guid, Team team)  { m_DroppedFlagGuid[GetTeamIndexByTeamId(team)] = guid;}
-        void ClearDroppedFlagGuid(Team team)  { m_DroppedFlagGuid[GetTeamIndexByTeamId(team)].Clear();}
-        ObjectGuid const& GetDroppedFlagGuid(Team team) const { return m_DroppedFlagGuid[GetTeamIndexByTeamId(team)];}
+        void SetDroppedFlagGuid(ObjectGuid guid, Team team)
+        {
+            m_DroppedFlagGuid[GetTeamIndexByTeamId(team)] = guid;
+        }
+        void ClearDroppedFlagGuid(Team team)
+        {
+            m_DroppedFlagGuid[GetTeamIndexByTeamId(team)].Clear();
+        }
+        ObjectGuid const& GetDroppedFlagGuid(Team team) const
+        {
+            return m_DroppedFlagGuid[GetTeamIndexByTeamId(team)];
+        }
         virtual void FillInitialWorldStates(WorldPacket& data, uint32& count) override;
 
     private:

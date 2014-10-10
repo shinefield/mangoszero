@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "utilities/Util.h"
 #include "Object.h"
 #include "Player.h"
 #include "BattleGround.h"
@@ -29,11 +37,11 @@
 #include "ObjectGuid.h"
 #include "ObjectMgr.h"
 #include "Mail.h"
-#include "WorldPacket.h"
-#include "Util.h"
+#include "network/WorldPacket.h"
 #include "Formulas.h"
 #include "GridNotifiersImpl.h"
 #include "Chat.h"
+#include "LuaEngine.h"
 
 namespace MaNGOS
 {
@@ -227,6 +235,8 @@ BattleGround::BattleGround()
 
 BattleGround::~BattleGround()
 {
+    //sEluna->OnBGDestroy(this, GetTypeID(), GetInstanceID());
+
     // remove objects and creatures
     // (this is done automatically in mapmanager update, when the instance is reset after the reset time)
     sBattleGroundMgr.RemoveBattleGround(GetInstanceID(), GetTypeID());
@@ -580,6 +590,8 @@ void BattleGround::UpdateWorldStateForPlayer(uint32 Field, uint32 Value, Player*
 
 void BattleGround::EndBattleGround(Team winner)
 {
+    sEluna->OnBGEnd(this, GetTypeID(), GetInstanceID(), winner);
+
     this->RemoveFromBGFreeSlotQueue();
 
     uint32 loser_rating = 0;
@@ -673,10 +685,14 @@ uint32 BattleGround::GetBattlemasterEntry() const
 {
     switch (GetTypeID())
     {
-        case BATTLEGROUND_AV: return 15972;
-        case BATTLEGROUND_WS: return 14623;
-        case BATTLEGROUND_AB: return 14879;
-        default:              return 0;
+        case BATTLEGROUND_AV:
+            return 15972;
+        case BATTLEGROUND_WS:
+            return 14623;
+        case BATTLEGROUND_AB:
+            return 14879;
+        default:
+            return 0;
     }
 }
 
@@ -935,6 +951,8 @@ void BattleGround::StartBattleGround()
     // This must be done here, because we need to have already invited some players when first BG::Update() method is executed
     // and it doesn't matter if we call StartBattleGround() more times, because m_BattleGrounds is a map and instance id never changes
     sBattleGroundMgr.AddBattleGround(GetInstanceID(), GetTypeID(), this);
+
+    sEluna->OnBGStart(this, GetTypeID(), GetInstanceID());
 }
 
 void BattleGround::AddPlayer(Player* plr)

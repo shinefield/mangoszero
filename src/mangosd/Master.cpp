@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,43 +18,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
-
-/** \file
-    \ingroup mangosd
-*/
-
-#ifndef WIN32
-#include "PosixDaemon.h"
-#endif
-
-#include "WorldSocketMgr.h"
-#include "Common.h"
-#include "Master.h"
-#include "WorldSocket.h"
-#include "WorldRunnable.h"
-#include "World.h"
-#include "Log.h"
-#include "Timer.h"
-#include "Policies/Singleton.h"
-#include "SystemConfig.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
-#include "CliRunnable.h"
-#include "RASocket.h"
-#include "Util.h"
-#include "revision_sql.h"
-#include "MaNGOSsoap.h"
-#include "MassMailMgr.h"
-#include "DBCStores.h"
 
 #include <ace/OS_NS_signal.h>
 #include <ace/TP_Reactor.h>
 #include <ace/Dev_Poll_Reactor.h>
 
+#ifndef WIN32
+#include "system/PosixDaemon.h"
+#endif
+
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 extern int m_ServiceStatus;
+#endif
+
+#include "policies/Singleton.h"
+#include "Common.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "system/SystemConfig.h"
+#include "utilities/Timer.h"
+#include "utilities/Util.h"
+#include "revision_sql.h"
+#include "WorldSocketMgr.h"
+#include "Master.h"
+#include "WorldSocket.h"
+#include "WorldRunnable.h"
+#include "World.h"
+#include "MassMailMgr.h"
+#include "DBCStores.h"
+#include "LuaEngine.h"
+#include "CliRunnable.h"
+#include "RASocket.h"
+#ifdef ENABLE_SOAP
+#include "MaNGOSsoap.h"
 #endif
 
 INSTANTIATE_SINGLETON_1(Master);
@@ -60,11 +66,17 @@ volatile uint32 Master::m_masterLoopCounter = 0;
 class FreezeDetectorRunnable : public ACE_Based::Runnable
 {
     public:
-        FreezeDetectorRunnable() { _delaytime = 0; }
+        FreezeDetectorRunnable()
+        {
+            _delaytime = 0;
+        }
         uint32 m_loops, m_lastchange;
         uint32 w_loops, w_lastchange;
         uint32 _delaytime;
-        void SetDelayTime(uint32 t) { _delaytime = t; }
+        void SetDelayTime(uint32 t)
+        {
+            _delaytime = t;
+        }
         void run(void)
         {
             if (!_delaytime)
@@ -145,7 +157,7 @@ class RARunnable : public ACE_Based::Runnable
                 sLog.outError("MaNGOS RA can not bind to port %d on %s", raport, stringip.c_str());
             }
 
-            sLog.outString("Starting Remote access listner on port %d on %s", raport, stringip.c_str());
+            sLog.outString("Starting Remote access listener on port %d on %s", raport, stringip.c_str());
 
             while (!m_Reactor->reactor_event_loop_done())
             {
@@ -196,6 +208,9 @@ int Master::Run()
         Log::WaitBeforeContinueIfNeed();
         return 1;
     }
+
+    ///- Set Realm to Offline, if crash happens. Only used once.
+    LoginDatabase.DirectPExecute("UPDATE realmlist SET realmflags = realmflags | %u WHERE id = '%u'", REALM_FLAG_OFFLINE, realmID);
 
     ///- Initialize the World
     sWorld.SetInitialWorldSettings();
@@ -273,7 +288,6 @@ int Master::Run()
 
         bool Prio = sConfig.GetBoolDefault("ProcessPriority", false);
 
-//        if(Prio && (m_ServiceStatus == -1)/* need set to default process priority class in service mode*/)
         if (Prio)
         {
             if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
@@ -285,6 +299,7 @@ int Master::Run()
     }
 #endif
 
+#ifdef ENABLE_SOAP
     ///- Start soap serving thread
     ACE_Based::Thread* soap_thread = NULL;
 
@@ -295,6 +310,12 @@ int Master::Run()
         runnable->setListenArguments(sConfig.GetStringDefault("SOAP.IP", "127.0.0.1"), sConfig.GetIntDefault("SOAP.Port", 7878));
         soap_thread = new ACE_Based::Thread(runnable);
     }
+#else /* ENABLE_SOAP */
+    if (sConfig.GetBoolDefault("SOAP.Enabled", false))
+    {
+        sLog.outError("SOAP is enabled but wasn't included during compilation, not activating it.");
+    }
+#endif /* ENABLE_SOAP */
 
     ///- Start up freeze catcher thread
     ACE_Based::Thread* freeze_thread = NULL;
@@ -312,13 +333,19 @@ int Master::Run()
 
     if (sWorldSocketMgr->StartNetwork(wsport, bind_ip) == -1)
     {
+        // go down and shutdown the server
         sLog.outError("Failed to start network");
         Log::WaitBeforeContinueIfNeed();
         World::StopNow(ERROR_EXIT_CODE);
-        // go down and shutdown the server
     }
 
+    ///- Used by Eluna
+    sEluna->OnStartup();
+
     sWorldSocketMgr->Wait();
+
+    ///- Used by Eluna
+    sEluna->OnShutdown();
 
     ///- Stop freeze protection before shutdown tasks
     if (freeze_thread)
@@ -327,6 +354,7 @@ int Master::Run()
         delete freeze_thread;
     }
 
+#ifdef ENABLE_SOAP
     ///- Stop soap thread
     if (soap_thread)
     {
@@ -334,6 +362,7 @@ int Master::Run()
         soap_thread->destroy();
         delete soap_thread;
     }
+#endif
 
     ///- Set server offline in realmlist
     LoginDatabase.DirectPExecute("UPDATE realmlist SET realmflags = realmflags | %u WHERE id = '%u'", REALM_FLAG_OFFLINE, realmID);
@@ -432,7 +461,7 @@ bool Master::_StartDB()
     }
     sLog.outString("World Database total connections: %i", nConnections + 1);
 
-    ///- Initialise the world database
+    ///- Initialize the world database
     if (!WorldDatabase.Initialize(dbstring.c_str(), nConnections))
     {
         sLog.outError("Cannot connect to world database %s", dbstring.c_str());
@@ -458,7 +487,7 @@ bool Master::_StartDB()
     }
     sLog.outString("Character Database total connections: %i", nConnections + 1);
 
-    ///- Initialise the Character database
+    ///- Initialize the Character database
     if (!CharacterDatabase.Initialize(dbstring.c_str(), nConnections))
     {
         sLog.outError("Cannot connect to Character database %s", dbstring.c_str());
@@ -489,7 +518,7 @@ bool Master::_StartDB()
         return false;
     }
 
-    ///- Initialise the login database
+    ///- Initialize the login database
     sLog.outString("Login Database total connections: %i", nConnections + 1);
     if (!LoginDatabase.Initialize(dbstring.c_str(), nConnections))
     {

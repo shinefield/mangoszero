@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "Corpse.h"
 #include "Player.h"
 #include "MapManager.h"
@@ -312,12 +319,30 @@ void WorldSession::HandleForceSpeedChangeAckOpcodes(WorldPacket& recv_data)
 
     switch (opcode)
     {
-        case CMSG_FORCE_WALK_SPEED_CHANGE_ACK:          move_type = MOVE_WALK;          force_move_type = MOVE_WALK;        break;
-        case CMSG_FORCE_RUN_SPEED_CHANGE_ACK:           move_type = MOVE_RUN;           force_move_type = MOVE_RUN;         break;
-        case CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK:      move_type = MOVE_RUN_BACK;      force_move_type = MOVE_RUN_BACK;    break;
-        case CMSG_FORCE_SWIM_SPEED_CHANGE_ACK:          move_type = MOVE_SWIM;          force_move_type = MOVE_SWIM;        break;
-        case CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK:     move_type = MOVE_SWIM_BACK;     force_move_type = MOVE_SWIM_BACK;   break;
-        case CMSG_FORCE_TURN_RATE_CHANGE_ACK:           move_type = MOVE_TURN_RATE;     force_move_type = MOVE_TURN_RATE;   break;
+        case CMSG_FORCE_WALK_SPEED_CHANGE_ACK:
+            move_type = MOVE_WALK;
+            force_move_type = MOVE_WALK;
+            break;
+        case CMSG_FORCE_RUN_SPEED_CHANGE_ACK:
+            move_type = MOVE_RUN;
+            force_move_type = MOVE_RUN;
+            break;
+        case CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK:
+            move_type = MOVE_RUN_BACK;
+            force_move_type = MOVE_RUN_BACK;
+            break;
+        case CMSG_FORCE_SWIM_SPEED_CHANGE_ACK:
+            move_type = MOVE_SWIM;
+            force_move_type = MOVE_SWIM;
+            break;
+        case CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK:
+            move_type = MOVE_SWIM_BACK;
+            force_move_type = MOVE_SWIM_BACK;
+            break;
+        case CMSG_FORCE_TURN_RATE_CHANGE_ACK:
+            move_type = MOVE_TURN_RATE;
+            force_move_type = MOVE_TURN_RATE;
+            break;
         default:
             sLog.outError("WorldSession::HandleForceSpeedChangeAck: Unknown move type opcode: %u", opcode);
             return;

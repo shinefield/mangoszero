@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
 #include "ObjectMgr.h"
-#include "Log.h"
 #include "Opcodes.h"
 #include "Guild.h"
 #include "GuildMgr.h"
 #include "GossipDef.h"
 #include "SocialMgr.h"
+#include "LuaEngine.h"
 
 void WorldSession::HandleGuildQueryOpcode(WorldPacket& recvPacket)
 {
@@ -62,6 +70,17 @@ void WorldSession::HandleGuildCreateOpcode(WorldPacket& recvPacket)
     }
 
     sGuildMgr.AddGuild(guild);
+}
+
+void WorldSession::SendGuildInvite(Player* player, bool alreadyInGuild /*= false*/)
+{
+    Guild* guild = sGuildMgr.GetGuildById(GetPlayer()->GetGuildId());
+    player->SetGuildIdInvited(GetPlayer()->GetGuildId());
+
+    WorldPacket data(SMSG_GUILD_INVITE, (8 + 10));          // guess size
+    data << GetPlayer()->GetName();
+    data << guild->GetName();
+    player->GetSession()->SendPacket(&data);                                  // unk
 }
 
 void WorldSession::HandleGuildInviteOpcode(WorldPacket& recvPacket)

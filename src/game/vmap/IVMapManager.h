@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _IVMAPMANAGER_H
-#define _IVMAPMANAGER_H
+#ifndef MANGOS_H_IVMAPMANAGER
+#define MANGOS_H_IVMAPMANAGER
 
-#include<string>
-#include <Platform/Define.h>
+#include <string>
 
-//===========================================================
+#include "platform/Define.h"
 
 /**
-This is the minimum interface to the VMapMamager.
+This is the minimum interface to the VMapManager.
 */
 
 namespace VMAP
@@ -76,16 +82,31 @@ namespace VMAP
             Enable/disable LOS calculation
             It is enabled by default. If it is enabled in mid game the maps have to loaded manualy
             */
-            void setEnableLineOfSightCalc(bool pVal) { iEnableLineOfSightCalc = pVal; }
+            void setEnableLineOfSightCalc(bool pVal)
+            {
+                iEnableLineOfSightCalc = pVal;
+            }
             /**
             Enable/disable model height calculation
             It is enabled by default. If it is enabled in mid game the maps have to loaded manualy
             */
-            void setEnableHeightCalc(bool pVal) { iEnableHeightCalc = pVal; }
+            void setEnableHeightCalc(bool pVal)
+            {
+                iEnableHeightCalc = pVal;
+            }
 
-            bool isLineOfSightCalcEnabled() const { return iEnableLineOfSightCalc; }
-            bool isHeightCalcEnabled() const { return iEnableHeightCalc; }
-            bool isMapLoadingEnabled() const { return iEnableLineOfSightCalc || iEnableHeightCalc; }
+            bool isLineOfSightCalcEnabled() const
+            {
+                return iEnableLineOfSightCalc;
+            }
+            bool isHeightCalcEnabled() const
+            {
+                return iEnableHeightCalc;
+            }
+            bool isMapLoadingEnabled() const
+            {
+                return iEnableLineOfSightCalc || iEnableHeightCalc;
+            }
 
             virtual std::string getDirFileName(unsigned int pMapId, int x, int y) const = 0;
             /**

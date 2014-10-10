@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "Language.h"
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Player.h"
@@ -35,6 +42,8 @@
 #include "Spell.h"
 #include "GuildMgr.h"
 #include "Chat.h"
+#include "Item.h"
+#include "LuaEngine.h"
 
 enum StableResultCode
 {
@@ -273,7 +282,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recv_data)
 
     // can't be learn, cheat? Or double learn with lags...
     uint32 reqLevel = 0;
-    if(!_player->IsSpellFitByClassAndRace(trainer_spell->spell, &reqLevel))
+    if (!_player->IsSpellFitByClassAndRace(trainer_spell->spell, &reqLevel))
         return;
 
     reqLevel = trainer_spell->isProvidedReqLevel ? trainer_spell->reqLevel : std::max(reqLevel, trainer_spell->reqLevel);
@@ -397,6 +406,29 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recv_data)
 
         if (!sScriptMgr.OnGossipSelect(_player, pGo, sender, action, code.empty() ? NULL : code.c_str()))
             _player->OnGossipSelect(pGo, gossipListId);
+    }
+    else if (guid.IsItem())
+    {
+        Item* item = GetPlayer()->GetItemByGuid(guid);
+        if (!item)
+        {
+            DEBUG_LOG("WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", guid.GetString().c_str());
+            return;
+        }
+
+        // used by eluna
+        sEluna->HandleGossipSelectOption(GetPlayer(), item, GetPlayer()->PlayerTalkClass->GossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(gossipListId), code);
+    }
+    else if (guid.IsPlayer())
+    {
+        if (GetPlayer()->GetGUIDLow() != guid)
+        {
+            DEBUG_LOG("WORLD: HandleGossipSelectOptionOpcode - %s not found or you can't interact with it.", guid.GetString().c_str());
+            return;
+        }
+
+        // used by eluna
+        sEluna->HandleGossipSelectOption(GetPlayer(), GetPlayer()->PlayerTalkClass->GetGossipMenu().GetMenuId(), GetPlayer()->PlayerTalkClass->GossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GossipOptionAction(gossipListId), code);
     }
 }
 

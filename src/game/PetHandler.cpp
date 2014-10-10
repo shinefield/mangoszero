@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
-#include "Log.h"
 #include "Opcodes.h"
 #include "Spell.h"
 #include "CreatureAI.h"
-#include "Util.h"
 #include "Pet.h"
 
 void WorldSession::HandlePetAction(WorldPacket& recv_data)
@@ -186,7 +193,7 @@ void WorldSession::HandlePetAction(WorldPacket& recv_data)
 
             for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
             {
-                if (spellInfo->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA || spellInfo->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_INSTANT || spellInfo->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED)
+                if (spellInfo->EffectImplicitTargetA[i] == TARGET_UNIT_SRC_AREA_ENEMY || spellInfo->EffectImplicitTargetA[i] == TARGET_UNIT_DEST_AREA_ENEMY || spellInfo->EffectImplicitTargetA[i] == TARGET_DEST_DYNOBJ_ENEMY)
                     return;
             }
 

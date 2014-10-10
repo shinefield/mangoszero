@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
+#include "system/ProgressBar.h"
 
 #include "Transports.h"
 #include "MapManager.h"
@@ -24,9 +32,8 @@
 #include "ObjectGuid.h"
 #include "Path.h"
 
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "DBCStores.h"
-#include "ProgressBar.h"
 
 void MapManager::LoadTransports()
 {
@@ -88,7 +95,11 @@ void MapManager::LoadTransports()
 
         float x, y, z, o;
         uint32 mapid;
-        x = t->m_WayPoints[0].x; y = t->m_WayPoints[0].y; z = t->m_WayPoints[0].z; mapid = t->m_WayPoints[0].mapid; o = 1;
+        x = t->m_WayPoints[0].x;
+        y = t->m_WayPoints[0].y;
+        z = t->m_WayPoints[0].z;
+        mapid = t->m_WayPoints[0].mapid;
+        o = 1;
 
         // current code does not support transports in dungeon!
         const MapEntry* pMapInfo = sMapStore.LookupEntry(mapid);

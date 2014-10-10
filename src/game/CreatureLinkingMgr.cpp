@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup npc_linking
- * @{
- *
- * @file CreatureLinkingMgr.cpp
- * This file contains the code needed for MaNGOS to link npcs together
- * Currently implemented
- * - Aggro on boss aggro, also reversed
- * - Despawning/ Selfkill on death of mob if the NPC it is linked to dies
- * - Respawning on leaving combat if the linked to NPC evades, also reversed
- * - Respawning on death of the linked to NPC
- * - (Re)Spawning dependend on boss Alive/ Dead
- * - Following NPCs
- *
- */
-
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "system/ProgressBar.h"
 #include "CreatureLinkingMgr.h"
-#include "Policies/Singleton.h"
-#include "ProgressBar.h"
-#include "Database/DatabaseEnv.h"
 #include "ObjectMgr.h"
 #include "SharedDefines.h"
 #include "Creature.h"
@@ -262,6 +253,7 @@ enum EventMask
     EVENT_MASK_ON_DIE       = FLAG_DESPAWN_ON_DEATH | FLAG_SELFKILL_ON_DEATH | FLAG_RESPAWN_ON_DEATH | FLAG_FOLLOW,
     EVENT_MASK_ON_RESPAWN   = FLAG_RESPAWN_ON_RESPAWN | FLAG_DESPAWN_ON_RESPAWN | FLAG_FOLLOW,
     EVENT_MASK_TRIGGER_TO   = FLAG_TO_AGGRO_ON_AGGRO | FLAG_TO_RESPAWN_ON_EVADE | FLAG_FOLLOW,
+    EVENT_MASK_ON_DESPAWN   = FLAG_DESPAWN_ON_DESPAWN,
 };
 
 // This functions checks if the NPC has linked NPCs for dynamic action
@@ -410,10 +402,26 @@ void CreatureLinkingHolder::DoCreatureLinkingEvent(CreatureLinkingEvent eventTyp
 
     switch (eventType)
     {
-        case LINKING_EVENT_AGGRO:   eventFlagFilter = EVENT_MASK_ON_AGGRO;   reverseEventFlagFilter = FLAG_TO_AGGRO_ON_AGGRO;   break;
-        case LINKING_EVENT_EVADE:   eventFlagFilter = EVENT_MASK_ON_EVADE;   reverseEventFlagFilter = FLAG_TO_RESPAWN_ON_EVADE; break;
-        case LINKING_EVENT_DIE:     eventFlagFilter = EVENT_MASK_ON_DIE;     reverseEventFlagFilter = 0;                        break;
-        case LINKING_EVENT_RESPAWN: eventFlagFilter = EVENT_MASK_ON_RESPAWN; reverseEventFlagFilter = FLAG_FOLLOW;              break;
+        case LINKING_EVENT_AGGRO:
+            eventFlagFilter = EVENT_MASK_ON_AGGRO;
+            reverseEventFlagFilter = FLAG_TO_AGGRO_ON_AGGRO;
+            break;
+        case LINKING_EVENT_EVADE:
+            eventFlagFilter = EVENT_MASK_ON_EVADE;
+            reverseEventFlagFilter = FLAG_TO_RESPAWN_ON_EVADE;
+            break;
+        case LINKING_EVENT_DIE:
+            eventFlagFilter = EVENT_MASK_ON_DIE;
+            reverseEventFlagFilter = 0;
+            break;
+        case LINKING_EVENT_RESPAWN:
+            eventFlagFilter = EVENT_MASK_ON_RESPAWN;
+            reverseEventFlagFilter = FLAG_FOLLOW;
+            break;
+        case LINKING_EVENT_DESPAWN:
+            eventFlagFilter = EVENT_MASK_ON_DESPAWN;
+            reverseEventFlagFilter = 0;
+            break;
     }
 
     // Process Slaves (by entry)
@@ -471,6 +479,7 @@ void CreatureLinkingHolder::DoCreatureLinkingEvent(CreatureLinkingEvent eventTyp
                             SetFollowing(pSource, pMaster);
                         break;
                     case LINKING_EVENT_DIE:                 // Nothing linked for this case
+                    case LINKING_EVENT_DESPAWN:             // Nothing linked for this case
                         break;
                 }
             }
@@ -549,6 +558,11 @@ void CreatureLinkingHolder::ProcessSlave(CreatureLinkingEvent eventType, Creatur
 
             if (flag & FLAG_FOLLOW && pSlave->isAlive() && !pSlave->isInCombat())
                 SetFollowing(pSlave, pSource);
+
+            break;
+        case LINKING_EVENT_DESPAWN:
+            if (flag & FLAG_DESPAWN_ON_DESPAWN && !pSlave->IsDespawned())
+                pSlave->ForcedDespawn();
 
             break;
     }
@@ -671,5 +685,3 @@ bool CreatureLinkingHolder::TryFollowMaster(Creature* pCreature)
 
     return false;
 }
-
-/*! @} */

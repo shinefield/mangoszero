@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "utilities/Util.h"
 #include "Object.h"
 #include "Player.h"
 #include "BattleGround.h"
@@ -24,8 +32,7 @@
 #include "GameObject.h"
 #include "BattleGroundMgr.h"
 #include "Language.h"
-#include "Util.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "MapManager.h"
 #include "DBCStores.h"                                   // TODO REMOVE this when graveyard handling for pvp is updated
 
@@ -223,11 +230,16 @@ int32 BattleGroundAB::_GetNodeNameId(uint8 node)
 {
     switch (node)
     {
-        case BG_AB_NODE_STABLES:    return LANG_BG_AB_NODE_STABLES;
-        case BG_AB_NODE_BLACKSMITH: return LANG_BG_AB_NODE_BLACKSMITH;
-        case BG_AB_NODE_FARM:       return LANG_BG_AB_NODE_FARM;
-        case BG_AB_NODE_LUMBER_MILL: return LANG_BG_AB_NODE_LUMBER_MILL;
-        case BG_AB_NODE_GOLD_MINE:  return LANG_BG_AB_NODE_GOLD_MINE;
+        case BG_AB_NODE_STABLES:
+            return LANG_BG_AB_NODE_STABLES;
+        case BG_AB_NODE_BLACKSMITH:
+            return LANG_BG_AB_NODE_BLACKSMITH;
+        case BG_AB_NODE_FARM:
+            return LANG_BG_AB_NODE_FARM;
+        case BG_AB_NODE_LUMBER_MILL:
+            return LANG_BG_AB_NODE_LUMBER_MILL;
+        case BG_AB_NODE_GOLD_MINE:
+            return LANG_BG_AB_NODE_GOLD_MINE;
         default:
             MANGOS_ASSERT(0);
     }

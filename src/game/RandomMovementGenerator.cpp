@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "utilities/Util.h"
 #include "Creature.h"
 #include "MapManager.h"
 #include "RandomMovementGenerator.h"
 #include "Map.h"
-#include "Util.h"
 #include "movement/MoveSplineInit.h"
 #include "movement/MoveSpline.h"
 
@@ -63,7 +70,15 @@ void RandomMovementGenerator<Creature>::_setRandomLocation(Creature& creature)
         if (roll_chance_i(MOVEMENT_RANDOM_MMGEN_CHANCE_NO_BREAK))
             i_nextMoveTime.Reset(50);
         else
-            i_nextMoveTime.Reset(urand(3000, 10000));       // keep a short wait time
+            switch (urand(0 , 2))
+            {
+                case 0:
+                    i_nextMoveTime.Reset(urand(3000, 10000));
+                    break;
+                default:
+                    i_nextMoveTime.Reset(urand(50, 400));
+                    break;
+            }
     }
 }
 
@@ -87,7 +102,7 @@ void RandomMovementGenerator<Creature>::Reset(Creature& creature)
 template<>
 void RandomMovementGenerator<Creature>::Interrupt(Creature& creature)
 {
-    creature.InterruptMoving();
+    creature.StopMoving();
     creature.clearUnitState(UNIT_STAT_ROAMING | UNIT_STAT_ROAMING_MOVE);
     creature.SetWalk(!creature.hasUnitState(UNIT_STAT_RUNNING_STATE), false);
 }

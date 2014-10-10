@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
@@ -942,6 +949,64 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             m_creature->SetStandState(action.setStandState.standState);
             break;
         }
+        case ACTION_T_CHANGE_MOVEMENT:
+        {
+            switch (action.changeMovement.movementType)
+            {
+                case IDLE_MOTION_TYPE:
+                    m_creature->GetMotionMaster()->MoveIdle();
+                    break;
+                case RANDOM_MOTION_TYPE:
+                    m_creature->GetMotionMaster()->MoveRandomAroundPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), float(action.changeMovement.wanderDistance));
+                    break;
+                case WAYPOINT_MOTION_TYPE:
+                    m_creature->GetMotionMaster()->MoveWaypoint();
+                    break;
+            }
+            break;
+        }
+        case ACTION_T_SUMMON_UNIQUE:
+        {
+            Creature* pCreature = NULL;
+
+            MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck u_check(*m_creature, action.summon_unique.creatureId, true, false, 100, true);
+            MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, u_check);
+            Cell::VisitGridObjects(m_creature, searcher, 100);
+            WorldObject* pSpawn = NULL;
+            pSpawn = pCreature;
+
+            if (!pSpawn)
+            {
+                Unit* target = GetTargetByType(action.summon_unique.target, pActionInvoker, pAIEventSender, reportTargetError);
+                if (!target && reportTargetError)
+                    sLog.outErrorEventAI("Event %u - NULL target for ACTION_T_SUMMON_UNIQUE(%u), target-type %u", EventId, action.type, action.summon_unique.target);
+
+                CreatureEventAI_Summon_Map::const_iterator i = sEventAIMgr.GetCreatureEventAISummonMap().find(action.summon_unique.spawnId);
+                if (i == sEventAIMgr.GetCreatureEventAISummonMap().end())
+                {
+                    sLog.outErrorEventAI("failed to spawn creature %u. Summon map index %u does not exist. EventID %d. CreatureID %d", action.summon_unique.creatureId, action.summon_unique.spawnId, EventId, m_creature->GetEntry());
+                    return;
+                }
+
+                Creature* pCreature = NULL;
+                if ((*i).second.SpawnTimeSecs)
+                    pCreature = m_creature->SummonCreature(action.summon_unique.creatureId, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, (*i).second.SpawnTimeSecs);
+                else
+                    pCreature = m_creature->SummonCreature(action.summon_unique.creatureId, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_OOC_DESPAWN, 0);
+
+                if (!pCreature)
+                    sLog.outErrorEventAI("failed to spawn creature %u. EventId %d.Creature %d", action.summon_unique.creatureId, EventId, m_creature->GetEntry());
+                else if (action.summon_unique.target != TARGET_T_SELF && target)
+                    pCreature->AI()->AttackStart(target);
+
+                break;
+            }
+
+            if (pSpawn)
+            {
+                return;
+            }
+        }
     }
 }
 
@@ -1287,9 +1352,12 @@ inline uint32 CreatureEventAI::GetRandActionParam(uint32 rnd, uint32 param1, uin
 {
     switch (rnd % 3)
     {
-        case 0: return param1;
-        case 1: return param2;
-        case 2: return param3;
+        case 0:
+            return param1;
+        case 1:
+            return param2;
+        case 2:
+            return param3;
     }
     return 0;
 }
@@ -1298,9 +1366,12 @@ inline int32 CreatureEventAI::GetRandActionParam(uint32 rnd, int32 param1, int32
 {
     switch (rnd % 3)
     {
-        case 0: return param1;
-        case 1: return param2;
-        case 2: return param3;
+        case 0:
+            return param1;
+        case 1:
+            return param2;
+        case 2:
+            return param3;
     }
     return 0;
 }

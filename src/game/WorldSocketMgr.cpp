@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file WorldSocketMgr.cpp
-*  \ingroup u2w
-*  \author Derex <derex101@gmail.com>
-*/
-
-#include "WorldSocketMgr.h"
-
+#include <set>
 #include <ace/ACE.h>
 #include <ace/Log_Msg.h>
 #include <ace/Reactor.h>
@@ -36,12 +37,11 @@
 #include <ace/os_include/sys/os_types.h>
 #include <ace/os_include/sys/os_socket.h>
 
-#include <set>
-
-#include "Log.h"
 #include "Common.h"
-#include "Config/Config.h"
-#include "Database/DatabaseEnv.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "WorldSocketMgr.h"
 #include "WorldSocket.h"
 
 /**
@@ -97,7 +97,10 @@ class ReactorRunnable : protected ACE_Task_Base
             return (m_ThreadId = activate());
         }
 
-        void Wait() { ACE_Task_Base::wait(); }
+        void Wait()
+        {
+            ACE_Task_Base::wait();
+        }
 
         long Connections()
         {
@@ -147,19 +150,20 @@ class ReactorRunnable : protected ACE_Task_Base
 
         virtual int svc()
         {
-            DEBUG_LOG("Network Thread Starting");
+            DEBUG_LOG("Network Thread starting");
 
             WorldDatabase.ThreadStart();
 
             MANGOS_ASSERT(m_Reactor);
 
             SocketSet::iterator i, t;
+            const int timeout = sConfig.GetIntDefault("Network.Timeout", 100000);
 
             while (!m_Reactor->reactor_event_loop_done())
             {
-                // dont be too smart to move this outside the loop
+                // don't be too smart to move this outside the loop
                 // the run_reactor_event_loop will modify interval
-                ACE_Time_Value interval(0, 10000);
+                ACE_Time_Value interval(0, timeout);
 
                 if (m_Reactor->run_reactor_event_loop(interval) == -1)
                     break;
@@ -184,7 +188,7 @@ class ReactorRunnable : protected ACE_Task_Base
 
             WorldDatabase.ThreadEnd();
 
-            DEBUG_LOG("Network Thread Exitting");
+            DEBUG_LOG("Network Thread exiting");
 
             return 0;
         }
@@ -227,7 +231,7 @@ int WorldSocketMgr::StartReactiveIO(ACE_UINT16 port, const char* address)
 
     if (num_threads <= 0)
     {
-        sLog.outError("Network.Threads is wrong in your config file");
+        sLog.outError("Network.Threads is wrong in your configuration file");
         return -1;
     }
 
@@ -244,7 +248,7 @@ int WorldSocketMgr::StartReactiveIO(ACE_UINT16 port, const char* address)
 
     if (m_SockOutUBuff <= 0)
     {
-        sLog.outError("Network.OutUBuff is wrong in your config file");
+        sLog.outError("Network.OutUBuff is wrong in your configuration file");
         return -1;
     }
 

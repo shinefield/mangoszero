@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "system/ProgressBar.h"
 #include "SpellMgr.h"
 #include "ObjectMgr.h"
 #include "SpellAuraDefines.h"
-#include "ProgressBar.h"
 #include "DBCStores.h"
 #include "SQLStorages.h"
 #include "World.h"
@@ -127,7 +134,7 @@ uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell)
         if (Player* modOwner = spell->GetCaster()->GetSpellModOwner())
             modOwner->ApplySpellMod(spellInfo->Id, SPELLMOD_CASTING_TIME, castTime, spell);
 
-        if (!spellInfo->HasAttribute(SPELL_ATTR_UNK4) && !spellInfo->HasAttribute(SPELL_ATTR_TRADESPELL))
+        if (!spellInfo->HasAttribute(SPELL_ATTR_ABILITY) && !spellInfo->HasAttribute(SPELL_ATTR_TRADESPELL))
             castTime = int32(castTime * spell->GetCaster()->GetFloatValue(UNIT_MOD_CAST_SPEED));
         else
         {
@@ -136,7 +143,7 @@ uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell)
         }
     }
 
-    if (spellInfo->HasAttribute(SPELL_ATTR_RANGED) && (!spell || !spell->IsAutoRepeat()))
+    if (spellInfo->HasAttribute(SPELL_ATTR_REQ_AMMO) && (!spell || !spell->IsAutoRepeat()))
         castTime += 500;
 
     // [workaround] holy light need script effect, but 19968 spell for it have 2.5 cast time sec
@@ -530,7 +537,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
     if ((IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_CREATURES) ||
             IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_RESOURCES)  ||
             IsSpellHaveAura(spellInfo, SPELL_AURA_TRACK_STEALTHED)) &&
-            (spellInfo->HasAttribute(SPELL_ATTR_EX_UNK17) || spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_MOUNTED)))
+            (spellInfo->HasAttribute(SPELL_ATTR_EX_UNAUTOCASTABLE_BY_PET) || spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_MOUNTED)))
         return SPELL_TRACKER;
 
     // elixirs can have different families, but potion most ofc.
@@ -616,16 +623,16 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
     switch (targetA)
     {
             // non-positive targets
-        case TARGET_CHAIN_DAMAGE:
-        case TARGET_ALL_ENEMY_IN_AREA:
-        case TARGET_ALL_ENEMY_IN_AREA_INSTANT:
-        case TARGET_IN_FRONT_OF_CASTER:
-        case TARGET_ALL_ENEMY_IN_AREA_CHANNELED:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_UNIT_TARGET_ENEMY:
+        case TARGET_UNIT_SRC_AREA_ENEMY:
+        case TARGET_UNIT_DEST_AREA_ENEMY:
+        case TARGET_UNIT_CONE_ENEMY:
+        case TARGET_DEST_DYNOBJ_ENEMY:
+        case TARGET_DEST_TARGET_ENEMY:
             return false;
             // positive or dependent
-        case TARGET_CASTER_COORDINATES:
-            return (targetB == TARGET_ALL_PARTY || targetB == TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER);
+        case TARGET_SRC_CASTER:
+            return (targetB == TARGET_UNIT_SRC_AREA_PARTY || targetB == TARGET_UNIT_SRC_AREA_ALLY);
         default:
             break;
     }
@@ -639,11 +646,11 @@ bool IsExplicitPositiveTarget(uint32 targetA)
     // positive targets that in target selection code expect target in m_targers, so not that auto-select target by spell data by m_caster and etc
     switch (targetA)
     {
-        case TARGET_SINGLE_FRIEND:
-        case TARGET_SINGLE_PARTY:
-        case TARGET_CHAIN_HEAL:
-        case TARGET_SINGLE_FRIEND_2:
-        case TARGET_AREAEFFECT_PARTY_AND_CLASS:
+        case TARGET_UNIT_TARGET_ALLY:
+        case TARGET_UNIT_TARGET_PARTY:
+        case TARGET_UNIT_TARGET_CHAINHEAL_ALLY:
+        case TARGET_UNIT_TARGET_RAID:
+        case TARGET_UNIT_TARGET_AREA_RAID_CLASS:
             return true;
         default:
             break;
@@ -656,8 +663,8 @@ bool IsExplicitNegativeTarget(uint32 targetA)
     // non-positive targets that in target selection code expect target in m_targers, so not that auto-select target by spell data by m_caster and etc
     switch (targetA)
     {
-        case TARGET_CHAIN_DAMAGE:
-        case TARGET_CURRENT_ENEMY_COORDINATES:
+        case TARGET_UNIT_TARGET_ENEMY:
+        case TARGET_DEST_TARGET_ENEMY:
             return true;
         default:
             break;
@@ -713,7 +720,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 case SPELL_AURA_MOD_DAMAGE_DONE:            // dependent from base point sign (negative -> negative)
                 case SPELL_AURA_MOD_RESISTANCE:
                 case SPELL_AURA_MOD_STAT:
@@ -782,16 +790,16 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                     return false;
                 case SPELL_AURA_PERIODIC_DAMAGE:            // used in positive spells also.
                     // part of negative spell if casted at self (prevent cancel)
-                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_SELF)
+                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_UNIT_CASTER)
                         return false;
                     break;
                 case SPELL_AURA_MOD_DECREASE_SPEED:         // used in positive spells also
                     // part of positive spell if casted at self
-                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_SELF &&
+                    if (spellproto->EffectImplicitTargetA[effIndex] == TARGET_UNIT_CASTER &&
                             spellproto->SpellFamilyName == SPELLFAMILY_GENERIC)
                         return false;
                     // but not this if this first effect (don't found better check)
-                    if (spellproto->HasAttribute(SPELL_ATTR_UNK26) && effIndex == EFFECT_INDEX_0)
+                    if (spellproto->HasAttribute(SPELL_ATTR_NEGATIVE_1) && effIndex == EFFECT_INDEX_0)
                         return false;
                     break;
 //                case SPELL_AURA_TRANSFORM:
@@ -823,7 +831,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 case SPELL_AURA_ADD_FLAT_MODIFIER:          // mods
                 case SPELL_AURA_ADD_PCT_MODIFIER:
                 {
@@ -837,7 +846,8 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         default:
                             break;
                     }
-                }   break;
+                }
+                break;
                 default:
                     break;
             }
@@ -852,7 +862,7 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
         return false;
 
     // AttributesEx check
-    if (spellproto->HasAttribute(SPELL_ATTR_EX_NEGATIVE))
+    if (spellproto->HasAttribute(SPELL_ATTR_EX_CANT_BE_REFLECTED))
         return false;
 
     // ok, positive
@@ -1066,7 +1076,7 @@ void SpellMgr::LoadSpellTargetPositions()
         bool found = false;
         for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
-            if (spellInfo->EffectImplicitTargetA[i] == TARGET_TABLE_X_Y_Z_COORDINATES || spellInfo->EffectImplicitTargetB[i] == TARGET_TABLE_X_Y_Z_COORDINATES)
+            if (spellInfo->EffectImplicitTargetA[i] == TARGET_DEST_DB || spellInfo->EffectImplicitTargetB[i] == TARGET_DEST_DB)
             {
                 found = true;
                 break;
@@ -1191,7 +1201,10 @@ struct DoSpellProcEvent
         }
     }
 
-    const char* TableName() { return "spell_proc_event"; }
+    const char* TableName()
+    {
+        return "spell_proc_event";
+    }
     bool IsValidCustomRank(SpellProcEventEntry const& spe, uint32 entry, uint32 first_id)
     {
         // let have independent data in table for spells with ppm rates (exist rank dependent ppm rate spells)
@@ -1260,8 +1273,14 @@ struct DoSpellProcEvent
             ++count;
     }
 
-    bool HasEntry(uint32 spellId) { return spe_map.count(spellId) > 0; }
-    bool SetStateToEntry(uint32 spellId) { return (state = spe_map.find(spellId)) != spe_map.end(); }
+    bool HasEntry(uint32 spellId)
+    {
+        return spe_map.count(spellId) > 0;
+    }
+    bool SetStateToEntry(uint32 spellId)
+    {
+        return (state = spe_map.find(spellId)) != spe_map.end();
+    }
     SpellProcEventMap& spe_map;
     SpellProcEventMap::const_iterator state;
 
@@ -1324,7 +1343,10 @@ void SpellMgr::LoadSpellProcEvents()
 struct DoSpellProcItemEnchant
 {
     DoSpellProcItemEnchant(SpellProcItemEnchantMap& _procMap, float _ppm) : procMap(_procMap), ppm(_ppm) {}
-    void operator()(uint32 spell_id) { procMap[spell_id] = ppm; }
+    void operator()(uint32 spell_id)
+    {
+        procMap[spell_id] = ppm;
+    }
 
     SpellProcItemEnchantMap& procMap;
     float ppm;
@@ -1396,7 +1418,10 @@ void SpellMgr::LoadSpellProcItemEnchant()
 struct DoSpellBonuses
 {
     DoSpellBonuses(SpellBonusMap& _spellBonusMap, SpellBonusEntry const& _spellBonus) : spellBonusMap(_spellBonusMap), spellBonus(_spellBonus) {}
-    void operator()(uint32 spell_id) { spellBonusMap[spell_id] = spellBonus; }
+    void operator()(uint32 spell_id)
+    {
+        spellBonusMap[spell_id] = spellBonus;
+    }
 
     SpellBonusMap& spellBonusMap;
     SpellBonusEntry const& spellBonus;
@@ -1667,7 +1692,10 @@ struct DoSpellThreat
                 sLog.outErrorDb("Spell %u listed in `spell_threat` as custom rank has same data as Rank 1, so redundant", spell_id);
         }
     }
-    const char* TableName() { return "spell_threat"; }
+    const char* TableName()
+    {
+        return "spell_threat";
+    }
     bool IsValidCustomRank(SpellThreatEntry const& ste, uint32 entry, uint32 first_id)
     {
         if (!ste.threat)
@@ -1693,8 +1721,14 @@ struct DoSpellThreat
         }
         ++count;
     }
-    bool HasEntry(uint32 spellId) { return threatMap.count(spellId) > 0; }
-    bool SetStateToEntry(uint32 spellId) { return (state = threatMap.find(spellId)) != threatMap.end(); }
+    bool HasEntry(uint32 spellId)
+    {
+        return threatMap.count(spellId) > 0;
+    }
+    bool SetStateToEntry(uint32 spellId)
+    {
+        return (state = threatMap.find(spellId)) != threatMap.end();
+    }
 
     SpellThreatMap& threatMap;
     SpellThreatMap::const_iterator state;
@@ -2537,7 +2571,7 @@ void SpellMgr::LoadSpellChains()
 
         if (node.prev != 0 && !sSpellStore.LookupEntry(node.prev))
         {
-            sLog.outErrorDb("Spell %u (prev: %u, first: %u, rank: %d, req: %u) listed in `spell_chain` has nonexistent previous rank spell.",
+            sLog.outErrorDb("Spell %u (prev: %u, first: %u, rank: %d, req: %u) listed in `spell_chain` has non-existent previous rank spell.",
                             spell_id, node.prev, node.first, node.rank, node.req);
             continue;
         }
@@ -2767,7 +2801,7 @@ void SpellMgr::LoadSpellLearnSpells()
 
         if (!sSpellStore.LookupEntry(node.spell))
         {
-            sLog.outErrorDb("Spell %u listed in `spell_learn_spell` learning nonexistent spell %u", spell_id, node.spell);
+            sLog.outErrorDb("Spell %u listed in `spell_learn_spell` learning non-existent spell %u", spell_id, node.spell);
             continue;
         }
 
@@ -2802,14 +2836,14 @@ void SpellMgr::LoadSpellLearnSpells()
                 dbc_node.spell       = entry->EffectTriggerSpell[i];
                 dbc_node.active      = true;                // all dbc based learned spells is active (show in spell book or hide by client itself)
 
-                // ignore learning nonexistent spells (broken/outdated/or generic learning spell 483
+                // ignore learning non-existent spells (broken/outdated/or generic learning spell 483
                 if (!sSpellStore.LookupEntry(dbc_node.spell))
                     continue;
 
                 // talent or passive spells or skill-step spells auto-casted and not need dependent learning,
                 // pet teaching spells don't must be dependent learning (casted)
                 // other required explicit dependent learning
-                dbc_node.autoLearned = entry->EffectImplicitTargetA[i] == TARGET_PET || GetTalentSpellCost(spell) > 0 || IsPassiveSpell(entry) || IsSpellHaveEffect(entry, SPELL_EFFECT_SKILL_STEP);
+                dbc_node.autoLearned = entry->EffectImplicitTargetA[i] == TARGET_UNIT_PET || GetTalentSpellCost(spell) > 0 || IsPassiveSpell(entry) || IsSpellHaveEffect(entry, SPELL_EFFECT_SKILL_STEP);
 
                 SpellLearnSpellMapBounds db_node_bounds = GetSpellLearnSpellMapBounds(spell);
 
@@ -2860,16 +2894,16 @@ void SpellMgr::LoadSpellScriptTarget()
                     spellProto->EffectImplicitTargetB[i] == TARGET_SCRIPT ||
                     spellProto->EffectImplicitTargetA[i] == TARGET_SCRIPT_COORDINATES ||
                     spellProto->EffectImplicitTargetB[i] == TARGET_SCRIPT_COORDINATES ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_FOCUS_OR_SCRIPTED_GAMEOBJECT ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_FOCUS_OR_SCRIPTED_GAMEOBJECT ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_INSTANT ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_INSTANT ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_CUSTOM ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_CUSTOM ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_GO_AROUND_SOURCE ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_GO_AROUND_SOURCE ||
-                    spellProto->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_GO_AROUND_DEST ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_AREAEFFECT_GO_AROUND_DEST)
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_NEARBY_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_NEARBY_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_SRC_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_SRC_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_DEST_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_DEST_AREA_ENTRY ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_SRC_AREA ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_SRC_AREA ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_DEST_AREA ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_DEST_AREA)
             {
                 targetfound = true;
                 break;
@@ -2943,7 +2977,7 @@ void SpellMgr::LoadSpellScriptTarget()
             for (int j = 0; j < MAX_EFFECT_INDEX; ++j)
             {
                 if (spellInfo->Effect[j] && (spellInfo->EffectImplicitTargetA[j] == TARGET_SCRIPT ||
-                                             (spellInfo->EffectImplicitTargetA[j] != TARGET_SELF && spellInfo->EffectImplicitTargetB[j] == TARGET_SCRIPT)))
+                                             (spellInfo->EffectImplicitTargetA[j] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetB[j] == TARGET_SCRIPT)))
                 {
                     SQLMultiStorage::SQLMSIteratorBounds<SpellTargetEntry> bounds = sSpellScriptTargetStorage.getBounds<SpellTargetEntry>(i);
                     if (bounds.first == bounds.second)
@@ -3021,7 +3055,7 @@ void SpellMgr::LoadSpellPetAuras()
                 continue;
             }
 
-            PetAura pa(pet, aura, spellInfo->EffectImplicitTargetA[i] == TARGET_PET, spellInfo->CalculateSimpleValue(SpellEffectIndex(i)));
+            PetAura pa(pet, aura, spellInfo->EffectImplicitTargetA[i] == TARGET_UNIT_PET, spellInfo->CalculateSimpleValue(SpellEffectIndex(i)));
             mSpellPetAuraMap[spell] = pa;
         }
 
@@ -3052,7 +3086,7 @@ bool SpellMgr::IsSpellValid(SpellEntry const* spellInfo, Player* pl, bool msg)
             case SPELL_EFFECT_NONE:
                 continue;
 
-                // craft spell for crafting nonexistent item (break client recipes list show)
+                // craft spell for crafting non-existent item (break client recipes list show)
             case SPELL_EFFECT_CREATE_ITEM:
             {
                 if (!ObjectMgr::GetItemPrototype(spellInfo->EffectItemType[i]))
@@ -3200,40 +3234,40 @@ void SpellMgr::LoadSpellAreas()
             continue;
         }
         else if (!spellArea.conditionId)
-    {
-        if (spellArea.questStart && !sObjectMgr.GetQuestTemplate(spellArea.questStart))
         {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong start quest (%u) requirement", spell, spellArea.questStart);
-            continue;
-        }
-
-        if (spellArea.questEnd)
-        {
-            if (!sObjectMgr.GetQuestTemplate(spellArea.questEnd))
+            if (spellArea.questStart && !sObjectMgr.GetQuestTemplate(spellArea.questStart))
             {
-                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong end quest (%u) requirement", spell, spellArea.questEnd);
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong start quest (%u) requirement", spell, spellArea.questStart);
                 continue;
             }
 
-            if (spellArea.questEnd == spellArea.questStart && !spellArea.questStartCanActive)
+            if (spellArea.questEnd)
             {
-                sLog.outErrorDb("Spell %u listed in `spell_area` have quest (%u) requirement for start and end in same time", spell, spellArea.questEnd);
+                if (!sObjectMgr.GetQuestTemplate(spellArea.questEnd))
+                {
+                    sLog.outErrorDb("Spell %u listed in `spell_area` have wrong end quest (%u) requirement", spell, spellArea.questEnd);
+                    continue;
+                }
+
+                if (spellArea.questEnd == spellArea.questStart && !spellArea.questStartCanActive)
+                {
+                    sLog.outErrorDb("Spell %u listed in `spell_area` have quest (%u) requirement for start and end in same time", spell, spellArea.questEnd);
+                    continue;
+                }
+            }
+
+            if (spellArea.raceMask && (spellArea.raceMask & RACEMASK_ALL_PLAYABLE) == 0)
+            {
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong race mask (%u) requirement", spell, spellArea.raceMask);
+                continue;
+            }
+
+            if (spellArea.gender != GENDER_NONE && spellArea.gender != GENDER_FEMALE && spellArea.gender != GENDER_MALE)
+            {
+                sLog.outErrorDb("Spell %u listed in `spell_area` have wrong gender (%u) requirement", spell, spellArea.gender);
                 continue;
             }
         }
-
-        if (spellArea.raceMask && (spellArea.raceMask & RACEMASK_ALL_PLAYABLE) == 0)
-        {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong race mask (%u) requirement", spell, spellArea.raceMask);
-            continue;
-        }
-
-        if (spellArea.gender != GENDER_NONE && spellArea.gender != GENDER_FEMALE && spellArea.gender != GENDER_MALE)
-        {
-            sLog.outErrorDb("Spell %u listed in `spell_area` have wrong gender (%u) requirement", spell, spellArea.gender);
-            continue;
-        }
-   }
 
         if (spellArea.auraSpell)
         {
@@ -3462,7 +3496,7 @@ void SpellMgr::CheckUsedSpells(char const* table)
 
         // checks of correctness requirements itself
 
-        if (family < -1 || family > SPELLFAMILY_UNK3)
+        if (family < -1 || family > SPELLFAMILY_POTION)
         {
             sLog.outError("Table '%s' for spell %u have wrong SpellFamily value(%u), skipped.", table, spell, family);
             continue;
@@ -3812,35 +3846,35 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
             return false;
     }
     else                                                    // This block will be removed
- {
-    if (gender != GENDER_NONE)
     {
-        // not in expected gender
-        if (!player || gender != player->getGender())
-            return false;
-    }
+        if (gender != GENDER_NONE)
+        {
+            // not in expected gender
+            if (!player || gender != player->getGender())
+                return false;
+        }
 
-    if (raceMask)
-    {
-        // not in expected race
-        if (!player || !(raceMask & player->getRaceMask()))
-            return false;
-    }
+        if (raceMask)
+        {
+            // not in expected race
+            if (!player || !(raceMask & player->getRaceMask()))
+                return false;
+        }
 
-    if (questStart)
-    {
-        // not in expected required quest state
-        if (!player || (!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart))
-            return false;
-    }
+        if (questStart)
+        {
+            // not in expected required quest state
+            if (!player || (!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart))
+                return false;
+        }
 
-    if (questEnd)
-    {
-        // not in expected forbidden quest state
-        if (!player || player->GetQuestRewardStatus(questEnd))
-            return false;
+        if (questEnd)
+        {
+            // not in expected forbidden quest state
+            if (!player || player->GetQuestRewardStatus(questEnd))
+                return false;
+        }
     }
- }
 
     if (areaId)
     {

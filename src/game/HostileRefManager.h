@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _HOSTILEREFMANAGER
-#define _HOSTILEREFMANAGER
+#ifndef MANGOS_H_HOSTILEREFMANAGER
+#define MANGOS_H_HOSTILEREFMANAGER
 
+#include "utilities/LinkedReference/RefManager.h"
 #include "Common.h"
-#include "Utilities/LinkedReference/RefManager.h"
 
 class Unit;
 class ThreatManager;
@@ -35,7 +42,10 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         explicit HostileRefManager(Unit* pOwner);
         ~HostileRefManager();
 
-        Unit* getOwner() { return iOwner; }
+        Unit* getOwner()
+        {
+            return iOwner;
+        }
 
         // send threat to all my hateres for the pVictim
         // The pVictim is hated than by them as well
@@ -51,7 +61,10 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         // Remove specific faction references
         void deleteReferencesForFaction(uint32 faction);
 
-        HostileReference* getFirst() { return ((HostileReference*) RefManager<Unit, ThreatManager>::getFirst()); }
+        HostileReference* getFirst()
+        {
+            return ((HostileReference*) RefManager<Unit, ThreatManager>::getFirst());
+        }
 
         void updateThreatTables();
 

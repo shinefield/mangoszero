@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MOVEMENTGENERATOR_H
-#define MANGOS_MOVEMENTGENERATOR_H
+#ifndef MANGOS_H_MOVEMENTGENERATOR
+#define MANGOS_H_MOVEMENTGENERATOR
 
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "dynamic/ObjectRegistry.h"
+#include "dynamic/FactoryHolder.h"
 #include "Common.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Dynamic/ObjectRegistry.h"
-#include "Dynamic/FactoryHolder.h"
+#include "utilities/Timer.h"
 #include "MotionMaster.h"
-#include "Timer.h"
 
 class Unit;
 class Creature;
@@ -53,10 +60,16 @@ class MANGOS_DLL_SPEC MovementGenerator
         virtual void unitSpeedChanged() { }
 
         // used by Evade code for select point to evade with expected restart default movement
-        virtual bool GetResetPosition(Unit&, float& /*x*/, float& /*y*/, float& /*z*/) const { return false; }
+        virtual bool GetResetPosition(Unit&, float& /*x*/, float& /*y*/, float& /*z*/) const
+        {
+            return false;
+        }
 
         // given destination unreachable? due to pathfinsing or other
-        virtual bool IsReachable() const { return true; }
+        virtual bool IsReachable() const
+        {
+            return true;
+        }
 
         // used for check from Update call is movegen still be active (top movement generator)
         // after some not safe for this calls
@@ -106,7 +119,10 @@ class MANGOS_DLL_SPEC MovementGeneratorMedium : public MovementGenerator
         bool Update(T& u, const uint32& time_diff);
 
         // not need always overwrites
-        bool GetResetPosition(T& /*u*/, float& /*x*/, float& /*y*/, float& /*z*/) const { return false; }
+        bool GetResetPosition(T& /*u*/, float& /*x*/, float& /*y*/, float& /*z*/) const
+        {
+            return false;
+        }
 };
 
 struct SelectableMovement : public FactoryHolder<MovementGenerator, MovementGeneratorType>

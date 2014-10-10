@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "WorldPacket.h"
-#include "Log.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "Corpse.h"
 #include "GameObject.h"
 #include "Player.h"
@@ -29,8 +37,8 @@
 #include "Object.h"
 #include "Group.h"
 #include "World.h"
-#include "Util.h"
 #include "DBCStores.h"
+#include "LuaEngine.h"
 
 void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket& recv_data)
 {
@@ -260,6 +268,9 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket& /*recv_data*/)
         }
         else
             player->ModifyMoney(pLoot->gold);
+
+        // used by eluna
+        sEluna->OnLootMoney(player, pLoot->gold);
 
         pLoot->gold = 0;
 
@@ -538,6 +549,9 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPacket& recv_data)
     // now move item from loot to target inventory
     Item* newitem = target->StoreNewItem(dest, item.itemid, true, item.randomPropertyId);
     target->SendNewItem(newitem, uint32(item.count), false, false, true);
+
+    // used by eluna
+    sEluna->OnLootItem(target, newitem, item.count, lootguid);
 
     // mark as looted
     item.count = 0;

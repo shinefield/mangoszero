@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_MOVESPLINEFLAG_H
-#define MANGOSSERVER_MOVESPLINEFLAG_H
+#ifndef MANGOS_H_MOVESPLINEFLAG
+#define MANGOS_H_MOVESPLINEFLAG
+
+#include <string>
 
 #include "typedefs.h"
-#include <string>
 
 namespace Movement
 {
@@ -77,31 +85,76 @@ namespace Movement
                 Mask_CatmullRom = Flying,
             };
 
-            inline uint32& raw() { return (uint32&) * this;}
-            inline const uint32& raw() const { return (const uint32&) * this;}
+            inline uint32& raw()
+            {
+                return (uint32&) * this;
+            }
+            inline const uint32& raw() const
+            {
+                return (const uint32&) * this;
+            }
 
-            MoveSplineFlag() { raw() = 0; }
-            MoveSplineFlag(uint32 f) { raw() = f; }
-            MoveSplineFlag(const MoveSplineFlag& f) { raw() = f.raw(); }
+            MoveSplineFlag()
+            {
+                raw() = 0;
+            }
+            MoveSplineFlag(uint32 f)
+            {
+                raw() = f;
+            }
+            MoveSplineFlag(const MoveSplineFlag& f)
+            {
+                raw() = f.raw();
+            }
 
             // Constant interface
 
-            bool isSmooth() const { return raw() & Mask_CatmullRom;}
-            bool isFacing() const { return raw() & Mask_Final_Facing;}
+            bool isSmooth() const
+            {
+                return raw() & Mask_CatmullRom;
+            }
+            bool isFacing() const
+            {
+                return raw() & Mask_Final_Facing;
+            }
 
-            bool hasAllFlags(uint32 f) const { return (raw() & f) == f;}
-            uint32 operator & (uint32 f) const { return (raw() & f);}
-            uint32 operator | (uint32 f) const { return (raw() | f);}
+            bool hasAllFlags(uint32 f) const
+            {
+                return (raw() & f) == f;
+            }
+            uint32 operator & (uint32 f) const
+            {
+                return (raw() & f);
+            }
+            uint32 operator | (uint32 f) const
+            {
+                return (raw() | f);
+            }
             std::string ToString() const;
 
             // Not constant interface
 
-            void operator &= (uint32 f) { raw() &= f;}
-            void operator |= (uint32 f) { raw() |= f;}
+            void operator &= (uint32 f)
+            {
+                raw() &= f;
+            }
+            void operator |= (uint32 f)
+            {
+                raw() |= f;
+            }
 
-            void EnableFacingPoint()    { raw() = (raw() & ~Mask_Final_Facing) | Final_Point;}
-            void EnableFacingAngle()    { raw() = (raw() & ~Mask_Final_Facing) | Final_Angle;}
-            void EnableFacingTarget()   { raw() = (raw() & ~Mask_Final_Facing) | Final_Target;}
+            void EnableFacingPoint()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Point;
+            }
+            void EnableFacingAngle()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Angle;
+            }
+            void EnableFacingTarget()
+            {
+                raw() = (raw() & ~Mask_Final_Facing) | Final_Target;
+            }
 
             bool done          : 1;
             bool falling       : 1;

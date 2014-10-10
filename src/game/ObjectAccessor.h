@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +18,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_OBJECTACCESSOR_H
-#define MANGOS_OBJECTACCESSOR_H
+#ifndef MANGOS_H_OBJECTACCESSOR
+#define MANGOS_H_OBJECTACCESSOR
 
-#include "Common.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
+#include <set>
+#include <list>
 #include <ace/Thread_Mutex.h>
 #include <ace/RW_Thread_Mutex.h>
-#include "Utilities/UnorderedMapSet.h"
-#include "Policies/ThreadingModel.h"
 
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "utilities/UnorderedMapSet.h"
+#include "policies/ThreadingModel.h"
+#include "Common.h"
 #include "UpdateData.h"
-
 #include "GridDefines.h"
 #include "Object.h"
 #include "Player.h"
 #include "Corpse.h"
-
-#include <set>
-#include <list>
 
 class Unit;
 class WorldObject;
@@ -70,9 +75,15 @@ class HashMapHolder
             return (itr != m_objectMap.end()) ? itr->second : NULL;
         }
 
-        static MapType& GetContainer() { return m_objectMap; }
+        static MapType& GetContainer()
+        {
+            return m_objectMap;
+        }
 
-        static LockType& GetLock() { return i_lock; }
+        static LockType& GetLock()
+        {
+            return i_lock;
+        }
 
     private:
 
@@ -121,10 +132,22 @@ class MANGOS_DLL_DECL ObjectAccessor : public MaNGOS::Singleton<ObjectAccessor, 
         void RemoveOldCorpses();
 
         // For call from Player/Corpse AddToWorld/RemoveFromWorld only
-        void AddObject(Corpse* object) { HashMapHolder<Corpse>::Insert(object); }
-        void AddObject(Player* object) { HashMapHolder<Player>::Insert(object); }
-        void RemoveObject(Corpse* object) { HashMapHolder<Corpse>::Remove(object); }
-        void RemoveObject(Player* object) { HashMapHolder<Player>::Remove(object); }
+        void AddObject(Corpse* object)
+        {
+            HashMapHolder<Corpse>::Insert(object);
+        }
+        void AddObject(Player* object)
+        {
+            HashMapHolder<Player>::Insert(object);
+        }
+        void RemoveObject(Corpse* object)
+        {
+            HashMapHolder<Corpse>::Remove(object);
+        }
+        void RemoveObject(Player* object)
+        {
+            HashMapHolder<Player>::Remove(object);
+        }
 
     private:
 

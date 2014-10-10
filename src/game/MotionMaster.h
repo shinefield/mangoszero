@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_MOTIONMASTER_H
-#define MANGOS_MOTIONMASTER_H
+#ifndef MANGOS_H_MOTIONMASTER
+#define MANGOS_H_MOTIONMASTER
 
-#include "Common.h"
 #include <stack>
 #include <vector>
+
+#include "Common.h"
 
 class MovementGenerator;
 class Unit;
@@ -70,14 +78,23 @@ class MANGOS_DLL_SPEC MotionMaster : private std::stack<MovementGenerator*>
 
         void Initialize();
 
-        MovementGenerator* operator->(void) { return top(); }
+        MovementGenerator* operator->(void)
+        {
+            return top();
+        }
 
         using Impl::top;
         using Impl::empty;
 
         typedef Impl::container_type::const_iterator const_iterator;
-        const_iterator begin() const { return Impl::c.begin(); }
-        const_iterator end() const { return Impl::c.end(); }
+        const_iterator begin() const
+        {
+            return Impl::c.begin();
+        }
+        const_iterator end() const
+        {
+            return Impl::c.end();
+        }
 
         void UpdateMotion(uint32 diff);
         void Clear(bool reset = true, bool all = false)

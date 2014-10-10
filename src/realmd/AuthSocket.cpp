@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup realmd
-*/
+#include <openssl/md5.h>
+#include <ace/OS_NS_unistd.h>
+#include <ace/OS_NS_fcntl.h>
+#include <ace/OS_NS_sys_stat.h>
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Config/Config.h"
-#include "Log.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "RealmList.h"
 #include "AuthSocket.h"
 #include "AuthCodes.h"
 #include "PatchHandler.h"
-
-#include <openssl/md5.h>
-//#include "Util.h" -- for commented utf8ToUpperOnlyLatin
-
-#include <ace/OS_NS_unistd.h>
-#include <ace/OS_NS_fcntl.h>
-#include <ace/OS_NS_sys_stat.h>
 
 extern DatabaseType LoginDatabase;
 
@@ -51,7 +52,7 @@ enum AccountFlags
     ACCOUNT_FLAG_PROPASS    = 0x00800000,
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack(N) syntax and old GCC version not support pack(push,N), also any GCC version not support it at some platform
 #if defined( __GNUC__ )
 #pragma pack(1)
 #else
@@ -157,7 +158,7 @@ typedef struct AuthHandler
     bool (AuthSocket::*handler)(void);
 } AuthHandler;
 
-// GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack() syntax and old GCC version not support pack(pop), also any GCC version not support it at some platform
 #if defined( __GNUC__ )
 #pragma pack()
 #else
@@ -329,7 +330,10 @@ bool AuthSocket::_HandleLogonChallenge()
 
     recv((char*)&buf[0], 4);
 
+#ifdef MANGOS_BIGENDIAN
     EndianConvert(*((uint16*)(buf[0])));
+#endif
+
     uint16 remaining = ((sAuthLogonChallenge_C*)&buf[0])->size;
     DEBUG_LOG("[AuthChallenge] got header, body is %#04x bytes", remaining);
 
@@ -395,7 +399,7 @@ bool AuthSocket::_HandleLogonChallenge()
         {
             ///- If the IP is 'locked', check that the player comes indeed from the correct IP address
             bool locked = false;
-            if ((*result)[2].GetUInt8() == 1)               // if ip is locked
+            if ((*result)[2].GetUInt8() == 1)               // if IP is locked
             {
                 DEBUG_LOG("[AuthChallenge] Account '%s' is locked to IP - '%s'", _login.c_str(), (*result)[3].GetString());
                 DEBUG_LOG("[AuthChallenge] Player address is '%s'", get_remote_address().c_str());
@@ -537,7 +541,7 @@ bool AuthSocket::_HandleLogonProof()
         if (this->patch_ != ACE_INVALID_HANDLE)
             return false;
 
-        ///- Check if we have the apropriate patch on the disk
+        ///- Check if we have the appropriate patch on the disk
         // file looks like: 65535enGB.mpq
         char tmp[64];
 
@@ -832,7 +836,6 @@ bool AuthSocket::_HandleReconnectProof()
         ByteBuffer pkt;
         pkt << (uint8)  CMD_AUTH_RECONNECT_PROOF;
         pkt << (uint8)  0x00;
-        pkt << (uint16) 0x00;                               // 2 bytes zeros
         send((char const*)pkt.contents(), pkt.size());
 
         ///- Set _authed to true!

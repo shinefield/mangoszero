@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "log/Log.h"
 #include "Totem.h"
-#include "WorldPacket.h"
-#include "Log.h"
+#include "network/WorldPacket.h"
 #include "Group.h"
 #include "Player.h"
 #include "ObjectMgr.h"
@@ -26,6 +33,7 @@
 #include "DBCStores.h"
 #include "CreatureAI.h"
 #include "InstanceData.h"
+#include "LuaEngine.h"
 
 Totem::Totem() : Creature(CREATURE_SUBTYPE_TOTEM)
 {
@@ -93,6 +101,7 @@ void Totem::Summon(Unit* owner)
 
     if (owner->GetTypeId() == TYPEID_UNIT && ((Creature*)owner)->AI())
         ((Creature*)owner)->AI()->JustSummoned((Creature*)this);
+    sEluna->OnSummoned(this, owner);
 
     // there are some totems, which exist just for their visual appeareance
     if (!GetSpell())
@@ -106,7 +115,8 @@ void Totem::Summon(Unit* owner)
         case TOTEM_STATUE:
             CastSpell(GetOwner(), GetSpell(), true);
             break;
-        default: break;
+        default:
+            break;
     }
 }
 
@@ -195,7 +205,7 @@ bool Totem::IsImmuneToSpellEffect(SpellEntry const* spellInfo, SpellEffectIndex 
     switch (spellInfo->Effect[index])
     {
         case SPELL_EFFECT_ATTACK_ME:
-        // immune to any type of regeneration effects hp/mana etc.
+            // immune to any type of regeneration effects hp/mana etc.
         case SPELL_EFFECT_HEAL:
         case SPELL_EFFECT_HEAL_MAX_HEALTH:
         case SPELL_EFFECT_HEAL_MECHANICAL:

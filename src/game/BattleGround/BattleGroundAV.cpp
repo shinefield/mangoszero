@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Player.h"
@@ -23,7 +30,7 @@
 #include "Creature.h"
 #include "GameObject.h"
 #include "Language.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "DBCStores.h"                                   // TODO REMOVE this when graveyard handling for pvp is updated
 
 BattleGroundAV::BattleGroundAV()
@@ -692,22 +699,39 @@ uint32 BattleGroundAV::GetNodeName(BG_AV_Nodes node) const
 {
     switch (node)
     {
-        case BG_AV_NODES_FIRSTAID_STATION:  return LANG_BG_AV_NODE_GRAVE_STORM_AID;
-        case BG_AV_NODES_DUNBALDAR_SOUTH:   return LANG_BG_AV_NODE_TOWER_DUN_S;
-        case BG_AV_NODES_DUNBALDAR_NORTH:   return LANG_BG_AV_NODE_TOWER_DUN_N;
-        case BG_AV_NODES_STORMPIKE_GRAVE:   return LANG_BG_AV_NODE_GRAVE_STORMPIKE;
-        case BG_AV_NODES_ICEWING_BUNKER:    return LANG_BG_AV_NODE_TOWER_ICEWING;
-        case BG_AV_NODES_STONEHEART_GRAVE:  return LANG_BG_AV_NODE_GRAVE_STONE;
-        case BG_AV_NODES_STONEHEART_BUNKER: return LANG_BG_AV_NODE_TOWER_STONE;
-        case BG_AV_NODES_SNOWFALL_GRAVE:    return LANG_BG_AV_NODE_GRAVE_SNOW;
-        case BG_AV_NODES_ICEBLOOD_TOWER:    return LANG_BG_AV_NODE_TOWER_ICE;
-        case BG_AV_NODES_ICEBLOOD_GRAVE:    return LANG_BG_AV_NODE_GRAVE_ICE;
-        case BG_AV_NODES_TOWER_POINT:       return LANG_BG_AV_NODE_TOWER_POINT;
-        case BG_AV_NODES_FROSTWOLF_GRAVE:   return LANG_BG_AV_NODE_GRAVE_FROST;
-        case BG_AV_NODES_FROSTWOLF_ETOWER:  return LANG_BG_AV_NODE_TOWER_FROST_E;
-        case BG_AV_NODES_FROSTWOLF_WTOWER:  return LANG_BG_AV_NODE_TOWER_FROST_W;
-        case BG_AV_NODES_FROSTWOLF_HUT:     return LANG_BG_AV_NODE_GRAVE_FROST_HUT;
-        default: return 0; break;
+        case BG_AV_NODES_FIRSTAID_STATION:
+            return LANG_BG_AV_NODE_GRAVE_STORM_AID;
+        case BG_AV_NODES_DUNBALDAR_SOUTH:
+            return LANG_BG_AV_NODE_TOWER_DUN_S;
+        case BG_AV_NODES_DUNBALDAR_NORTH:
+            return LANG_BG_AV_NODE_TOWER_DUN_N;
+        case BG_AV_NODES_STORMPIKE_GRAVE:
+            return LANG_BG_AV_NODE_GRAVE_STORMPIKE;
+        case BG_AV_NODES_ICEWING_BUNKER:
+            return LANG_BG_AV_NODE_TOWER_ICEWING;
+        case BG_AV_NODES_STONEHEART_GRAVE:
+            return LANG_BG_AV_NODE_GRAVE_STONE;
+        case BG_AV_NODES_STONEHEART_BUNKER:
+            return LANG_BG_AV_NODE_TOWER_STONE;
+        case BG_AV_NODES_SNOWFALL_GRAVE:
+            return LANG_BG_AV_NODE_GRAVE_SNOW;
+        case BG_AV_NODES_ICEBLOOD_TOWER:
+            return LANG_BG_AV_NODE_TOWER_ICE;
+        case BG_AV_NODES_ICEBLOOD_GRAVE:
+            return LANG_BG_AV_NODE_GRAVE_ICE;
+        case BG_AV_NODES_TOWER_POINT:
+            return LANG_BG_AV_NODE_TOWER_POINT;
+        case BG_AV_NODES_FROSTWOLF_GRAVE:
+            return LANG_BG_AV_NODE_GRAVE_FROST;
+        case BG_AV_NODES_FROSTWOLF_ETOWER:
+            return LANG_BG_AV_NODE_TOWER_FROST_E;
+        case BG_AV_NODES_FROSTWOLF_WTOWER:
+            return LANG_BG_AV_NODE_TOWER_FROST_W;
+        case BG_AV_NODES_FROSTWOLF_HUT:
+            return LANG_BG_AV_NODE_GRAVE_FROST_HUT;
+        default:
+            return 0;
+            break;
     }
 }
 

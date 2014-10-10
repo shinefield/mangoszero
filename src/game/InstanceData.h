@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_INSTANCE_DATA_H
-#define MANGOS_INSTANCE_DATA_H
+#ifndef MANGOS_H_INSTANCE_DATA
+#define MANGOS_H_INSTANCE_DATA
 
 #include "Common.h"
 #include "ObjectGuid.h"
@@ -59,7 +66,10 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void Load(const char* /*data*/) {}
 
         // When save is needed, this function generates the data
-        virtual const char* Save() const { return ""; }
+        virtual const char* Save() const
+        {
+            return "";
+        }
 
         void SaveToDB() const;
 
@@ -67,7 +77,10 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void Update(uint32 /*diff*/) {}
 
         // This is to prevent players from entering during boss encounters.
-        virtual bool IsEncounterInProgress() const { return false; };
+        virtual bool IsEncounterInProgress() const
+        {
+            return false;
+        };
 
         // Called when a player successfully enters the instance (after really added to map)
         virtual void OnPlayerEnter(Player*) {}
@@ -78,7 +91,7 @@ class MANGOS_DLL_SPEC InstanceData
         // Called when a player leaves the instance (before really removed from map (or possibly world))
         virtual void OnPlayerLeave(Player*) {}
 
-        // Called when a gameobject is created
+        // Called when a game object is created
         virtual void OnObjectCreate(GameObject*) {}
 
         // called on creature creation
@@ -94,19 +107,30 @@ class MANGOS_DLL_SPEC InstanceData
         virtual void OnCreatureDeath(Creature* /*creature*/) {}
 
         // All-purpose data storage 64 bit
-        virtual uint64 GetData64(uint32 /*Data*/) const { return 0; }
+        virtual uint64 GetData64(uint32 /*Data*/) const
+        {
+            return 0;
+        }
         virtual void SetData64(uint32 /*Data*/, uint64 /*Value*/) { }
 
         // Guid data storage (wrapper for set/get from uint64 storage
-        ObjectGuid GetGuid(uint32 dataIdx) const { return ObjectGuid(GetData64(dataIdx)); }
-        void SetGuid(uint32 dataIdx, ObjectGuid value) { SetData64(dataIdx, value.GetRawValue()); }
+        ObjectGuid GetGuid(uint32 dataIdx) const
+        {
+            return ObjectGuid(GetData64(dataIdx));
+        }
+        void SetGuid(uint32 dataIdx, ObjectGuid value)
+        {
+            SetData64(dataIdx, value.GetRawValue());
+        }
 
         // All-purpose data storage 32 bit
-        virtual uint32 GetData(uint32 /*Type*/) const { return 0; }
+        virtual uint32 GetData(uint32 /*Type*/) const
+        {
+            return 0;
+        }
         virtual void SetData(uint32 /*Type*/, uint32 /*Data*/) {}
 
         // Condition criteria additional requirements check
-        // This is used for such things are heroic loot
         // See ObjectMgr.h enum ConditionSource for possible values of conditionSourceType
         virtual bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const;
 };

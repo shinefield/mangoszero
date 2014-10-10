@@ -21,11 +21,11 @@
 
 struct FileList
 {
-	static const int MAX_FILES = 256;
-	
+	static const int MAX_FILES = 1000;
+
 	FileList();
 	~FileList();
-	
+
 	char* files[MAX_FILES];
 	int size;
 };

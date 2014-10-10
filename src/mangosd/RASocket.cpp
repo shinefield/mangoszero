@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup mangosd
-*/
-
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "RASocket.h"
 #include "World.h"
-#include "Config/Config.h"
-#include "Util.h"
 #include "AccountMgr.h"
 #include "Language.h"
 #include "ObjectMgr.h"
@@ -40,7 +43,7 @@ RASocket::RASocket()
       outputBufferLen(0),
       stage(NONE)
 {
-    ///- Get the config parameters
+    ///- Get the configuration parameters
     bSecure = sConfig.GetBoolDefault("RA.Secure", true);
     bStricted = sConfig.GetBoolDefault("RA.Stricted", false);
     iMinLevel = AccountTypes(sConfig.GetIntDefault("RA.MinLevel", SEC_ADMINISTRATOR));
@@ -180,7 +183,7 @@ int RASocket::handle_input(ACE_HANDLE)
         inputBufferLen = 0;
         switch (stage)
         {
-                /// <ul> <li> If the input is '<username>'
+            /// If the input is '<username>'
             case NONE:
             {
                 std::string szLogin = inputBuffer;
@@ -204,7 +207,7 @@ int RASocket::handle_input(ACE_HANDLE)
 
                 accAccessLevel = sAccountMgr.GetSecurity(accId);
 
-                ///- if gmlevel is too low, deny access
+                ///- if access level is too low, deny access
                 if (accAccessLevel < iMinLevel)
                 {
                     sendf("-Not enough privileges.\r\n");
@@ -219,7 +222,7 @@ int RASocket::handle_input(ACE_HANDLE)
                     break;
                 }
 
-                ///- allow by remotely connected admin use console level commands dependent from config setting
+                ///- allow by remotely connected admin use console level commands dependent from configuration setting
                 if (accAccessLevel >= SEC_ADMINISTRATOR && !bStricted)
                     accAccessLevel = SEC_CONSOLE;
 
@@ -227,10 +230,10 @@ int RASocket::handle_input(ACE_HANDLE)
                 sendf(sObjectMgr.GetMangosStringForDBCLocale(LANG_RA_PASS));
                 break;
             }
-            ///<li> If the input is '<password>' (and the user already gave his username)
+            /// If the input is '<password>' (and the user already gave his username)
             case LG:
             {
-                // login+pass ok
+                // login + password okay
                 std::string pw = inputBuffer;
 
                 if (sAccountMgr.CheckPassword(accId, pw))
@@ -256,7 +259,7 @@ int RASocket::handle_input(ACE_HANDLE)
                 }
                 break;
             }
-            ///<li> If user is logged, parse and execute the command
+            /// If user is logged, parse and execute the command
             case OK:
                 if (strlen(inputBuffer))
                 {
@@ -273,10 +276,11 @@ int RASocket::handle_input(ACE_HANDLE)
                 else
                     sendf("mangos>");
                 break;
-                ///</ul>
+                ///
         };
     }
-    // no enter yet? wait for next input...
+
+    // wait for next input...
     return 0;
 }
 

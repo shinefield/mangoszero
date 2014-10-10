@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_CHAT_H
-#define MANGOSSERVER_CHAT_H
+#ifndef MANGOS_H_CHAT
+#define MANGOS_H_CHAT
 
 #include "Common.h"
 #include "SharedDefines.h"
@@ -76,7 +83,12 @@ class MANGOS_DLL_SPEC ChatHandler
         explicit ChatHandler(Player* player);
         ~ChatHandler();
 
-        static char* LineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
+        static char* LineFromMessage(char*& pos)
+        {
+            char* start = strtok(pos, "\n");
+            pos = NULL;
+            return start;
+        }
 
         // function with different implementation for chat/console
         virtual const char* GetMangosString(int32 entry) const;
@@ -92,14 +104,17 @@ class MANGOS_DLL_SPEC ChatHandler
         ChatCommand const* FindCommand(char const* text);
 
         bool isValidChatMessage(const char* msg);
-        bool HasSentErrorMessage() { return sentErrorMessage;}
+        bool HasSentErrorMessage()
+        {
+            return sentErrorMessage;
+        }
 
         /**
         * \brief Prepare SMSG_GM_MESSAGECHAT/SMSG_MESSAGECHAT
         *
         * Method:    BuildChatPacket build message chat packet generic way
         * FullName:  ChatHandler::BuildChatPacket
-        * Access:    public static 
+        * Access:    public static
         * Returns:   void
         *
         * \param WorldPacket& data             : Provided packet will be filled with requested info
@@ -109,7 +124,7 @@ class MANGOS_DLL_SPEC ChatHandler
         * \param Language language             : Language from Language enum in SharedDefines.h
         * \param ObjectGuid const& senderGuid  : May be null in some case but often required for ignore list
         * \param char const* senderName        : Required for type *MONSTER* or *BATTLENET, but also if GM is true
-        * \param ObjectGuid const& targetGuid  : Often null, but needed for type *MONSTER* or *BATTLENET or *BATTLEGROUND* or *ACHIEVEMENT
+        * \param ObjectGuid const& targetGuid  : Often null, but needed for type *MONSTER* or *BATTLENET or *BATTLEGROUND*
         * \param char const* targetName        : Often null, but needed for type *MONSTER* or *BATTLENET or *BATTLEGROUND*
         * \param char const* channelName       : Required only for CHAT_MSG_CHANNEL
         **/
@@ -140,7 +155,7 @@ class MANGOS_DLL_SPEC ChatHandler
         bool SetDataForCommandInTable(ChatCommand* table, const char* text, uint32 security, std::string const& help);
         void ExecuteCommand(const char* text);
         void LogCommand(char const* fullcmd);
-        
+
         bool ShowHelpForCommand(ChatCommand* table, const char* cmd);
         bool ShowHelpForSubCommands(ChatCommand* table, char const* cmd);
         ChatCommandSearchResult FindCommand(ChatCommand* table, char const*& text, ChatCommand*& command, ChatCommand** parentCommand = NULL, std::string* cmdNamePtr = NULL, bool allAvailable = false, bool exactlyName = false);
@@ -460,7 +475,6 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleReloadSpellThreatsCommand(char* args);
         bool HandleReloadSpellPetAurasCommand(char* args);
 
-        bool HandleResetAchievementsCommand(char* args);
         bool HandleResetAllCommand(char* args);
         bool HandleResetHonorCommand(char* args);
         bool HandleResetLevelCommand(char* args);
@@ -517,8 +531,8 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleDismountCommand(char* args);
         bool HandleSaveCommand(char* args);
 
-        bool HandleNamegoCommand(char* args);
-        bool HandleGonameCommand(char* args);
+        bool HandleSummonCommand(char* args);
+        bool HandleAppearCommand(char* args);
         bool HandleGroupgoCommand(char* args);
         bool HandleRecallCommand(char* args);
         bool HandleAnnounceCommand(char* args);
@@ -593,7 +607,10 @@ class MANGOS_DLL_SPEC ChatHandler
         bool  ExtractInt32(char** args, int32& val);
         bool  ExtractOptInt32(char** args, int32& val, int32 defVal);
         bool  ExtractUInt32Base(char** args, uint32& val, uint32 base);
-        bool  ExtractUInt32(char** args, uint32& val) { return ExtractUInt32Base(args, val, 10); }
+        bool  ExtractUInt32(char** args, uint32& val)
+        {
+            return ExtractUInt32Base(args, val, 10);
+        }
         bool  ExtractOptUInt32(char** args, uint32& val, uint32 defVal);
         bool  ExtractFloat(char** args, float& val);
         bool  ExtractOptFloat(char** args, float& val, float defVal);
@@ -622,7 +639,10 @@ class MANGOS_DLL_SPEC ChatHandler
         bool ExtractPlayerTarget(char** args, Player** player, ObjectGuid* player_guid = NULL, std::string* player_name = NULL);
         // select by arg (name/link) or in-game selection online/offline player
 
-        std::string playerLink(std::string const& name) const { return m_session ? "|cffffffff|Hplayer:" + name + "|h[" + name + "]|h|r" : name; }
+        std::string playerLink(std::string const& name) const
+        {
+            return m_session ? "|cffffffff|Hplayer:" + name + "|h[" + name + "]|h|r" : name;
+        }
         std::string GetNameLink(Player* chr) const;
 
         GameObject* GetGameObjectWithGuid(uint32 lowguid, uint32 entry);
@@ -677,7 +697,10 @@ class MANGOS_DLL_SPEC ChatHandler
         void HandleCharacterDeletedListHelper(DeletedInfoList const& foundList);
         void HandleCharacterDeletedRestoreHelper(DeletedInfo const& delInfo);
 
-        void SetSentErrorMessage(bool val) { sentErrorMessage = val;};
+        void SetSentErrorMessage(bool val)
+        {
+            sentErrorMessage = val;
+        };
     private:
         WorldSession* m_session;                            // != NULL for chat command call and NULL for CLI command
 

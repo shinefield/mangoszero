@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CREATUREAI_H
-#define MANGOS_CREATUREAI_H
+#ifndef MANGOS_H_CREATUREAI
+#define MANGOS_H_CREATUREAI
 
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "dynamic/ObjectRegistry.h"
+#include "dynamic/FactoryHolder.h"
 #include "Common.h"
-#include "Platform/Define.h"
-#include "Policies/Singleton.h"
-#include "Dynamic/ObjectRegistry.h"
-#include "Dynamic/FactoryHolder.h"
 #include "ObjectGuid.h"
 
 class WorldObject;
@@ -282,11 +289,17 @@ class MANGOS_DLL_SPEC CreatureAI
          * Note: This check is by default only the state-depending (visibility, range), NOT LineOfSight
          * @param pWho Unit* who is checked if it is visisble for the creature
          */
-        virtual bool IsVisible(Unit* /*pWho*/) const { return false; }
+        virtual bool IsVisible(Unit* /*pWho*/) const
+        {
+            return false;
+        }
 
         // Called when victim entered water and creature can not enter water
         // TODO: rather unused
-        virtual bool canReachByRangeAttack(Unit*) { return false; }
+        virtual bool canReachByRangeAttack(Unit*)
+        {
+            return false;
+        }
 
         ///== Helper functions =============================
 
@@ -307,7 +320,10 @@ class MANGOS_DLL_SPEC CreatureAI
 
         /// Set combat movement (on/off), also sets UNIT_STAT_NO_COMBAT_MOVEMENT
         void SetCombatMovement(bool enable, bool stopOrStartMovement = false);
-        bool IsCombatMovement() const { return m_isCombatMovement; }
+        bool IsCombatMovement() const
+        {
+            return m_isCombatMovement;
+        }
 
         ///== Event Handling ===============================
 
@@ -363,7 +379,10 @@ struct CreatureAIFactory : public SelectableAI
 
     CreatureAI* Create(void*) const override;
 
-    int Permit(const Creature* c) const { return REAL_AI::Permissible(c); }
+    int Permit(const Creature* c) const
+    {
+        return REAL_AI::Permissible(c);
+    }
 };
 
 enum Permitions

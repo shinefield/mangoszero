@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "log/Log.h"
 #include "Map.h"
 #include "MapManager.h"
 #include "Player.h"
 #include "GridNotifiers.h"
-#include "Log.h"
 #include "GridStates.h"
 #include "CellImpl.h"
 #include "InstanceData.h"
@@ -37,9 +44,13 @@
 #include "MoveMap.h"
 #include "BattleGround/BattleGroundMgr.h"
 #include "Chat.h"
+#include "LuaEngine.h"
 
 Map::~Map()
 {
+    sEluna->OnDestroy(this);
+    Eluna::RemoveRef(this);
+
     UnloadAll(true);
 
     if (!m_scriptSchedule.empty())
@@ -97,6 +108,8 @@ Map::Map(uint32 id, time_t expiry, uint32 InstanceId)
 
     m_persistentState = sMapPersistentStateMgr.AddPersistentState(i_mapEntry, GetInstanceId(), 0, IsDungeon());
     m_persistentState->SetUsedByMapState(this);
+
+    sEluna->OnCreate(this);
 }
 
 void Map::InitVisibilityDistance()
@@ -298,6 +311,9 @@ bool Map::Add(Player* player)
     NGridType* grid = getNGrid(cell.GridX(), cell.GridY());
     player->GetViewPoint().Event_AddedToWorld(&(*grid)(cell.CellX(), cell.CellY()));
     UpdateObjectVisibility(player, cell, p);
+
+    sEluna->OnMapChanged(player);
+    sEluna->OnPlayerEnter(this, player);
 
     if (i_data)
         i_data->OnPlayerEnter(player);
@@ -561,12 +577,16 @@ void Map::Update(const uint32& t_diff)
     if (!m_scriptSchedule.empty())
         ScriptsProcess();
 
+    sEluna->OnUpdate(this, t_diff);
+
     if (i_data)
         i_data->Update(t_diff);
 }
 
 void Map::Remove(Player* player, bool remove)
 {
+    sEluna->OnPlayerLeave(this, player);
+
     if (i_data)
         i_data->OnPlayerLeave(player);
 
@@ -958,6 +978,11 @@ inline void Map::setNGrid(NGridType* grid, uint32 x, uint32 y)
 void Map::AddObjectToRemoveList(WorldObject* obj)
 {
     MANGOS_ASSERT(obj->GetMapId() == GetId() && obj->GetInstanceId() == GetInstanceId());
+
+    if (Creature* creature = obj->ToCreature())
+        sEluna->OnRemove(creature);
+    else if (GameObject* gameobject = obj->ToGameObject())
+        sEluna->OnRemove(gameobject);
 
     obj->CleanupsBeforeDelete();                            // remove or simplify at least cross referenced links
 
@@ -1722,9 +1747,12 @@ Creature* Map::GetAnyTypeCreature(ObjectGuid guid)
 {
     switch (guid.GetHigh())
     {
-        case HIGHGUID_UNIT:         return GetCreature(guid);
-        case HIGHGUID_PET:          return GetPet(guid);
-        default:                    break;
+        case HIGHGUID_UNIT:
+            return GetCreature(guid);
+        case HIGHGUID_PET:
+            return GetPet(guid);
+        default:
+            break;
     }
 
     return NULL;
@@ -1773,11 +1801,16 @@ WorldObject* Map::GetWorldObject(ObjectGuid guid)
 {
     switch (guid.GetHigh())
     {
-        case HIGHGUID_PLAYER:       return GetPlayer(guid);
-        case HIGHGUID_GAMEOBJECT:   return GetGameObject(guid);
-        case HIGHGUID_UNIT:         return GetCreature(guid);
-        case HIGHGUID_PET:          return GetPet(guid);
-        case HIGHGUID_DYNAMICOBJECT: return GetDynamicObject(guid);
+        case HIGHGUID_PLAYER:
+            return GetPlayer(guid);
+        case HIGHGUID_GAMEOBJECT:
+            return GetGameObject(guid);
+        case HIGHGUID_UNIT:
+            return GetCreature(guid);
+        case HIGHGUID_PET:
+            return GetPet(guid);
+        case HIGHGUID_DYNAMICOBJECT:
+            return GetDynamicObject(guid);
         case HIGHGUID_CORPSE:
         {
             // corpse special case, it can be not in world
@@ -1786,7 +1819,8 @@ WorldObject* Map::GetWorldObject(ObjectGuid guid)
         }
         case HIGHGUID_MO_TRANSPORT:
         case HIGHGUID_TRANSPORT:
-        default:                    break;
+        default:
+            break;
     }
 
     return NULL;
@@ -1838,30 +1872,30 @@ uint32 Map::GenerateLocalLowGuid(HighGuid guidhigh)
 class StaticMonsterChatBuilder
 {
     public:
-        StaticMonsterChatBuilder(CreatureInfo const* cInfo, ChatMsg msgtype, int32 textId, Language language, Unit const* target, uint32 senderLowGuid = 0)
-            : i_cInfo(cInfo), i_msgtype(msgtype), i_textId(textId), i_language(language), i_target(target)
-        {
-            // 0 lowguid not used in core, but accepted fine in this case by client
-            i_senderGuid = i_cInfo->GetObjectGuid(senderLowGuid);
-        }
-        void operator()(WorldPacket& data, int32 loc_idx)
-        {
-            char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
+    StaticMonsterChatBuilder(CreatureInfo const* cInfo, ChatMsg msgtype, int32 textId, Language language, Unit const* target, uint32 senderLowGuid = 0)
+        : i_cInfo(cInfo), i_msgtype(msgtype), i_textId(textId), i_language(language), i_target(target)
+{
+    // 0 lowguid not used in core, but accepted fine in this case by client
+    i_senderGuid = i_cInfo->GetObjectGuid(senderLowGuid);
+}
+void operator()(WorldPacket& data, int32 loc_idx)
+{
+    char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
 
-            char const* nameForLocale = i_cInfo->Name;
-            sObjectMgr.GetCreatureLocaleStrings(i_cInfo->Entry, loc_idx, &nameForLocale);
+    char const* nameForLocale = i_cInfo->Name;
+    sObjectMgr.GetCreatureLocaleStrings(i_cInfo->Entry, loc_idx, &nameForLocale);
 
-            ChatHandler::BuildChatPacket(data, i_msgtype, text, i_language, CHAT_TAG_NONE, i_senderGuid, nameForLocale, i_target ? i_target->GetObjectGuid() : ObjectGuid(),
-                i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
-        }
+    ChatHandler::BuildChatPacket(data, i_msgtype, text, i_language, CHAT_TAG_NONE, i_senderGuid, nameForLocale, i_target ? i_target->GetObjectGuid() : ObjectGuid(),
+                                 i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
+}
 
-    private:
-        ObjectGuid i_senderGuid;
-        CreatureInfo const* i_cInfo;
-        ChatMsg i_msgtype;
-        int32 i_textId;
-        Language i_language;
-        Unit const* i_target;
+private:
+ObjectGuid i_senderGuid;
+CreatureInfo const* i_cInfo;
+ChatMsg i_msgtype;
+int32 i_textId;
+Language i_language;
+Unit const* i_target;
 };
 
 
@@ -1880,7 +1914,7 @@ void Map::MonsterYellToMap(ObjectGuid guid, int32 textId, Language language, Uni
         CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(guid.GetEntry());
         if (!cInfo)
         {
-            sLog.outError("Map::MonsterYellToMap: Called for nonexistent creature entry in guid: %s", guid.GetString().c_str());
+            sLog.outError("Map::MonsterYellToMap: Called for non-existent creature entry in guid: %s", guid.GetString().c_str());
             return;
         }
 
@@ -1937,7 +1971,7 @@ void Map::PlayDirectSoundToMap(uint32 soundId, uint32 zoneId /*=0*/) const
 bool Map::IsInLineOfSight(float srcX, float srcY, float srcZ, float destX, float destY, float destZ) const
 {
     return VMAP::VMapFactory::createOrGetVMapManager()->isInLineOfSight(GetId(), srcX, srcY, srcZ, destX, destY, destZ)
-           && m_dyn_tree.isInLineOfSight(srcX, srcY, srcZ, destX, destY, destZ);
+    && m_dyn_tree.isInLineOfSight(srcX, srcY, srcZ, destX, destY, destZ);
 }
 
 /**

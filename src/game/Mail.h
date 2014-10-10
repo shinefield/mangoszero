@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/**
- * @addtogroup mailing The mail system
- * The mailing system in MaNGOS consists of mostly 4 files:
- * - Mail.h
- * - Mail.cpp
- * - MassMailMgr.h
- * - MassMailMgr.cpp
- *
- * @{
- *
- * @file Mail.h
- * This file contains the the headers needed for MaNGOS to handle mails.
- *
- */
+#ifndef MANGOS_H_MAIL
+#define MANGOS_H_MAIL
 
-#ifndef MANGOS_MAIL_H
-#define MANGOS_MAIL_H
+#include <map>
 
 #include "Common.h"
 #include "ObjectGuid.h"
-#include <map>
 
 struct AuctionEntry;
 class Item;
@@ -131,11 +124,20 @@ class MailSender
         MailSender(AuctionEntry* sender);
     public:                                                 // Accessors
         /// The Messagetype of this MailSender.
-        MailMessageType GetMailMessageType() const { return m_messageType; }
+        MailMessageType GetMailMessageType() const
+        {
+            return m_messageType;
+        }
         /// The GUID of the player represented by this MailSender, or the Entry of the non-player object.
-        uint32 GetSenderId() const { return m_senderId; }
+        uint32 GetSenderId() const
+        {
+            return m_senderId;
+        }
         /// The stationary associated with this MailSender
-        MailStationery GetStationery() const { return m_stationery; }
+        MailStationery GetStationery() const
+        {
+            return m_stationery;
+        }
     private:
         // Trap for wrong used guid as low guid, no body
         MailSender(MailMessageType messageType, uint64 wrong_guid, MailStationery stationery = MAIL_STATIONERY_DEFAULT);
@@ -162,13 +164,19 @@ class MailReceiver
          * @returns a pointer to the Player this mail is for.
          *
          */
-        Player* GetPlayer() const { return m_receiver; }
+        Player* GetPlayer() const
+        {
+            return m_receiver;
+        }
         /**
          * Gets the low part of the recievers GUID.
          *
          * @returns the low part of the GUID of the player associated with this MailReciever
          */
-        ObjectGuid const& GetPlayerGuid() const { return m_receiver_guid; }
+        ObjectGuid const& GetPlayerGuid() const
+        {
+            return m_receiver_guid;
+        }
     private:
         Player* m_receiver;
         ObjectGuid m_receiver_guid;
@@ -217,21 +225,46 @@ class MailDraft
         MailDraft(std::string subject, std::string text);
     public:                                                 // Accessors
         /// Returns the template ID used for this MailDraft.
-        uint16 GetMailTemplateId() const { return m_mailTemplateId; }
+        uint16 GetMailTemplateId() const
+        {
+            return m_mailTemplateId;
+        }
         /// Returns the subject of this MailDraft.
-        std::string const& GetSubject() const { return m_subject; }
+        std::string const& GetSubject() const
+        {
+            return m_subject;
+        }
         /// Returns the ID of the text of this MailDraft.
-        uint32 GetBodyId() const { return m_bodyId; }
+        uint32 GetBodyId() const
+        {
+            return m_bodyId;
+        }
         /// Returns the amount of money in this MailDraft.
-        uint32 GetMoney() const { return m_money; }
+        uint32 GetMoney() const
+        {
+            return m_money;
+        }
         /// Returns the Cost of delivery of this MailDraft.
-        uint32 GetCOD() const { return m_COD; }
+        uint32 GetCOD() const
+        {
+            return m_COD;
+        }
     public:                                                 // modifiers
 
         // this two modifiers expected to be applied in normal case to blank draft and exclusively, It DON'T must overwrite already set itemTextId, in other cases it will work and with mixed cases but this will be not normal way use.
-        MailDraft& SetSubjectAndBodyId(std::string subject, uint32 itemTextId) { m_subject = subject; MANGOS_ASSERT(!m_bodyId); m_bodyId = itemTextId; return *this; }
+        MailDraft& SetSubjectAndBodyId(std::string subject, uint32 itemTextId)
+        {
+            m_subject = subject;
+            MANGOS_ASSERT(!m_bodyId);
+            m_bodyId = itemTextId;
+            return *this;
+        }
         MailDraft& SetSubjectAndBody(std::string subject, std::string text);
-        MailDraft& SetMailTemplate(uint16 mailTemplateId, bool need_items = true) { m_mailTemplateId = mailTemplateId, m_mailTemplateItemsNeed = need_items; return *this; }
+        MailDraft& SetMailTemplate(uint16 mailTemplateId, bool need_items = true)
+        {
+            m_mailTemplateId = mailTemplateId, m_mailTemplateItemsNeed = need_items;
+            return *this;
+        }
 
         MailDraft& AddItem(Item* item);
         /**
@@ -239,13 +272,21 @@ class MailDraft
          *
          * @param money The amount of money included in this MailDraft.
          */
-        MailDraft& SetMoney(uint32 money) { m_money = money; return *this; }
+        MailDraft& SetMoney(uint32 money)
+        {
+            m_money = money;
+            return *this;
+        }
         /**
          * Modifies the cost of delivery of the MailDraft.
          *
          * @param COD the amount to which the cod should be set.
          */
-        MailDraft& SetCOD(uint32 COD) { m_COD = COD; return *this; }
+        MailDraft& SetCOD(uint32 COD)
+        {
+            m_COD = COD;
+            return *this;
+        }
 
         void CloneFrom(MailDraft const& draft);
     public:                                                 // finishers
@@ -373,7 +414,10 @@ struct Mail
      * @returns true if the mail contains items or template items already generated possible none, false otherwise.
      *
      */
-    bool HasItems() const { return has_items; }
+    bool HasItems() const
+    {
+        return has_items;
+    }
 
     /*
      * Generate items for template if items not genereated before (receiver has been offline, has_items == false)
@@ -383,4 +427,3 @@ struct Mail
 };
 
 #endif
-/*! @} */

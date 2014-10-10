@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_LOOTMGR_H
-#define MANGOS_LOOTMGR_H
-
-#include "ItemEnchantmentMgr.h"
-#include "ByteBuffer.h"
-#include "ObjectGuid.h"
-#include "Utilities/LinkedReference/RefManager.h"
+#ifndef MANGOS_H_LOOTMGR
+#define MANGOS_H_LOOTMGR
 
 #include <map>
 #include <vector>
+
+#include "utilities/LinkedReference/RefManager.h"
+#include "network/ByteBuffer.h"
+#include "ItemEnchantmentMgr.h"
+#include "ObjectGuid.h"
 
 class Player;
 class LootStore;
@@ -143,7 +150,10 @@ class LootStore
     public:
         explicit LootStore(char const* name, char const* entryName, bool ratesAllowed)
             : m_name(name), m_entryName(entryName), m_ratesAllowed(ratesAllowed) {}
-        virtual ~LootStore() { Clear(); }
+        virtual ~LootStore()
+        {
+            Clear();
+        }
 
         void Verify() const;
 
@@ -152,15 +162,27 @@ class LootStore
         void ReportUnusedIds(LootIdSet const& ids_set) const;
         void ReportNotExistedId(uint32 id) const;
 
-        bool HaveLootFor(uint32 loot_id) const { return m_LootTemplates.find(loot_id) != m_LootTemplates.end(); }
+        bool HaveLootFor(uint32 loot_id) const
+        {
+            return m_LootTemplates.find(loot_id) != m_LootTemplates.end();
+        }
         bool HaveQuestLootFor(uint32 loot_id) const;
         bool HaveQuestLootForPlayer(uint32 loot_id, Player* player) const;
 
         LootTemplate const* GetLootFor(uint32 loot_id) const;
 
-        char const* GetName() const { return m_name; }
-        char const* GetEntryName() const { return m_entryName; }
-        bool IsRatesAllowed() const { return m_ratesAllowed; }
+        char const* GetName() const
+        {
+            return m_name;
+        }
+        char const* GetEntryName() const
+        {
+            return m_entryName;
+        }
+        bool IsRatesAllowed() const
+        {
+            return m_ratesAllowed;
+        }
     protected:
         void LoadLootTable();
         void Clear();
@@ -212,13 +234,31 @@ class LootValidatorRefManager : public RefManager<Loot, LootValidatorRef>
     public:
         typedef LinkedListHead::Iterator< LootValidatorRef > iterator;
 
-        LootValidatorRef* getFirst() { return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getFirst(); }
-        LootValidatorRef* getLast() { return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getLast(); }
+        LootValidatorRef* getFirst()
+        {
+            return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getFirst();
+        }
+        LootValidatorRef* getLast()
+        {
+            return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getLast();
+        }
 
-        iterator begin() { return iterator(getFirst()); }
-        iterator end() { return iterator(NULL); }
-        iterator rbegin() { return iterator(getLast()); }
-        iterator rend() { return iterator(NULL); }
+        iterator begin()
+        {
+            return iterator(getFirst());
+        }
+        iterator end()
+        {
+            return iterator(NULL);
+        }
+        iterator rbegin()
+        {
+            return iterator(getLast());
+        }
+        iterator rend()
+        {
+            return iterator(NULL);
+        }
 };
 
 //=====================================================
@@ -231,9 +271,18 @@ struct Loot
 {
         friend ByteBuffer& operator<<(ByteBuffer& b, LootView const& lv);
 
-        QuestItemMap const& GetPlayerQuestItems() const { return m_playerQuestItems; }
-        QuestItemMap const& GetPlayerFFAItems() const { return m_playerFFAItems; }
-        QuestItemMap const& GetPlayerNonQuestNonFFAConditionalItems() const { return m_playerNonQuestNonFFAConditionalItems; }
+        QuestItemMap const& GetPlayerQuestItems() const
+        {
+            return m_playerQuestItems;
+        }
+        QuestItemMap const& GetPlayerFFAItems() const
+        {
+            return m_playerFFAItems;
+        }
+        QuestItemMap const& GetPlayerNonQuestNonFFAConditionalItems() const
+        {
+            return m_playerNonQuestNonFFAConditionalItems;
+        }
 
         LootItemList items;
         uint32 gold;
@@ -241,7 +290,10 @@ struct Loot
         LootType loot_type;                                 // required for for proper item loot finish (store internal loot types in different from 3.x version, in fact this meaning that it send same loot types for interesting cases like 3.x version code, skip pre-3.x client loot type limitaitons)
 
         Loot(WorldObject const* lootTarget, uint32 _gold = 0) : gold(_gold), unlootedCount(0), loot_type(LOOT_CORPSE), m_lootTarget(lootTarget) {}
-        ~Loot() { clear(); }
+        ~Loot()
+        {
+            clear();
+        }
 
         // if loot becomes invalid this reference is used to inform the listener
         void addLootValidatorRef(LootValidatorRef* pLootValidatorRef)
@@ -272,14 +324,26 @@ struct Loot
             m_LootValidatorRefManager.clearReferences();
         }
 
-        bool empty() const { return items.empty() && gold == 0; }
-        bool isLooted() const { return gold == 0 && unlootedCount == 0; }
+        bool empty() const
+        {
+            return items.empty() && gold == 0;
+        }
+        bool isLooted() const
+        {
+            return gold == 0 && unlootedCount == 0;
+        }
 
         void NotifyItemRemoved(uint8 lootIndex);
         void NotifyQuestItemRemoved(uint8 questIndex);
         void NotifyMoneyRemoved();
-        void AddLooter(ObjectGuid guid) { m_playersLooting.insert(guid); }
-        void RemoveLooter(ObjectGuid guid) { m_playersLooting.erase(guid); }
+        void AddLooter(ObjectGuid guid)
+        {
+            m_playersLooting.insert(guid);
+        }
+        void RemoveLooter(ObjectGuid guid)
+        {
+            m_playersLooting.erase(guid);
+        }
 
         void generateMoneyLoot(uint32 minAmount, uint32 maxAmount);
         bool FillLoot(uint32 loot_id, LootStore const& store, Player* loot_owner, bool personal, bool noEmptyError = false);
@@ -290,7 +354,10 @@ struct Loot
         LootItem* LootItemInSlot(uint32 lootslot, Player* player, QuestItem** qitem = NULL, QuestItem** ffaitem = NULL, QuestItem** conditem = NULL);
         uint32 GetMaxSlotInLootFor(Player* player) const;
 
-        WorldObject const* GetLootTarget() const { return m_lootTarget; }
+        WorldObject const* GetLootTarget() const
+        {
+            return m_lootTarget;
+        }
 
     private:
         void FillNotNormalLootFor(Player* player);

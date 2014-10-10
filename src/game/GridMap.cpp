@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "MapManager.h"
-#include "Log.h"
 #include "GridStates.h"
 #include "CellImpl.h"
 #include "Map.h"
@@ -27,8 +36,6 @@
 #include "VMapFactory.h"
 #include "MoveMap.h"
 #include "World.h"
-#include "Policies/Singleton.h"
-#include "Util.h"
 
 char const* MAP_MAGIC         = "MAPS";
 char const* MAP_VERSION_MAGIC = "z1.3";
@@ -78,7 +85,14 @@ bool GridMap::loadData(char* filename)
     if (!in)
         return true;
 
-    fread(&header, sizeof(header), 1, in);
+    size_t file_read = fread(&header, sizeof(header), 1, in);
+    if (file_read <= 0)
+    {
+        sLog.outError("Error loading map area data\n");
+        fclose(in);
+        return false;
+    }
+
     if (header.mapMagic     == *((uint32 const*)(MAP_MAGIC)) &&
             header.versionMagic == *((uint32 const*)(MAP_VERSION_MAGIC)))
     {
@@ -110,7 +124,7 @@ bool GridMap::loadData(char* filename)
         return true;
     }
 
-    sLog.outError("Map file '%s' is non-compatible version (outdated?). Please, create new using ad.exe program.", filename);
+    sLog.outError("Map file '%s' was created for non-compatible version. Please re-extract using map-extractor version %s.", filename, MAP_VERSION_MAGIC);
     fclose(in);
     return false;
 }
@@ -137,7 +151,9 @@ bool GridMap::loadAreaData(FILE* in, uint32 offset, uint32 /*size*/)
 {
     GridMapAreaHeader header;
     fseek(in, offset, SEEK_SET);
-    fread(&header, sizeof(header), 1, in);
+    size_t file_read = fread(&header, sizeof(header), 1, in);
+    if (file_read <= 0)
+        return false;
     if (header.fourcc != *((uint32 const*)(MAP_AREA_MAGIC)))
         return false;
 
@@ -155,7 +171,9 @@ bool GridMap::loadHeightData(FILE* in, uint32 offset, uint32 /*size*/)
 {
     GridMapHeightHeader header;
     fseek(in, offset, SEEK_SET);
-    fread(&header, sizeof(header), 1, in);
+    size_t file_read = fread(&header, sizeof(header), 1, in);
+    if (file_read <= 0)
+        return false;
     if (header.fourcc != *((uint32 const*)(MAP_HEIGHT_MAGIC)))
         return false;
 
@@ -199,7 +217,9 @@ bool GridMap::loadGridMapLiquidData(FILE* in, uint32 offset, uint32 /*size*/)
 {
     GridMapLiquidHeader header;
     fseek(in, offset, SEEK_SET);
-    fread(&header, sizeof(header), 1, in);
+    size_t file_read = fread(&header, sizeof(header), 1, in);
+    if (file_read <= 0)
+        return false;
     if (header.fourcc != *((uint32 const*)(MAP_LIQUID_MAGIC)))
         return false;
 
@@ -616,7 +636,14 @@ bool GridMap::ExistMap(uint32 mapid, int gx, int gy)
     }
 
     GridMapFileHeader header;
-    fread(&header, sizeof(header), 1, pf);
+    size_t file_read = fread(&header, sizeof(header), 1, pf);
+    if (file_read <= 0)
+    {
+        sLog.outError("Map file '%s' could not be read.", tmp);
+        delete[] tmp;
+        fclose(pf);                                         // close file before return
+        return false;
+    }
     if (header.mapMagic     != *((uint32 const*)(MAP_MAGIC)) ||
             header.versionMagic != *((uint32 const*)(MAP_VERSION_MAGIC)))
     {

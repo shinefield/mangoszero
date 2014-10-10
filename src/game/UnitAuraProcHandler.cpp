@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "Log.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Player.h"
@@ -29,7 +37,6 @@
 #include "Formulas.h"
 #include "CreatureAI.h"
 #include "ScriptMgr.h"
-#include "Util.h"
 
 pAuraProcHandler AuraProcHandler[TOTAL_AURAS] =
 {
@@ -347,7 +354,7 @@ SpellAuraProcResult Unit::HandleHasteAuraProc(Unit* pVictim, uint32 damage, Aura
 
     if (!triggerEntry)
     {
-        sLog.outError("Unit::HandleHasteAuraProc: Spell %u have nonexistent triggered spell %u", hasteSpell->Id, triggered_spell_id);
+        sLog.outError("Unit::HandleHasteAuraProc: Spell %u have non-existent triggered spell %u", hasteSpell->Id, triggered_spell_id);
         return SPELL_AURA_PROC_FAILED;
     }
 
@@ -479,11 +486,21 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                         case SPELL_SCHOOL_NORMAL:
                         case SPELL_SCHOOL_HOLY:
                             return SPELL_AURA_PROC_FAILED;  // ignored
-                        case SPELL_SCHOOL_FIRE:   triggered_spell_id = 28765; break;
-                        case SPELL_SCHOOL_NATURE: triggered_spell_id = 28768; break;
-                        case SPELL_SCHOOL_FROST:  triggered_spell_id = 28766; break;
-                        case SPELL_SCHOOL_SHADOW: triggered_spell_id = 28769; break;
-                        case SPELL_SCHOOL_ARCANE: triggered_spell_id = 28770; break;
+                        case SPELL_SCHOOL_FIRE:
+                            triggered_spell_id = 28765;
+                            break;
+                        case SPELL_SCHOOL_NATURE:
+                            triggered_spell_id = 28768;
+                            break;
+                        case SPELL_SCHOOL_FROST:
+                            triggered_spell_id = 28766;
+                            break;
+                        case SPELL_SCHOOL_SHADOW:
+                            triggered_spell_id = 28769;
+                            break;
+                        case SPELL_SCHOOL_ARCANE:
+                            triggered_spell_id = 28770;
+                            break;
                         default:
                             return SPELL_AURA_PROC_FAILED;
                     }
@@ -501,12 +518,24 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                     {
                         case SPELL_SCHOOL_NORMAL:
                             return SPELL_AURA_PROC_FAILED;  // ignore
-                        case SPELL_SCHOOL_HOLY:   triggered_spell_id = 27536; break;
-                        case SPELL_SCHOOL_FIRE:   triggered_spell_id = 27533; break;
-                        case SPELL_SCHOOL_NATURE: triggered_spell_id = 27538; break;
-                        case SPELL_SCHOOL_FROST:  triggered_spell_id = 27534; break;
-                        case SPELL_SCHOOL_SHADOW: triggered_spell_id = 27535; break;
-                        case SPELL_SCHOOL_ARCANE: triggered_spell_id = 27540; break;
+                        case SPELL_SCHOOL_HOLY:
+                            triggered_spell_id = 27536;
+                            break;
+                        case SPELL_SCHOOL_FIRE:
+                            triggered_spell_id = 27533;
+                            break;
+                        case SPELL_SCHOOL_NATURE:
+                            triggered_spell_id = 27538;
+                            break;
+                        case SPELL_SCHOOL_FROST:
+                            triggered_spell_id = 27534;
+                            break;
+                        case SPELL_SCHOOL_SHADOW:
+                            triggered_spell_id = 27535;
+                            break;
+                        case SPELL_SCHOOL_ARCANE:
+                            triggered_spell_id = 27540;
+                            break;
                         default:
                             return SPELL_AURA_PROC_FAILED;
                     }
@@ -522,7 +551,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
             // Magic Absorption
             if (dummySpell->SpellIconID == 459)             // only this spell have SpellIconID == 459 and dummy aura
             {
-                if (getPowerType() != POWER_MANA)
+                if (GetPowerType() != POWER_MANA)
                     return SPELL_AURA_PROC_FAILED;
 
                 // mana reward
@@ -559,11 +588,21 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                 {
                     switch (dummySpell->Id)
                     {
-                        case 11119: basepoints[0] = int32(0.04f * damage); break;
-                        case 11120: basepoints[0] = int32(0.08f * damage); break;
-                        case 12846: basepoints[0] = int32(0.12f * damage); break;
-                        case 12847: basepoints[0] = int32(0.16f * damage); break;
-                        case 12848: basepoints[0] = int32(0.20f * damage); break;
+                        case 11119:
+                            basepoints[0] = int32(0.04f * damage);
+                            break;
+                        case 11120:
+                            basepoints[0] = int32(0.08f * damage);
+                            break;
+                        case 12846:
+                            basepoints[0] = int32(0.12f * damage);
+                            break;
+                        case 12847:
+                            basepoints[0] = int32(0.16f * damage);
+                            break;
+                        case 12848:
+                            basepoints[0] = int32(0.20f * damage);
+                            break;
                         default:
                             sLog.outError("Unit::HandleDummyAuraProc: non handled spell id: %u (IG)", dummySpell->Id);
                             return SPELL_AURA_PROC_FAILED;
@@ -621,7 +660,9 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                         return SPELL_AURA_PROC_FAILED;
 
                     // heal amount
-                    basepoints[0] = triggerAmount * damage / 100;                    pVictim->CastCustomSpell(pVictim, 15290, &basepoints[0], NULL, NULL, true, castItem, triggeredByAura);                    return SPELL_AURA_PROC_OK;                                // no hidden cooldown
+                    basepoints[0] = triggerAmount * damage / 100;
+                    pVictim->CastCustomSpell(pVictim, 15290, &basepoints[0], NULL, NULL, true, castItem, triggeredByAura);
+                    return SPELL_AURA_PROC_OK;                                // no hidden cooldown
                 }
                 // Oracle Healing Bonus ("Garments of the Oracle" set)
                 case 26169:
@@ -691,14 +732,30 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                 uint32 spellId;
                 switch (triggeredByAura->GetId())
                 {
-                    case 21084: spellId = 25742; break;     // Rank 1
-                    case 20287: spellId = 25740; break;     // Rank 2
-                    case 20288: spellId = 25739; break;     // Rank 3
-                    case 20289: spellId = 25738; break;     // Rank 4
-                    case 20290: spellId = 25737; break;     // Rank 5
-                    case 20291: spellId = 25736; break;     // Rank 6
-                    case 20292: spellId = 25735; break;     // Rank 7
-                    case 20293: spellId = 25713; break;     // Rank 8
+                    case 21084:
+                        spellId = 25742;
+                        break;     // Rank 1
+                    case 20287:
+                        spellId = 25740;
+                        break;     // Rank 2
+                    case 20288:
+                        spellId = 25739;
+                        break;     // Rank 3
+                    case 20289:
+                        spellId = 25738;
+                        break;     // Rank 4
+                    case 20290:
+                        spellId = 25737;
+                        break;     // Rank 5
+                    case 20291:
+                        spellId = 25736;
+                        break;     // Rank 6
+                    case 20292:
+                        spellId = 25735;
+                        break;     // Rank 7
+                    case 20293:
+                        spellId = 25713;
+                        break;     // Rank 8
                     default:
                         sLog.outError("Unit::HandleDummyAuraProc: non handled possibly SoR (Id = %u)", triggeredByAura->GetId());
                         return SPELL_AURA_PROC_FAILED;
@@ -820,7 +877,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
 
     if (!triggerEntry)
     {
-        sLog.outError("Unit::HandleDummyAuraProc: Spell %u have nonexistent triggered spell %u", dummySpell->Id, triggered_spell_id);
+        sLog.outError("Unit::HandleDummyAuraProc: Spell %u have non-existent triggered spell %u", dummySpell->Id, triggered_spell_id);
         return SPELL_AURA_PROC_FAILED;
     }
 
@@ -930,9 +987,15 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
 
                 switch (auraSpellInfo->Id)
                 {
-                    case 12834: basepoints[0] = int32(weaponDamage * 0.2f); break;
-                    case 12849: basepoints[0] = int32(weaponDamage * 0.4f); break;
-                    case 12867: basepoints[0] = int32(weaponDamage * 0.6f); break;
+                    case 12834:
+                        basepoints[0] = int32(weaponDamage * 0.2f);
+                        break;
+                    case 12849:
+                        basepoints[0] = int32(weaponDamage * 0.4f);
+                        break;
+                    case 12867:
+                        basepoints[0] = int32(weaponDamage * 0.6f);
+                        break;
                         // Impossible case
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: DW unknown spell rank %u", auraSpellInfo->Id);
@@ -969,8 +1032,12 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
                 float chance = 0;
                 switch (auraSpellInfo->Id)
                 {
-                    case 18096: chance = 13.0f / tick; break;
-                    case 18073: chance = 26.0f / tick; break;
+                    case 18096:
+                        chance = 13.0f / tick;
+                        break;
+                    case 18073:
+                        chance = 26.0f / tick;
+                        break;
                 }
                 // Roll chance
                 if (!roll_chance_f(chance))
@@ -995,12 +1062,24 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
             {
                 switch (auraSpellInfo->Id)
                 {
-                    case 18137: trigger_spell_id = 28377; break;   // Rank 1
-                    case 19308: trigger_spell_id = 28378; break;   // Rank 2
-                    case 19309: trigger_spell_id = 28379; break;   // Rank 3
-                    case 19310: trigger_spell_id = 28380; break;   // Rank 4
-                    case 19311: trigger_spell_id = 28381; break;   // Rank 5
-                    case 19312: trigger_spell_id = 28382; break;   // Rank 6
+                    case 18137:
+                        trigger_spell_id = 28377;
+                        break;   // Rank 1
+                    case 19308:
+                        trigger_spell_id = 28378;
+                        break;   // Rank 2
+                    case 19309:
+                        trigger_spell_id = 28379;
+                        break;   // Rank 3
+                    case 19310:
+                        trigger_spell_id = 28380;
+                        break;   // Rank 4
+                    case 19311:
+                        trigger_spell_id = 28381;
+                        break;   // Rank 5
+                    case 19312:
+                        trigger_spell_id = 28382;
+                        break;   // Rank 6
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: Spell %u not handled in SG", auraSpellInfo->Id);
                         return SPELL_AURA_PROC_FAILED;
@@ -1011,9 +1090,15 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
             {
                 switch (auraSpellInfo->Id)
                 {
-                    case 27811: trigger_spell_id = 27813; break;
-                    case 27815: trigger_spell_id = 27817; break;
-                    case 27816: trigger_spell_id = 27818; break;
+                    case 27811:
+                        trigger_spell_id = 27813;
+                        break;
+                    case 27815:
+                        trigger_spell_id = 27817;
+                        break;
+                    case 27816:
+                        trigger_spell_id = 27818;
+                        break;
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: Spell %u not handled in BR", auraSpellInfo->Id);
                         return SPELL_AURA_PROC_FAILED;
@@ -1034,15 +1119,29 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
             {
                 switch (auraSpellInfo->Id)
                 {
-                        // Judgement of Light
-                    case 20185: trigger_spell_id = 20267; break; // Rank 1
-                    case 20344: trigger_spell_id = 20341; break; // Rank 2
-                    case 20345: trigger_spell_id = 20342; break; // Rank 3
-                    case 20346: trigger_spell_id = 20343; break; // Rank 4
-                        // Judgement of Wisdom
-                    case 20186: trigger_spell_id = 20268; break; // Rank 1
-                    case 20354: trigger_spell_id = 20352; break; // Rank 2
-                    case 20355: trigger_spell_id = 20353; break; // Rank 3
+                    // Judgement of Light
+                    case 20185:
+                        trigger_spell_id = 20267;           // Rank 1
+                        break;
+                    case 20344:
+                        trigger_spell_id = 20341;           // Rank 2
+                        break;
+                    case 20345:
+                        trigger_spell_id = 20342;           // Rank 3
+                        break;
+                    case 20346:
+                        trigger_spell_id = 20343;           // Rank 4
+                        break;
+                    // Judgement of Wisdom
+                    case 20186:
+                        trigger_spell_id = 20268;           // Rank 1
+                        break;
+                    case 20354:
+                        trigger_spell_id = 20352;           // Rank 2
+                        break;
+                    case 20355:
+                        trigger_spell_id = 20353;           // Rank 3
+                        break;
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: Spell %u miss posibly Judgement of Light/Wisdom", auraSpellInfo->Id);
                         return SPELL_AURA_PROC_FAILED;
@@ -1062,9 +1161,15 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
                 {
                     switch (procSpell->Id)
                     {
-                        case 25914: originalSpellId = 20473; break;
-                        case 25913: originalSpellId = 20929; break;
-                        case 25903: originalSpellId = 20930; break;
+                        case 25914:
+                            originalSpellId = 20473;
+                            break;
+                        case 25913:
+                            originalSpellId = 20929;
+                            break;
+                        case 25903:
+                            originalSpellId = 20930;
+                            break;
                         default:
                             sLog.outError("Unit::HandleProcTriggerSpellAuraProc: Spell %u not handled in HShock", procSpell->Id);
                             return SPELL_AURA_PROC_FAILED;
@@ -1090,19 +1195,26 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
                 switch (auraSpellInfo->Id)
                 {
                     case 324:                           // Rank 1
-                        trigger_spell_id = 26364; break;
+                        trigger_spell_id = 26364;
+                        break;
                     case 325:                           // Rank 2
-                        trigger_spell_id = 26365; break;
+                        trigger_spell_id = 26365;
+                        break;
                     case 905:                           // Rank 3
-                        trigger_spell_id = 26366; break;
+                        trigger_spell_id = 26366;
+                        break;
                     case 945:                           // Rank 4
-                        trigger_spell_id = 26367; break;
+                        trigger_spell_id = 26367;
+                        break;
                     case 8134:                          // Rank 5
-                        trigger_spell_id = 26369; break;
+                        trigger_spell_id = 26369;
+                        break;
                     case 10431:                         // Rank 6
-                        trigger_spell_id = 26370; break;
+                        trigger_spell_id = 26370;
+                        break;
                     case 10432:                         // Rank 7
-                        trigger_spell_id = 26363; break;
+                        trigger_spell_id = 26363;
+                        break;
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: Spell %u not handled in LShield", auraSpellInfo->Id);
                         return SPELL_AURA_PROC_FAILED;
@@ -1283,11 +1395,17 @@ SpellAuraProcResult Unit::HandleOverrideClassScriptAuraProc(Unit* pVictim, uint3
             if (!roll_chance_i(50))
                 return SPELL_AURA_PROC_FAILED;
 
-            switch (pVictim->getPowerType())
+            switch (pVictim->GetPowerType())
             {
-                case POWER_MANA:   triggered_spell_id = 28722; break;
-                case POWER_RAGE:   triggered_spell_id = 28723; break;
-                case POWER_ENERGY: triggered_spell_id = 28724; break;
+                case POWER_MANA:
+                    triggered_spell_id = 28722;
+                    break;
+                case POWER_RAGE:
+                    triggered_spell_id = 28723;
+                    break;
+                case POWER_ENERGY:
+                    triggered_spell_id = 28724;
+                    break;
                 default:
                     return SPELL_AURA_PROC_FAILED;
             }

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_CAMERA_H
-#define MANGOSSERVER_CAMERA_H
+#ifndef MANGOS_H_CAMERA
+#define MANGOS_H_CAMERA
 
 #include "Common.h"
 #include "GridDefines.h"
@@ -37,8 +44,14 @@ class MANGOS_DLL_SPEC Camera
         explicit Camera(Player* pl);
         ~Camera();
 
-        WorldObject* GetBody() { return m_source;}
-        Player* GetOwner() { return &m_owner;}
+        WorldObject* GetBody()
+        {
+            return m_source;
+        }
+        Player* GetOwner()
+        {
+            return &m_owner;
+        }
 
         // set camera's view to any worldobject
         // Note: this worldobject must be in same map, in same phase with camera's owner(player)
@@ -70,8 +83,14 @@ class MANGOS_DLL_SPEC Camera
         void UpdateForCurrentViewPoint();
 
     public:
-        GridReference<Camera>& GetGridRef() { return m_gridRef; }
-        bool isActiveObject() const { return false; }
+        GridReference<Camera>& GetGridRef()
+        {
+            return m_gridRef;
+        }
+        bool isActiveObject() const
+        {
+            return false;
+        }
     private:
         GridReference<Camera> m_gridRef;
 };
@@ -86,8 +105,14 @@ class MANGOS_DLL_SPEC ViewPoint
         CameraList m_cameras;
         GridType* m_grid;
 
-        void Attach(Camera* c) { m_cameras.push_back(c); }
-        void Detach(Camera* c) { m_cameras.remove(c); }
+        void Attach(Camera* c)
+        {
+            m_cameras.push_back(c);
+        }
+        void Detach(Camera* c)
+        {
+            m_cameras.remove(c);
+        }
 
         void CameraCall(void (Camera::*handler)())
         {
@@ -106,7 +131,10 @@ class MANGOS_DLL_SPEC ViewPoint
         ViewPoint() : m_grid(0) {}
         ~ViewPoint();
 
-        bool hasViewers() const { return !m_cameras.empty(); }
+        bool hasViewers() const
+        {
+            return !m_cameras.empty();
+        }
 
         // these events are called when viewpoint changes visibility state
         void Event_AddedToWorld(GridType* grid)

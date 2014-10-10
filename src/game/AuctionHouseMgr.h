@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _AUCTION_HOUSE_MGR_H
-#define _AUCTION_HOUSE_MGR_H
+#ifndef MANGOS_H_AUCTION_HOUSE_MGR
+#define MANGOS_H_AUCTION_HOUSE_MGR
 
+#include "policies/Singleton.h"
 #include "Common.h"
 #include "SharedDefines.h"
-#include "Policies/Singleton.h"
 #include "DBCStructure.h"
 
 class Item;
@@ -68,8 +75,14 @@ struct AuctionEntry
     AuctionHouseEntry const* auctionHouseEntry;             // in AuctionHouse.dbc
 
     // helpers
-    uint32 GetHouseId() const { return auctionHouseEntry->houseId; }
-    uint32 GetHouseFaction() const { return auctionHouseEntry->faction; }
+    uint32 GetHouseId() const
+    {
+        return auctionHouseEntry->houseId;
+    }
+    uint32 GetHouseFaction() const
+    {
+        return auctionHouseEntry->faction;
+    }
     uint32 GetAuctionCut() const;
     uint32 GetAuctionOutBid() const;
     bool BuildAuctionInfo(WorldPacket& data) const;
@@ -84,19 +97,24 @@ class AuctionHouseObject
 {
     public:
         AuctionHouseObject() {}
-        ~AuctionHouseObject()
-        {
-            for (AuctionEntryMap::const_iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end(); ++itr)
-                delete itr->second;
-        }
+        ~AuctionHouseObject();
 
         typedef std::map<uint32, AuctionEntry*> AuctionEntryMap;
         typedef std::pair<AuctionEntryMap::const_iterator, AuctionEntryMap::const_iterator> AuctionEntryMapBounds;
 
-        uint32 GetCount() { return AuctionsMap.size(); }
+        uint32 GetCount()
+        {
+            return AuctionsMap.size();
+        }
 
-        AuctionEntryMap const& GetAuctions() const { return AuctionsMap; }
-        AuctionEntryMapBounds GetAuctionsBounds() const {return AuctionEntryMapBounds(AuctionsMap.begin(), AuctionsMap.end()); }
+        AuctionEntryMap const& GetAuctions() const
+        {
+            return AuctionsMap;
+        }
+        AuctionEntryMapBounds GetAuctionsBounds() const
+        {
+            return AuctionEntryMapBounds(AuctionsMap.begin(), AuctionsMap.end());
+        }
 
         void AddAuction(AuctionEntry* ah)
         {
@@ -145,7 +163,10 @@ class AuctionHouseMgr
 
         typedef UNORDERED_MAP<uint32, Item*> ItemMap;
 
-        AuctionHouseObject* GetAuctionsMap(AuctionHouseType houseType) { return &mAuctions[houseType]; }
+        AuctionHouseObject* GetAuctionsMap(AuctionHouseType houseType)
+        {
+            return &mAuctions[houseType];
+        }
         AuctionHouseObject* GetAuctionsMap(AuctionHouseEntry const* house);
 
         Item* GetAItem(uint32 id)

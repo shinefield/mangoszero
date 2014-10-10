@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/// \addtogroup realmd Realm Daemon
-/// @{
-/// \file
-
-#include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "RealmList.h"
-
-#include "Config/Config.h"
-#include "Log.h"
-#include "AuthSocket.h"
-#include "SystemConfig.h"
-#include "revision.h"
-#include "revision_nr.h"
-#include "revision_sql.h"
-#include "Util.h"
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
-
 #include <ace/Get_Opt.h>
 #include <ace/Dev_Poll_Reactor.h>
 #include <ace/TP_Reactor.h>
@@ -42,8 +32,21 @@
 #include <ace/Acceptor.h>
 #include <ace/SOCK_Acceptor.h>
 
+#include "Common.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "revision.h"
+#include "revision_nr.h"
+#include "revision_sql.h"
+#include "system/SystemConfig.h"
+
+#include "RealmList.h"
+#include "AuthSocket.h"
+
 #ifdef WIN32
-#include "ServiceWin32.h"
+#include "system/ServiceWin32.h"
 char serviceName[] = "realmd";
 char serviceLongName[] = "MaNGOS realmd service";
 char serviceDescription[] = "Massive Network Game Object Server";
@@ -55,7 +58,7 @@ char serviceDescription[] = "Massive Network Game Object Server";
  */
 int m_ServiceStatus = -1;
 #else
-#include "PosixDaemon.h"
+#include "system/PosixDaemon.h"
 #endif
 
 bool StartDB();
@@ -70,17 +73,17 @@ DatabaseType LoginDatabase;                                 ///< Accessor to the
 void usage(const char* prog)
 {
     sLog.outString("Usage: \n %s [<options>]\n"
-                   "    -v, --version            print version and exist\n\r"
-                   "    -c config_file           use config_file as configuration file\n\r"
+                   "    -v, --version            print version and exit\r\n"
+                   "    -c config_file           use config_file as configuration file\r\n"
 #ifdef WIN32
-                   "    Running as service functions:\n\r"
-                   "    -s run                   run as service\n\r"
-                   "    -s install               install service\n\r"
-                   "    -s uninstall             uninstall service\n\r"
+                   "    Running as service functions:\r\n"
+                   "    -s run                   run as service\r\n"
+                   "    -s install               install service\r\n"
+                   "    -s remove                remove service\r\n"
 #else
-                   "    Running as daemon functions:\n\r"
-                   "    -s run                   run as daemon\n\r"
-                   "    -s stop                  stop daemon\n\r"
+                   "    Running as daemon functions:\r\n"
+                   "    -s run                   run as daemon\r\n"
+                   "    -s stop                  stop daemon\r\n"
 #endif
                    , prog);
 }
@@ -119,7 +122,7 @@ extern int main(int argc, char** argv)
 #ifdef WIN32
                 else if (!strcmp(mode, "install"))
                     serviceDaemonMode = 'i';
-                else if (!strcmp(mode, "uninstall"))
+                else if (!strcmp(mode, "remove"))
                     serviceDaemonMode = 'u';
 #else
                 else if (!strcmp(mode, "stop"))
@@ -140,14 +143,14 @@ extern int main(int argc, char** argv)
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
             default:
-                sLog.outError("Runtime-Error: bad format of commandline arguments");
+                sLog.outError("Runtime-Error: bad format of command line arguments");
                 usage(argv[0]);
                 Log::WaitBeforeContinueIfNeed();
                 return 1;
         }
     }
 
-#ifdef WIN32                                                // windows service command need execute before config read
+#ifdef WIN32                                                // windows service command need execute before configuration read
     switch (serviceDaemonMode)
     {
         case 'i':
@@ -156,7 +159,7 @@ extern int main(int argc, char** argv)
             return 1;
         case 'u':
             if (WinServiceUninstall())
-                sLog.outString("Uninstalling service");
+                sLog.outString("Removing service");
             return 1;
         case 'r':
             WinServiceRun();
@@ -171,7 +174,7 @@ extern int main(int argc, char** argv)
         return 1;
     }
 
-#ifndef WIN32                                               // posix daemon commands need apply after config read
+#ifndef WIN32                                               // POSIX daemon commands need apply after configuration read
     switch (serviceDaemonMode)
     {
         case 'r':
@@ -194,7 +197,7 @@ extern int main(int argc, char** argv)
     if (confVersion < _REALMDCONFVERSION)
     {
         sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your realmd.conf version indicates your conf file is out of date!");
+        sLog.outError(" WARNING: Your configuration is outdated.");
         sLog.outError("          Please check for updates, as your current default values may cause");
         sLog.outError("          strange behavior.");
         sLog.outError("*****************************************************************************");
@@ -225,7 +228,7 @@ extern int main(int argc, char** argv)
         uint32 pid = CreatePIDFile(pidfile);
         if (!pid)
         {
-            sLog.outError("Cannot create PID file %s.\n", pidfile.c_str());
+            sLog.outError("Can't create PID file %s.\n", pidfile.c_str());
             Log::WaitBeforeContinueIfNeed();
             return 1;
         }
@@ -249,7 +252,7 @@ extern int main(int argc, char** argv)
         return 1;
     }
 
-    // cleanup query
+    // clean up query
     // set expired bans to inactive
     LoginDatabase.BeginTransaction();
     LoginDatabase.Execute("UPDATE account_banned SET active = 0 WHERE unbandate<=UNIX_TIMESTAMP() AND unbandate<>bandate");
@@ -266,7 +269,7 @@ extern int main(int argc, char** argv)
 
     if (acceptor.open(bind_addr, ACE_Reactor::instance(), ACE_NONBLOCK) == -1)
     {
-        sLog.outError("MaNGOS realmd can not bind to %s:%d", bind_ip.c_str(), rmport);
+        sLog.outError("MaNGOS realmd can't bind to %s:%d", bind_ip.c_str(), rmport);
         Log::WaitBeforeContinueIfNeed();
         return 1;
     }
@@ -330,7 +333,7 @@ extern int main(int argc, char** argv)
     ///- Wait for termination signal
     while (!stopEvent)
     {
-        // dont move this outside the loop, the reactor will modify it
+        // don't move this outside the loop, the reactor will modify it
         ACE_Time_Value interval(0, 100000);
 
         if (ACE_Reactor::instance()->run_reactor_event_loop(interval) == -1)
@@ -392,7 +395,7 @@ bool StartDB()
 
     if (!LoginDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to database");
+        sLog.outError("Can't connect to database");
         return false;
     }
 
@@ -425,5 +428,3 @@ void UnhookSignals()
     signal(SIGBREAK, 0);
 #endif
 }
-
-/// @}

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef AUCTION_HOUSE_BOT_H
-#define AUCTION_HOUSE_BOT_H
+#ifndef MANGOS_H_AUCTION_HOUSE_BOT
+#define MANGOS_H_AUCTION_HOUSE_BOT
 
+#include "configuration/Config.h"
 #include "World.h"
-#include "Config/Config.h"
 #include "AuctionHouseMgr.h"
 #include "SharedDefines.h"
 #include "Item.h"
@@ -127,23 +134,50 @@ class AuctionBotConfig
     public:
         AuctionBotConfig();
 
-        void        SetConfigFileName(char const* filename) { m_configFileName = filename; }
+        void        SetConfigFileName(char const* filename)
+        {
+            m_configFileName = filename;
+        }
         bool        Initialize();
-        const char* GetAHBotIncludes() const { return m_AHBotIncludes.c_str(); }
-        const char* GetAHBotExcludes() const { return m_AHBotExcludes.c_str(); }
+        const char* GetAHBotIncludes() const
+        {
+            return m_AHBotIncludes.c_str();
+        }
+        const char* GetAHBotExcludes() const
+        {
+            return m_AHBotExcludes.c_str();
+        }
 
-        uint32      getConfig(AuctionBotConfigUInt32Values index) const { return m_configUint32Values[index]; }
-        bool        getConfig(AuctionBotConfigBoolValues index) const { return m_configBoolValues[index]; }
-        void        setConfig(AuctionBotConfigBoolValues index, bool value) { m_configBoolValues[index]=value; }
-        void        setConfig(AuctionBotConfigUInt32Values index, uint32 value) { m_configUint32Values[index]=value; }
+        uint32      getConfig(AuctionBotConfigUInt32Values index) const
+        {
+            return m_configUint32Values[index];
+        }
+        bool        getConfig(AuctionBotConfigBoolValues index) const
+        {
+            return m_configBoolValues[index];
+        }
+        void        setConfig(AuctionBotConfigBoolValues index, bool value)
+        {
+            m_configBoolValues[index]=value;
+        }
+        void        setConfig(AuctionBotConfigUInt32Values index, uint32 value)
+        {
+            m_configUint32Values[index]=value;
+        }
 
         uint32 getConfigItemAmountRatio(AuctionHouseType houseType) const;
         bool getConfigBuyerEnabled(AuctionHouseType houseType) const;
         uint32 getConfigItemQualityAmount(AuctionQuality quality) const;
 
 
-        uint32      GetItemPerCycleBoost() const { return m_ItemsPerCycleBoost; }
-        uint32      GetItemPerCycleNormal() const { return m_ItemsPerCycleNormal; }
+        uint32      GetItemPerCycleBoost() const
+        {
+            return m_ItemsPerCycleBoost;
+        }
+        uint32      GetItemPerCycleNormal() const
+        {
+            return m_ItemsPerCycleNormal;
+        }
         bool        Reload();
 
         static char const* GetItemClassName(ItemClass itemclass);
@@ -160,8 +194,14 @@ class AuctionBotConfig
         uint32 m_configUint32Values[CONFIG_UINT32_AHBOT_UINT32_COUNT];
         bool   m_configBoolValues[CONFIG_UINT32_AHBOT_BOOL_COUNT];
 
-        void SetAHBotIncludes(const std::string& AHBotIncludes) { m_AHBotIncludes = AHBotIncludes; }
-        void SetAHBotExcludes(const std::string& AHBotExcludes) { m_AHBotExcludes = AHBotExcludes; }
+        void SetAHBotIncludes(const std::string& AHBotIncludes)
+        {
+            m_AHBotIncludes = AHBotIncludes;
+        }
+        void SetAHBotExcludes(const std::string& AHBotExcludes)
+        {
+            m_AHBotExcludes = AHBotExcludes;
+        }
 
         void setConfig(AuctionBotConfigUInt32Values index, char const* fieldname, uint32 defvalue);
         void setConfigMax(AuctionBotConfigUInt32Values index, char const* fieldname, uint32 defvalue, uint32 maxvalue);
@@ -204,7 +244,7 @@ class AuctionHouseBot
         // Followed method is mainly used by level3.cpp for ingame/console command
         void SetItemsRatio(uint32 al, uint32 ho, uint32 ne);
         void SetItemsRatioForHouse(AuctionHouseType house, uint32 val);
-        void SetItemsAmount(uint32 (&vals) [MAX_AUCTION_QUALITY]);
+        void SetItemsAmount(uint32(&vals) [MAX_AUCTION_QUALITY]);
         void SetItemsAmountForQuality(AuctionQuality quality, uint32 val);
         bool ReloadAllConfig();
         void Rebuild(bool all);

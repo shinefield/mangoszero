@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_MOVESPLINEINIT_H
-#define MANGOSSERVER_MOVESPLINEINIT_H
+#ifndef MANGOS_H_MOVESPLINEINIT
+#define MANGOS_H_MOVESPLINEINIT
 
 #include "MoveSplineInitArgs.h"
 #include "PathFinder.h"
@@ -38,6 +45,9 @@ namespace Movement
              * @return duration - estimated travel time
              */
             int32 Launch();
+
+            /* Stop any creature movement */
+            void Stop();
 
             /* Adds final facing animation
              * sets unit's facing to specified point/angle after all path done
@@ -61,7 +71,10 @@ namespace Movement
             /* Sets Id of fisrt point of the path. When N-th path point will be done ILisener will notify that pointId + N done
              * Needed for waypoint movement where path splitten into parts
              */
-            void SetFirstPointId(int32 pointId) { args.path_Idx_offset = pointId; }
+            void SetFirstPointId(int32 pointId)
+            {
+                args.path_Idx_offset = pointId;
+            }
 
             /* Enables CatmullRom spline interpolation mode, enables flying animation. Disabled by default
              */
@@ -83,7 +96,10 @@ namespace Movement
              */
             void SetVelocity(float velocity);
 
-            PointsArray& Path() { return args.path; }
+            PointsArray& Path()
+            {
+                return args.path;
+            }
 
         protected:
 
@@ -91,11 +107,26 @@ namespace Movement
             Unit&  unit;
     };
 
-    inline void MoveSplineInit::SetFly() { args.flags.flying = true;}
-    inline void MoveSplineInit::SetWalk(bool enable) { args.flags.runmode = !enable;}
-    inline void MoveSplineInit::SetCyclic() { args.flags.cyclic = true;}
-    inline void MoveSplineInit::SetFall() { args.flags.falling = true;}
-    inline void MoveSplineInit::SetVelocity(float vel) { args.velocity = vel;}
+    inline void MoveSplineInit::SetFly()
+    {
+        args.flags.flying = true;
+    }
+    inline void MoveSplineInit::SetWalk(bool enable)
+    {
+        args.flags.runmode = !enable;
+    }
+    inline void MoveSplineInit::SetCyclic()
+    {
+        args.flags.cyclic = true;
+    }
+    inline void MoveSplineInit::SetFall()
+    {
+        args.flags.falling = true;
+    }
+    inline void MoveSplineInit::SetVelocity(float vel)
+    {
+        args.velocity = vel;
+    }
 
     inline void MoveSplineInit::MovebyPath(const PointsArray& controls, int32 path_offset)
     {

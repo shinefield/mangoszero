@@ -28,6 +28,8 @@
 #include "DebugDraw.h"
 #include "RecastDebugDraw.h"
 #include "DetourNavMesh.h"
+#include "MeshLoaderObj.h"
+#include "MeshLoaderMap.h"
 
 static bool intersectSegmentTriangle(const float* sp, const float* sq,
 									 const float* a, const float* b, const float* c,
@@ -38,16 +40,16 @@ static bool intersectSegmentTriangle(const float* sp, const float* sq,
 	rcVsub(ab, b, a);
 	rcVsub(ac, c, a);
 	rcVsub(qp, sp, sq);
-	
+
 	// Compute triangle normal. Can be precalculated or cached if
 	// intersecting multiple segments against the same triangle
 	rcVcross(norm, ab, ac);
-	
+
 	// Compute denominator d. If d <= 0, segment is parallel to or points
 	// away from triangle, so exit early
 	float d = rcVdot(qp, norm);
 	if (d <= 0.0f) return false;
-	
+
 	// Compute intersection t value of pq with plane of triangle. A ray
 	// intersects iff 0 <= t. Segment intersects iff 0 <= t <= 1. Delay
 	// dividing by d until intersection has been found to pierce triangle
@@ -55,17 +57,17 @@ static bool intersectSegmentTriangle(const float* sp, const float* sq,
 	t = rcVdot(ap, norm);
 	if (t < 0.0f) return false;
 	if (t > d) return false; // For segment; exclude this code line for a ray test
-	
+
 	// Compute barycentric coordinate components and test if within bounds
 	rcVcross(e, qp, ap);
 	v = rcVdot(ac, e);
 	if (v < 0.0f || v > d) return false;
 	w = -rcVdot(ab, e);
 	if (w < 0.0f || v + w > d) return false;
-	
+
 	// Segment/ray intersects triangle. Perform delayed division
 	t /= d;
-	
+
 	return true;
 }
 
@@ -117,8 +119,44 @@ InputGeom::~InputGeom()
 	delete m_chunkyMesh;
 	delete m_mesh;
 }
-		
-bool InputGeom::loadMesh(rcContext* ctx, const char* filepath)
+
+bool InputGeom::loadObj(rcContext* ctx, const char* filepath)
+{
+    rcMeshLoaderObj* mesh = new rcMeshLoaderObj;
+    if (!mesh)
+    {
+        ctx->log(RC_LOG_ERROR, "loadMesh: Out of memory 'm_mesh'.");
+        return false;
+    }
+    if (!mesh->load(filepath))
+    {
+        ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Could not load '%s'", filepath);
+        return false;
+    }
+
+    m_mesh = (MeshLoader*)mesh;
+    return true;
+}
+
+bool InputGeom::loadMap(rcContext* ctx, const char* filepath)
+{
+    MeshLoaderMap* mesh = new MeshLoaderMap;
+    if (!mesh)
+    {
+        ctx->log(RC_LOG_ERROR, "loadMesh: Out of memory 'm_mesh'.");
+        return false;
+    }
+    if (!mesh->load(filepath))
+    {
+        ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Could not load '%s'", filepath);
+        return false;
+    }
+
+    m_mesh = (MeshLoader*)mesh;
+    return true;
+}
+
+bool InputGeom::loadMesh(rcContext* ctx, const char* filepath, SampleType type)
 {
 	if (m_mesh)
 	{
@@ -129,20 +167,24 @@ bool InputGeom::loadMesh(rcContext* ctx, const char* filepath)
 	}
 	m_offMeshConCount = 0;
 	m_volumeCount = 0;
-	
-	m_mesh = new myMeshLoaderObj;
-	if (!m_mesh)
-	{
-		ctx->log(RC_LOG_ERROR, "loadMesh: Out of memory 'm_mesh'.");
-		return false;
-	}
-	if (!m_mesh->load(filepath))
-	{
-		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Could not load '%s'", filepath);
-		return false;
-	}
 
-	rcCalcBounds(m_mesh->getVerts(), m_mesh->getVertCount(), m_meshBMin, m_meshBMax);
+    switch (type)
+    {
+        case ORIGINAL_SAMPLE:
+            if (!loadObj(ctx, filepath))
+                return false;
+            break;
+        case CMANGOS_MAP_SAMPLE:
+            if (!loadMap(ctx, filepath))
+                return false;
+            break;
+        default:
+            ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Failed to build mesh (invalid type provided).");
+            return false;
+            break;
+    }
+
+    rcCalcBounds(m_mesh->getVerts(), m_mesh->getVertCount(), m_meshBMin, m_meshBMax);
 
 	m_chunkyMesh = new rcChunkyTriMesh;
 	if (!m_chunkyMesh)
@@ -154,7 +196,7 @@ bool InputGeom::loadMesh(rcContext* ctx, const char* filepath)
 	{
 		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Failed to build chunky mesh.");
 		return false;
-	}		
+	}
 
 	return true;
 }
@@ -174,9 +216,13 @@ bool InputGeom::load(rcContext* ctx, const char* filePath)
 		fclose(fp);
 		return false;
 	}
-	fread(buf, bufSize, 1, fp);
+	size_t readLen = fread(buf, bufSize, 1, fp);
 	fclose(fp);
-	
+	if (readLen != 1)
+	{
+		return false;
+	}
+
 	m_offMeshConCount = 0;
 	m_volumeCount = 0;
 	delete m_mesh;
@@ -239,22 +285,22 @@ bool InputGeom::load(rcContext* ctx, const char* filePath)
 			}
 		}
 	}
-	
+
 	delete [] buf;
-	
+
 	return true;
 }
 
 bool InputGeom::save(const char* filepath)
 {
 	if (!m_mesh) return false;
-	
+
 	FILE* fp = fopen(filepath, "w");
 	if (!fp) return false;
-	
+
 	// Store mesh filename.
 	fprintf(fp, "f %s\n", m_mesh->getFileName());
-	
+
 	// Store off-mesh links.
 	for (int i = 0; i < m_offMeshConCount; ++i)
 	{
@@ -272,12 +318,12 @@ bool InputGeom::save(const char* filepath)
 	{
 		ConvexVolume* vol = &m_volumes[i];
 		fprintf(fp, "v %d %d %f %f\n", vol->nverts, vol->area, vol->hmin, vol->hmax);
-		for (int i = 0; i < vol->nverts; ++i)
-			fprintf(fp, "%f %f %f\n", vol->verts[i*3+0], vol->verts[i*3+1], vol->verts[i*3+2]);
+		for (int j = 0; j < vol->nverts; ++j)
+			fprintf(fp, "%f %f %f\n", vol->verts[j*3+0], vol->verts[j*3+1], vol->verts[j*3+2]);
 	}
-	
+
 	fclose(fp);
-	
+
 	return true;
 }
 
@@ -286,14 +332,14 @@ static bool isectSegAABB(const float* sp, const float* sq,
 						 float& tmin, float& tmax)
 {
 	static const float EPS = 1e-6f;
-	
+
 	float d[3];
 	d[0] = sq[0] - sp[0];
 	d[1] = sq[1] - sp[1];
 	d[2] = sq[2] - sp[2];
 	tmin = 0.0;
 	tmax = 1.0f;
-	
+
 	for (int i = 0; i < 3; i++)
 	{
 		if (fabsf(d[i]) < EPS)
@@ -312,7 +358,7 @@ static bool isectSegAABB(const float* sp, const float* sq,
 			if (tmin > tmax) return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -331,16 +377,16 @@ bool InputGeom::raycastMesh(float* src, float* dst, float& tmin)
 	p[1] = src[2] + (dst[2]-src[2])*btmin;
 	q[0] = src[0] + (dst[0]-src[0])*btmax;
 	q[1] = src[2] + (dst[2]-src[2])*btmax;
-	
+
 	int cid[512];
 	const int ncid = rcGetChunksOverlappingSegment(m_chunkyMesh, p, q, cid, 512);
 	if (!ncid)
 		return false;
-	
+
 	tmin = 1.0f;
 	bool hit = false;
 	const float* verts = m_mesh->getVerts();
-	
+
 	for (int i = 0; i < ncid; ++i)
 	{
 		const rcChunkyTriMeshNode& node = m_chunkyMesh->nodes[cid[i]];
@@ -361,7 +407,7 @@ bool InputGeom::raycastMesh(float* src, float* dst, float& tmin)
 			}
 		}
 	}
-	
+
 	return hit;
 }
 
@@ -406,10 +452,10 @@ void InputGeom::drawOffMeshConnections(duDebugDraw* dd, bool hilight)
 
 		dd->vertex(v[0],v[1],v[2], baseColor);
 		dd->vertex(v[0],v[1]+0.2f,v[2], baseColor);
-		
+
 		dd->vertex(v[3],v[4],v[5], baseColor);
 		dd->vertex(v[3],v[4]+0.2f,v[5], baseColor);
-		
+
 		duAppendCircle(dd, v[0],v[1]+0.1f,v[2], m_offMeshConRads[i], baseColor);
 		duAppendCircle(dd, v[3],v[4]+0.1f,v[5], m_offMeshConRads[i], baseColor);
 
@@ -418,7 +464,7 @@ void InputGeom::drawOffMeshConnections(duDebugDraw* dd, bool hilight)
 			duAppendArc(dd, v[0],v[1],v[2], v[3],v[4],v[5], 0.25f,
 						(m_offMeshConDirs[i]&1) ? 0.6f : 0.0f, 0.6f, conColor);
 		}
-	}	
+	}
 	dd->end();
 
 	dd->depthMask(true);
@@ -448,7 +494,7 @@ void InputGeom::drawConvexVolumes(struct duDebugDraw* dd, bool /*hilight*/)
 	dd->depthMask(false);
 
 	dd->begin(DU_DRAW_TRIS);
-	
+
 	for (int i = 0; i < m_volumeCount; ++i)
 	{
 		const ConvexVolume* vol = &m_volumes[i];
@@ -461,7 +507,7 @@ void InputGeom::drawConvexVolumes(struct duDebugDraw* dd, bool /*hilight*/)
 			dd->vertex(vol->verts[0],vol->hmax,vol->verts[2], col);
 			dd->vertex(vb[0],vol->hmax,vb[2], col);
 			dd->vertex(va[0],vol->hmax,va[2], col);
-			
+
 			dd->vertex(va[0],vol->hmin,va[2], duDarkenCol(col));
 			dd->vertex(va[0],vol->hmax,va[2], col);
 			dd->vertex(vb[0],vol->hmax,vb[2], col);
@@ -471,7 +517,7 @@ void InputGeom::drawConvexVolumes(struct duDebugDraw* dd, bool /*hilight*/)
 			dd->vertex(vb[0],vol->hmin,vb[2], duDarkenCol(col));
 		}
 	}
-	
+
 	dd->end();
 
 	dd->begin(DU_DRAW_LINES, 2.0f);
@@ -506,7 +552,7 @@ void InputGeom::drawConvexVolumes(struct duDebugDraw* dd, bool /*hilight*/)
 		}
 	}
 	dd->end();
-	
-	
+
+
 	dd->depthMask(true);
 }

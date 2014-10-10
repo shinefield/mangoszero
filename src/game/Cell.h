@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CELL_H
-#define MANGOS_CELL_H
+#ifndef MANGOS_H_CELL
+#define MANGOS_H_CELL
 
-#include "GameSystem/TypeContainer.h"
-#include "GameSystem/TypeContainerVisitor.h"
-#include "GridDefines.h"
 #include <cmath>
+
+#include "game_system/TypeContainer.h"
+#include "game_system/TypeContainerVisitor.h"
+#include "GridDefines.h"
 
 class Map;
 class WorldObject;
@@ -32,7 +40,10 @@ struct MANGOS_DLL_DECL CellArea
     CellArea() {}
     CellArea(CellPair low, CellPair high) : low_bound(low), high_bound(high) {}
 
-    bool operator!() const { return low_bound == high_bound; }
+    bool operator!() const
+    {
+        return low_bound == high_bound;
+    }
 
     void ResizeBorders(CellPair& begin_cell, CellPair& end_cell) const
     {
@@ -46,8 +57,14 @@ struct MANGOS_DLL_DECL CellArea
 
 struct MANGOS_DLL_DECL Cell
 {
-        Cell() { data.All = 0; }
-        Cell(const Cell& cell) { data.All = cell.data.All; }
+        Cell()
+        {
+            data.All = 0;
+        }
+        Cell(const Cell& cell)
+        {
+            data.All = cell.data.All;
+        }
         explicit Cell(CellPair const& p);
 
         void Compute(uint32& x, uint32& y) const
@@ -68,14 +85,35 @@ struct MANGOS_DLL_DECL Cell
                     data.Part.grid_y != cell.data.Part.grid_y);
         }
 
-        uint32 CellX() const { return data.Part.cell_x; }
-        uint32 CellY() const { return data.Part.cell_y; }
-        uint32 GridX() const { return data.Part.grid_x; }
-        uint32 GridY() const { return data.Part.grid_y; }
-        bool NoCreate() const { return data.Part.nocreate; }
-        void SetNoCreate() { data.Part.nocreate = 1; }
+        uint32 CellX() const
+        {
+            return data.Part.cell_x;
+        }
+        uint32 CellY() const
+        {
+            return data.Part.cell_y;
+        }
+        uint32 GridX() const
+        {
+            return data.Part.grid_x;
+        }
+        uint32 GridY() const
+        {
+            return data.Part.grid_y;
+        }
+        bool NoCreate() const
+        {
+            return data.Part.nocreate;
+        }
+        void SetNoCreate()
+        {
+            data.Part.nocreate = 1;
+        }
 
-        GridPair gridPair() const { return GridPair(GridX(), GridY()); }
+        GridPair gridPair() const
+        {
+            return GridPair(GridX(), GridY());
+        }
 
         CellPair cellPair() const
         {
@@ -90,8 +128,14 @@ struct MANGOS_DLL_DECL Cell
             return *this;
         }
 
-        bool operator==(const Cell& cell) const { return (data.All == cell.data.All); }
-        bool operator!=(const Cell& cell) const { return !operator==(cell); }
+        bool operator==(const Cell& cell) const
+        {
+            return (data.All == cell.data.All);
+        }
+        bool operator!=(const Cell& cell) const
+        {
+            return !operator==(cell);
+        }
         union
         {
             struct

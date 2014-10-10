@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Pet.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 #include "Formulas.h"
 #include "SpellAuras.h"
 #include "CreatureAI.h"
 #include "Unit.h"
-#include "Util.h"
 
 // numbers represent minutes * 100 while happy (you get 100 loyalty points per min while happy)
 uint32 const LevelUpLoyalty[6] =
@@ -226,7 +233,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
             SetTP(fields[9].GetInt32());
             SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
             SetPower(POWER_HAPPINESS, fields[15].GetUInt32());
-            setPowerType(POWER_FOCUS);
+            SetPowerType(POWER_FOCUS);
             break;
         default:
             sLog.outError("Pet have incorrect type (%u) for pet loading.", getPetType());
@@ -245,7 +252,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     m_loyaltyPoints = fields[7].GetInt32();
 
     uint32 savedhealth = fields[13].GetUInt32();
-    uint32 savedmana = fields[14].GetUInt32();
+    uint32 savedpower = fields[14].GetUInt32();
 
     // set current pet as current
     // 0=current
@@ -309,15 +316,17 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         CastPetAuras(current);
     }
 
+    Powers powerType = GetPowerType();
+
     if (getPetType() == SUMMON_PET && !current)             // all (?) summon pets come with full health when called, but not when they are current
     {
         SetHealth(GetMaxHealth());
-        SetPower(POWER_MANA, GetMaxPower(POWER_MANA));
+        SetPower(powerType, GetMaxPower(powerType));
     }
     else
     {
         SetHealth(savedhealth > GetMaxHealth() ? GetMaxHealth() : savedhealth);
-        SetPower(POWER_MANA, savedmana > GetMaxPower(POWER_MANA) ? GetMaxPower(POWER_MANA) : savedmana);
+        SetPower(powerType, savedpower > GetMaxPower(powerType) ? GetMaxPower(powerType) : savedpower);
     }
 
     AIM_Initialize();
@@ -381,7 +390,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
         }
 
         uint32 curhealth = GetHealth();
-        uint32 curmana = GetPower(POWER_MANA);
+        uint32 curpower = GetPower(GetPowerType());
 
         // stable and not in slot saves
         if (mode != PET_SAVE_AS_CURRENT)
@@ -442,7 +451,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
         savePet.addString(m_name);
         savePet.addUInt32(uint32(HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_RENAME) ? 0 : 1));
         savePet.addUInt32((curhealth < 1 ? 1 : curhealth));
-        savePet.addUInt32(curmana);
+        savePet.addUInt32(curpower);
         savePet.addUInt32(GetPower(POWER_HAPPINESS));
 
         std::ostringstream ss;
@@ -597,13 +606,10 @@ void Pet::RegenerateAll(uint32 update_diff)
     // regenerate focus
     if (m_regenTimer <= update_diff)
     {
-        if (getPetType() == HUNTER_PET)
-            RegenerateFocus();
-
         if (!isInCombat() || IsPolymorphed())
             RegenerateHealth();
 
-        RegenerateMana();
+        RegeneratePower();
 
         m_regenTimer = 4000;
     }
@@ -628,25 +634,6 @@ void Pet::RegenerateAll(uint32 update_diff)
     }
     else
         m_loyaltyTimer -= update_diff;
-}
-
-void Pet::RegenerateFocus()
-{
-    uint32 curValue = GetPower(POWER_FOCUS);
-    uint32 maxValue = GetMaxPower(POWER_FOCUS);
-
-    if (curValue >= maxValue)
-        return;
-
-    float addvalue = 24 * sWorld.getConfig(CONFIG_FLOAT_RATE_POWER_FOCUS);
-
-    // Apply modifiers (if any).
-    AuraList const& ModPowerRegenPCTAuras = GetAurasByType(SPELL_AURA_MOD_POWER_REGEN_PERCENT);
-    for (AuraList::const_iterator i = ModPowerRegenPCTAuras.begin(); i != ModPowerRegenPCTAuras.end(); ++i)
-        if ((*i)->GetModifier()->m_miscvalue == int32(POWER_FOCUS))
-            addvalue *= ((*i)->GetModifier()->m_amount + 100) / 100.0f;
-
-    ModifyPower(POWER_FOCUS, (int32)addvalue);
 }
 
 void Pet::LooseHappiness()
@@ -712,9 +699,15 @@ void Pet::TickLoyaltyChange()
 
     switch (GetHappinessState())
     {
-        case HAPPY:   addvalue =  20; break;
-        case CONTENT: addvalue =  10; break;
-        case UNHAPPY: addvalue = -20; break;
+        case HAPPY:
+            addvalue =  20;
+            break;
+        case CONTENT:
+            addvalue =  10;
+            break;
+        case UNHAPPY:
+            addvalue = -20;
+            break;
         default:
             return;
     }
@@ -856,7 +849,7 @@ void Pet::SetTP(int32 TP)
 int32 Pet::GetDispTP()
 {
     if (getPetType() != HUNTER_PET)
-        return(0);
+        return (0);
     if (m_TrainingPoints < 0)
         return -m_TrainingPoints;
     else
@@ -1026,7 +1019,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     SetNativeDisplayId(creature->GetNativeDisplayId());
     SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
     SetPower(POWER_HAPPINESS, 166500);
-    setPowerType(POWER_FOCUS);
+    SetPowerType(POWER_FOCUS);
     SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, 0);
     SetUInt32Value(UNIT_FIELD_PETEXPERIENCE, 0);
     SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, sObjectMgr.GetXPForPetLevel(creature->getLevel()));
@@ -1264,7 +1257,7 @@ bool Pet::InitStatsForLevel(uint32 petlevel, Unit* owner)
     UpdateAllStats();
 
     SetHealth(GetMaxHealth());
-    SetPower(POWER_MANA, GetMaxPower(POWER_MANA));
+    SetPower(GetPowerType(), GetMaxPower(GetPowerType()));
 
     return true;
 }
@@ -1620,11 +1613,11 @@ bool Pet::addSpell(uint32 spell_id, ActiveStates active /*= ACT_DECIDE*/, PetSpe
         // do pet spell book cleanup
         if (state == PETSPELL_UNCHANGED)                    // spell load case
         {
-            sLog.outError("Pet::addSpell: nonexistent in SpellStore spell #%u request, deleting for all pets in `pet_spell`.", spell_id);
+            sLog.outError("Pet::addSpell: non-existent in SpellStore spell #%u request, deleting for all pets in `pet_spell`.", spell_id);
             CharacterDatabase.PExecute("DELETE FROM pet_spell WHERE spell = '%u'", spell_id);
         }
         else
-            sLog.outError("Pet::addSpell: nonexistent in SpellStore spell #%u request.", spell_id);
+            sLog.outError("Pet::addSpell: non-existent in SpellStore spell #%u request.", spell_id);
 
         return false;
     }

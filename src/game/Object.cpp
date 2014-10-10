@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Object.h"
 #include "SharedDefines.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "Creature.h"
 #include "Player.h"
@@ -28,9 +36,7 @@
 #include "ObjectGuid.h"
 #include "UpdateData.h"
 #include "UpdateMask.h"
-#include "Util.h"
 #include "MapManager.h"
-#include "Log.h"
 #include "Transports.h"
 #include "TargetedMovementGenerator.h"
 #include "WaypointMovementGenerator.h"
@@ -43,6 +49,8 @@
 #include "movement/packet_builder.h"
 #include "CreatureLinkingMgr.h"
 #include "Chat.h"
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
 
 Object::Object()
 {
@@ -58,6 +66,8 @@ Object::Object()
 
 Object::~Object()
 {
+    Eluna::RemoveRef(this);
+
     if (IsInWorld())
     {
         ///- Do NOT call RemoveFromWorld here, if the object is a player it will crash
@@ -284,7 +294,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, uint8 updateFlags) const
 
         *data << (float)0;
 
-        if (moveFlags & 0x2000)                             // update self
+        if (moveFlags & MOVEFLAG_FALLING)                             // update self
         {
             *data << (float)0;
             *data << (float)1.0;
@@ -303,7 +313,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, uint8 updateFlags) const
         if (m_objectTypeId == TYPEID_UNIT)
         {
             uint8 PosCount = 0;
-            if (moveFlags & 0x400000)
+            if (moveFlags & MOVEFLAG_SPLINE_ENABLED)
             {
                 *data << (uint32)0x0;
                 *data << (uint32)0x659;
@@ -552,6 +562,14 @@ void Object::SetUInt32Value(uint16 index, uint32 value)
     }
 }
 
+void Object::UpdateUInt32Value(uint16 index, uint32 value)
+{
+    MANGOS_ASSERT(index < m_valuesCount || PrintIndexError(index, true));
+
+    m_uint32Values[index] = value;
+    m_changedValues[index] = true;
+}
+
 void Object::SetUInt64Value(uint16 index, const uint64& value)
 {
     MANGOS_ASSERT(index + 1 < m_valuesCount || PrintIndexError(index, true));
@@ -753,7 +771,7 @@ void Object::RemoveShortFlag(uint16 index, bool highpart, uint16 oldFlag)
 
 bool Object::PrintIndexError(uint32 index, bool set) const
 {
-    sLog.outError("Attempt %s nonexistent value field: %u (count: %u) for object typeid: %u type mask: %u", (set ? "set value to" : "get value from"), index, m_valuesCount, GetTypeId(), m_objectType);
+    sLog.outError("Attempt %s non-existent value field: %u (count: %u) for object typeid: %u type mask: %u", (set ? "set value to" : "get value from"), index, m_valuesCount, GetTypeId(), m_objectType);
 
     // ASSERT must fail after function call
     return false;
@@ -813,15 +831,27 @@ void Object::MarkForClientUpdate()
 }
 
 WorldObject::WorldObject() :
+    elunaEvents(new ElunaEventProcessor(this)),
     m_currMap(NULL),
     m_mapId(0), m_InstanceId(0),
     m_isActiveObject(false)
 {
 }
 
+WorldObject::~WorldObject()
+{
+    Eluna::RemoveRef(this);
+    delete elunaEvents;
+}
+
 void WorldObject::CleanupsBeforeDelete()
 {
     RemoveFromWorld();
+}
+
+void WorldObject::Update(uint32 update_diff, uint32 /*time_diff*/)
+{
+    elunaEvents->Update(update_diff);
 }
 
 void WorldObject::_Create(uint32 guidlow, HighGuid guidhigh)
@@ -1236,7 +1266,7 @@ void WorldObject::MonsterSay(const char* text, uint32 /*language*/, Unit const* 
 {
     WorldPacket data;
     ChatHandler::BuildChatPacket(data, CHAT_MSG_MONSTER_SAY, text, LANG_UNIVERSAL, CHAT_TAG_NONE, GetObjectGuid(), GetName(),
-        target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
+                                 target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
     SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_FLOAT_LISTEN_RANGE_SAY), true);
 }
 
@@ -1244,7 +1274,7 @@ void WorldObject::MonsterYell(const char* text, uint32 /*language*/, Unit const*
 {
     WorldPacket data;
     ChatHandler::BuildChatPacket(data, CHAT_MSG_MONSTER_YELL, text, LANG_UNIVERSAL, CHAT_TAG_NONE, GetObjectGuid(), GetName(),
-        target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
+                                 target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
     SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_FLOAT_LISTEN_RANGE_YELL), true);
 }
 
@@ -1252,7 +1282,7 @@ void WorldObject::MonsterTextEmote(const char* text, Unit const* target, bool Is
 {
     WorldPacket data;
     ChatHandler::BuildChatPacket(data, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, text, LANG_UNIVERSAL, CHAT_TAG_NONE, GetObjectGuid(), GetName(),
-        target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
+                                 target ? target->GetObjectGuid() : ObjectGuid(),target ? target->GetName() : "");
     SendMessageToSetInRange(&data, sWorld.getConfig(IsBossEmote ? CONFIG_FLOAT_LISTEN_RANGE_YELL : CONFIG_FLOAT_LISTEN_RANGE_TEXTEMOTE), true);
 }
 
@@ -1263,7 +1293,7 @@ void WorldObject::MonsterWhisper(const char* text, Unit const* target, bool IsBo
 
     WorldPacket data;
     ChatHandler::BuildChatPacket(data, IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER, text, LANG_UNIVERSAL, CHAT_TAG_NONE, GetObjectGuid(), GetName(),
-        target->GetObjectGuid(), target->GetName());
+                                 target->GetObjectGuid(), target->GetName());
     ((Player*)target)->GetSession()->SendPacket(&data);
 }
 
@@ -1283,7 +1313,7 @@ namespace MaNGOS
                     text = i_textData->Content[0].c_str();
 
                 ChatHandler::BuildChatPacket(data, i_msgtype, text, i_language, CHAT_TAG_NONE, i_object.GetObjectGuid(), i_object.GetNameForLocaleIdx(loc_idx),
-                    i_target ? i_target->GetObjectGuid() : ObjectGuid(), i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
+                                             i_target ? i_target->GetObjectGuid() : ObjectGuid(), i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
             }
 
         private:
@@ -1449,6 +1479,8 @@ Creature* WorldObject::SummonCreature(uint32 id, float x, float y, float z, floa
 
     if (GetTypeId() == TYPEID_UNIT && ((Creature*)this)->AI())
         ((Creature*)this)->AI()->JustSummoned(pCreature);
+    if (Unit* summoner = ToUnit())
+        sEluna->OnSummoned(pCreature, summoner);
 
     // Creature Linking, Initial load is handled like respawn
     if (pCreature->IsLinkingEventTrigger())
@@ -1456,6 +1488,28 @@ Creature* WorldObject::SummonCreature(uint32 id, float x, float y, float z, floa
 
     // return the creature therewith the summoner has access to it
     return pCreature;
+}
+
+GameObject* WorldObject::SummonGameObject(uint32 id, float x, float y, float z, float angle, uint32 despwtime)
+{
+    GameObject* pGameObj = new GameObject;
+
+    Map *map = GetMap();
+
+    if (!map)
+        return NULL;
+
+    if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), id, map, x, y, z, angle))
+    {
+        delete pGameObj;
+        return NULL;
+    }
+
+    pGameObj->SetRespawnTime(despwtime/IN_MILLISECONDS);
+
+    map->Add(pGameObj);
+
+    return pGameObj;
 }
 
 // how much space should be left in front of/ behind a mob that already uses a space

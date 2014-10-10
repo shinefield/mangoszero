@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _THREATMANAGER
-#define _THREATMANAGER
+#ifndef MANGOS_H_THREATMANAGER
+#define MANGOS_H_THREATMANAGER
 
+#include <list>
+
+#include "utilities/LinkedReference/Reference.h"
 #include "Common.h"
 #include "SharedDefines.h"
-#include "Utilities/LinkedReference/Reference.h"
 #include "UnitEvents.h"
 #include "ObjectGuid.h"
-#include <list>
 
 //==============================================================
 
@@ -51,7 +59,10 @@ class MANGOS_DLL_SPEC HostileReference : public Reference<Unit, ThreatManager>
         //=================================================
         void addThreat(float pMod);
 
-        void setThreat(float pThreat) { addThreat(pThreat - getThreat()); }
+        void setThreat(float pThreat)
+        {
+            addThreat(pThreat - getThreat());
+        }
 
         void addThreatPercent(int32 pPercent)
         {
@@ -59,27 +70,44 @@ class MANGOS_DLL_SPEC HostileReference : public Reference<Unit, ThreatManager>
             addThreat(pPercent == -100 ? -iThreat : iThreat * pPercent / 100.0f);
         }
 
-        float getThreat() const { return iThreat; }
+        float getThreat() const
+        {
+            return iThreat;
+        }
 
-        bool isOnline() const { return iOnline; }
+        bool isOnline() const
+        {
+            return iOnline;
+        }
 
         // The Unit might be in water and the creature can not enter the water, but has range attack
         // in this case online = true, but accessable = false
-        bool isAccessable() const { return iAccessible; }
+        bool isAccessable() const
+        {
+            return iAccessible;
+        }
 
         // used for temporary setting a threat and reducting it later again.
         // the threat modification is stored
-        void setTempThreat(float pThreat) { iTempThreatModifyer = pThreat - getThreat(); if (iTempThreatModifyer != 0.0f) addThreat(iTempThreatModifyer);  }
+        void setTempThreat(float pThreat)
+        {
+            iTempThreatModifyer = pThreat - getThreat();
+            if (iTempThreatModifyer != 0.0f) addThreat(iTempThreatModifyer);
+        }
 
         void resetTempThreat()
         {
             if (iTempThreatModifyer != 0.0f)
             {
-                addThreat(-iTempThreatModifyer);  iTempThreatModifyer = 0.0f;
+                addThreat(-iTempThreatModifyer);
+                iTempThreatModifyer = 0.0f;
             }
         }
 
-        float getTempThreatModifyer() { return iTempThreatModifyer; }
+        float getTempThreatModifyer()
+        {
+            return iTempThreatModifyer;
+        }
 
         //=================================================
         // check, if source can reach target and set the status
@@ -90,11 +118,17 @@ class MANGOS_DLL_SPEC HostileReference : public Reference<Unit, ThreatManager>
         void setAccessibleState(bool pIsAccessible);
         //=================================================
 
-        bool operator ==(const HostileReference& pHostileReference) const { return pHostileReference.getUnitGuid() == getUnitGuid(); }
+        bool operator ==(const HostileReference& pHostileReference) const
+        {
+            return pHostileReference.getUnitGuid() == getUnitGuid();
+        }
 
         //=================================================
 
-        ObjectGuid const& getUnitGuid() const { return iUnitGuid; }
+        ObjectGuid const& getUnitGuid() const
+        {
+            return iUnitGuid;
+        }
 
         //=================================================
         // reference is not needed anymore. realy delete it !
@@ -103,7 +137,10 @@ class MANGOS_DLL_SPEC HostileReference : public Reference<Unit, ThreatManager>
 
         //=================================================
 
-        HostileReference* next() { return ((HostileReference*) Reference<Unit, ThreatManager>::next()); }
+        HostileReference* next()
+        {
+            return ((HostileReference*) Reference<Unit, ThreatManager>::next());
+        }
 
         //=================================================
 
@@ -141,14 +178,26 @@ class MANGOS_DLL_SPEC ThreatContainer
     protected:
         friend class ThreatManager;
 
-        void remove(HostileReference* pRef) { iThreatList.remove(pRef); }
-        void addReference(HostileReference* pHostileReference) { iThreatList.push_back(pHostileReference); }
+        void remove(HostileReference* pRef)
+        {
+            iThreatList.remove(pRef);
+        }
+        void addReference(HostileReference* pHostileReference)
+        {
+            iThreatList.push_back(pHostileReference);
+        }
         void clearReferences();
         // Sort the list if necessary
         void update();
     public:
-        ThreatContainer() { iDirty = false; }
-        ~ThreatContainer() { clearReferences(); }
+        ThreatContainer()
+        {
+            iDirty = false;
+        }
+        ~ThreatContainer()
+        {
+            clearReferences();
+        }
 
         HostileReference* addThreat(Unit* pVictim, float pThreat);
 
@@ -156,17 +205,32 @@ class MANGOS_DLL_SPEC ThreatContainer
 
         HostileReference* selectNextVictim(Creature* pAttacker, HostileReference* pCurrentVictim);
 
-        void setDirty(bool pDirty) { iDirty = pDirty; }
+        void setDirty(bool pDirty)
+        {
+            iDirty = pDirty;
+        }
 
-        bool isDirty() const { return iDirty; }
+        bool isDirty() const
+        {
+            return iDirty;
+        }
 
-        bool empty() const { return iThreatList.empty(); }
+        bool empty() const
+        {
+            return iThreatList.empty();
+        }
 
-        HostileReference* getMostHated() { return iThreatList.empty() ? NULL : iThreatList.front(); }
+        HostileReference* getMostHated()
+        {
+            return iThreatList.empty() ? NULL : iThreatList.front();
+        }
 
         HostileReference* getReferenceByTarget(Unit* pVictim);
 
-        ThreatList const& getThreatList() const { return iThreatList; }
+        ThreatList const& getThreatList() const
+        {
+            return iThreatList;
+        }
 };
 
 //=================================================
@@ -178,12 +242,18 @@ class MANGOS_DLL_SPEC ThreatManager
 
         explicit ThreatManager(Unit* pOwner);
 
-        ~ThreatManager() { clearReferences(); }
+        ~ThreatManager()
+        {
+            clearReferences();
+        }
 
         void clearReferences();
 
         void addThreat(Unit* pVictim, float threat, bool crit, SpellSchoolMask schoolMask, SpellEntry const* threatSpell);
-        void addThreat(Unit* pVictim, float threat) { addThreat(pVictim, threat, false, SPELL_SCHOOL_MASK_NONE, NULL); }
+        void addThreat(Unit* pVictim, float threat)
+        {
+            addThreat(pVictim, threat, false, SPELL_SCHOOL_MASK_NONE, NULL);
+        }
 
         // add threat as raw value (ignore redirections and expection all mods applied already to it
         void addThreatDirectly(Unit* pVictim, float threat);
@@ -192,13 +262,22 @@ class MANGOS_DLL_SPEC ThreatManager
 
         float getThreat(Unit* pVictim, bool pAlsoSearchOfflineList = false);
 
-        bool isThreatListEmpty() const { return iThreatContainer.empty(); }
+        bool isThreatListEmpty() const
+        {
+            return iThreatContainer.empty();
+        }
 
         void processThreatEvent(ThreatRefStatusChangeEvent* threatRefStatusChangeEvent);
 
-        HostileReference* getCurrentVictim() { return iCurrentVictim; }
+        HostileReference* getCurrentVictim()
+        {
+            return iCurrentVictim;
+        }
 
-        Unit*  getOwner() const { return iOwner; }
+        Unit*  getOwner() const
+        {
+            return iOwner;
+        }
 
         Unit* getHostileTarget();
 
@@ -207,10 +286,16 @@ class MANGOS_DLL_SPEC ThreatManager
 
         void setCurrentVictim(HostileReference* pHostileReference);
 
-        void setDirty(bool pDirty) { iThreatContainer.setDirty(pDirty); }
+        void setDirty(bool pDirty)
+        {
+            iThreatContainer.setDirty(pDirty);
+        }
 
         // Don't must be used for explicit modify threat values in iterator return pointers
-        ThreatList const& getThreatList() const { return iThreatContainer.getThreatList(); }
+        ThreatList const& getThreatList() const
+        {
+            return iThreatContainer.getThreatList();
+        }
     private:
         HostileReference* iCurrentVictim;
         Unit* iOwner;

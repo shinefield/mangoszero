@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _MODELINSTANCE_H_
-#define _MODELINSTANCE_H_
+#ifndef MANGOS_H_MODELINSTANCE
+#define MANGOS_H_MODELINSTANCE
 
 #include <G3D/Matrix3.h>
 #include <G3D/Vector3.h>
 #include <G3D/AABox.h>
 #include <G3D/Ray.h>
 
-#include "Platform/Define.h"
+#include "platform/Define.h"
 
 namespace VMAP
 {
@@ -51,10 +58,16 @@ namespace VMAP
             float iScale;
             G3D::AABox iBound;
             std::string name;
-            bool operator==(const ModelSpawn& other) const { return ID == other.ID; }
+            bool operator==(const ModelSpawn& other) const
+            {
+                return ID == other.ID;
+            }
             // uint32 hashCode() const { return ID; }
             // temp?
-            const G3D::AABox& getBounds() const { return iBound; }
+            const G3D::AABox& getBounds() const
+            {
+                return iBound;
+            }
 
 
             static bool readFromFile(FILE* rf, ModelSpawn& spawn);
@@ -66,7 +79,10 @@ namespace VMAP
         public:
             ModelInstance(): iModel(0) {}
             ModelInstance(const ModelSpawn& spawn, WorldModel* model);
-            void setUnloaded() { iModel = 0; }
+            void setUnloaded()
+            {
+                iModel = 0;
+            }
             bool intersectRay(const G3D::Ray& pRay, float& pMaxDist, bool pStopAtFirstHit) const;
             void intersectPoint(const G3D::Vector3& p, AreaInfo& info) const;
             bool GetLocationInfo(const G3D::Vector3& p, LocationInfo& info) const;

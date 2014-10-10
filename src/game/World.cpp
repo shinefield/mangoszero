@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup world
-*/
-
+#include "platform/Define.h"
+#include "policies/Singleton.h"
+#include "configuration/Config.h"
+#include "database/DatabaseEnv.h"
+#include "database/DatabaseImpl.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "system/SystemConfig.h"
 #include "World.h"
-#include "Database/DatabaseEnv.h"
-#include "Config/Config.h"
-#include "Platform/Define.h"
-#include "SystemConfig.h"
-#include "Log.h"
 #include "Opcodes.h"
 #include "WorldSession.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "Weather.h"
 #include "Player.h"
 #include "AccountMgr.h"
@@ -45,7 +51,6 @@
 #include "MapManager.h"
 #include "ScriptMgr.h"
 #include "CreatureAIRegistry.h"
-#include "Policies/Singleton.h"
 #include "BattleGround/BattleGroundMgr.h"
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "TemporarySummon.h"
@@ -53,16 +58,16 @@
 #include "MoveMap.h"
 #include "GameEventMgr.h"
 #include "PoolManager.h"
-#include "Database/DatabaseImpl.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "MapPersistentStateMgr.h"
 #include "WaypointManager.h"
 #include "GMTicketMgr.h"
-#include "Util.h"
 #include "AuctionHouseBot/AuctionHouseBot.h"
 #include "CharacterDatabaseCleaner.h"
 #include "CreatureLinkingMgr.h"
+#include "LFGMgr.h"
+#include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(World);
 
@@ -144,6 +149,7 @@ void World::CleanupsBeforeStop()
     KickAll();                                       // save and kick all players
     UpdateSessions(1);                               // real players unload required UpdateSessions call
     sBattleGroundMgr.DeleteAllBattleGrounds();       // unload battleground templates before different singletons destroyed
+    Eluna::Uninitialize();
 }
 
 /// Find a player in a specified zone
@@ -837,6 +843,11 @@ void World::LoadConfigSettings(bool reload)
     std::string ignoreMapIds = sConfig.GetStringDefault("mmap.ignoreMapIds", "");
     MMAP::MMapFactory::preventPathfindingOnMaps(ignoreMapIds.c_str());
     sLog.outString("WORLD: mmap pathfinding %sabled", getConfig(CONFIG_BOOL_MMAP_ENABLED) ? "en" : "dis");
+
+    setConfig(CONFIG_BOOL_ELUNA_ENABLED, "Eluna.Enabled", false);
+
+    if (reload)
+        sEluna->OnConfigLoad(reload);
 }
 
 /// Initialize the World
@@ -921,6 +932,10 @@ void World::SetInitialWorldSettings()
     ///- Init highest guids before any guid using table loading to prevent using not initialized guids in some code.
     sObjectMgr.SetHighestGuids();                           // must be after packing instances
     sLog.outString();
+
+    ///- Initialize Lua Engine
+    sLog.outString("Initialize Eluna Lua Engine...");
+    Eluna::Initialize();
 
     sLog.outString("Loading Page Texts...");
     sObjectMgr.LoadPageTexts();
@@ -1304,6 +1319,11 @@ void World::SetInitialWorldSettings()
     sLog.outString("Initialize AuctionHouseBot...");
     sAuctionBot.Initialize();
 
+    ///- Run eluna scripts.
+    // in multithread foreach: run scripts
+    sEluna->RunScripts();
+    sEluna->OnConfigLoad(false); // Must be done after Eluna is initialized and scripts have run
+
     sLog.outString("WORLD: World initialized");
 
     uint32 uStartInterval = WorldTimer::getMSTimeDiff(uStartTime, WorldTimer::getMSTime());
@@ -1434,7 +1454,11 @@ void World::Update(uint32 diff)
     ///- Update objects (maps, transport, creatures,...)
     sMapMgr.Update(diff);
     sBattleGroundMgr.Update(diff);
+    sLFGMgr.Update(diff);
     sOutdoorPvPMgr.Update(diff);
+
+    ///- used by eluna
+    sEluna->OnWorldUpdate(diff);
 
     ///- Delete all characters which have been deleted X days before
     if (m_timers[WUPDATE_DELETECHARS].Passed())
@@ -1485,6 +1509,9 @@ void World::Update(uint32 diff)
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
 
+    ///- Used by Eluna
+    sEluna->OnWorldUpdate(diff);
+
     // cleanup unused GridMap objects as well as VMaps
     sTerrainMgr.Update(diff);
 }
@@ -1516,7 +1543,12 @@ namespace MaNGOS
                     do_helper(data_list, (char*)text);
             }
         private:
-            char* lineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
+            char* lineFromMessage(char*& pos)
+            {
+                char* start = strtok(pos, "\n");
+                pos = NULL;
+                return start;
+            }
             void do_helper(WorldPacketList& data_list, char* text)
             {
                 char* pos = text;
@@ -1779,6 +1811,8 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode)
         m_ShutdownTimer = time;
         ShutdownMsg(true);
     }
+    ///- Used by Eluna
+    sEluna->OnShutdownInitiate(ShutdownExitCode(exitcode), ShutdownMask(options));
 }
 
 /// Display a shutdown message to the user(s)
@@ -1820,6 +1854,9 @@ void World::ShutdownCancel()
     SendServerMessage(msgid);
 
     DEBUG_LOG("Server %s cancelled.", (m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shutdown"));
+
+    ///- Used by Eluna
+    sEluna->OnShutdownCancel();
 }
 
 void World::UpdateSessions(uint32 /*diff*/)
@@ -2139,4 +2176,11 @@ bool World::configNoReload(bool reload, eConfigBoolValues index, char const* fie
         sLog.outError("%s option can't be changed at mangosd.conf reload, using current value (%s).", fieldname, getConfig(index) ? "'true'" : "'false'");
 
     return false;
+}
+
+void World::InvalidatePlayerDataToAllClient(ObjectGuid guid)
+{
+    WorldPacket data(SMSG_INVALIDATE_PLAYER, 8);
+    data << guid;
+    SendGlobalMessage(&data);
 }

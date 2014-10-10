@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +18,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
+#include "database/DatabaseEnv.h"
+#include "system/ProgressBar.h"
+#include "log/Log.h"
 #include "AuctionHouseMgr.h"
-#include "Database/DatabaseEnv.h"
 #include "SQLStorages.h"
 #include "DBCStores.h"
-#include "ProgressBar.h"
-
 #include "AccountMgr.h"
 #include "Item.h"
 #include "Language.h"
-#include "Log.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "Player.h"
 #include "World.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Mail.h"
-
-#include "Policies/Singleton.h"
+#include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(AuctionHouseMgr);
 
@@ -56,9 +62,12 @@ AuctionHouseObject* AuctionHouseMgr::GetAuctionsMap(AuctionHouseEntry const* hou
     // team have linked auction houses
     switch (GetAuctionHouseTeam(house))
     {
-        case ALLIANCE: return &mAuctions[AUCTION_HOUSE_ALLIANCE];
-        case HORDE:    return &mAuctions[AUCTION_HOUSE_HORDE];
-        default:       return &mAuctions[AUCTION_HOUSE_NEUTRAL];
+        case ALLIANCE:
+            return &mAuctions[AUCTION_HOUSE_ALLIANCE];
+        case HORDE:
+            return &mAuctions[AUCTION_HOUSE_HORDE];
+        default:
+            return &mAuctions[AUCTION_HOUSE_NEUTRAL];
     }
 }
 
@@ -456,9 +465,13 @@ uint32 AuctionHouseMgr::GetAuctionHouseTeam(AuctionHouseEntry const* house)
     // so more easy just sort by auction house ids
     switch (house->houseId)
     {
-        case 1: case 2: case 3:
+        case 1:
+        case 2:
+        case 3:
             return ALLIANCE;
-        case 4: case 5: case 6:
+        case 4:
+        case 5:
+        case 6:
             return HORDE;
         case 7:
         default:
@@ -468,28 +481,48 @@ uint32 AuctionHouseMgr::GetAuctionHouseTeam(AuctionHouseEntry const* house)
 
 AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(Unit* unit)
 {
-    uint32 houseid = 1;                                     // dwarf auction house (used for normal cut/etc percents)
+    uint32 houseid = 1;                                     // dwarf auction house (used for normal cut)
 
     if (!sWorld.getConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
     {
         if (unit->GetTypeId() == TYPEID_UNIT)
         {
-            // FIXME: found way for proper auctionhouse selection by another way
+            // FIXME: found way for proper auction house selection by another way
             // AuctionHouse.dbc have faction field with _player_ factions associated with auction house races.
             // but no easy way convert creature faction to player race faction for specific city
             uint32 factionTemplateId = unit->getFaction();
             switch (factionTemplateId)
             {
-                case   12: houseid = 1; break;              // human
-                case   29: houseid = 6; break;              // orc, and generic for horde
-                case   55: houseid = 2; break;              // dwarf/gnome, and generic for alliance
-                case   68: houseid = 4; break;              // undead
-                case   80: houseid = 3; break;              // n-elf
-                case  104: houseid = 5; break;              // trolls
-                case  120: houseid = 7; break;              // booty bay, neutral
-                case  474: houseid = 7; break;              // gadgetzan, neutral
-                case  534: houseid = 2; break;              // Alliance Generic
-                case  855: houseid = 7; break;              // everlook, neutral
+                case   12:
+                    houseid = 1;                            // human
+                    break;
+                case   29:
+                    houseid = 6;                            // orc, and generic for horde
+                    break;
+                case   55:
+                    houseid = 2;                            // dwarf/gnome, and generic for alliance
+                    break;
+                case   68:
+                    houseid = 4;                            // undead
+                    break;
+                case   80:
+                    houseid = 3;                            // night elf
+                    break;
+                case  104:
+                    houseid = 5;                            // trolls
+                    break;
+                case  120:
+                    houseid = 7;                            // booty bay, neutral
+                    break;
+                case  474:
+                    houseid = 7;                            // gadgetzan, neutral
+                    break;
+                case  534:
+                    houseid = 2;                            // Alliance Generic
+                    break;
+                case  855:
+                    houseid = 7;                            // everlook, neutral
+                    break;
                 default:                                    // for unknown case
                 {
                     FactionTemplateEntry const* u_entry = sFactionTemplateStore.LookupEntry(factionTemplateId);
@@ -514,9 +547,14 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(Unit* unit)
             {
                 switch (((Player*)unit)->GetTeam())
                 {
-                    case ALLIANCE: houseid = player->GetAuctionAccessMode() == 0 ? 1 : 6; break;
-                    case HORDE:    houseid = player->GetAuctionAccessMode() == 0 ? 6 : 1; break;
-                    default: break;
+                    case ALLIANCE:
+                        houseid = player->GetAuctionAccessMode() == 0 ? 1 : 6;
+                        break;
+                    case HORDE:
+                        houseid = player->GetAuctionAccessMode() == 0 ? 6 : 1;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -525,11 +563,19 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(Unit* unit)
     return sAuctionHouseStore.LookupEntry(houseid);
 }
 
+AuctionHouseObject::~AuctionHouseObject()
+{
+    Eluna::RemoveRef(this);
+
+    for (AuctionEntryMap::const_iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end(); ++itr)
+        delete itr->second;
+}
+
 void AuctionHouseObject::Update()
 {
     time_t curTime = sWorld.GetGameTime();
     ///- Handle expired auctions
-    for (AuctionEntryMap::iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end(); )
+    for (AuctionEntryMap::iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end();)
     {
         if (curTime > itr->second->expireTime)
         {
@@ -617,6 +663,11 @@ void AuctionHouseObject::BuildListAuctionItems(WorldPacket& data, Player* player
             {
                 if (player->CanUseItem(item) != EQUIP_ERR_OK)
                     continue;
+
+                if (usable != 0x00 && proto->Class == ITEM_CLASS_RECIPE)
+                    if (SpellEntry const* spell = sSpellStore.LookupEntry(proto->Spells[0].SpellId))
+                        if (player->HasSpell(spell->EffectTriggerSpell[EFFECT_INDEX_0]))
+                            continue;
 
                 if (proto->Class == ITEM_CLASS_RECIPE)
                 {

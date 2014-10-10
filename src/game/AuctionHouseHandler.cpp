@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#include "WorldPacket.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
@@ -27,8 +35,8 @@
 #include "UpdateMask.h"
 #include "AuctionHouseMgr.h"
 #include "Mail.h"
-#include "Util.h"
 #include "Chat.h"
+#include "LuaEngine.h"
 
 // please DO NOT use iterator++, because it is slower than ++iterator!!!
 // post-incrementation is always slower than pre-incrementation !
@@ -150,7 +158,7 @@ void WorldSession::SendAuctionOutbiddedMail(AuctionEntry* auction)
     Player* oldBidder = sObjectMgr.GetPlayer(oldBidder_guid);
 
     uint32 oldBidder_accId = 0;
-    if(!oldBidder)
+    if (!oldBidder)
         oldBidder_accId = sObjectMgr.GetPlayerAccountIdByGUID(oldBidder_guid);
 
     // old bidder exist
@@ -324,6 +332,9 @@ void WorldSession::HandleAuctionSellItem(WorldPacket& recv_data)
                itemGuid.GetString().c_str(), auctioneerGuid.GetString().c_str(), bid, buyout, etime, auctionHouseEntry->houseId);
 
     SendAuctionCommandResult(AH, AUCTION_STARTED, AUCTION_OK);
+
+    // used by eluna
+    sEluna->OnAdd(auctionHouse);
 }
 
 // this function is called when client bids or buys out auction
@@ -440,7 +451,7 @@ void WorldSession::HandleAuctionRemoveItem(WorldPacket& recv_data)
     Item* pItem = sAuctionMgr.GetAItem(auction->itemGuidLow);
     if (!pItem)
     {
-        sLog.outError("Auction id: %u has nonexistent item (item guid : %u)!!!", auction->Id, auction->itemGuidLow);
+        sLog.outError("Auction id: %u has non-existent item (item guid : %u)!!!", auction->Id, auction->itemGuidLow);
         SendAuctionCommandResult(NULL, AUCTION_REMOVED, AUCTION_ERR_INVENTORY, EQUIP_ERR_ITEM_NOT_FOUND);
         return;
     }
@@ -473,6 +484,8 @@ void WorldSession::HandleAuctionRemoveItem(WorldPacket& recv_data)
     pl->SaveInventoryAndGoldToDB();
     CharacterDatabase.CommitTransaction();
     sAuctionMgr.RemoveAItem(auction->itemGuidLow);
+    // used by eluna
+    sEluna->OnRemove(auctionHouse);
     auctionHouse->RemoveAuction(auction->Id);
     delete auction;
 }

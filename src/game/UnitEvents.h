@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _UNITEVENTS
-#define _UNITEVENTS
+#ifndef MANGOS_H_UNITEVENTS
+#define MANGOS_H_UNITEVENTS
 
 #include "Common.h"
 
@@ -66,11 +73,23 @@ class MANGOS_DLL_SPEC UnitBaseEvent
     private:
         uint32 iType;
     public:
-        UnitBaseEvent(uint32 pType) { iType = pType; }
-        uint32 getType() const { return iType; }
-        bool matchesTypeMask(uint32 pMask) const { return iType & pMask; }
+        UnitBaseEvent(uint32 pType)
+        {
+            iType = pType;
+        }
+        uint32 getType() const
+        {
+            return iType;
+        }
+        bool matchesTypeMask(uint32 pMask) const
+        {
+            return iType & pMask;
+        }
 
-        void setType(uint32 pType) { iType = pType; }
+        void setType(uint32 pType)
+        {
+            iType = pType;
+        }
 };
 
 //==============================================================
@@ -87,27 +106,62 @@ class MANGOS_DLL_SPEC ThreatRefStatusChangeEvent : public UnitBaseEvent
         };
         ThreatManager* iThreatManager;
     public:
-        ThreatRefStatusChangeEvent(uint32 pType) : UnitBaseEvent(pType) { iHostileReference = NULL; }
+        ThreatRefStatusChangeEvent(uint32 pType) : UnitBaseEvent(pType)
+        {
+            iHostileReference = NULL;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, float pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iFValue = pValue; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, float pValue) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+            iFValue = pValue;
+        }
 
-        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, bool pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iBValue = pValue; }
+        ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, bool pValue) : UnitBaseEvent(pType)
+        {
+            iHostileReference = pHostileReference;
+            iBValue = pValue;
+        }
 
-        int32 getIValue() const { return iIValue; }
+        int32 getIValue() const
+        {
+            return iIValue;
+        }
 
-        float getFValue() const { return iFValue; }
+        float getFValue() const
+        {
+            return iFValue;
+        }
 
-        bool getBValue() const { return iBValue; }
+        bool getBValue() const
+        {
+            return iBValue;
+        }
 
-        void setBValue(bool pValue) { iBValue = pValue; }
+        void setBValue(bool pValue)
+        {
+            iBValue = pValue;
+        }
 
-        HostileReference* getReference() const { return iHostileReference; }
+        HostileReference* getReference() const
+        {
+            return iHostileReference;
+        }
 
-        void setThreatManager(ThreatManager* pThreatManager) { iThreatManager = pThreatManager; }
+        void setThreatManager(ThreatManager* pThreatManager)
+        {
+            iThreatManager = pThreatManager;
+        }
 
-        ThreatManager* getThreatManager() const { return iThreatManager; }
+        ThreatManager* getThreatManager() const
+        {
+            return iThreatManager;
+        }
 };
 
 //==============================================================
@@ -120,9 +174,15 @@ class MANGOS_DLL_SPEC ThreatManagerEvent : public ThreatRefStatusChangeEvent
         ThreatManagerEvent(uint32 pType) : ThreatRefStatusChangeEvent(pType) {}
         ThreatManagerEvent(uint32 pType, HostileReference* pHostileReference) : ThreatRefStatusChangeEvent(pType, pHostileReference) {}
 
-        void setThreatContainer(ThreatContainer* pThreatContainer) { iThreatContainer = pThreatContainer; }
+        void setThreatContainer(ThreatContainer* pThreatContainer)
+        {
+            iThreatContainer = pThreatContainer;
+        }
 
-        ThreatContainer* getThreatContainer() const { return iThreatContainer; }
+        ThreatContainer* getThreatContainer() const
+        {
+            return iThreatContainer;
+        }
 };
 
 //==============================================================

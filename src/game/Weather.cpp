@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup world
-*/
-
+#include "log/Log.h"
+#include "utilities/Util.h"
 #include "Weather.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "World.h"
-#include "Log.h"
 #include "ObjectMgr.h"
-#include "Util.h"
+#include "LuaEngine.h"
 
 /// Weather sound defines ( only for 1.12 )
 enum WeatherSounds
@@ -53,6 +57,11 @@ Weather::Weather(uint32 zone, WeatherZoneChances const* weatherChances) : m_zone
 
     DETAIL_FILTER_LOG(LOG_FILTER_WEATHER, "WORLD: Starting weather system for zone %u (change every %u minutes).", m_zone, (m_timer.GetInterval() / (MINUTE * IN_MILLISECONDS)));
 }
+
+Weather::~Weather()
+{
+    Eluna::RemoveRef(this);
+};
 
 /// Launch a weather update
 bool Weather::Update(time_t diff)
@@ -211,7 +220,7 @@ void Weather::SendFineWeatherUpdateToPlayer(Player* player)
 {
     WorldPacket data(SMSG_WEATHER, (4 + 4 + 4));
 
-    data << (uint32)WEATHER_STATE_FINE << (float)0.0f << uint8(0); // no sound
+    data << (uint32)WEATHER_STATE_FINE << (float)0.0f << uint32(0); // no sound
     player->GetSession()->SendPacket(&data);
 }
 
@@ -273,7 +282,7 @@ bool Weather::UpdateWeather()
     }
 
     DETAIL_FILTER_LOG(LOG_FILTER_WEATHER, "Change the weather of zone %u to %s.", m_zone, wthstr);
-
+    sEluna->OnChange(this, (WeatherState)m_type, m_grade);
     return true;
 }
 

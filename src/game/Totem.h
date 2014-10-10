@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_TOTEM_H
-#define MANGOSSERVER_TOTEM_H
+#ifndef MANGOS_H_TOTEM
+#define MANGOS_H_TOTEM
 
 #include "Creature.h"
 
@@ -37,16 +44,34 @@ class Totem : public Creature
         void Update(uint32 update_diff, uint32 time) override;
         void Summon(Unit* owner);
         void UnSummon();
-        uint32 GetSpell() const { return m_spells[0]; }
-        uint32 GetTotemDuration() const { return m_duration; }
+        uint32 GetSpell() const
+        {
+            return m_spells[0];
+        }
+        uint32 GetTotemDuration() const
+        {
+            return m_duration;
+        }
         Unit* GetOwner();
-        TotemType GetTotemType() const { return m_type; }
+        TotemType GetTotemType() const
+        {
+            return m_type;
+        }
         void SetTypeBySummonSpell(SpellEntry const* spellProto);
-        void SetDuration(uint32 dur) { m_duration = dur; }
+        void SetDuration(uint32 dur)
+        {
+            m_duration = dur;
+        }
         void SetOwner(Unit* owner);
 
-        bool UpdateStats(Stats /*stat*/) override { return true; }
-        bool UpdateAllStats() override { return true; }
+        bool UpdateStats(Stats /*stat*/) override
+        {
+            return true;
+        }
+        bool UpdateAllStats() override
+        {
+            return true;
+        }
         void UpdateResistances(uint32 /*school*/) override {}
         void UpdateArmor() override {}
         void UpdateMaxHealth() override {}

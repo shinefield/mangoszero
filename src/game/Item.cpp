@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "database/DatabaseEnv.h"
 #include "Item.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
-#include "WorldPacket.h"
-#include "Database/DatabaseEnv.h"
+#include "network/WorldPacket.h"
 #include "ItemEnchantmentMgr.h"
 #include "SQLStorages.h"
+#include "LuaEngine.h"
 
 void AddItemsSetItem(Player* player, Item* item)
 {
@@ -230,6 +238,11 @@ Item::Item() :
     m_lootState = ITEM_LOOT_NONE;
 }
 
+Item::~Item()
+{
+    Eluna::RemoveRef(this);
+}
+
 bool Item::Create(uint32 guidlow, uint32 itemid, Player const* owner)
 {
     Object::_Create(guidlow, 0, HIGHGUID_ITEM);
@@ -256,6 +269,13 @@ bool Item::Create(uint32 guidlow, uint32 itemid, Player const* owner)
     return true;
 }
 
+bool Item::IsNotEmptyBag() const
+{
+    if (Bag const* bag = ToBag())
+        return !bag->IsEmpty();
+    return false;
+}
+
 void Item::UpdateDuration(Player* owner, uint32 diff)
 {
     if (!GetUInt32Value(ITEM_FIELD_DURATION))
@@ -265,6 +285,8 @@ void Item::UpdateDuration(Player* owner, uint32 diff)
 
     if (GetUInt32Value(ITEM_FIELD_DURATION) <= diff)
     {
+        // used by eluna
+        sEluna->OnExpire(owner, GetProto());
         owner->DestroyItem(GetBagSlot(), GetSlot(), true);
         return;
     }
@@ -292,7 +314,8 @@ void Item::SaveToDB()
 
             stmt = CharacterDatabase.CreateStatement(insItem, "INSERT INTO item_instance (guid,owner_guid,data) VALUES (?, ?, ?)");
             stmt.PExecute(guid, GetOwnerGuid().GetCounter(), ss.str().c_str());
-        } break;
+        }
+        break;
         case ITEM_CHANGED:
         {
             static SqlStatementID updInstance ;
@@ -311,7 +334,8 @@ void Item::SaveToDB()
                 stmt = CharacterDatabase.CreateStatement(updGifts, "UPDATE character_gifts SET guid = ? WHERE item_guid = ?");
                 stmt.PExecute(GetOwnerGuid().GetCounter(), GetGUIDLow());
             }
-        } break;
+        }
+        break;
         case ITEM_REMOVED:
         {
             static SqlStatementID delItemText;
@@ -596,32 +620,54 @@ uint32 Item::GetSpell()
         case ITEM_CLASS_WEAPON:
             switch (proto->SubClass)
             {
-                case ITEM_SUBCLASS_WEAPON_AXE:     return  196;
-                case ITEM_SUBCLASS_WEAPON_AXE2:    return  197;
-                case ITEM_SUBCLASS_WEAPON_BOW:     return  264;
-                case ITEM_SUBCLASS_WEAPON_GUN:     return  266;
-                case ITEM_SUBCLASS_WEAPON_MACE:    return  198;
-                case ITEM_SUBCLASS_WEAPON_MACE2:   return  199;
-                case ITEM_SUBCLASS_WEAPON_POLEARM: return  200;
-                case ITEM_SUBCLASS_WEAPON_SWORD:   return  201;
-                case ITEM_SUBCLASS_WEAPON_SWORD2:  return  202;
-                case ITEM_SUBCLASS_WEAPON_STAFF:   return  227;
-                case ITEM_SUBCLASS_WEAPON_DAGGER:  return 1180;
-                case ITEM_SUBCLASS_WEAPON_THROWN:  return 2567;
-                case ITEM_SUBCLASS_WEAPON_SPEAR:   return 3386;
-                case ITEM_SUBCLASS_WEAPON_CROSSBOW: return 5011;
-                case ITEM_SUBCLASS_WEAPON_WAND:    return 5009;
-                default: return 0;
+                case ITEM_SUBCLASS_WEAPON_AXE:
+                    return  196;
+                case ITEM_SUBCLASS_WEAPON_AXE2:
+                    return  197;
+                case ITEM_SUBCLASS_WEAPON_BOW:
+                    return  264;
+                case ITEM_SUBCLASS_WEAPON_GUN:
+                    return  266;
+                case ITEM_SUBCLASS_WEAPON_MACE:
+                    return  198;
+                case ITEM_SUBCLASS_WEAPON_MACE2:
+                    return  199;
+                case ITEM_SUBCLASS_WEAPON_POLEARM:
+                    return  200;
+                case ITEM_SUBCLASS_WEAPON_SWORD:
+                    return  201;
+                case ITEM_SUBCLASS_WEAPON_SWORD2:
+                    return  202;
+                case ITEM_SUBCLASS_WEAPON_STAFF:
+                    return  227;
+                case ITEM_SUBCLASS_WEAPON_DAGGER:
+                    return 1180;
+                case ITEM_SUBCLASS_WEAPON_THROWN:
+                    return 2567;
+                case ITEM_SUBCLASS_WEAPON_SPEAR:
+                    return 3386;
+                case ITEM_SUBCLASS_WEAPON_CROSSBOW:
+                    return 5011;
+                case ITEM_SUBCLASS_WEAPON_WAND:
+                    return 5009;
+                default:
+                    return 0;
             }
         case ITEM_CLASS_ARMOR:
             switch (proto->SubClass)
             {
-                case ITEM_SUBCLASS_ARMOR_CLOTH:    return 9078;
-                case ITEM_SUBCLASS_ARMOR_LEATHER:  return 9077;
-                case ITEM_SUBCLASS_ARMOR_MAIL:     return 8737;
-                case ITEM_SUBCLASS_ARMOR_PLATE:    return  750;
-                case ITEM_SUBCLASS_ARMOR_SHIELD:   return 9116;
-                default: return 0;
+                case ITEM_SUBCLASS_ARMOR_CLOTH:
+                    return 9078;
+                case ITEM_SUBCLASS_ARMOR_LEATHER:
+                    return 9077;
+                case ITEM_SUBCLASS_ARMOR_MAIL:
+                    return 8737;
+                case ITEM_SUBCLASS_ARMOR_PLATE:
+                    return  750;
+                case ITEM_SUBCLASS_ARMOR_SHIELD:
+                    return 9116;
+                default:
+                    return 0;
             }
     }
     return 0;

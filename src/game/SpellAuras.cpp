@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "UpdateMask.h"
 #include "World.h"
 #include "ObjectMgr.h"
@@ -33,7 +42,6 @@
 #include "Group.h"
 #include "UpdateData.h"
 #include "ObjectAccessor.h"
-#include "Policies/Singleton.h"
 #include "Totem.h"
 #include "Creature.h"
 #include "Formulas.h"
@@ -41,11 +49,11 @@
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "CreatureAI.h"
 #include "ScriptMgr.h"
-#include "Util.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "MapManager.h"
+#include "LuaEngine.h"
 
 #define NULL_AURA_SLOT 0xFF
 
@@ -288,6 +296,7 @@ Aura::Aura(SpellEntry const* spellproto, SpellEffectIndex eff, int32* currentBas
 
 Aura::~Aura()
 {
+    Eluna::RemoveRef(this);
 }
 
 AreaAura::AreaAura(SpellEntry const* spellproto, SpellEffectIndex eff, int32* currentBasePoints, SpellAuraHolder* holder, Unit* target,
@@ -473,7 +482,7 @@ void AreaAura::Update(uint32 diff)
                     continue;
 
                 // Skip some targets (TODO: Might require better checks, also unclear how the actual caster must/can be handled)
-                if (GetSpellProto()->HasAttribute(SPELL_ATTR_EX3_TARGET_ONLY_PLAYER) && (*tIter)->GetTypeId() != TYPEID_PLAYER)
+                if (GetSpellProto()->HasAttribute(SPELL_ATTR_EX3_ONLY_TARGET_PLAYERS) && (*tIter)->GetTypeId() != TYPEID_PLAYER)
                     continue;
 
                 if (SpellEntry const* actualSpellInfo = sSpellMgr.SelectAuraRankForLevel(GetSpellProto(), (*tIter)->getLevel()))
@@ -685,7 +694,10 @@ void Aura::ReapplyAffectedPassiveAuras(Unit* target)
 struct ReapplyAffectedPassiveAurasHelper
 {
     explicit ReapplyAffectedPassiveAurasHelper(Aura* _aura) : aura(_aura) {}
-    void operator()(Unit* unit) const { aura->ReapplyAffectedPassiveAuras(unit); }
+    void operator()(Unit* unit) const
+    {
+        aura->ReapplyAffectedPassiveAuras(unit);
+    }
     Aura* aura;
 };
 
@@ -788,8 +800,9 @@ void Aura::TriggerSpell()
 //                    // Polymorphic Ray
 //                    case 6965: break;
                     case 9712:                              // Thaumaturgy Channel
-                        trigger_spell_id = 21029;
-                        break;
+                        if (Unit* caster = GetCaster())
+                            caster->CastSpell(caster, 21029, true);
+                        return;
                     case 23170:                             // Brood Affliction: Bronze
                     {
                         target->CastSpell(target, 23171, true, NULL, this);
@@ -1050,9 +1063,14 @@ void Aura::TriggerSpell()
                     {
                         switch ((*i)->GetModifier()->m_miscvalue)
                         {
-                            case STAT_INTELLECT: intelectLoss += (*i)->GetModifier()->m_amount; break;
-                            case STAT_SPIRIT:    spiritLoss   += (*i)->GetModifier()->m_amount; break;
-                            default: break;
+                            case STAT_INTELLECT:
+                                intelectLoss += (*i)->GetModifier()->m_amount;
+                                break;
+                            case STAT_SPIRIT:
+                                spiritLoss   += (*i)->GetModifier()->m_amount;
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -1162,10 +1180,18 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                         {
                             case 1:
                                 return;
-                            case 2: damage =   500; break;
-                            case 3: damage =  1500; break;
-                            case 4: damage =  4000; break;
-                            case 5: damage = 12500; break;
+                            case 2:
+                                damage =   500;
+                                break;
+                            case 3:
+                                damage =  1500;
+                                break;
+                            case 4:
+                                damage =  4000;
+                                break;
+                            case 5:
+                                damage = 12500;
+                                break;
                             default:
                                 damage = 14000 + 1000 * GetStackAmount();
                                 break;
@@ -1192,18 +1218,42 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
             uint32 finalSpellId = 0;
             switch (GetId())
             {
-                case 19548: finalSpellId = 19597; break;
-                case 19674: finalSpellId = 19677; break;
-                case 19687: finalSpellId = 19676; break;
-                case 19688: finalSpellId = 19678; break;
-                case 19689: finalSpellId = 19679; break;
-                case 19692: finalSpellId = 19680; break;
-                case 19693: finalSpellId = 19684; break;
-                case 19694: finalSpellId = 19681; break;
-                case 19696: finalSpellId = 19682; break;
-                case 19697: finalSpellId = 19683; break;
-                case 19699: finalSpellId = 19685; break;
-                case 19700: finalSpellId = 19686; break;
+                case 19548:
+                    finalSpellId = 19597;
+                    break;
+                case 19674:
+                    finalSpellId = 19677;
+                    break;
+                case 19687:
+                    finalSpellId = 19676;
+                    break;
+                case 19688:
+                    finalSpellId = 19678;
+                    break;
+                case 19689:
+                    finalSpellId = 19679;
+                    break;
+                case 19692:
+                    finalSpellId = 19680;
+                    break;
+                case 19693:
+                    finalSpellId = 19684;
+                    break;
+                case 19694:
+                    finalSpellId = 19681;
+                    break;
+                case 19696:
+                    finalSpellId = 19682;
+                    break;
+                case 19697:
+                    finalSpellId = 19683;
+                    break;
+                case 19699:
+                    finalSpellId = 19685;
+                    break;
+                case 19700:
+                    finalSpellId = 19686;
+                    break;
             }
 
             if (finalSpellId)
@@ -1625,8 +1675,8 @@ void Aura::HandleAuraModShapeshift(bool apply, bool Real)
         if (PowerType != POWER_MANA)
         {
             // reset power to default values only at power change
-            if (target->getPowerType() != PowerType)
-                target->setPowerType(PowerType);
+            if (target->GetPowerType() != PowerType)
+                target->SetPowerType(PowerType);
 
             switch (form)
             {
@@ -1674,11 +1724,21 @@ void Aura::HandleAuraModShapeshift(bool apply, bool Real)
                             // select by script id
                             switch ((*iter)->GetModifier()->m_miscvalue)
                             {
-                                case 831: Rage_val =  50; break;
-                                case 832: Rage_val = 100; break;
-                                case 833: Rage_val = 150; break;
-                                case 834: Rage_val = 200; break;
-                                case 835: Rage_val = 250; break;
+                                case 831:
+                                    Rage_val =  50;
+                                    break;
+                                case 832:
+                                    Rage_val = 100;
+                                    break;
+                                case 833:
+                                    Rage_val = 150;
+                                    break;
+                                case 834:
+                                    Rage_val = 200;
+                                    break;
+                                case 835:
+                                    Rage_val = 250;
+                                    break;
                             }
                             if (Rage_val != 0)
                                 break;
@@ -1712,7 +1772,7 @@ void Aura::HandleAuraModShapeshift(bool apply, bool Real)
         }
 
         if (target->getClass() == CLASS_DRUID)
-            target->setPowerType(POWER_MANA);
+            target->SetPowerType(POWER_MANA);
 
         target->SetShapeshiftForm(FORM_NONE);
     }
@@ -1740,39 +1800,56 @@ void Aura::HandleAuraTransform(bool apply, bool Real)
                     uint32 orb_model = target->GetNativeDisplayId();
                     switch (orb_model)
                     {
-                            // Troll Female
-                        case 1479: target->SetDisplayId(10134); break;
-                            // Troll Male
-                        case 1478: target->SetDisplayId(10135); break;
-                            // Tauren Male
-                        case 59:   target->SetDisplayId(10136); break;
-                            // Human Male
-                        case 49:   target->SetDisplayId(10137); break;
-                            // Human Female
-                        case 50:   target->SetDisplayId(10138); break;
-                            // Orc Male
-                        case 51:   target->SetDisplayId(10139); break;
-                            // Orc Female
-                        case 52:   target->SetDisplayId(10140); break;
-                            // Dwarf Male
-                        case 53:   target->SetDisplayId(10141); break;
-                            // Dwarf Female
-                        case 54:   target->SetDisplayId(10142); break;
-                            // NightElf Male
-                        case 55:   target->SetDisplayId(10143); break;
-                            // NightElf Female
-                        case 56:   target->SetDisplayId(10144); break;
-                            // Undead Female
-                        case 58:   target->SetDisplayId(10145); break;
-                            // Undead Male
-                        case 57:   target->SetDisplayId(10146); break;
-                            // Tauren Female
-                        case 60:   target->SetDisplayId(10147); break;
-                            // Gnome Male
-                        case 1563: target->SetDisplayId(10148); break;
-                            // Gnome Female
-                        case 1564: target->SetDisplayId(10149); break;
-                        default: break;
+                        case 1479:                          // Troll Female
+                            target->SetDisplayId(10134);
+                            break;
+                        case 1478:                          // Troll Male
+                            target->SetDisplayId(10135);
+                            break;
+                        case 59:                            // Tauren Male
+                            target->SetDisplayId(10136);
+                            break;
+                        case 49:                            // Human Male
+                            target->SetDisplayId(10137);
+                            break;
+                        case 50:                            // Human Female
+                            target->SetDisplayId(10138);
+                            break;
+                        case 51:                            // Orc Male
+                            target->SetDisplayId(10139);
+                            break;
+                        case 52:                            // Orc Female
+                            target->SetDisplayId(10140);
+                            break;
+                        case 53:                            // Dwarf Male
+                            target->SetDisplayId(10141);
+                            break;
+                        case 54:                            // Dwarf Female
+                            target->SetDisplayId(10142);
+                            break;
+                        case 55:                            // NightElf Male
+                            target->SetDisplayId(10143);
+                            break;
+                        case 56:                            // NightElf Female
+                            target->SetDisplayId(10144);
+                            break;
+                        case 58:                            // Undead Female
+                            target->SetDisplayId(10145);
+                            break;
+                        case 57:                            // Undead Male
+                            target->SetDisplayId(10146);
+                            break;
+                        case 60:                            // Tauren Female
+                            target->SetDisplayId(10147);
+                            break;
+                        case 1563:                          // Gnome Male
+                            target->SetDisplayId(10148);
+                            break;
+                        case 1564:                          // Gnome Female
+                            target->SetDisplayId(10149);
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 }
@@ -2403,9 +2480,15 @@ void Aura::HandleAuraModStun(bool apply, bool Real)
 
             switch (GetId())
             {
-                case 19386: spell_id = 24131; break;
-                case 24132: spell_id = 24134; break;
-                case 24133: spell_id = 24135; break;
+                case 19386:
+                    spell_id = 24131;
+                    break;
+                case 24132:
+                    spell_id = 24134;
+                    break;
+                case 24133:
+                    spell_id = 24135;
+                    break;
                 default:
                     sLog.outError("Spell selection called for unexpected original spell %u, new spell for this spell family?", GetId());
                     return;
@@ -3336,7 +3419,7 @@ void Aura::HandleModTotalPercentStat(bool apply, bool /*Real*/)
     }
 
     // recalculate current HP/MP after applying aura modifications (only for spells with 0x10 flag)
-    if (m_modifier.m_miscvalue == STAT_STAMINA && maxHPValue > 0 && GetSpellProto()->HasAttribute(SPELL_ATTR_UNK4))
+    if (m_modifier.m_miscvalue == STAT_STAMINA && maxHPValue > 0 && GetSpellProto()->HasAttribute(SPELL_ATTR_ABILITY))
     {
         // newHP = (curHP / maxHP) * newMaxHP = (newMaxHP * curHP) / maxHP -> which is better because no int -> double -> int conversion is needed
         uint32 newHPValue = (target->GetMaxHealth() * curHPValue) / maxHPValue;
@@ -3392,11 +3475,11 @@ void Aura::HandleModPowerRegen(bool apply, bool Real)       // drinking
     if (!Real)
         return;
 
-    Powers pt = GetTarget()->getPowerType();
+    Powers powerType = GetTarget()->GetPowerType();
     if (m_modifier.periodictime == 0)
     {
         // Anger Management (only spell use this aura for rage)
-        if (pt == POWER_RAGE)
+        if (powerType == POWER_RAGE)
             m_modifier.periodictime = 3000;
         else
             m_modifier.periodictime = 2000;
@@ -3430,10 +3513,10 @@ void Aura::HandleAuraModIncreaseHealth(bool apply, bool Real)
 
     switch (GetId())
     {
-        // Special case with temporary increase max/current health
+            // Special case with temporary increase max/current health
             // Cases where we need to manually calculate the amount for the spell (by percentage)
             // recalculate to full amount at apply for proper remove
-        // Backport notive TBC: no cases yet
+            // Backport native TBC: no cases yet
             // no break here
 
             // Cases where m_amount already has the correct value (spells cast with CastCustomSpell or absolute values)
@@ -3478,7 +3561,7 @@ void Aura::HandleAuraModIncreaseHealth(bool apply, bool Real)
 void Aura::HandleAuraModIncreaseEnergy(bool apply, bool /*Real*/)
 {
     Unit* target = GetTarget();
-    Powers powerType = target->getPowerType();
+    Powers powerType = target->GetPowerType();
     if (int32(powerType) != m_modifier.m_miscvalue)
         return;
 
@@ -3489,7 +3572,7 @@ void Aura::HandleAuraModIncreaseEnergy(bool apply, bool /*Real*/)
 
 void Aura::HandleAuraModIncreaseEnergyPercent(bool apply, bool /*Real*/)
 {
-    Powers powerType = GetTarget()->getPowerType();
+    Powers powerType = GetTarget()->GetPowerType();
     if (int32(powerType) != m_modifier.m_miscvalue)
         return;
 
@@ -3626,7 +3709,7 @@ void Aura::HandleModSpellCritChanceShool(bool /*apply*/, bool Real)
 void Aura::HandleModCastingSpeed(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_HASTE, amount);
@@ -3637,7 +3720,7 @@ void Aura::HandleModCastingSpeed(bool apply, bool /*Real*/)
 void Aura::HandleModAttackSpeed(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_HASTE, amount);
@@ -3648,7 +3731,7 @@ void Aura::HandleModAttackSpeed(bool apply, bool /*Real*/)
 void Aura::HandleModMeleeSpeedPct(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_HASTE, amount);
@@ -3661,7 +3744,7 @@ void Aura::HandleModMeleeSpeedPct(bool apply, bool /*Real*/)
 void Aura::HandleAuraModRangedHaste(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_HASTE, amount);
@@ -3673,7 +3756,7 @@ void Aura::HandleRangedAmmoHaste(bool apply, bool /*Real*/)
 {
     if (GetTarget()->GetTypeId() != TYPEID_PLAYER)
         return;
-        
+
     float amount = m_modifier.m_amount;
 
     if (Unit* caster = GetCaster())
@@ -3690,7 +3773,7 @@ void Aura::HandleRangedAmmoHaste(bool apply, bool /*Real*/)
 void Aura::HandleAuraModAttackPower(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_ATTACK_POWER, amount);
@@ -3702,9 +3785,9 @@ void Aura::HandleAuraModRangedAttackPower(bool apply, bool /*Real*/)
 {
     if ((GetTarget()->getClassMask() & CLASSMASK_WAND_USERS) != 0)
         return;
-        
+
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_ATTACK_POWER, amount);
@@ -3715,7 +3798,7 @@ void Aura::HandleAuraModRangedAttackPower(bool apply, bool /*Real*/)
 void Aura::HandleAuraModAttackPowerPercent(bool apply, bool /*Real*/)
 {
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_ATTACK_POWER, amount);
@@ -3730,7 +3813,7 @@ void Aura::HandleAuraModRangedAttackPowerPercent(bool apply, bool /*Real*/)
         return;
 
     float amount = m_modifier.m_amount;
-    
+
     if (Unit* caster = GetCaster())
         if (Player* modOwner = caster->GetSpellModOwner())
             modOwner->ApplySpellMod(GetSpellProto()->Id, SPELLMOD_ATTACK_POWER, amount);
@@ -4231,6 +4314,10 @@ void Aura::PeriodicTick()
             if (!target->isAlive())
                 return;
 
+            // Don't heal target if it is already at max health.
+            if (target->GetHealth() == target->GetMaxHealth())
+                return;
+
             Unit* pCaster = GetCaster();
             if (!pCaster)
                 return;
@@ -4473,7 +4560,7 @@ void Aura::PeriodicTick()
             Powers power = Powers(m_modifier.m_miscvalue);
 
             // power type might have changed between aura applying and tick (druid's shapeshift)
-            if (target->getPowerType() != power)
+            if (target->GetPowerType() != power)
                 return;
 
             Unit* pCaster = GetCaster();
@@ -4608,7 +4695,7 @@ void Aura::PeriodicTick()
 
             Powers powerType = Powers(m_modifier.m_miscvalue);
 
-            if (!target->isAlive() || target->getPowerType() != powerType)
+            if (!target->isAlive() || target->GetPowerType() != powerType)
                 return;
 
             uint32 gain = uint32(-target->ModifyPower(powerType, -pdamage));
@@ -4654,8 +4741,8 @@ void Aura::PeriodicTick()
             if (!target->isAlive())
                 return;
 
-            Powers pt = target->getPowerType();
-            if (int32(pt) != m_modifier.m_miscvalue)
+            Powers powerType = target->GetPowerType();
+            if (int32(powerType) != m_modifier.m_miscvalue)
                 return;
 
             if (spellProto->AuraInterruptFlags & AURA_INTERRUPT_FLAG_NOT_SEATED)
@@ -4672,8 +4759,8 @@ void Aura::PeriodicTick()
             // Anger Management
             // amount = 1+ 16 = 17 = 3,4*5 = 10,2*5/3
             // so 17 is rounded amount for 5 sec tick grow ~ 1 range grow in 3 sec
-            if (pt == POWER_RAGE)
-                target->ModifyPower(pt, m_modifier.m_amount * 3 / 5);
+            if (powerType == POWER_RAGE && target->GetPower(POWER_RAGE) > 0)
+                target->ModifyPower(powerType, m_modifier.m_amount * 3 / 5);
             break;
         }
         // Here tick dummy auras
@@ -5223,6 +5310,22 @@ void SpellAuraHolder::HandleSpellSpecificBoosts(bool apply)
         {
             switch (GetId())
             {
+                case 11129:                                 // Combustion (remove triggered aura stack)
+                {
+                    if (!apply)
+                        spellId1 = 28682;
+                    else
+                        return;
+                    break;
+                }
+                case 28682:                                 // Combustion (remove main aura)
+                {
+                    if (!apply)
+                        spellId1 = 11129;
+                    else
+                        return;
+                    break;
+                }
                 case 11189:                                 // Frost Warding
                 case 28332:
                 {

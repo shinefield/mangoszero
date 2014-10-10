@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,31 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "cryptography/md5.h"
+#include "database/DatabaseEnv.h"
+#include "database/DatabaseImpl.h"
+#include "log/Log.h"
+#include "utilities/Util.h"
+#include "network/WorldPacket.h"
 #include "SharedDefines.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "Guild.h"
 #include "GuildMgr.h"
 #include "UpdateMask.h"
-#include "Auth/md5.h"
 #include "ObjectAccessor.h"
 #include "Group.h"
-#include "Database/DatabaseImpl.h"
 #include "PlayerDump.h"
 #include "SocialMgr.h"
-#include "Util.h"
 #include "Language.h"
 #include "Chat.h"
 #include "SpellMgr.h"
+#include "LuaEngine.h"
 
 // config option SkipCinematics supported values
 enum CinematicsSkipMode
@@ -56,8 +64,14 @@ class LoginQueryHolder : public SqlQueryHolder
     public:
         LoginQueryHolder(uint32 accountId, ObjectGuid guid)
             : m_accountId(accountId), m_guid(guid) { }
-        ObjectGuid GetGuid() const { return m_guid; }
-        uint32 GetAccountId() const { return m_accountId; }
+        ObjectGuid GetGuid() const
+        {
+            return m_guid;
+        }
+        uint32 GetAccountId() const
+        {
+            return m_accountId;
+        }
         bool Initialize();
 };
 
@@ -195,9 +209,14 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recv_data)
             Team team = Player::TeamForRace(race_);
             switch (team)
             {
-                case ALLIANCE: disabled = mask & (1 << 0); break;
-                case HORDE:    disabled = mask & (1 << 1); break;
-                default: break;
+                case ALLIANCE:
+                    disabled = mask & (1 << 0);
+                    break;
+                case HORDE:
+                    disabled = mask & (1 << 1);
+                    break;
+                default:
+                    break;
             }
 
             if (disabled)
@@ -358,6 +377,9 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recv_data)
     BASIC_LOG("Account: %d (IP: %s) Create Character:[%s] (guid: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), pNewChar->GetGUIDLow());
     sLog.outChar("Account: %d (IP: %s) Create Character:[%s] (guid: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), pNewChar->GetGUIDLow());
 
+    // used by eluna
+    sEluna->OnCreate(pNewChar);
+
     delete pNewChar;                                        // created only to call SaveToDB()
 }
 
@@ -400,6 +422,9 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket& recv_data)
     std::string IP_str = GetRemoteAddress();
     BASIC_LOG("Account: %d (IP: %s) Delete Character:[%s] (guid: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), lowguid);
     sLog.outChar("Account: %d (IP: %s) Delete Character:[%s] (guid: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), lowguid);
+
+    // used by eluna
+    sEluna->OnDelete(lowguid);
 
     if (sLog.IsOutCharDump())                               // optimize GetPlayerDump call
     {
@@ -484,7 +509,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         {
             if (nextpos != pos)
             {
-                ChatHandler(pCurrChar).PSendSysMessage(str_motd.substr(pos, nextpos - pos).c_str());
+                ChatHandler(pCurrChar).PSendSysMessage("%s", str_motd.substr(pos, nextpos - pos).c_str());
                 ++linecount;
             }
             pos = nextpos + 1;
@@ -492,7 +517,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
         if (pos < str_motd.length())
         {
-            ChatHandler(pCurrChar).PSendSysMessage(str_motd.substr(pos).c_str());
+            ChatHandler(pCurrChar).PSendSysMessage("%s", str_motd.substr(pos).c_str());
             ++linecount;
         }
 
@@ -509,7 +534,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         pCurrChar->SetRank(fields[1].GetUInt32());
         delete resultGuild;
     }
-    else if (pCurrChar->GetGuildId())                       // clear guild related fields in case wrong data about nonexistent membership
+    else if (pCurrChar->GetGuildId())                       // clear guild related fields in case wrong data about non-existent membership
     {
         pCurrChar->SetInGuild(0);
         pCurrChar->SetRank(0);
@@ -532,7 +557,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         else
         {
             // remove wrong guild data
-            sLog.outError("Player %s (GUID: %u) marked as member of nonexistent guild (id: %u), removing guild membership for player.", pCurrChar->GetName(), pCurrChar->GetGUIDLow(), pCurrChar->GetGuildId());
+            sLog.outError("Player %s (GUID: %u) marked as member of non-existent guild (id: %u), removing guild membership for player.", pCurrChar->GetName(), pCurrChar->GetGUIDLow(), pCurrChar->GetGuildId());
             pCurrChar->SetInGuild(0);
         }
     }
@@ -636,6 +661,10 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         SendNotification(LANG_RESET_TALENTS);               // we can use SMSG_TALENTS_INVOLUNTARILY_RESET here
     }
 
+    // used by eluna
+    if (pCurrChar->HasAtLoginFlag(AT_LOGIN_FIRST))
+        sEluna->OnFirstLogin(pCurrChar);
+
     if (pCurrChar->HasAtLoginFlag(AT_LOGIN_FIRST))
         pCurrChar->RemoveAtLoginFlag(AT_LOGIN_FIRST);
 
@@ -665,6 +694,10 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         pCurrChar->SetStandState(UNIT_STAND_STATE_STAND);
 
     m_playerLoading = false;
+
+    // used by eluna
+    sEluna->OnLogin(pCurrChar);
+
     delete holder;
 }
 
@@ -679,15 +712,6 @@ void WorldSession::HandleSetFactionAtWarOpcode(WorldPacket& recv_data)
     recv_data >> flag;
 
     GetPlayer()->GetReputationMgr().SetAtWar(repListID, flag);
-}
-
-void WorldSession::HandleMeetingStoneInfoOpcode(WorldPacket& /*recv_data*/)
-{
-    DEBUG_LOG("WORLD: Received CMSG_MEETING_STONE_INFO");
-
-    WorldPacket data(SMSG_MEETINGSTONE_SETQUEUE, 5);
-    data << uint32(0) << uint8(6);
-    SendPacket(&data);
 }
 
 void WorldSession::HandleTutorialFlagOpcode(WorldPacket& recv_data)
@@ -833,4 +857,6 @@ void WorldSession::HandleChangePlayerNameOpcodeCallBack(QueryResult* result, uin
     data << guid;
     data << newname;
     session->SendPacket(&data);
+
+    sWorld.InvalidatePlayerDataToAllClient(guid);
 }

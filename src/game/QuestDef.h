@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_QUEST_H
-#define MANGOSSERVER_QUEST_H
-
-#include "Platform/Define.h"
-#include "Database/DatabaseEnv.h"
+#ifndef MANGOS_H_QUEST
+#define MANGOS_H_QUEST
 
 #include <string>
 #include <vector>
+
+#include "platform/Define.h"
+#include "database/DatabaseEnv.h"
 
 class Player;
 
@@ -119,9 +126,9 @@ enum QuestTypes
     QUEST_TYPE_PVP                 = 41,
     QUEST_TYPE_RAID                = 62,
     QUEST_TYPE_DUNGEON             = 81,
-    // tbc?
     QUEST_TYPE_WORLD_EVENT         = 82,
     QUEST_TYPE_LEGENDARY           = 83,
+    // Escort quest is not listed in QuestInfo.dbc
     QUEST_TYPE_ESCORT              = 84,
 };
 
@@ -160,7 +167,10 @@ enum QuestSpecialFlags
 
 struct QuestLocale
 {
-    QuestLocale() { ObjectiveText.resize(QUEST_OBJECTIVES_COUNT); }
+    QuestLocale()
+    {
+        ObjectiveText.resize(QUEST_OBJECTIVES_COUNT);
+    }
 
     std::vector<std::string> Title;
     std::vector<std::string> Details;
@@ -181,67 +191,223 @@ class Quest
         Quest(Field* questRecord);
         uint32 XPValue(Player* pPlayer) const;
 
-        uint32 GetQuestFlags() const { return m_QuestFlags; }
-        bool HasQuestFlag(QuestFlags flag) const { return (m_QuestFlags & flag) != 0; }
-        bool HasSpecialFlag(QuestSpecialFlags flag) const { return (m_SpecialFlags & flag) != 0; }
-        void SetSpecialFlag(QuestSpecialFlags flag) { m_SpecialFlags |= flag; }
+        uint32 GetQuestFlags() const
+        {
+            return m_QuestFlags;
+        }
+        bool HasQuestFlag(QuestFlags flag) const
+        {
+            return (m_QuestFlags & flag) != 0;
+        }
+        bool HasSpecialFlag(QuestSpecialFlags flag) const
+        {
+            return (m_SpecialFlags & flag) != 0;
+        }
+        void SetSpecialFlag(QuestSpecialFlags flag)
+        {
+            m_SpecialFlags |= flag;
+        }
 
         // table data accessors:
-        uint32 GetQuestId() const { return QuestId; }
-        uint32 GetQuestMethod() const { return QuestMethod; }
-        int32  GetZoneOrSort() const { return ZoneOrSort; }
-        uint32 GetMinLevel() const { return MinLevel; }
-        uint32 GetQuestLevel() const { return QuestLevel; }
-        uint32 GetType() const { return Type; }
-        uint32 GetRequiredClasses() const { return RequiredClasses; }
-        uint32 GetRequiredRaces() const { return RequiredRaces; }
-        uint32 GetRequiredSkill() const { return RequiredSkill; }
-        uint32 GetRequiredSkillValue() const { return RequiredSkillValue; }
-        uint32 GetRepObjectiveFaction() const { return RepObjectiveFaction; }
-        int32  GetRepObjectiveValue() const { return RepObjectiveValue; }
-        uint32 GetRequiredMinRepFaction() const { return RequiredMinRepFaction; }
-        int32  GetRequiredMinRepValue() const { return RequiredMinRepValue; }
-        uint32 GetRequiredMaxRepFaction() const { return RequiredMaxRepFaction; }
-        int32  GetRequiredMaxRepValue() const { return RequiredMaxRepValue; }
-        uint32 GetSuggestedPlayers() const { return SuggestedPlayers; }
-        uint32 GetLimitTime() const { return LimitTime; }
-        int32  GetPrevQuestId() const { return PrevQuestId; }
-        int32  GetNextQuestId() const { return NextQuestId; }
-        int32  GetExclusiveGroup() const { return ExclusiveGroup; }
-        uint32 GetNextQuestInChain() const { return NextQuestInChain; }
+        uint32 GetQuestId() const
+        {
+            return QuestId;
+        }
+        uint32 GetQuestMethod() const
+        {
+            return QuestMethod;
+        }
+        int32  GetZoneOrSort() const
+        {
+            return ZoneOrSort;
+        }
+        uint32 GetMinLevel() const
+        {
+            return MinLevel;
+        }
+        uint32 GetQuestLevel() const
+        {
+            return QuestLevel;
+        }
+        uint32 GetType() const
+        {
+            return Type;
+        }
+        uint32 GetRequiredClasses() const
+        {
+            return RequiredClasses;
+        }
+        uint32 GetRequiredRaces() const
+        {
+            return RequiredRaces;
+        }
+        uint32 GetRequiredSkill() const
+        {
+            return RequiredSkill;
+        }
+        uint32 GetRequiredSkillValue() const
+        {
+            return RequiredSkillValue;
+        }
+        uint32 GetRepObjectiveFaction() const
+        {
+            return RepObjectiveFaction;
+        }
+        int32  GetRepObjectiveValue() const
+        {
+            return RepObjectiveValue;
+        }
+        uint32 GetRequiredMinRepFaction() const
+        {
+            return RequiredMinRepFaction;
+        }
+        int32  GetRequiredMinRepValue() const
+        {
+            return RequiredMinRepValue;
+        }
+        uint32 GetRequiredMaxRepFaction() const
+        {
+            return RequiredMaxRepFaction;
+        }
+        int32  GetRequiredMaxRepValue() const
+        {
+            return RequiredMaxRepValue;
+        }
+        uint32 GetSuggestedPlayers() const
+        {
+            return SuggestedPlayers;
+        }
+        uint32 GetLimitTime() const
+        {
+            return LimitTime;
+        }
+        int32  GetPrevQuestId() const
+        {
+            return PrevQuestId;
+        }
+        int32  GetNextQuestId() const
+        {
+            return NextQuestId;
+        }
+        int32  GetExclusiveGroup() const
+        {
+            return ExclusiveGroup;
+        }
+        uint32 GetNextQuestInChain() const
+        {
+            return NextQuestInChain;
+        }
         // [-ZERO] not exist
-        uint32 GetSrcItemId() const { return SrcItemId; }
-        uint32 GetSrcItemCount() const { return SrcItemCount; }
-        uint32 GetSrcSpell() const { return SrcSpell; }
-        std::string GetTitle() const { return Title; }
-        std::string GetDetails() const { return Details; }
-        std::string GetObjectives() const { return Objectives; }
-        std::string GetOfferRewardText() const { return OfferRewardText; }
-        std::string GetRequestItemsText() const { return RequestItemsText; }
-        std::string GetEndText() const { return EndText; }
+        uint32 GetSrcItemId() const
+        {
+            return SrcItemId;
+        }
+        uint32 GetSrcItemCount() const
+        {
+            return SrcItemCount;
+        }
+        uint32 GetSrcSpell() const
+        {
+            return SrcSpell;
+        }
+        std::string GetTitle() const
+        {
+            return Title;
+        }
+        std::string GetDetails() const
+        {
+            return Details;
+        }
+        std::string GetObjectives() const
+        {
+            return Objectives;
+        }
+        std::string GetOfferRewardText() const
+        {
+            return OfferRewardText;
+        }
+        std::string GetRequestItemsText() const
+        {
+            return RequestItemsText;
+        }
+        std::string GetEndText() const
+        {
+            return EndText;
+        }
         int32  GetRewOrReqMoney() const;
-        uint32 GetRewMoneyMaxLevel() const { return RewMoneyMaxLevel; }
+        uint32 GetRewMoneyMaxLevel() const
+        {
+            return RewMoneyMaxLevel;
+        }
         // use in XP calculation at client
-        uint32 GetRewSpell() const { return RewSpell; }
-        uint32 GetRewSpellCast() const { return RewSpellCast; }
-        uint32 GetRewMailTemplateId() const { return RewMailTemplateId; }
-        uint32 GetRewMailDelaySecs() const { return RewMailDelaySecs; }
-        uint32 GetPointMapId() const { return PointMapId; }
-        float  GetPointX() const { return PointX; }
-        float  GetPointY() const { return PointY; }
-        uint32 GetPointOpt() const { return PointOpt; }
-        uint32 GetIncompleteEmote() const { return IncompleteEmote; }
-        uint32 GetCompleteEmote() const { return CompleteEmote; }
-        uint32 GetQuestStartScript() const { return QuestStartScript; }
-        uint32 GetQuestCompleteScript() const { return QuestCompleteScript; }
+        uint32 GetRewSpell() const
+        {
+            return RewSpell;
+        }
+        uint32 GetRewSpellCast() const
+        {
+            return RewSpellCast;
+        }
+        uint32 GetRewMailTemplateId() const
+        {
+            return RewMailTemplateId;
+        }
+        uint32 GetRewMailDelaySecs() const
+        {
+            return RewMailDelaySecs;
+        }
+        uint32 GetPointMapId() const
+        {
+            return PointMapId;
+        }
+        float  GetPointX() const
+        {
+            return PointX;
+        }
+        float  GetPointY() const
+        {
+            return PointY;
+        }
+        uint32 GetPointOpt() const
+        {
+            return PointOpt;
+        }
+        uint32 GetIncompleteEmote() const
+        {
+            return IncompleteEmote;
+        }
+        uint32 GetCompleteEmote() const
+        {
+            return CompleteEmote;
+        }
+        uint32 GetQuestStartScript() const
+        {
+            return QuestStartScript;
+        }
+        uint32 GetQuestCompleteScript() const
+        {
+            return QuestCompleteScript;
+        }
 
-        bool   IsRepeatable() const { return m_SpecialFlags & QUEST_SPECIAL_FLAG_REPEATABLE; }
-        bool   IsAutoComplete() const { return QuestMethod ? false : true; }
+        bool   IsRepeatable() const
+        {
+            return m_SpecialFlags & QUEST_SPECIAL_FLAG_REPEATABLE;
+        }
+        bool   IsAutoComplete() const
+        {
+            return QuestMethod ? false : true;
+        }
         bool   IsAllowedInRaid() const;
 
         // quest can be fully deactivated and will not be available for any player
-        void SetQuestActiveState(bool state) { m_isActive = state; }
-        bool IsActive() const { return m_isActive; }
+        void SetQuestActiveState(bool state)
+        {
+            m_isActive = state;
+        }
+        bool IsActive() const
+        {
+            return m_isActive;
+        }
 
         // multiple values
         std::string ObjectiveText[QUEST_OBJECTIVES_COUNT];
@@ -263,10 +429,22 @@ class Quest
         uint32 OfferRewardEmote[QUEST_EMOTE_COUNT];
         uint32 OfferRewardEmoteDelay[QUEST_EMOTE_COUNT];
 
-        uint32 GetReqItemsCount() const { return m_reqitemscount; }
-        uint32 GetReqCreatureOrGOcount() const { return m_reqCreatureOrGOcount; }
-        uint32 GetRewChoiceItemsCount() const { return m_rewchoiceitemscount; }
-        uint32 GetRewItemsCount() const { return m_rewitemscount; }
+        uint32 GetReqItemsCount() const
+        {
+            return m_reqitemscount;
+        }
+        uint32 GetReqCreatureOrGOcount() const
+        {
+            return m_reqCreatureOrGOcount;
+        }
+        uint32 GetRewChoiceItemsCount() const
+        {
+            return m_rewchoiceitemscount;
+        }
+        uint32 GetRewItemsCount() const
+        {
+            return m_rewitemscount;
+        }
 
         typedef std::vector<int32> PrevQuests;
         PrevQuests prevQuests;

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "Chat.h"
 #include "Language.h"
-#include "Database/DatabaseEnv.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
-#include "Log.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
@@ -35,6 +42,7 @@
 #include "PoolManager.h"
 #include "GameEventMgr.h"
 #include "AuctionHouseBot/AuctionHouseBot.h"
+#include "LuaEngine.h"
 
 // Supported shift-links (client generated and server side)
 // |color|Harea:area_id|h[name]|h|r
@@ -706,8 +714,8 @@ ChatCommand* ChatHandler::getCommandTable()
         { "unaura",         SEC_ADMINISTRATOR,  false, &ChatHandler::HandleUnAuraCommand,              "", NULL },
         { "announce",       SEC_MODERATOR,      true,  &ChatHandler::HandleAnnounceCommand,            "", NULL },
         { "notify",         SEC_MODERATOR,      true,  &ChatHandler::HandleNotifyCommand,              "", NULL },
-        { "goname",         SEC_MODERATOR,      false, &ChatHandler::HandleGonameCommand,              "", NULL },
-        { "namego",         SEC_MODERATOR,      false, &ChatHandler::HandleNamegoCommand,              "", NULL },
+        { "appear",         SEC_MODERATOR,      false, &ChatHandler::HandleAppearCommand,              "", NULL },
+        { "summon",         SEC_MODERATOR,      false, &ChatHandler::HandleSummonCommand,              "", NULL },
         { "groupgo",        SEC_MODERATOR,      false, &ChatHandler::HandleGroupgoCommand,             "", NULL },
         { "commands",       SEC_PLAYER,         true,  &ChatHandler::HandleCommandsCommand,            "", NULL },
         { "demorph",        SEC_GAMEMASTER,     false, &ChatHandler::HandleDeMorphCommand,             "", NULL },
@@ -889,7 +897,8 @@ bool ChatHandler::hasStringAbbr(const char* name, const char* part)
                 return false;
             else if (tolower(*name) != tolower(*part))
                 return false;
-            ++name; ++part;
+            ++name;
+            ++part;
         }
     }
     // allow with any for ""
@@ -1192,6 +1201,8 @@ void ChatHandler::ExecuteCommand(const char* text)
         }
         case CHAT_COMMAND_UNKNOWN_SUBCOMMAND:
         {
+            if (!sEluna->OnCommand(m_session ? m_session->GetPlayer() : NULL, fullcmd.c_str()))
+                return;
             SendSysMessage(LANG_NO_SUBCMD);
             ShowHelpForCommand(command->ChildCommands, text);
             SetSentErrorMessage(true);
@@ -1199,6 +1210,8 @@ void ChatHandler::ExecuteCommand(const char* text)
         }
         case CHAT_COMMAND_UNKNOWN:
         {
+            if (!sEluna->OnCommand(m_session ? m_session->GetPlayer() : NULL, fullcmd.c_str()))
+                return;
             SendSysMessage(LANG_NO_CMD);
             SetSentErrorMessage(true);
             break;
@@ -1250,7 +1263,7 @@ bool ChatHandler::SetDataForCommandInTable(ChatCommand* commandTable, const char
         }
         case CHAT_COMMAND_UNKNOWN:
         {
-            sLog.outErrorDb("Table `command` have nonexistent command '%s', skip.", cmdName.c_str());
+            sLog.outErrorDb("Table `command` have non-existent command '%s', skip.", cmdName.c_str());
             return false;
         }
     }
@@ -2084,7 +2097,9 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
     switch (head[0])
     {
             // reject quoted string
-        case '[': case '\'': case '"':
+        case '[':
+        case '\'':
+        case '"':
             return NULL;
             // reject link (|-started text)
         case '|':
@@ -2093,7 +2108,8 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
                 return NULL;
             ++head;                                         // skip one |
             break;
-        default: break;
+        default:
+            break;
     }
 
     if (lit)
@@ -2101,7 +2117,7 @@ char* ChatHandler::ExtractLiteralArg(char** args, char const* lit /*= NULL*/)
         int l = strlen(lit);
 
         int largs = 0;
-        while(head[largs] && !isWhiteSpace(head[largs]))
+        while (head[largs] && !isWhiteSpace(head[largs]))
             ++largs;
 
         if (largs < l)
@@ -2344,9 +2360,7 @@ char* ChatHandler::ExtractLinkArg(char** args, char const* const* linkTypes /*= 
     if (*tail == ':' && somethingPair)                      // optional data extraction
     {
         // :something...|h[name]|h|r
-
-        if (*tail == ':')
-            ++tail;
+        ++tail;
 
         // something|h[name]|h|r or something:something2...|h[name]|h|r
 
@@ -3303,13 +3317,13 @@ void ChatHandler::LogCommand(char const* fullcmd)
         Player* p = m_session->GetPlayer();
         ObjectGuid sel_guid = p->GetSelectionGuid();
         sLog.outCommand(GetAccountId(),"Command: %s [Player: %s (Account: %u) X: %f Y: %f Z: %f Map: %u Selected: %s]",
-            fullcmd, p->GetName(), GetAccountId(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetMapId(),
-            sel_guid.GetString().c_str());
+                        fullcmd, p->GetName(), GetAccountId(), p->GetPositionX(), p->GetPositionY(), p->GetPositionZ(), p->GetMapId(),
+                        sel_guid.GetString().c_str());
     }
     else                                        // 0 account -> console
     {
         sLog.outCommand(GetAccountId(),"Command: %s [Account: %u from %s]",
-            fullcmd, GetAccountId(), GetAccountId() ? "RA-connection" : "Console");
+                        fullcmd, GetAccountId(), GetAccountId() ? "RA-connection" : "Console");
     }
 }
 
@@ -3333,14 +3347,14 @@ void ChatHandler::BuildChatPacket(WorldPacket& data, ChatMsg msgtype, char const
             data << senderName;
             data << ObjectGuid(targetGuid);
             break;
-    
+
         case CHAT_MSG_SAY:
         case CHAT_MSG_PARTY:
         case CHAT_MSG_YELL:
             data << ObjectGuid(senderGuid);
             data << ObjectGuid(senderGuid);
             break;
-    
+
         case CHAT_MSG_MONSTER_SAY:
         case CHAT_MSG_MONSTER_YELL:
             MANGOS_ASSERT(senderName);
@@ -3349,14 +3363,14 @@ void ChatHandler::BuildChatPacket(WorldPacket& data, ChatMsg msgtype, char const
             data << senderName;
             data << ObjectGuid(targetGuid);
             break;
-    
+
         case CHAT_MSG_CHANNEL:
             MANGOS_ASSERT(channelName);
             data << channelName;
             data << uint32(0);
             data << ObjectGuid(senderGuid);
             break;
-    
+
         default:
             data << ObjectGuid(senderGuid);
             break;

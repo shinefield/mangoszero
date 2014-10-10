@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-/** \file
-    \ingroup u2w
-*/
-
-#include "WorldSocket.h"                                    // must be first to make ACE happy with ACE includes in it
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
+#include "WorldSocket.h"                                    // must be first to make ACE happy with ACE includes in it
 #include "Opcodes.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
 #include "ObjectMgr.h"
@@ -37,6 +40,7 @@
 #include "BattleGround/BattleGroundMgr.h"
 #include "MapManager.h"
 #include "SocialMgr.h"
+#include "LuaEngine.h"
 
 // select opcodes appropriate for processing in Map::Update context for current session state
 static bool MapSessionFilterHelper(WorldSession* session, OpcodeHandler const& opHandle)
@@ -462,6 +466,9 @@ void WorldSession::LogoutPlayer(bool Save)
         sSocialMgr.SendFriendStatus(_player, FRIEND_OFFLINE, _player->GetObjectGuid(), true);
         sSocialMgr.RemovePlayerSocial(_player->GetGUIDLow());
 
+        ///- used by eluna
+        sEluna->OnLogout(_player);
+
         ///- Remove the player from the world
         // the player may not be in the world when logging out
         // e.g if he got disconnected during a transfer to another map
@@ -604,9 +611,10 @@ void WorldSession::SendAuthWaitQue(uint32 position)
     }
     else
     {
-        WorldPacket packet(SMSG_AUTH_RESPONSE, 1 + 4);
+        WorldPacket packet(SMSG_AUTH_RESPONSE, 6);
         packet << uint8(AUTH_WAIT_QUEUE);
         packet << uint32(position);
+        packet << uint8(0);                                 // unk
         SendPacket(&packet);
     }
 }
@@ -694,6 +702,8 @@ void WorldSession::SendTransferAborted(uint32 mapid, uint8 reason, uint8 arg)
 
 void WorldSession::ExecuteOpcode(OpcodeHandler const& opHandle, WorldPacket* packet)
 {
+    if (!sEluna->OnPacketReceive(this, *packet))
+        return;
     // need prevent do internal far teleports in handlers because some handlers do lot steps
     // or call code that can do far teleports in some conditions unexpectedly for generic way work code
     if (_player)

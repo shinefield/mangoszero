@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_CREATURE_EAI_H
-#define MANGOS_CREATURE_EAI_H
+#ifndef MANGOS_H_CREATURE_EAI
+#define MANGOS_H_CREATURE_EAI
 
 #include "Common.h"
 #include "Creature.h"
@@ -118,6 +125,8 @@ enum EventAI_ActionType
     ACTION_T_THROW_AI_EVENT             = 45,               // EventType, Radius, unused
     ACTION_T_SET_THROW_MASK             = 46,               // EventTypeMask, unused, unused
     ACTION_T_SET_STAND_STATE            = 47,               // StandState, unused, unused
+    ACTION_T_CHANGE_MOVEMENT            = 48,               // MovementType, WanderDistance, unused
+    ACTION_T_SUMMON_UNIQUE              = 49,               // CreatureId, Target, SpawnId
 
     ACTION_T_END,
 };
@@ -404,6 +413,20 @@ struct CreatureEventAI_Action
             uint32 unused1;
             uint32 unused2;
         } setStandState;
+        // ACTION_T_CHANGE_MOVEMENT                         = 48
+        struct
+        {
+            uint32 movementType;
+            uint32 wanderDistance;
+            uint32 unused1;
+        } changeMovement;
+        // ACTION_T_SUMMON_ID                               = 49
+        struct
+        {
+            uint32 creatureId;
+            uint32 target;
+            uint32 spawnId;
+        } summon_unique;
         // RAW
         struct
         {

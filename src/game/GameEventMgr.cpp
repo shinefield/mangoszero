@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
+#include "log/Log.h"
+#include "system/ProgressBar.h"
 #include "GameEventMgr.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "ObjectGuid.h"
 #include "PoolManager.h"
-#include "ProgressBar.h"
 #include "Language.h"
-#include "Log.h"
 #include "MapManager.h"
 #include "BattleGround/BattleGroundMgr.h"
 #include "MassMailMgr.h"
 #include "SpellMgr.h"
-#include "Policies/Singleton.h"
 
 INSTANTIATE_SINGLETON_1(GameEventMgr);
 
@@ -400,13 +407,13 @@ void GameEventMgr::LoadFromDB()
 
             if (newData.spell_id_start && !sSpellStore.LookupEntry(newData.spell_id_start))
             {
-                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with nonexistent spell_start %u, set to no start spell.", guid, newData.spell_id_start);
+                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with non-existent spell_start %u, set to no start spell.", guid, newData.spell_id_start);
                 newData.spell_id_start = 0;
             }
 
             if (newData.spell_id_end && !sSpellStore.LookupEntry(newData.spell_id_end))
             {
-                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with nonexistent spell_end %u, set to no end spell.", guid, newData.spell_id_end);
+                sLog.outErrorDb("Table `game_event_creature_data` have creature (Guid: %u) with non-existent spell_end %u, set to no end spell.", guid, newData.spell_id_end);
                 newData.spell_id_end = 0;
             }
 
@@ -530,7 +537,7 @@ void GameEventMgr::LoadFromDB()
 
             if (mail.questId && !sObjectMgr.GetQuestTemplate(mail.questId))
             {
-                sLog.outErrorDb("Table `game_event_mail` have nonexistent quest (%u) requirement for game event %i, ignoring.", mail.questId, event_id);
+                sLog.outErrorDb("Table `game_event_mail` have non-existent quest (%u) requirement for game event %i, ignoring.", mail.questId, event_id);
                 continue;
             }
 
@@ -542,7 +549,7 @@ void GameEventMgr::LoadFromDB()
 
             if (!ObjectMgr::GetCreatureTemplate(mail.senderEntry))
             {
-                sLog.outErrorDb("Table `game_event_mail` have nonexistent sender creature entry (%u) for game event %i that invalid not include any player races, ignoring.", mail.senderEntry, event_id);
+                sLog.outErrorDb("Table `game_event_mail` have non-existent sender creature entry (%u) for game event %i that invalid not include any player races, ignoring.", mail.senderEntry, event_id);
                 continue;
             }
 

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _OBJECTMGR_H
-#define _OBJECTMGR_H
+#ifndef MANGOS_H_OBJECTMGR
+#define MANGOS_H_OBJECTMGR
 
+#include <string>
+#include <map>
+#include <limits>
+
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Log.h"
+#include "database/DatabaseEnv.h"
+#include "log/Log.h"
 #include "Object.h"
 #include "Bag.h"
 #include "Creature.h"
@@ -30,16 +43,10 @@
 #include "QuestDef.h"
 #include "ItemPrototype.h"
 #include "NPCHandler.h"
-#include "Database/DatabaseEnv.h"
 #include "Map.h"
 #include "MapPersistentStateMgr.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
-#include "Policies/Singleton.h"
-
-#include <string>
-#include <map>
-#include <limits>
 
 class Group;
 class Item;
@@ -80,7 +87,7 @@ struct AreaTrigger
     {
         MANGOS_ASSERT(target_mapId == l->target_mapId);
         return requiredLevel <= l->requiredLevel && requiredItem <= l->requiredItem && requiredItem2 <= l->requiredItem2
-                && requiredQuest <= l->requiredQuest;
+               && requiredQuest <= l->requiredQuest;
     }
 };
 
@@ -181,7 +188,10 @@ typedef std::pair<QuestRelationsMap::const_iterator, QuestRelationsMap::const_it
 
 struct PetLevelInfo
 {
-    PetLevelInfo() : health(0), mana(0) { for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0; }
+    PetLevelInfo() : health(0), mana(0)
+    {
+        for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0;
+    }
 
     uint16 stats[MAX_STATS];
     uint16 health;
@@ -318,12 +328,12 @@ enum ConditionType
     CONDITION_ACTIVE_HOLIDAY        = 26,                   // holiday_id   0       preferred use instead CONDITION_ACTIVE_GAME_EVENT when possible
     CONDITION_NOT_ACTIVE_HOLIDAY    = 27,                   // holiday_id   0       preferred use instead CONDITION_NOT_ACTIVE_GAME_EVENT when possible
     CONDITION_LEARNABLE_ABILITY     = 28,                   // spell_id     0 or item_id
-    // True when player can learn ability (using min skill value from SkillLineAbility).
-    // Item_id can be defined in addition, to check if player has one (1) item in inventory or bank.
-    // When player has spell or has item (when defined), condition return false.
+                                                            // True when player can learn ability (using min skill value from SkillLineAbility).
+                                                            // Item_id can be defined in addition, to check if player has one (1) item in inventory or bank.
+                                                            // When player has spell or has item (when defined), condition return false.
     CONDITION_SKILL_BELOW           = 29,                   // skill_id     skill_value
-    // True if player has skill skill_id and skill less than (and not equal) skill_value (for skill_value > 1)
-    // If skill_value == 1, then true if player has not skill skill_id
+                                                            // True if player has skill skill_id and skill less than (and not equal) skill_value (for skill_value > 1)
+                                                            // If skill_value == 1, then true if player has not skill skill_id
     CONDITION_REPUTATION_RANK_MAX   = 30,                   // faction_id   max_rank
     CONDITION_RESERVED_3            = 31,                   // reserved for 3.x and later
     CONDITION_SOURCE_AURA           = 32,                   // spell_id     effindex (returns true if the source of the condition check has aura of spell_id, effIndex)
@@ -332,12 +342,13 @@ enum ConditionType
     CONDITION_GENDER                = 35,                   // 0=male, 1=female, 2=none (see enum Gender)
     CONDITION_DEAD_OR_AWAY          = 36,                   // value1: 0=player dead, 1=player is dead (with group dead), 2=player in instance are dead, 3=creature is dead
                                                             // value2: if != 0 only consider players in range of this value
+    CONDITION_CREATURE_IN_RANGE     = 37,                   // value1: creature entry; value2: range; returns only alive creatures
 };
 
 enum ConditionSource                                        // From where was the condition called?
 {
     CONDITION_FROM_LOOT             = 0,                    // Used to check a *_loot_template entry
-    CONDITION_FROM_REFERING_LOOT    = 1,                    // Used to check a entry refering to a reference_loot_template entry
+    CONDITION_FROM_REFERING_LOOT    = 1,                    // Used to check a entry referring to a reference_loot_template entry
     CONDITION_FROM_GOSSIP_MENU      = 2,                    // Used to check a gossip menu menu-text
     CONDITION_FROM_GOSSIP_OPTION    = 3,                    // Used to check a gossip menu option-item
     CONDITION_FROM_EVENTAI          = 4,                    // Used to check EventAI Event "On Receive Emote"
@@ -351,14 +362,17 @@ enum ConditionSource                                        // From where was th
 class PlayerCondition
 {
     public:
-        // Default constructor, required for SQL Storage (Will give errors if used elsewise)
+        // Default constructor, required for SQL Storage (Will give errors if used else wise)
         PlayerCondition() : m_entry(0), m_condition(CONDITION_AND), m_value1(0), m_value2(0) {}
 
         PlayerCondition(uint16 _entry, int16 _condition, uint32 _value1, uint32 _value2)
             : m_entry(_entry), m_condition(ConditionType(_condition)), m_value1(_value1), m_value2(_value2) {}
 
         // Checks correctness of values
-        bool IsValid() const { return IsValid(m_entry, m_condition, m_value1, m_value2); }
+        bool IsValid() const
+        {
+            return IsValid(m_entry, m_condition, m_value1, m_value2);
+        }
         static bool IsValid(uint16 entry, ConditionType condition, uint32 value1, uint32 value2);
 
         static bool CanBeUsedWithoutPlayer(uint16 entry);
@@ -426,14 +440,13 @@ class HonorStanding
         uint32 guid;
         float rpEarning;
 
-        HonorStanding* GetInfo() { return this; };
-
-        // create the standing order
-        bool operator < (const HonorStanding& rhs)
+        HonorStanding* GetInfo()
         {
-            return honorPoints > rhs.honorPoints;
-        }
+            return this;
+        };
 };
+
+bool operator < (const HonorStanding& lhs, const HonorStanding& rhs);
 
 typedef std::list<HonorStanding> HonorStandingList;
 
@@ -444,11 +457,17 @@ class IdGenerator
         explicit IdGenerator(char const* _name) : m_name(_name), m_nextGuid(1) {}
 
     public:                                                 // modifiers
-        void Set(T val) { m_nextGuid = val; }
+        void Set(T val)
+        {
+            m_nextGuid = val;
+        }
         T Generate();
 
     public:                                                 // accessors
-        T GetNextAfterMaxUsed() const { return m_nextGuid; }
+        T GetNextAfterMaxUsed() const
+        {
+            return m_nextGuid;
+        }
 
     private:                                                // fields
         char const* m_name;
@@ -514,6 +533,7 @@ class ObjectMgr
         ObjectGuid GetPlayerGuidByName(std::string name) const;
         bool GetPlayerNameByGUID(ObjectGuid guid, std::string& name) const;
         Team GetPlayerTeamByGUID(ObjectGuid guid) const;
+        uint8 GetPlayerClassByGUID(ObjectGuid guid) const;
         uint32 GetPlayerAccountIdByGUID(ObjectGuid guid) const;
         uint32 GetPlayerAccountIdByPlayerName(const std::string& name) const;
 
@@ -526,7 +546,10 @@ class ObjectMgr
             QuestMap::const_iterator itr = mQuestTemplates.find(quest_id);
             return itr != mQuestTemplates.end() ? itr->second : NULL;
         }
-        QuestMap const& GetQuestTemplates() const { return mQuestTemplates; }
+        QuestMap const& GetQuestTemplates() const
+        {
+            return mQuestTemplates;
+        }
 
         uint32 GetQuestForAreaTrigger(uint32 Trigger_ID) const
         {
@@ -635,7 +658,10 @@ class ObjectMgr
         void LoadCreatureInvolvedRelations();
 
         bool LoadMangosStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value, bool extra_content);
-        bool LoadMangosStrings() { return LoadMangosStrings(WorldDatabase, "mangos_string", MIN_MANGOS_STRING_ID, MAX_MANGOS_STRING_ID, false); }
+        bool LoadMangosStrings()
+        {
+            return LoadMangosStrings(WorldDatabase, "mangos_string", MIN_MANGOS_STRING_ID, MAX_MANGOS_STRING_ID, false);
+        }
         void LoadPetCreateSpells();
         void LoadCreatureLocales();
         void LoadCreatureTemplates();
@@ -692,14 +718,23 @@ class ObjectMgr
         void LoadGossipMenus();
 
         void LoadVendorTemplates();
-        void LoadVendors() { LoadVendors("npc_vendor", false); }
+        void LoadVendors()
+        {
+            LoadVendors("npc_vendor", false);
+        }
         void LoadTrainerTemplates();
-        void LoadTrainers() { LoadTrainers("npc_trainer", false); }
+        void LoadTrainers()
+        {
+            LoadTrainers("npc_trainer", false);
+        }
 
         std::string GeneratePetName(uint32 entry);
         uint32 GetBaseXP(uint32 level) const;
         uint32 GetXPForLevel(uint32 level) const;
-        uint32 GetXPForPetLevel(uint32 level) const { return GetXPForLevel(level) / 4; }
+        uint32 GetXPForPetLevel(uint32 level) const
+        {
+            return GetXPForLevel(level) / 4;
+        }
 
         int32 GetFishingBaseSkillLevel(uint32 entry) const
         {
@@ -722,26 +757,70 @@ class ObjectMgr
         void SetHighestGuids();
 
         // used for set initial guid counter for map local guids
-        uint32 GetFirstTemporaryCreatureLowGuid() const { return m_FirstTemporaryCreatureGuid; }
-        uint32 GetFirstTemporaryGameObjectLowGuid() const { return m_FirstTemporaryGameObjectGuid; }
+        uint32 GetFirstTemporaryCreatureLowGuid() const
+        {
+            return m_FirstTemporaryCreatureGuid;
+        }
+        uint32 GetFirstTemporaryGameObjectLowGuid() const
+        {
+            return m_FirstTemporaryGameObjectGuid;
+        }
 
         // used in .npc add/.gobject add commands for adding static spawns
-        uint32 GenerateStaticCreatureLowGuid() { if (m_StaticCreatureGuids.GetNextAfterMaxUsed() >= m_FirstTemporaryCreatureGuid) return 0; return m_StaticCreatureGuids.Generate(); }
-        uint32 GenerateStaticGameObjectLowGuid() { if (m_StaticGameObjectGuids.GetNextAfterMaxUsed() >= m_FirstTemporaryGameObjectGuid) return 0; return m_StaticGameObjectGuids.Generate(); }
+        uint32 GenerateStaticCreatureLowGuid()
+        {
+            if (m_StaticCreatureGuids.GetNextAfterMaxUsed() >= m_FirstTemporaryCreatureGuid) return 0;
+            return m_StaticCreatureGuids.Generate();
+        }
+        uint32 GenerateStaticGameObjectLowGuid()
+        {
+            if (m_StaticGameObjectGuids.GetNextAfterMaxUsed() >= m_FirstTemporaryGameObjectGuid) return 0;
+            return m_StaticGameObjectGuids.Generate();
+        }
 
-        uint32 GeneratePlayerLowGuid() { return m_CharGuids.Generate(); }
-        uint32 GenerateItemLowGuid() { return m_ItemGuids.Generate(); }
-        uint32 GenerateCorpseLowGuid() { return m_CorpseGuids.Generate(); }
+        uint32 GeneratePlayerLowGuid()
+        {
+            return m_CharGuids.Generate();
+        }
+        uint32 GenerateItemLowGuid()
+        {
+            return m_ItemGuids.Generate();
+        }
+        uint32 GenerateCorpseLowGuid()
+        {
+            return m_CorpseGuids.Generate();
+        }
 
-        uint32 GenerateAuctionID() { return m_AuctionIds.Generate(); }
-        uint32 GenerateGuildId() { return m_GuildIds.Generate(); }
-        uint32 GenerateGroupId() { return m_GroupIds.Generate(); }
-        uint32 GenerateItemTextID() { return m_ItemGuids.Generate(); }
-        uint32 GenerateMailID() { return m_MailIds.Generate(); }
-        uint32 GeneratePetNumber() { return m_PetNumbers.Generate(); }
+        uint32 GenerateAuctionID()
+        {
+            return m_AuctionIds.Generate();
+        }
+        uint32 GenerateGuildId()
+        {
+            return m_GuildIds.Generate();
+        }
+        uint32 GenerateGroupId()
+        {
+            return m_GroupIds.Generate();
+        }
+        uint32 GenerateItemTextID()
+        {
+            return m_ItemGuids.Generate();
+        }
+        uint32 GenerateMailID()
+        {
+            return m_MailIds.Generate();
+        }
+        uint32 GeneratePetNumber()
+        {
+            return m_PetNumbers.Generate();
+        }
 
         uint32 CreateItemText(std::string text);
-        void AddItemText(uint32 itemTextId, std::string text) { mItemTexts[itemTextId] = text; }
+        void AddItemText(uint32 itemTextId, std::string text)
+        {
+            mItemTexts[itemTextId] = text;
+        }
         std::string GetItemText(uint32 id)
         {
             ItemTextMap::const_iterator itr = mItemTexts.find(id);
@@ -773,7 +852,10 @@ class ObjectMgr
             return dataPair ? &dataPair->second : NULL;
         }
 
-        CreatureData& NewOrExistCreatureData(uint32 guid) { return mCreatureDataMap[guid]; }
+        CreatureData& NewOrExistCreatureData(uint32 guid)
+        {
+            return mCreatureDataMap[guid];
+        }
         void DeleteCreatureData(uint32 guid);
 
         template<typename Worker>
@@ -863,7 +945,10 @@ class ObjectMgr
             return dataPair ? &dataPair->second : NULL;
         }
 
-        GameObjectData& NewGOData(uint32 guid) { return mGameObjectDataMap[guid]; }
+        GameObjectData& NewGOData(uint32 guid)
+        {
+            return mGameObjectDataMap[guid];
+        }
         void DeleteGOData(uint32 guid);
 
         template<typename Worker>
@@ -889,17 +974,26 @@ class ObjectMgr
         }
 
         const char* GetMangosString(int32 entry, int locale_idx) const;
-        const char* GetMangosStringForDBCLocale(int32 entry) const { return GetMangosString(entry, DBCLocaleIndex); }
-        int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
-        void SetDBCLocaleIndex(uint32 lang) { DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang)); }
+        const char* GetMangosStringForDBCLocale(int32 entry) const
+        {
+            return GetMangosString(entry, DBCLocaleIndex);
+        }
+        int32 GetDBCLocaleIndex() const
+        {
+            return DBCLocaleIndex;
+        }
+        void SetDBCLocaleIndex(uint32 lang)
+        {
+            DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang));
+        }
 
-        // global grid objects state (static DB spawns, global spawn mods from gameevent system)
+        // global grid objects state (static DB spawns, global spawn mods from game event system)
         CellObjectGuids const& GetCellObjectGuids(uint16 mapid, uint32 cell_id)
         {
             return mMapObjectGuids[mapid][cell_id];
         }
 
-        // modifiers for global grid objects state (static DB spawns, global spawn mods from gameevent system)
+        // modifiers for global grid objects state (static DB spawns, global spawn mods from game event system)
         // Don't must be used for modify instance specific spawn state modifications
         void AddCreatureToGrid(uint32 guid, CreatureData const* data);
         void RemoveCreatureFromGrid(uint32 guid, CreatureData const* data);
@@ -931,7 +1025,10 @@ class ObjectMgr
         }
 
         GameTele const* GetGameTele(const std::string& name) const;
-        GameTeleMap const& GetGameTeleMap() const { return m_GameTeleMap; }
+        GameTeleMap const& GetGameTeleMap() const
+        {
+            return m_GameTeleMap;
+        }
         bool AddGameTele(GameTele& data);
         bool DeleteGameTele(const std::string& name);
 
@@ -984,6 +1081,13 @@ class ObjectMgr
         bool RemoveVendorItem(uint32 entry, uint32 item);
         bool IsVendorItemValid(bool isTemplate, char const* tableName, uint32 vendor_entry, uint32 item, uint32 maxcount, uint32 ptime, uint16 conditionId, Player* pl = NULL, std::set<uint32>* skip_vendors = NULL) const;
 
+        static void AddLocaleString(std::string const& s, LocaleConstant locale, StringVector& data);
+        static inline void GetLocaleString(const StringVector& data, int loc_idx, std::string& value)
+        {
+            if (data.size() > size_t(loc_idx) && !data[loc_idx].empty())
+                value = data[loc_idx];
+        }
+
         int GetOrNewIndexForLocale(LocaleConstant loc);
 
         ItemRequiredTargetMapBounds GetItemRequiredTargetMapBounds(uint32 uiItemEntry) const
@@ -1026,7 +1130,10 @@ class ObjectMgr
             return m_GOQuestInvolvedRelations.equal_range(entry);
         }
 
-        QuestRelationsMap& GetCreatureQuestRelationsMap() { return m_CreatureQuestRelations; }
+        QuestRelationsMap& GetCreatureQuestRelationsMap()
+        {
+            return m_CreatureQuestRelations;
+        }
 
         /**
         * \brief: Data returned is used to compute health, mana, armor, damage of creatures. May be NULL.
@@ -1151,7 +1258,7 @@ class ObjectMgr
         HalfNameMap PetHalfName0;
         HalfNameMap PetHalfName1;
 
-        // Array to store creature stats, Max creature level + 1 (for data alignement with in game level)
+        // Array to store creature stats, max creature level + 1 (for data alignment with in game level)
         CreatureClassLvlStats m_creatureClassLvlStats[DEFAULT_MAX_CREATURE_LEVEL + 1][MAX_CREATURE_CLASS];
 
         MapObjectGuids mMapObjectGuids;

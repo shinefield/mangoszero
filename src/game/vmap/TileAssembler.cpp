@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
-
-#include "TileAssembler.h"
-#include "MapTree.h"
-#include "BIH.h"
-#include "VMapDefinitions.h"
 
 #include <set>
 #include <iomanip>
 #include <sstream>
 #include <iomanip>
+
+#include "TileAssembler.h"
+#include "MapTree.h"
+#include "BIH.h"
+#include "VMapDefinitions.h"
 
 using G3D::Vector3;
 using G3D::AABox;
@@ -33,7 +40,10 @@ using std::pair;
 
 template<> struct BoundsTrait<VMAP::ModelSpawn*>
 {
-    static void getBounds(const VMAP::ModelSpawn* const& obj, G3D::AABox& out) { out = obj->getBounds(); }
+    static void getBounds(const VMAP::ModelSpawn* const& obj, G3D::AABox& out)
+    {
+        out = obj->getBounds();
+    }
 };
 
 namespace VMAP
@@ -163,7 +173,7 @@ namespace VMAP
                 // write tile spawns
                 for (uint32 s = 0; s < nSpawns; ++s)
                 {
-                    if (s)
+                    if (s && tile != tileEntries.end())
                         ++tile;
                     const ModelSpawn& spawn2 = map_iter->second->UniqueEntries[tile->second];
                     success = success && ModelSpawn::writeToFile(tilefile, spawn2);
@@ -173,7 +183,6 @@ namespace VMAP
                 }
                 fclose(tilefile);
             }
-            // break; // test, extract only first map; TODO: remvoe this line
         }
 
         // add an object models, listed in temp_gameobject_models file
@@ -394,9 +403,9 @@ namespace VMAP
 
     // temporary use defines to simplify read/check code (close file and return at fail)
 #define READ_OR_RETURN(V,S) if(fread((V), (S), 1, rf) != 1) { \
-                                    fclose(rf); printf("readfail, op = %i\n", readOperation); return(false); }
+        fclose(rf); printf("readfail, op = %i\n", readOperation); return(false); }
 #define CMP_OR_RETURN(V,S)  if(strcmp((V),(S)) != 0)        { \
-                                    fclose(rf); printf("cmpfail, %s!=%s\n", V, S);return(false); }
+        fclose(rf); printf("cmpfail, %s!=%s\n", V, S);return(false); }
 
     bool GroupModel_Raw::Read(FILE* rf)
     {

@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _VMAPMANAGER2_H
-#define _VMAPMANAGER2_H
+#ifndef MANGOS_H_VMAPMANAGER2
+#define MANGOS_H_VMAPMANAGER2
 
-#include "IVMapManager.h"
-#include "Utilities/UnorderedMapSet.h"
-#include "Platform/Define.h"
 #include <G3D/Vector3.h>
+
+#include "platform/Define.h"
+#include "utilities/UnorderedMapSet.h"
+#include "IVMapManager.h"
 
 //===========================================================
 
@@ -49,10 +57,22 @@ namespace VMAP
     {
         public:
             ManagedModel(): iModel(0), iRefCount(0) {}
-            void setModel(WorldModel* model) { iModel = model; }
-            WorldModel* getModel() { return iModel; }
-            void incRefCount() { ++iRefCount; }
-            int decRefCount() { return --iRefCount; }
+            void setModel(WorldModel* model)
+            {
+                iModel = model;
+            }
+            WorldModel* getModel()
+            {
+                return iModel;
+            }
+            void incRefCount()
+            {
+                ++iRefCount;
+            }
+            int decRefCount()
+            {
+                return --iRefCount;
+            }
         protected:
             WorldModel* iModel;
             int iRefCount;
@@ -91,7 +111,10 @@ namespace VMAP
             bool getObjectHitPos(unsigned int pMapId, float x1, float y1, float z1, float x2, float y2, float z2, float& rx, float& ry, float& rz, float pModifyDist) override;
             float getHeight(unsigned int pMapId, float x, float y, float z, float maxSearchDist) override;
 
-            bool processCommand(char* /*pCommand*/) override { return false; }      // for debug and extensions
+            bool processCommand(char* /*pCommand*/) override
+            {
+                return false;    // for debug and extensions
+            }
 
             bool getAreaInfo(unsigned int pMapId, float x, float y, float& z, uint32& flags, int32& adtId, int32& rootId, int32& groupId) const override;
             bool GetLiquidLevel(uint32 pMapId, float x, float y, float z, uint8 ReqLiquidType, float& level, float& floor, uint32& type) const override;

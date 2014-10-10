@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOSSERVER_PET_H
-#define MANGOSSERVER_PET_H
+#ifndef MANGOS_H_PET
+#define MANGOS_H_PET
 
 #include "Common.h"
 #include "ObjectGuid.h"
@@ -157,10 +164,22 @@ class MANGOS_DLL_SPEC Pet : public Creature
         void AddToWorld() override;
         void RemoveFromWorld() override;
 
-        PetType getPetType() const { return m_petType; }
-        void setPetType(PetType type) { m_petType = type; }
-        bool isControlled() const { return getPetType() == SUMMON_PET || getPetType() == HUNTER_PET; }
-        bool isTemporarySummoned() const { return m_duration > 0; }
+        PetType getPetType() const
+        {
+            return m_petType;
+        }
+        void setPetType(PetType type)
+        {
+            m_petType = type;
+        }
+        bool isControlled() const
+        {
+            return getPetType() == SUMMON_PET || getPetType() == HUNTER_PET;
+        }
+        bool isTemporarySummoned() const
+        {
+            return m_duration > 0;
+        }
         bool IsPermanentPetFor(Player* owner);              // pet have tab in character windows and set UNIT_FIELD_PETNUMBER
 
         bool Create(uint32 guidlow, CreatureCreatePos& cPos, CreatureInfo const* cinfo, uint32 pet_number);
@@ -173,7 +192,10 @@ class MANGOS_DLL_SPEC Pet : public Creature
         void SetDeathState(DeathState s) override;          // overwrite virtual Creature::SetDeathState and Unit::SetDeathState
         void Update(uint32 update_diff, uint32 diff) override;  // overwrite virtual Creature::Update and Unit::Update
 
-        uint8 GetPetAutoSpellSize() const { return m_autospells.size(); }
+        uint8 GetPetAutoSpellSize() const
+        {
+            return m_autospells.size();
+        }
         uint32 GetPetAutoSpellOnPos(uint8 pos) const override
         {
             if (pos >= m_autospells.size())
@@ -192,7 +214,6 @@ class MANGOS_DLL_SPEC Pet : public Creature
         }
 
         void RegenerateAll(uint32 update_diff) override;    // overwrite Creature::RegenerateAll
-        void RegenerateFocus();
         void LooseHappiness();
         void TickLoyaltyChange();
         void ModifyLoyalty(int32 addvalue);
@@ -200,7 +221,10 @@ class MANGOS_DLL_SPEC Pet : public Creature
         uint32 GetMaxLoyaltyPoints(uint32 level);
         uint32 GetStartLoyaltyPoints(uint32 level);
         void KillLoyaltyBonus(uint32 level);
-        uint32 GetLoyaltyLevel() { return GetByteValue(UNIT_FIELD_BYTES_1, 1); }
+        uint32 GetLoyaltyLevel()
+        {
+            return GetByteValue(UNIT_FIELD_BYTES_1, 1);
+        }
         void SetLoyaltyLevel(LoyaltyLevel level);
         void GivePetXP(uint32 xp);
         void GivePetLevel(uint32 level);
@@ -208,10 +232,19 @@ class MANGOS_DLL_SPEC Pet : public Creature
         bool InitStatsForLevel(uint32 level, Unit* owner = NULL);
         bool HaveInDiet(ItemPrototype const* item) const;
         uint32 GetCurrentFoodBenefitLevel(uint32 itemlevel);
-        void SetDuration(int32 dur) { m_duration = dur; }
+        void SetDuration(int32 dur)
+        {
+            m_duration = dur;
+        }
 
-        int32 GetBonusDamage() { return m_bonusdamage; }
-        void SetBonusDamage(int32 damage) { m_bonusdamage = damage; }
+        int32 GetBonusDamage()
+        {
+            return m_bonusdamage;
+        }
+        void SetBonusDamage(int32 damage)
+        {
+            m_bonusdamage = damage;
+        }
 
         bool UpdateStats(Stats stat) override;
         bool UpdateAllStats() override;
@@ -228,10 +261,16 @@ class MANGOS_DLL_SPEC Pet : public Creature
         int32  GetTPForSpell(uint32 spellid);
 
         void ApplyModeFlags(PetModeFlags mode, bool apply);
-        PetModeFlags GetModeFlags() const { return m_petModeFlags; }
+        PetModeFlags GetModeFlags() const
+        {
+            return m_petModeFlags;
+        }
 
         bool HasSpell(uint32 spell) const override;
-        void AddTeachSpell(uint32 learned_id, uint32 source_id) { m_teachspells[learned_id] = source_id; }
+        void AddTeachSpell(uint32 learned_id, uint32 source_id)
+        {
+            m_teachspells[learned_id] = source_id;
+        }
 
         void LearnPetPassives();
         void CastPetAuras(bool current);
@@ -265,12 +304,24 @@ class MANGOS_DLL_SPEC Pet : public Creature
         uint32  m_resetTalentsCost;
         time_t  m_resetTalentsTime;
 
-        const uint64& GetAuraUpdateMask() const { return m_auraUpdateMask; }
-        void SetAuraUpdateMask(uint8 slot) { m_auraUpdateMask |= (uint64(1) << slot); }
-        void ResetAuraUpdateMask() { m_auraUpdateMask = 0; }
+        const uint64& GetAuraUpdateMask() const
+        {
+            return m_auraUpdateMask;
+        }
+        void SetAuraUpdateMask(uint8 slot)
+        {
+            m_auraUpdateMask |= (uint64(1) << slot);
+        }
+        void ResetAuraUpdateMask()
+        {
+            m_auraUpdateMask = 0;
+        }
 
         // overwrite Creature function for name localization back to WorldObject version without localization
-        const char* GetNameForLocaleIdx(int32 locale_idx) const { return WorldObject::GetNameForLocaleIdx(locale_idx); }
+        const char* GetNameForLocaleIdx(int32 locale_idx) const
+        {
+            return WorldObject::GetNameForLocaleIdx(locale_idx);
+        }
 
         bool    m_removed;                                  // prevent overwrite pet state in DB at next Pet::Update if pet already removed(saved)
     protected:

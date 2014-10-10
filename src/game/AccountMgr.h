@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef _ACCMGR_H
-#define _ACCMGR_H
+#ifndef MANGOS_H_ACCMGR
+#define MANGOS_H_ACCMGR
 
-#include "Common.h"
-#include "Policies/Singleton.h"
 #include <string>
+
+#include "policies/Singleton.h"
+#include "Common.h"
 
 enum AccountOpResult
 {
     AOR_OK,
     AOR_NAME_TOO_LONG,
     AOR_PASS_TOO_LONG,
-    AOR_NAME_ALREDY_EXIST,
+    AOR_NAME_ALREADY_EXIST,
     AOR_NAME_NOT_EXIST,
     AOR_DB_INTERNAL_ERROR
 };
@@ -57,4 +65,5 @@ class AccountMgr
 };
 
 #define sAccountMgr MaNGOS::Singleton<AccountMgr>::Instance()
+
 #endif

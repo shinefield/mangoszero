@@ -1,5 +1,9 @@
-/*
- * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
+/**
+ * mangos-zero is a full featured server for World of Warcraft in its vanilla
+ * version, supporting clients for patch 1.12.x.
+ *
+ * Copyright (C) 2005-2014  MaNGOS project  <http://getmangos.com>
+ * Parts Copyright (C) 2013-2014  CMaNGOS project <http://cmangos.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * World of Warcraft, and all World of Warcraft or Warcraft art, images,
+ * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef __BATTLEGROUNDMGR_H
-#define __BATTLEGROUNDMGR_H
+#ifndef MANGOS_H_BATTLEGROUNDMGR
+#define MANGOS_H_BATTLEGROUNDMGR
 
+#include <ace/Recursive_Thread_Mutex.h>
+
+#include "policies/Singleton.h"
 #include "Common.h"
-#include "Policies/Singleton.h"
 #include "BattleGround.h"
-#include "ace/Recursive_Thread_Mutex.h"
 
 typedef std::map<uint32, BattleGround*> BattleGroundSet;
 
@@ -111,7 +119,10 @@ class BattleGroundQueue
                 void Init();
                 bool AddGroup(GroupQueueInfo* ginfo, uint32 desiredCount);
                 bool KickGroup(uint32 size);
-                uint32 GetPlayerCount() const {return PlayerCount;}
+                uint32 GetPlayerCount() const
+                {
+                    return PlayerCount;
+                }
             public:
                 GroupsQueueType SelectedGroups;
             private:
@@ -200,8 +211,14 @@ class BattleGroundMgr
 
         uint32 CreateBattleGround(BattleGroundTypeId bgTypeId, uint32 MinPlayersPerTeam, uint32 MaxPlayersPerTeam, uint32 LevelMin, uint32 LevelMax, char const* BattleGroundName, uint32 MapID, float Team1StartLocX, float Team1StartLocY, float Team1StartLocZ, float Team1StartLocO, float Team2StartLocX, float Team2StartLocY, float Team2StartLocZ, float Team2StartLocO);
 
-        void AddBattleGround(uint32 InstanceID, BattleGroundTypeId bgTypeId, BattleGround* BG) { m_BattleGrounds[bgTypeId][InstanceID] = BG; };
-        void RemoveBattleGround(uint32 instanceID, BattleGroundTypeId bgTypeId) { m_BattleGrounds[bgTypeId].erase(instanceID); }
+        void AddBattleGround(uint32 InstanceID, BattleGroundTypeId bgTypeId, BattleGround* BG)
+        {
+            m_BattleGrounds[bgTypeId][InstanceID] = BG;
+        };
+        void RemoveBattleGround(uint32 instanceID, BattleGroundTypeId bgTypeId)
+        {
+            m_BattleGrounds[bgTypeId].erase(instanceID);
+        }
         uint32 CreateClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BattleGroundBracketId bracket_id);
         void DeleteClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BattleGroundBracketId bracket_id, uint32 clientInstanceID)
         {
@@ -249,7 +266,10 @@ class BattleGroundMgr
             return m_GameObjectBattleEventIndexMap.find(-1)->second;
         }
 
-        bool isTesting() const { return m_Testing; }
+        bool isTesting() const
+        {
+            return m_Testing;
+        }
 
         static BattleGroundQueueTypeId BGQueueTypeId(BattleGroundTypeId bgTypeId);
         static BattleGroundTypeId BGTemplateId(BattleGroundQueueTypeId bgQueueTypeId);
