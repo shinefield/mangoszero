@@ -33,7 +33,7 @@
 #include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
-#include "WorldPacket.h"
+#include "network/WorldPacket.h"
 #include "WorldSession.h"
 
 #ifdef TRINITY
@@ -43,7 +43,7 @@
 #include "WeatherMgr.h"
 #include "Battleground.h"
 #else
-#include "Config/Config.h"
+#include "configuration/Config.h"
 #include "ReactorAI.h"
 #include "revision_nr.h"
 #include "BattleGroundMgr.h"

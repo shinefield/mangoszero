@@ -37,5 +37,5 @@ script:
   - test -d _build || mkdir _build
   - test -d _install || mkdir _install
   - cd _build
-  - cmake -DCMAKE_INSTALL_PREFIX=../_install -DCMAKE_BUILD_TYPE=Debug -DWITH_DEBUG_OUTPUT=1 -DWITH_MOD_LUA=0 -DWITH_MOD_SCRIPTDEV2=0 ..
+  - cmake -DCMAKE_INSTALL_PREFIX=../_install -DCMAKE_BUILD_TYPE=Debug -DWITH_DEBUG_OUTPUT=1 -DWITH_MOD_SCRIPTDEV2=0 ..
   - make -j4

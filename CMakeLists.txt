@@ -135,7 +135,6 @@ option(WITH_MYSQL                   "Enable MySQL database backend"             
 option(WITH_POSTGRESQL              "Enable PostgreSQL database backend"                    OFF)
 
 # mangos-zero language bindings
-option(WITH_MOD_LUA                 "Enable Lua scripting"                                   ON)
 option(WITH_MOD_SCRIPTDEV2          "Enable C++ scripting library"                          OFF)
 option(WITH_MOD_SCRIPTDEV2_DIR      "Define the SD2 drectory"                         "scripts")
 mark_as_advanced(WITH_MOD_SCRIPTDEV2_DIR)
@@ -487,12 +486,6 @@ if(FIRST_RUN)
 
     message(STATUS "")
     message(STATUS "Scripting information:")
-
-    if(WITH_MOD_LUA)
-        message(STATUS "  Lua scripting enabled.")
-    else()
-        message(STATUS "  Lua scripting disabled.")
-    endif()
 
     if(WITH_MOD_SCRIPTDEV2)
         message(STATUS "  ScriptDev2 scripting enabled.")

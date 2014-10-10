@@ -44,6 +44,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/dep/lua/src/
     ${CMAKE_SOURCE_DIR}/src/framework/
     ${CMAKE_SOURCE_DIR}/src/game/
+    ${CMAKE_SOURCE_DIR}/src/game/BattleGround/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}

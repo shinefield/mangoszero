@@ -31,9 +31,7 @@ add_subdirectory(libmpq)
 
 #-----------------------------------------------------------------------------
 # Build internal Lua library
-if(WITH_MOD_LUA)
-    add_subdirectory(lua)
-endif()
+add_subdirectory(lua)
 
 #-----------------------------------------------------------------------------
 # Build internal recast-navigation

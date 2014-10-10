@@ -14,7 +14,7 @@
 #ifdef TRINITY
 #include "Define.h"
 #else
-#include "Platform/Define.h"
+#include "platform/Define.h"
 #endif
 
 class EventMgr;

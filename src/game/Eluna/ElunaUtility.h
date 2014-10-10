@@ -16,7 +16,7 @@
 #include "Object.h"
 #endif
 #else
-#include "Database/QueryResult.h"
+#include "database/QueryResult.h"
 #endif
 
 // Some dummy includes containing BOOST_VERSION:
