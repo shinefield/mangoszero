@@ -944,7 +944,7 @@ GuidReserveSize.GameObject = 100
 #                 1 (enable fake messages preventing)
 #
 #    ChatStrictLinkChecking.Severity
-#        Check chat messages for in-game links to spells, items, quests, achievements etc.
+#        Check chat messages for in-game links to spells, items, quests etc.
 #        Default: 0 (disable link checking)
 #                 1 (check if only valid pipe commands are used. This prevents posting pictures for example)
 #                 2 (verify that pipe commands are used in a correct order)
