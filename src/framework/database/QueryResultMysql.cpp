@@ -23,8 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DO_POSTGRESQL
-
 #include "DatabaseEnv.h"
 #include "debugging/Errors.h"
 
@@ -106,4 +104,3 @@ Field::SimpleDataTypes QueryResultMysql::GetSimpleType(enum_field_types type)
             return Field::DB_TYPE_UNKNOWN;
     }
 }
-#endif

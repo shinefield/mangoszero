@@ -33,16 +33,6 @@
 #include "database/Field.h"
 #include "database/QueryResult.h"
 
-#ifdef DO_POSTGRESQL
-#include "database/QueryResultPostgre.h"
-#include "database/Database.h"
-#include "database/DatabasePostgre.h"
-typedef DatabasePostgre DatabaseType;
-#define _LIKE_           "ILIKE"
-#define _TABLE_SIM_      "\""
-#define _CONCAT3_(A,B,C) "( " A " || " B " || " C " )"
-#define _OFFSET_         "LIMIT 1 OFFSET %d"
-#else
 #include "database/QueryResultMysql.h"
 #include "database/Database.h"
 #include "database/DatabaseMysql.h"
@@ -51,7 +41,6 @@ typedef DatabaseMysql DatabaseType;
 #define _TABLE_SIM_      "`"
 #define _CONCAT3_(A,B,C) "CONCAT( " A " , " B " , " C " )"
 #define _OFFSET_         "LIMIT %d,1"
-#endif
 
 extern DatabaseType WorldDatabase;
 extern DatabaseType CharacterDatabase;

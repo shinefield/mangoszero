@@ -132,7 +132,7 @@ option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output" 
 
 # mangos-zero database bindings
 option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
-option(WITH_POSTGRESQL              "Enable PostgreSQL database backend"                    OFF)
+mark_as_advanced(WITH_MYSQL)
 
 # mangos-zero language bindings
 option(WITH_MOD_SCRIPTDEV2          "Enable C++ scripting library"                          OFF)
@@ -145,12 +145,6 @@ mark_as_advanced(WITH_RECAST_DEMO)
 
 #-----------------------------------------------------------------------------
 # Check for conflicting/unsupported configurations
-if(NOT WITH_MYSQL AND NOT WITH_POSTGRESQL)
-    message(FATAL_ERROR "At least one of WITH_MYSQL or WITH_POSTGRESQL must be enabled!")
-elseif(WITH_MYSQL AND WITH_POSTGRESQL)
-    message(FATAL_ERROR "Only WITH_MYSQL or WITH_POSTGRESQL can be enabled!")
-endif()
-
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND WITH_DEBUG_OUTPUT)
     message(FATAL_ERROR "It is not recommeded to build ${CMAKE_PROJECT_NAME} with debug output in a non-development release.")
 endif()
@@ -454,8 +448,6 @@ endif()
 
 if(WITH_MYSQL)
     find_package(MySQL REQUIRED)
-elseif(WITH_POSTGRESQL)
-    find_package(PostgreSQL REQUIRED)
 endif()
 
 #-----------------------------------------------------------------------------
