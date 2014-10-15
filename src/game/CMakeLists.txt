@@ -32,10 +32,6 @@ include(MacroMangosSourceGroup)
 add_subdirectory(vmap)
 
 #-----------------------------------------------------------------------------
-# Build the mangos auctionhousebot library
-add_subdirectory(AuctionHouseBot)
-
-#-----------------------------------------------------------------------------
 # Build the mangos battleground library
 add_subdirectory(BattleGround)
 
@@ -313,7 +309,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/framework/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vmap/
-    ${CMAKE_CURRENT_SOURCE_DIR}/AuctionHouseBot/
     ${CMAKE_CURRENT_SOURCE_DIR}/BattleGround/
     ${CMAKE_CURRENT_SOURCE_DIR}/Eluna/
     ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/
@@ -325,7 +320,7 @@ include_directories(
 #-----------------------------------------------------------------------------
 # Build the game library
 add_library(mangos-game STATIC ${game_LIB_SRCS})
-target_link_libraries(mangos-game mangos-auctionhouse-bot mangos-battleground mangos-eluna mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(mangos-game mangos-battleground mangos-eluna mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
 # Special case for SD2 library builds
 if(UNIX AND WITH_MOD_SCRIPTDEV2)

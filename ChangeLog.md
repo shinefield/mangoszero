@@ -12,6 +12,9 @@ things such as these:
 * removal of PostgreSQL support. Sadly, due to lack of testing and development
   resources required to maintain proper support, we had to remove support for
   PostgreSQL.
+* removal of the auction house bot. Sadly, due to lack of testing and development
+  resources required to maintain proper support, we had to remove support for
+  the auction house bot.
 
 Also numerous minor fixes and improvements have been added, such as:
 

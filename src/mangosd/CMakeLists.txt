@@ -96,7 +96,7 @@ if(WIN32 AND MSVC)
 else()
     add_executable(mangosd ${mangosd_LIB_SRCS})
 endif()
-target_link_libraries(mangosd ${ACE_LIBRARIES} mangos-game mangos-auctionhouse-bot mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
+target_link_libraries(mangosd ${ACE_LIBRARIES} mangos-game mangos-battleground mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES})
 install(TARGETS mangosd DESTINATION ${BIN_DIR})
 
 add_dependencies(mangosd revision.h)
