@@ -77,8 +77,7 @@ enum WorldTimers
     WUPDATE_CORPSES     = 3,
     WUPDATE_EVENTS      = 4,
     WUPDATE_DELETECHARS = 5,
-    WUPDATE_AHBOT       = 6,
-    WUPDATE_COUNT       = 7
+    WUPDATE_COUNT       = 6
 };
 
 /// Configuration elements
@@ -702,7 +701,7 @@ class World
             return m_CreatureEventAIVersion.c_str();
         }
 
-        
+
         /**
         * \brief: force all client to request player data
         * \param: ObjectGuid guid : guid of the specified player
@@ -710,7 +709,7 @@ class World
         *
         * Description: InvalidatePlayerDataToAllClient force all connected clients to clear specified player cache
         * FullName: World::InvalidatePlayerDataToAllClient
-        * Access: public 
+        * Access: public
         **/
         void InvalidatePlayerDataToAllClient(ObjectGuid guid);
 

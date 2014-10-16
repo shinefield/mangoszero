@@ -35,7 +35,7 @@
 
 class ObjectWorldLoader;
 
-class MANGOS_DLL_DECL ObjectGridLoader
+class ObjectGridLoader
 {
         friend class ObjectWorldLoader;
 
@@ -62,7 +62,7 @@ class MANGOS_DLL_DECL ObjectGridLoader
         uint32 i_corpses;
 };
 
-class MANGOS_DLL_DECL ObjectGridUnloader
+class ObjectGridUnloader
 {
     public:
         ObjectGridUnloader(NGridType& grid) : i_grid(grid) {}
@@ -86,7 +86,7 @@ class MANGOS_DLL_DECL ObjectGridUnloader
         NGridType& i_grid;
 };
 
-class MANGOS_DLL_DECL ObjectGridStoper
+class ObjectGridStoper
 {
     public:
         ObjectGridStoper(NGridType& grid) : i_grid(grid) {}

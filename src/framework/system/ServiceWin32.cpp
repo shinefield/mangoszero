@@ -25,6 +25,10 @@
 
 #ifdef WIN32
 
+// required first, because of platform settings
+#include "Common.h"
+#include "log/Log.h"
+
 #include <cstring>
 #include <windows.h>
 #include <winsvc.h>
@@ -33,8 +37,6 @@
 #ifdef main
 #undef main
 #endif
-#include "Common.h"
-#include "log/Log.h"
 
 #if !defined(WINADVAPI)
 #if !defined(_ADVAPI32_)

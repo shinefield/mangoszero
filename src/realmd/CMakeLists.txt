@@ -48,7 +48,7 @@ include_directories(
 )
 
 #-----------------------------------------------------------------------------
-# Configure the auctionhouse-bot library
+# Configure the realmd application
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/realmd.conf.dist.cmake ${CMAKE_CURRENT_BINARY_DIR}/realmd.conf.dist)
 
 #-----------------------------------------------------------------------------

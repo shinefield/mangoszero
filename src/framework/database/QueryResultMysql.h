@@ -23,8 +23,6 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef DO_POSTGRESQL
-
 #ifndef MANGOS_H_QUERYRESULTMYSQL
 #define MANGOS_H_QUERYRESULTMYSQL
 
@@ -51,6 +49,4 @@ class QueryResultMysql : public QueryResult
 
         MYSQL_RES* mResult;
 };
-#endif
-
 #endif

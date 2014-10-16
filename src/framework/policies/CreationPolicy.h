@@ -36,7 +36,7 @@ namespace MaNGOS
      * OperatorNew policy creates an object on the heap using new.
      */
     template<class T>
-    class MANGOS_DLL_DECL OperatorNew
+    class OperatorNew
     {
         public:
 
@@ -56,7 +56,7 @@ namespace MaNGOS
      * the first time call Create.
      */
     template<class T>
-    class MANGOS_DLL_DECL LocalStaticCreation
+    class LocalStaticCreation
     {
             union MaxAlign
             {
@@ -90,7 +90,7 @@ namespace MaNGOS
      * CreateUsingMalloc by pass the memory manger.
      */
     template<class T>
-    class MANGOS_DLL_DECL CreateUsingMalloc
+    class CreateUsingMalloc
     {
         public:
 
@@ -115,7 +115,7 @@ namespace MaNGOS
      * CreateOnCallBack creates the object base on the call back.
      */
     template<class T, class CALL_BACK>
-    class MANGOS_DLL_DECL CreateOnCallBack
+    class CreateOnCallBack
     {
         public:
             static T* Create()

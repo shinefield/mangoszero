@@ -163,19 +163,6 @@ if(WITH_MYSQL AND MYSQL_FOUND)
         database/DatabaseMysql.h
         database/QueryResultMysql.h
     )
-elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
-    include_directories(
-        ${PostgreSQL_INCLUDE_DIRS}
-    )
-    list(APPEND sources
-        database/DatabasePostgre.cpp
-        database/QueryResultPostgre.cpp
-    )
-    list(APPEND headers
-        database/DatabasePostgre.h
-        database/PGSQLDelayThread.h
-        database/QueryResultPostgre.h
-    )
 endif()
 
 set(framework_LIB_SRCS ${sources} ${headers})
@@ -215,9 +202,6 @@ endif()
 if(WITH_MYSQL AND MYSQL_FOUND)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_MYSQL")
     target_link_libraries(mangos-framework ${MYSQL_LIBRARIES})
-elseif(WITH_POSTGRESQL AND PostgreSQL_FOUND)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_POSTGRESQL")
-    target_link_libraries(mangos-framework ${PostgreSQL_LIBRARIES})
 endif()
 
 set_target_properties(mangos-framework PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})

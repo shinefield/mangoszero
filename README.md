@@ -1,4 +1,4 @@
-mangos-zero server
+mangos-zero server [![Build Status](https://drone.io/bitbucket.org/mangoszero/server/status.png)](https://drone.io/bitbucket.org/mangoszero/server/latest) [![Coverity Build Status](https://scan.coverity.com/projects/365/badge.svg)](https://scan.coverity.com/projects/365)
 ==================
 
 **mangos-zero** is an Open Source GPL version 2 licensed server for running your
