@@ -4,7 +4,7 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
-## 1.0.0-RC2 (2014-10-14)
+## 1.0.0-RC2 (2014-10-16)
 
 Major changes for this build which require your attention when upgrading include
 things such as these:
@@ -21,6 +21,7 @@ Also numerous minor fixes and improvements have been added, such as:
 * the overall build time for mangos-zero has been greatly reduced, and support
   for building on multiple CPU cores is considered final now. Enjoy an awesome,
   fast build with CMake!
+* Windows builds have been fixed. Oops!
 
 ## 1.0.0-RC1 (2014-10-10)
 
