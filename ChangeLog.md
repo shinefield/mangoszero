@@ -11,6 +11,7 @@ Minor fixes and improvements have been added, such as:
 * usernames are now normalized when updating the account password, no longer
   resulting in the creation of a broken SHA1 hash due to lowercase characters
   in usernames.
+* an unused setting for max character level has been removed.
 
 ## 1.0.0-RC2 (2014-10-16)
 
