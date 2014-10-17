@@ -1,4 +1,4 @@
-mangos-zero server [![Build Status](https://drone.io/bitbucket.org/mangoszero/server/status.png)](https://drone.io/bitbucket.org/mangoszero/server/latest) [![Coverity Build Status](https://scan.coverity.com/projects/365/badge.svg)](https://scan.coverity.com/projects/365)
+mangos-zero server [![Build Status][build-status-img]][build-status] [![Coverity Build Status][scan-status-img]][scan-status]
 ==================
 
 **mangos-zero** is an Open Source GPL version 2 licensed server for running your
@@ -16,9 +16,9 @@ Supporting the project
 If you like **mangos-zero** and want to support the project, there are various
 options:
 
-* financial support: I spend roughly 30 hours per week to work on the project,
-  including server, scripts, database and documentation. A little [tip][gittip]
-  helps pay the bills.
+* [![Tip the developer!][gittip-img]][gittip] financial support: I spend roughly
+  30 hours per week to work on the project, including server, scripts, database
+  and documentation. A little [tip][gittip] helps pay the bills.
 * testing and reporting issues: if you use **mangos-zero**, please report issues
   you find for the [server][mz-server-issues], [scripts][mz-scripts-issues],
   [database][mz-content-issues] or our [documentation][mz-docs-issues].
@@ -56,22 +56,29 @@ with a special exception that allows you to link our server against *OpenSSL*.
 We provide a few libraries within the `dep` directory for which different
 licenses apply.
 
-[wow]: http://worldofwarcraft.com/
-[wow-1]: http://blizzard.com/games/wow/
+[wow]:                      http://worldofwarcraft.com/
+[wow-1]:                    http://blizzard.com/games/wow/
 
-[mangos-zero]: http://getmangos.com/
-[mangos-zero-docs]: http://docs.getmangos.com/
-[mangos-zero-contribute]: http://docs.getmangos.com/en/latest/contributing/
+[mangos-zero]:              http://getmangos.com/
+[mangos-zero-docs]:         http://docs.getmangos.com/
+[mangos-zero-contribute]:   http://docs.getmangos.com/en/latest/contributing/
 [mangos-zero-installation]: http://docs.getmangos.com/en/latest/installation/
 
-[mz-team]: http://bitbucket.org/mangoszero/
-[mz-server]: http://bitbucket.org/mangoszero/server/
-[mz-server-issues]: http://bitbucket.org/mangoszero/server/issues
-[mz-scripts]: http://bitbucket.org/mangoszero/scripts/
-[mz-scripts-issues]: http://bitbucket.org/mangoszero/scripts/issues
-[mz-content]: http://bitbucket.org/mangoszero/content/
-[mz-content-issues]: http://bitbucket.org/mangoszero/content/issues
-[mz-docs]: http://bitbucket.org/mangoszero/documentation/
-[mz-docs-issues]: http://bitbucket.org/mangoszero/documentation/issues
+[mz-team]:                  http://bitbucket.org/mangoszero/
+[mz-server]:                http://bitbucket.org/mangoszero/server/
+[mz-server-issues]:         http://bitbucket.org/mangoszero/server/issues
+[mz-scripts]:               http://bitbucket.org/mangoszero/scripts/
+[mz-scripts-issues]:        http://bitbucket.org/mangoszero/scripts/issues
+[mz-content]:               http://bitbucket.org/mangoszero/content/
+[mz-content-issues]:        http://bitbucket.org/mangoszero/content/issues
+[mz-docs]:                  http://bitbucket.org/mangoszero/documentation/
+[mz-docs-issues]:           http://bitbucket.org/mangoszero/documentation/issues
 
-[gittip]: https://www.gittip.com/danielsreichenbach/
+[build-status]:             http://drone.io/bitbucket.org/mangoszero/server/latest
+[build-status-img]:         http://drone.io/bitbucket.org/mangoszero/server/status.png
+
+[scan-status]:              http://scan.coverity.com/projects/365
+[scan-status-img]:          http://scan.coverity.com/projects/365/badge.svg
+
+[gittip]:                   http://gratipay.com/danielsreichenbach/
+[gittip-img]:               http://img.shields.io/gratipay/danielsreichenbach.svg
