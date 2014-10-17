@@ -14,6 +14,8 @@ Minor fixes and improvements have been added, such as:
 * an unused setting for max character level has been removed.
 * paths will no longer be recalculated on movement speed changing effects on
   creatures. This removes stuttering when creatures are e.g. hit by Frost Bolt.
+* removed support for [Shiv](http://wowpedia.org/Shiv) which was introduced
+  in The Burning Crusade first.
 
 ## 1.0.0-RC2 (2014-10-16)
 
