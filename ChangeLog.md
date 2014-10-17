@@ -12,6 +12,8 @@ Minor fixes and improvements have been added, such as:
   resulting in the creation of a broken SHA1 hash due to lowercase characters
   in usernames.
 * an unused setting for max character level has been removed.
+* paths will no longer be recalculated on movement speed changing effects on
+  creatures. This removes stuttering when creatures are e.g. hit by Frost Bolt.
 
 ## 1.0.0-RC2 (2014-10-16)
 
