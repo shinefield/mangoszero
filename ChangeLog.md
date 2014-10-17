@@ -4,6 +4,14 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
+## 1.0.0-RC3 (2014-10-XX)
+
+Minor fixes and improvements have been added, such as:
+
+* usernames are now normalized when updating the account password, no longer
+  resulting in the creation of a broken SHA1 hash due to lowercase characters
+  in usernames.
+
 ## 1.0.0-RC2 (2014-10-16)
 
 Major changes for this build which require your attention when upgrading include
