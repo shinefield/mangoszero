@@ -289,8 +289,8 @@ elseif(WIN32)
             add_definitions(/D_ALLOW_KEYWORD_MACROS)
         endif()
 
-        set(CMAKE_CXX_FLAGS "/nologo /J /Gd /EHsc /MP" CACHE STRING "MSVC MT C++ flags " FORCE)
-        set(CMAKE_C_FLAGS   "/nologo /J /Gd"           CACHE STRING "MSVC MT C++ flags " FORCE)
+        set(CMAKE_CXX_FLAGS "/nologo /J /Gd /bigobj /EHsc /MP" CACHE STRING "MSVC MT C++ flags " FORCE)
+        set(CMAKE_C_FLAGS   "/nologo /J /Gd /bigobj"           CACHE STRING "MSVC MT C++ flags " FORCE)
 
         if(CMAKE_CL_64)
             set(CMAKE_CXX_FLAGS_DEBUG "/Od /RTC1 /MDd /Zi" CACHE STRING "MSVC MT flags " FORCE)

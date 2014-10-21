@@ -17,6 +17,7 @@ Minor fixes and improvements have been added, such as:
 * removed support for [Shiv](http://wowpedia.org/Shiv) which was introduced
   in The Burning Crusade first.
 * grouped players will now see stealthed members with the proper animation.
+* fixed build for Visual Studio 2012 (/bigobj required).
 
 ## 1.0.0-RC2 (2014-10-16)
 
