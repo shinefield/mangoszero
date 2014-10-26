@@ -18,6 +18,8 @@ Minor fixes and improvements have been added, such as:
   in The Burning Crusade first.
 * grouped players will now see stealthed members with the proper animation.
 * fixed build for Visual Studio 2012 (/bigobj required).
+* the build system is now fully compatible with CMake 3.0, and less spammy
+  when building Lua.
 
 ## 1.0.0-RC2 (2014-10-16)
 

@@ -86,10 +86,10 @@ endif ( )
 
 if ( LUA_USE_DLOPEN )
   # Link to dynamic linker library "dl"
-	find_library ( DL_LIBRARY NAMES dl )
-	if ( DL_LIBRARY )
-  	list ( APPEND LIBS ${DL_LIBRARY} )
-	endif ( )
+    find_library ( DL_LIBRARY NAMES dl )
+    if ( DL_LIBRARY )
+    list ( APPEND LIBS ${DL_LIBRARY} )
+    endif ( )
 endif ( )
 
 if ( LUA_USE_READLINE )
