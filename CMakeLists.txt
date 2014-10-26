@@ -114,12 +114,6 @@ cmake_policy(SET CMP0010 NEW)
 cmake_policy(SET CMP0014 NEW)
 
 #-----------------------------------------------------------------------------
-# Initialize Doxygen module and prepare the Doxygen template
-SET(DOXYFILE_SOURCE_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-SET(DOXYFILE_LATEX          OFF)
-include(UseDoxygen)
-
-#-----------------------------------------------------------------------------
 # Redirect output files
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE INTERNAL "" FORCE)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
