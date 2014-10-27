@@ -61,6 +61,12 @@ endif()
 cmake_minimum_required(VERSION 2.8)
 
 #-----------------------------------------------------------------------------
+# Keep until CMake-3.0 is the official minimum requirement
+if(NOT (${CMAKE_VERSION} VERSION_LESS 3.0))
+    cmake_policy(SET CMP0043 OLD)
+endif()
+
+#-----------------------------------------------------------------------------
 # Ensure we print configuration summary only on the initial CMake run
 if(NOT EXECUTABLE_OUTPUT_PATH)
     set(FIRST_RUN "TRUE")
@@ -112,12 +118,6 @@ cmake_policy(SET CMP0010 NEW)
 # see "cmake --help-policy CMP0014"
 # Input directories must have CMakeLists.txt
 cmake_policy(SET CMP0014 NEW)
-
-#-----------------------------------------------------------------------------
-# Initialize Doxygen module and prepare the Doxygen template
-SET(DOXYFILE_SOURCE_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-SET(DOXYFILE_LATEX          OFF)
-include(UseDoxygen)
 
 #-----------------------------------------------------------------------------
 # Redirect output files
@@ -293,13 +293,14 @@ elseif(WIN32)
         set(CMAKE_C_FLAGS   "/nologo /J /Gd"           CACHE STRING "MSVC MT C++ flags " FORCE)
 
         if(CMAKE_CL_64)
-            set(CMAKE_CXX_FLAGS_DEBUG "/Od /RTC1 /MDd /Zi" CACHE STRING "MSVC MT flags " FORCE)
+            set(CMAKE_CXX_FLAGS_DEBUG "/Od /RTC1 /MDd /Zi /bigobj" CACHE STRING "MSVC MT flags " FORCE)
+            set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /Ob1 /MD /Zi /bigobj" CACHE STRING "MSVC MT flags " FORCE)
         else()
             set(CMAKE_CXX_FLAGS_DEBUG "/Od /RTC1 /MDd /ZI" CACHE STRING "MSVC MT flags " FORCE)
+            set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /Ob1 /MD /Zi" CACHE STRING "MSVC MT flags " FORCE)
         endif()
         set(CMAKE_CXX_FLAGS_RELEASE "/O2 /Ob2 /MD" CACHE STRING "MSVC MT flags " FORCE)
         set(CMAKE_CXX_FLAGS_MINSIZEREL "/O1 /Ob1 /MD" CACHE STRING "MSVC MT flags " FORCE)
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /Ob1 /MD /Zi" CACHE STRING "MSVC MT flags " FORCE)
         if(CMAKE_CL_64)
             set(CMAKE_C_FLAGS_DEBUG "/Od /RTC1 /MDd /Zi" CACHE STRING "MSVC MT flags " FORCE)
         else()

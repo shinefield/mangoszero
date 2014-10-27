@@ -4,6 +4,23 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
+## 1.0.0 (2014-10-27)
+
+Minor fixes and improvements have been added, such as:
+
+* usernames are now normalized when updating the account password, no longer
+  resulting in the creation of a broken SHA1 hash due to lowercase characters
+  in usernames.
+* an unused setting for max character level has been removed.
+* paths will no longer be recalculated on movement speed changing effects on
+  creatures. This removes stuttering when creatures are e.g. hit by Frost Bolt.
+* removed support for [Shiv](http://wowpedia.org/Shiv) which was introduced
+  in The Burning Crusade first.
+* grouped players will now see stealthed members with the proper animation.
+* fixed build for Visual Studio 2012 (/bigobj required).
+* the build system is now fully compatible with CMake 3.0, and less spammy
+  when building Lua.
+
 ## 1.0.0-RC2 (2014-10-16)
 
 Major changes for this build which require your attention when upgrading include

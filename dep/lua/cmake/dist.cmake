@@ -1,6 +1,6 @@
 # LuaDist CMake utility library.
 # Provides sane project defaults and macros common to LuaDist CMake builds.
-# 
+#
 # Copyright (C) 2007-2012 LuaDist.
 # by David Manura, Peter Drahoš
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
@@ -32,19 +32,19 @@ _parse_dist_field ( author DIST_AUTHOR )
 _parse_dist_field ( maintainer DIST_MAINTAINER )
 _parse_dist_field ( url DIST_URL )
 _parse_dist_field ( desc DIST_DESC )
-message ( "DIST_NAME: ${DIST_NAME}")
-message ( "DIST_VERSION: ${DIST_VERSION}")
-message ( "DIST_LICENSE: ${DIST_LICENSE}")
-message ( "DIST_AUTHOR: ${DIST_AUTHOR}")
-message ( "DIST_MAINTAINER: ${DIST_MAINTAINER}")
-message ( "DIST_URL: ${DIST_URL}")
-message ( "DIST_DESC: ${DIST_DESC}")
+# message ( "DIST_NAME: ${DIST_NAME}")
+# message ( "DIST_VERSION: ${DIST_VERSION}")
+# message ( "DIST_LICENSE: ${DIST_LICENSE}")
+# message ( "DIST_AUTHOR: ${DIST_AUTHOR}")
+# message ( "DIST_MAINTAINER: ${DIST_MAINTAINER}")
+# message ( "DIST_URL: ${DIST_URL}")
+# message ( "DIST_DESC: ${DIST_DESC}")
 string ( REGEX REPLACE ".*depends[ \t]?=[ \t]?[\"']([^\"']+)[\"'].*" "\\1"
          DIST_DEPENDS ${DIST_INFO} )
 if ( DIST_DEPENDS STREQUAL DIST_INFO )
   set ( DIST_DEPENDS "" )
 endif ()
-message ( "DIST_DEPENDS: ${DIST_DEPENDS}")
+# message ( "DIST_DEPENDS: ${DIST_DEPENDS}")
 ## 2DO: Parse DIST_DEPENDS and try to install Dependencies with automatically using externalproject_add
 
 
@@ -60,7 +60,7 @@ set ( INSTALL_SHARE share CACHE PATH "Directory for shared data." )
 option ( INSTALL_VERSION
       "Install runtime libraries and executables with version information." OFF)
 set ( INSTALL_DATA ${INSTALL_SHARE}/${DIST_NAME} CACHE PATH
-      "Directory the package can store documentation, tests or other data in.")  
+      "Directory the package can store documentation, tests or other data in.")
 set ( INSTALL_DOC  ${INSTALL_DATA}/doc CACHE PATH
       "Recommended directory to install documentation into.")
 set ( INSTALL_EXAMPLE ${INSTALL_DATA}/example CACHE PATH
@@ -107,16 +107,16 @@ macro ( parse_arguments prefix arg_names option_names)
 
   set ( current_arg_name DEFAULT_ARGS )
   set ( current_arg_list )
-  foreach ( arg ${ARGN} )            
-    set ( larg_names ${arg_names} )    
-    list ( FIND larg_names "${arg}" is_arg_name )                   
+  foreach ( arg ${ARGN} )
+    set ( larg_names ${arg_names} )
+    list ( FIND larg_names "${arg}" is_arg_name )
     if ( is_arg_name GREATER -1 )
       set ( ${prefix}_${current_arg_name} ${current_arg_list} )
       set ( current_arg_name ${arg} )
       set ( current_arg_list )
     else ()
-      set ( loption_names ${option_names} )    
-      list ( FIND loption_names "${arg}" is_option )            
+      set ( loption_names ${option_names} )
+      list ( FIND loption_names "${arg}" is_option )
       if ( is_option GREATER -1 )
         set ( ${prefix}_${arg} TRUE )
       else ()
@@ -161,7 +161,7 @@ macro ( install_library )
     endif ()
     install ( TARGETS ${_file}
               RUNTIME DESTINATION ${INSTALL_BIN} COMPONENT Runtime
-              LIBRARY DESTINATION ${INSTALL_LIB} COMPONENT Runtime 
+              LIBRARY DESTINATION ${INSTALL_LIB} COMPONENT Runtime
               ARCHIVE DESTINATION ${INSTALL_LIB} COMPONENT Library )
   endforeach()
 endmacro ()

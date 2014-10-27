@@ -28,9 +28,9 @@ macro(mangos_source_group_topic
         if((${_SRC_EXT} MATCHES ".h") OR
            (${_SRC_EXT} MATCHES ".hpp") OR
            (${_SRC_EXT} MATCHES ".hh"))
-            source_group("Header Files\\${topic}" FILES ${_SRC})
+            source_group("${topic} - Header Files" FILES ${_SRC})
         else()
-            source_group("Source Files\\${topic}" FILES ${_SRC})
+            source_group("${topic} - Source Files" FILES ${_SRC})
         endif()
     endforeach()
 
