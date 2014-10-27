@@ -4,7 +4,7 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
-## 1.0.0-RC3 (2014-10-XX)
+## 1.0.0 (2014-10-27)
 
 Minor fixes and improvements have been added, such as:
 
