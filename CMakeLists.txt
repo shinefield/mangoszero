@@ -134,11 +134,6 @@ option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output" 
 option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
 mark_as_advanced(WITH_MYSQL)
 
-# mangos-zero language bindings
-option(WITH_MOD_SCRIPTDEV2          "Enable C++ scripting library"                          OFF)
-option(WITH_MOD_SCRIPTDEV2_DIR      "Define the SD2 drectory"                         "scripts")
-mark_as_advanced(WITH_MOD_SCRIPTDEV2_DIR)
-
 # Modifiers
 option(WITH_RECAST_DEMO             "Build the Recast movement map viewer application"      OFF)
 mark_as_advanced(WITH_RECAST_DEMO)
@@ -476,15 +471,6 @@ add_subdirectory(src)
 if(FIRST_RUN)
     message(STATUS "")
     message(STATUS "${CMAKE_PROJECT_NAME} version ${APPLICATION_VERSION} (${CMAKE_BUILD_TYPE} mode) configured for ${CMAKE_SYSTEM_NAME}")
-
-    message(STATUS "")
-    message(STATUS "Scripting information:")
-
-    if(WITH_MOD_SCRIPTDEV2)
-        message(STATUS "  ScriptDev2 scripting enabled.")
-    else()
-        message(STATUS "  ScriptDev2 scripting disabled.")
-    endif()
 
     message(STATUS "")
     message(STATUS "Feature information:")
