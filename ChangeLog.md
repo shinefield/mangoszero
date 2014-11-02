@@ -16,6 +16,9 @@ things such as these:
 Minor fixes and improvements have been added, such as:
 
 * the CMake build system is now compatible with CMake 2.8 and CMake 3.
+* fixed the range of traps based on YouTube videos.
+* fixed the range in which spell focus objects (such as fires) will trigger.
+  This prevents fire damage taken even though you're not standing in the fire.
 
 ## 1.0.0 (2014-10-27)
 
