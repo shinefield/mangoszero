@@ -4,6 +4,19 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
+## 1.1.0 (2014-11-XX)
+
+Major changes for this build which require your attention when upgrading include
+things such as these:
+
+* support for ScriptDev2 has been dropped, and the matching configuration options
+  are gone. Instead we provide our own script library, where we recreate scripts
+  for game content from scratch.
+
+Minor fixes and improvements have been added, such as:
+
+* the CMake build system is now compatible with CMake 2.8 and CMake 3.
+
 ## 1.0.0 (2014-10-27)
 
 Minor fixes and improvements have been added, such as:
