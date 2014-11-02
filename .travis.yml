@@ -34,7 +34,7 @@ script:
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/realmd/
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/game/
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/mangosd/
-  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/bindings/scripts/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/scripts/
   - test -d _build || mkdir _build
   - test -d _install || mkdir _install
   - cd _build

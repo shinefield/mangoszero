@@ -1,0 +1,40 @@
+# Chose a predefine style, and refine it.
+--style=ansi
+
+# Set indents
+--min-conditional-indent=2
+--indent=spaces=4
+--indent-classes
+--indent-namespaces
+--indent-preprocessor
+--indent-switches
+
+# Convert existing tab indentions to spaces
+--convert-tabs
+
+# Remove extra space padding around parenthesis on the inside and outside
+--unpad-paren
+
+# Insert space padding after parent headers only (e.g. 'if', 'for', 'while'...)
+--pad-header
+
+# Add brackets for conditional statements
+# --add-brackets
+# --add-one-line-brackets
+
+# Add space padding around operators
+#-p
+
+# Keeping one-line-statements intact
+# Keep one-line-blocks intact
+#-o
+#-O
+
+# Do not retain old file after formatting
+--suffix=none
+
+# Enable quiet display mode.
+--quiet
+
+# Force use of Linux (LF) line end style.
+--lineend=linux

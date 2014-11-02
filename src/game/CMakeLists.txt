@@ -322,8 +322,8 @@ include_directories(
 add_library(mangos-game STATIC ${game_LIB_SRCS})
 target_link_libraries(mangos-game mangos-battleground mangos-eluna mangos-outdoor-pvp mangos-movement mangos-vmap mangos-framework Detour g3dlite ${ACE_LIBRARIES} ${MYSQL_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
-# Special case for SD2 library builds
-if(UNIX AND WITH_MOD_SCRIPTDEV2)
+# Special case for mangos-scripts library builds
+if(UNIX)
   # Both systems don't have libdl and don't need them
   if (NOT (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD"))
     target_link_libraries(mangos-game dl)
@@ -344,8 +344,6 @@ if(WITH_DEBUG_OUTPUT)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DVMAP_DEBUG")
 endif()
 
-if(WITH_MOD_SCRIPTDEV2)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_SCRIPTDEV2" )
-endif()
+set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DWITH_MOD_SCRIPTDEV2" )
 
 set_target_properties(mangos-game PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
