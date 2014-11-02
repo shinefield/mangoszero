@@ -1744,7 +1744,6 @@ enum HolidayIds
     HOLIDAY_LUNAR_FESTIVAL           = 327,
     HOLIDAY_LOVE_IS_IN_THE_AIR       = 335,
     HOLIDAY_FIRE_FESTIVAL            = 341,
-    HOLIDAY_BREWFEST                 = 372,
     HOLIDAY_DARKMOON_FAIRE_ELWYNN    = 374,
     HOLIDAY_DARKMOON_FAIRE_THUNDER   = 375,
 };
@@ -1785,8 +1784,7 @@ enum QuestSort
     QUEST_SORT_LUNAR_FESTIVAL      = 366,
     QUEST_SORT_REPUTATION          = 367,
     QUEST_SORT_INVASION            = 368,
-    QUEST_SORT_MIDSUMMER           = 369,
-    QUEST_SORT_BREWFEST            = 370
+    QUEST_SORT_MIDSUMMER           = 369
 };
 
 inline uint8 ClassByQuestSort(int32 QuestSort)
