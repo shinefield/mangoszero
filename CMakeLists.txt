@@ -32,7 +32,7 @@ project(mangos-zero C CXX)
 
 set(APPLICATION_NAME            ${PROJECT_NAME})
 set(APPLICATION_VERSION_MAJOR   "1")
-set(APPLICATION_VERSION_MINOR   "0")
+set(APPLICATION_VERSION_MINOR   "1")
 set(APPLICATION_VERSION_RELEASE "0")
 set(APPLICATION_VERSION         "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_RELEASE}")
 
@@ -59,12 +59,6 @@ endif()
 # We require CMake version 2.8 or newer. Older versions do not detect Visual
 # Studio properly, especially the Express versions.
 cmake_minimum_required(VERSION 2.8)
-
-#-----------------------------------------------------------------------------
-# Keep until CMake-3.0 is the official minimum requirement
-if(NOT (${CMAKE_VERSION} VERSION_LESS 3.0))
-    cmake_policy(SET CMP0043 OLD)
-endif()
 
 #-----------------------------------------------------------------------------
 # Ensure we print configuration summary only on the initial CMake run
@@ -95,10 +89,10 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 #-----------------------------------------------------------------------------
 # Global compile definitions since add_definitions() adds for all.
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG           DEBUG _DEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE         NDEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL      NDEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO  NDEBUG)
+set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Debug>:_DEBUG>)
+set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Release>:NDEBUG>)
+set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:RelWithDebInfo>:NDEBUG>)
+set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:MinSizeRel>:NDEBUG>)
 
 #-----------------------------------------------------------------------------
 # Set policies
