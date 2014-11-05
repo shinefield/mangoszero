@@ -1,8 +1,7 @@
--- MySQL dump 10.13
---
 -- Host: localhost    Database: realmd
--- ------------------------------------------------------
--- Server version	5.5.32
+-- ---------------------------------------------------------------------------
+-- Default realmd database for mangos-zero.
+--
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,34 +13,11 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `realmd_db_version`
---
-
-DROP TABLE IF EXISTS `realmd_db_version`;
-CREATE TABLE `realmd_db_version` (
-  `required_10008_01_realmd_realmd_db_version` bit(1) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Last applied sql update to DB';
-
---
--- Dumping data for table `realmd_db_version`
---
-
-LOCK TABLES `realmd_db_version` WRITE;
-/*!40000 ALTER TABLE `realmd_db_version` DISABLE KEYS */;
-INSERT INTO `realmd_db_version` VALUES
-(NULL);
-/*!40000 ALTER TABLE `realmd_db_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `account`
---
-
 DROP TABLE IF EXISTS `account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Account identifier',
   `username` varchar(32) NOT NULL DEFAULT '',
   `sha_pass_hash` varchar(40) NOT NULL DEFAULT '',
   `gmlevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -61,51 +37,40 @@ CREATE TABLE `account` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_username` (`username`),
   KEY `idx_gmlevel` (`gmlevel`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Account System';
-
---
--- Dumping data for table `account`
---
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Account System';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` VALUES
-(1,'ADMINISTRATOR','a34b29541b87b7e4823683ce6c7bf6ae68beaaac',3,'','0','0','','2006-04-25 10:18:56','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
-(2,'GAMEMASTER','7841e21831d7c6bc0b57fbe7151eb82bd65ea1f9',2,'','0','0','','2006-04-25 10:18:56','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
-(3,'MODERATOR','a7f5fbff0b4eec2d6b6e78e38e8312e64d700008',1,'','0','0','','2006-04-25 10:19:35','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
-(4,'PLAYER','3ce8a96d17c5ae88a30681024e86279f1a38c041',0,'','0','0','','2006-04-25 10:19:35','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0);
+(1,'ADMINISTRATOR','a34b29541b87b7e4823683ce6c7bf6ae68beaaac',3,'','0','0','','2006-04-25 08:18:56','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
+(2,'GAMEMASTER','7841e21831d7c6bc0b57fbe7151eb82bd65ea1f9',2,'','0','0','','2006-04-25 08:18:56','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
+(3,'MODERATOR','a7f5fbff0b4eec2d6b6e78e38e8312e64d700008',1,'','0','0','','2006-04-25 08:19:35','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0),
+(4,'PLAYER','3ce8a96d17c5ae88a30681024e86279f1a38c041',0,'','0','0','','2006-04-25 08:19:35','127.0.0.1',0,0,'0000-00-00 00:00:00',0,0,0,0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `account_banned`
---
-
 DROP TABLE IF EXISTS `account_banned`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account_banned` (
-  `id` int(11) NOT NULL DEFAULT '0' COMMENT 'Account id',
+  `id` int(11) unsigned NOT NULL COMMENT 'Account identifier',
   `bandate` bigint(40) NOT NULL DEFAULT '0',
   `unbandate` bigint(40) NOT NULL DEFAULT '0',
   `bannedby` varchar(50) NOT NULL,
   `banreason` varchar(255) NOT NULL,
   `active` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`,`bandate`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Ban List';
-
---
--- Dumping data for table `account_banned`
---
+  PRIMARY KEY (`id`,`bandate`),
+  CONSTRAINT `account_banned_ibfk_1` FOREIGN KEY (`id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Ban List';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `account_banned` WRITE;
 /*!40000 ALTER TABLE `account_banned` DISABLE KEYS */;
 /*!40000 ALTER TABLE `account_banned` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `ip_banned`
---
-
 DROP TABLE IF EXISTS `ip_banned`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ip_banned` (
   `ip` varchar(32) NOT NULL DEFAULT '0.0.0.0',
   `bandate` bigint(40) NOT NULL,
@@ -113,46 +78,50 @@ CREATE TABLE `ip_banned` (
   `bannedby` varchar(50) NOT NULL DEFAULT '[Console]',
   `banreason` varchar(255) NOT NULL DEFAULT 'no reason',
   PRIMARY KEY (`ip`,`bandate`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Banned IPs';
-
---
--- Dumping data for table `ip_banned`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Banned IPs';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `ip_banned` WRITE;
 /*!40000 ALTER TABLE `ip_banned` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ip_banned` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `realmcharacters`
---
-
 DROP TABLE IF EXISTS `realmcharacters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `realmcharacters` (
-  `realmid` int(11) unsigned NOT NULL DEFAULT '0',
-  `acctid` bigint(20) unsigned NOT NULL,
+  `realmid` int(11) unsigned NOT NULL COMMENT 'Realm identifier',
+  `acctid` int(11) unsigned NOT NULL COMMENT 'Account identifier',
   `numchars` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`realmid`,`acctid`),
-  KEY `acctid` (`acctid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Realm Character Tracker';
-
---
--- Dumping data for table `realmcharacters`
---
+  KEY `acctid` (`acctid`),
+  CONSTRAINT `realmcharacters_ibfk_2` FOREIGN KEY (`acctid`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `realmcharacters_ibfk_1` FOREIGN KEY (`realmid`) REFERENCES `realmlist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Realm Character Tracker';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `realmcharacters` WRITE;
 /*!40000 ALTER TABLE `realmcharacters` DISABLE KEYS */;
 /*!40000 ALTER TABLE `realmcharacters` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `realmd_db_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `realmd_db_version` (
+  `required_10008_01_realmd_realmd_db_version` bit(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Last applied update';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `realmlist`
---
-
+LOCK TABLES `realmd_db_version` WRITE;
+/*!40000 ALTER TABLE `realmd_db_version` DISABLE KEYS */;
+INSERT INTO `realmd_db_version` VALUES
+(NULL);
+/*!40000 ALTER TABLE `realmd_db_version` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `realmlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `realmlist` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Realm identifier',
   `name` varchar(32) NOT NULL DEFAULT '',
   `address` varchar(32) NOT NULL DEFAULT '127.0.0.1',
   `port` int(11) NOT NULL DEFAULT '8085',
@@ -164,36 +133,28 @@ CREATE TABLE `realmlist` (
   `realmbuilds` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Realm System';
-
---
--- Dumping data for table `realmlist`
---
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Realm System';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `realmlist` WRITE;
 /*!40000 ALTER TABLE `realmlist` DISABLE KEYS */;
 INSERT INTO `realmlist` VALUES
-(1,'MaNGOS','127.0.0.1',8085,1,0,1,0,0,'');
+(1,'Bronzebeard','127.0.0.1',8085,0,2,0,0,0,'5875 6005 6141');
 /*!40000 ALTER TABLE `realmlist` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `uptime`
---
-
 DROP TABLE IF EXISTS `uptime`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uptime` (
-  `realmid` int(11) unsigned NOT NULL,
+  `realmid` int(11) unsigned NOT NULL COMMENT 'Realm identifier',
   `starttime` bigint(20) unsigned NOT NULL DEFAULT '0',
   `startstring` varchar(64) NOT NULL DEFAULT '',
   `uptime` bigint(20) unsigned NOT NULL DEFAULT '0',
   `maxplayers` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`realmid`,`starttime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Uptime system';
-
---
--- Dumping data for table `uptime`
---
+  PRIMARY KEY (`realmid`,`starttime`),
+  CONSTRAINT `uptime_ibfk_1` FOREIGN KEY (`realmid`) REFERENCES `realmlist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Uptime system';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `uptime` WRITE;
 /*!40000 ALTER TABLE `uptime` DISABLE KEYS */;
@@ -209,4 +170,3 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-10  0:00:00
