@@ -454,6 +454,10 @@ set(SCRIPTDEV2_VERSION       "${SD2_CONF_VERSION_MAJOR}${SD2_CONF_VERSION_MINOR}
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-sd2.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-sd2.h)
 
 #-----------------------------------------------------------------------------
+# Handle SQL files and updates
+add_subdirectory(sql)
+
+#-----------------------------------------------------------------------------
 # Build the scriptdev2 library
 add_library(mangos-scripts SHARED ${mangosscript_LIB_SRCS})
 

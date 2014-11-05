@@ -19,6 +19,7 @@ Minor fixes and improvements have been added, such as:
 * fixed the range of traps based on YouTube videos.
 * fixed the range in which spell focus objects (such as fires) will trigger.
   This prevents fire damage taken even though you're not standing in the fire.
+* database files and updates will now be installed, too.
 
 ## 1.0.0 (2014-10-27)
 

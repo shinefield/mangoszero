@@ -458,6 +458,7 @@ add_custom_target("revision.h" ALL
 #-----------------------------------------------------------------------------
 # Build dependencies and our own applications
 add_subdirectory(dep)
+add_subdirectory(sql)
 add_subdirectory(src)
 
 #-----------------------------------------------------------------------------
