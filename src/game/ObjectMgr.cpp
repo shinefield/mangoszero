@@ -4398,14 +4398,12 @@ void ObjectMgr::LoadGossipText()
         return;
     }
 
-    int cic;
-
     BarGoLink bar(result->GetRowCount());
 
     do
     {
         ++count;
-        cic = 0;
+        int cic = 0;
 
         Field* fields = result->Fetch();
 
@@ -6530,7 +6528,7 @@ static LanguageType GetRealmLanguageType(bool create)
     }
 }
 
-bool isValidString(std::wstring wstr, uint32 strictMask, bool numericOrSpace, bool create = false)
+bool isValidString(const std::wstring &wstr, uint32 strictMask, bool numericOrSpace, bool create = false)
 {
     if (strictMask == 0)                                    // any language, ignore realm
     {

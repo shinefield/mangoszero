@@ -500,7 +500,7 @@ void Group::Disband(bool hideDestroy)
     sEluna->OnDisband(this);
 
     m_leaderGuid.Clear();
-    m_leaderName = "";
+    m_leaderName.clear();
 }
 
 /*********************************************************/

@@ -4639,9 +4639,12 @@ void Unit::SetPowerType(Powers new_powertype)
         if (new_powertype == POWER_RAGE)
             curValue = 0;
 
-        // set power
-        SetMaxPower(new_powertype, maxValue);
-        SetPower(new_powertype, curValue);
+        // set power (except for mana)
+        if (new_powertype != POWER_MANA)
+        {
+            SetMaxPower(new_powertype, maxValue);
+            SetPower(new_powertype, curValue);
+        }
     }
 }
 
@@ -8072,7 +8075,6 @@ void CharmInfo::InitCharmCreateSpells()
             bool onlyselfcast = true;
             SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
 
-            if (!spellInfo) onlyselfcast = false;
             for (uint32 i = 0; i < 3 && onlyselfcast; ++i)  // non-existent spell will not make any problems as onlyselfcast would be false -> break right away
             {
                 if (spellInfo->EffectImplicitTargetA[i] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetA[i] != 0)
