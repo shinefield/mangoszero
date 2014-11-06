@@ -21,6 +21,8 @@ Minor fixes and improvements have been added, such as:
   This prevents fire damage taken even though you're not standing in the fire.
 * database files and updates will now be installed, too.
 * code refactoring in many functions makes the code more readable.
+* rooted players will now not only appear rooted to other players, but actually
+  stay rooted for real.
 
 ## 1.0.0 (2014-10-27)
 
