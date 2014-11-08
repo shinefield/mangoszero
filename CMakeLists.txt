@@ -124,10 +124,6 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 # mangos-zero internal features
 option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
 
-# mangos-zero database bindings
-option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
-mark_as_advanced(WITH_MYSQL)
-
 # Modifiers
 option(WITH_RECAST_DEMO             "Build the Recast movement map viewer application"      OFF)
 mark_as_advanced(WITH_RECAST_DEMO)
@@ -436,9 +432,7 @@ if(EXISTS ${ACE_INCLUDE_DIR}/ace/Stack_Trace.h)
     set(HAVE_ACE_STACK_TRACE_H ON)
 endif()
 
-if(WITH_MYSQL)
-    find_package(MySQL REQUIRED)
-endif()
+find_package(MySQL REQUIRED)
 
 #-----------------------------------------------------------------------------
 # Extra compile flags
