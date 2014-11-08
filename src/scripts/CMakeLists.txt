@@ -48,8 +48,6 @@ set(sources
     base/pet_ai.cpp
     base/pet_ai.h
 
-    include/precompiled.cpp
-    include/precompiled.h
     include/sc_creature.cpp
     include/sc_creature.h
     include/sc_grid_searchers.cpp

@@ -30,7 +30,17 @@ SDComment: Intended to be used with Guardian/Protector/Minipets. Little/no contr
 SDCategory: Npc
 EndScriptData */
 
-#include "precompiled.h"
+#include "Object.h"
+#include "Unit.h"
+#include "Creature.h"
+#include "CreatureAI.h"
+#include "GameObject.h"
+#include "SpellAuras.h"
+#include "ScriptDevMgr.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "sc_grid_searchers.h"
+#include "sc_instance.h"
 #include "pet_ai.h"
 
 ScriptedPetAI::ScriptedPetAI(Creature* pCreature) : CreatureAI(pCreature)

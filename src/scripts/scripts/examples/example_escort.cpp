@@ -30,7 +30,17 @@ SDComment: Script used for testing escortAI
 SDCategory: Script Examples
 EndScriptData */
 
-#include "precompiled.h"
+#include "Object.h"
+#include "Unit.h"
+#include "Creature.h"
+#include "CreatureAI.h"
+#include "GameObject.h"
+#include "SpellAuras.h"
+#include "ScriptDevMgr.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "sc_grid_searchers.h"
+#include "sc_instance.h"
 #include "escort_ai.h"
 
 enum
