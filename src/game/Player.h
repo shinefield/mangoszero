@@ -2103,6 +2103,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         {
             m_standing_pos = standingPos;
         }
+        void SendPvPCredit(ObjectGuid guid, uint32 rank, uint32 points);
 
         /*********************************************************/
         /***                  PVP SYSTEM                       ***/
