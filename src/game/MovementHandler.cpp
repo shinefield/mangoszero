@@ -607,6 +607,9 @@ void WorldSession::HandleMoverRelocation(MovementInfo& movementInfo)
 
                 // cancel the death timer here if started
                 plMover->RepopAtGraveyard();
+
+                plMover->ResurrectPlayer(0.5f);
+                plMover->SpawnCorpseBones();
             }
         }
     }
