@@ -2048,7 +2048,7 @@ class MANGOS_DLL_SPEC Player : public Unit
             return (victimType == TYPEID_UNIT || victimType == TYPEID_PLAYER);
         }
         uint32 CalculateTotalKills(Unit* Victim, uint32 fromDate, uint32 toDate) const;
-        // Acessors of honor rank
+        // Accessors of honor rank
         HonorRankInfo GetHonorRankInfo() const
         {
             return m_honor_rank;
@@ -2057,7 +2057,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         {
             m_honor_rank = rank;
         }
-        // Acessors of total honor points
+        // Accessors of total honor points
         void SetRankPoints(float rankPoints)
         {
             m_rank_points = rankPoints;
@@ -2066,7 +2066,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         {
             return m_rank_points;
         }
-        // Acessors of highest rank
+        // Accessors of highest rank
         HonorRankInfo GetHonorHighestRankInfo() const
         {
             return m_highest_rank;
@@ -2075,7 +2075,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         {
             m_highest_rank = hr;
         }
-        // Acessors of rating
+        // Accessors of rating
         float GetStoredHonor() const
         {
             return m_stored_honor;
@@ -2084,7 +2084,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         {
             m_stored_honor = rating;
         }
-        // Acessors of lifetime
+        // Accessors of lifetime
         uint32 GetHonorStoredKills(bool honorable) const
         {
             return honorable ? m_stored_honorableKills : m_stored_dishonorableKills;
@@ -2094,7 +2094,7 @@ class MANGOS_DLL_SPEC Player : public Unit
             if (honorable) m_stored_honorableKills = kills;
             else m_stored_dishonorableKills = kills;
         }
-        // Acessors of last week standing
+        // Accessors of last week standing
         int32 GetHonorLastWeekStandingPos() const
         {
             return m_standing_pos;
