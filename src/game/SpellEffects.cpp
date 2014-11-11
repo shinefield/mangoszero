@@ -878,10 +878,13 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                 case 23645:                                 // Hourglass Sand
                     m_caster->RemoveAurasDueToSpell(23170); // Brood Affliction: Bronze
                     return;
-                case 23725:                                 // Gift of Life (warrior bwl trinket)
-                    m_caster->CastSpell(m_caster, 23782, true);
-                    m_caster->CastSpell(m_caster, 23783, true);
-                    return;
+                case 23725:                                 // Gift of Life (warrior BWL trinket)
+                    {
+                        int32 healthModSpellBasePoints0 = int32(m_caster->GetMaxHealth() * 0.15);
+                        m_caster->CastCustomSpell(m_caster, 23782, &healthModSpellBasePoints0, NULL, NULL, true, NULL);
+                        m_caster->CastSpell(m_caster, 23783, true);
+                        return;
+                    }
                 case 24781:                                 // Dream Fog
                 {
                     if (m_caster->GetTypeId() != TYPEID_UNIT || !unitTarget)
@@ -1678,6 +1681,12 @@ void Spell::EffectHeal(SpellEffectIndex /*eff_idx*/)
             return;
 
         int32 addhealth = damage;
+
+        if (caster->HasAura(23401))                         // Corrupted Healing
+            caster->CastSpell(unitTarget, 23402, true);
+
+        if (m_spellInfo->Id == 23783)                       // Gift of Life
+            addhealth = int32(m_caster->GetMaxHealth() * 0.15);
 
         // Swiftmend - consumes Regrowth or Rejuvenation
         if (m_spellInfo->Id == 18562)
