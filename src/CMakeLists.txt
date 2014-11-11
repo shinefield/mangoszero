@@ -47,4 +47,6 @@ add_subdirectory(mangosd)
 
 #-----------------------------------------------------------------------------
 # Add the mangos script library
-add_subdirectory(scripts)
+if(WITH_MZ_SCRIPTS)
+    add_subdirectory(scripts)
+endif()

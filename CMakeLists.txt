@@ -124,6 +124,10 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 # mangos-zero internal features
 option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
 
+# mangos-zero script extensions
+option(WITH_MZ_SCRIPTS              "Enable ${CMAKE_PROJECT_NAME} script extensions"        OFF)
+mark_as_advanced(WITH_MZ_SCRIPTS)
+
 # Modifiers
 option(WITH_RECAST_DEMO             "Build the Recast movement map viewer application"      OFF)
 mark_as_advanced(WITH_RECAST_DEMO)
@@ -460,6 +464,15 @@ add_subdirectory(src)
 if(FIRST_RUN)
     message(STATUS "")
     message(STATUS "${CMAKE_PROJECT_NAME} version ${APPLICATION_VERSION} (${CMAKE_BUILD_TYPE} mode) configured for ${CMAKE_SYSTEM_NAME}")
+
+    message(STATUS "")
+    message(STATUS "Scripting information:")
+
+    if(WITH_MZ_SCRIPTS)
+        message(STATUS "  script extensions enabled.")
+    else()
+        message(STATUS "  script extensions disabled.")
+    endif()
 
     message(STATUS "")
     message(STATUS "Feature information:")

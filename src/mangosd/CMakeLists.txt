@@ -120,7 +120,7 @@ endif()
 
 set_target_properties(mangosd PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 
-if(WIN32)
+if(WIN32 AND WITH_MZ_SCRIPTS)
     set_target_properties(mangosd
     PROPERTIES
     ENABLE_EXPORTS ON
