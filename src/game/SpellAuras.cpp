@@ -2408,6 +2408,9 @@ void Aura::HandleAuraModDisarm(bool apply, bool Real)
 
 void Aura::HandleAuraModStun(bool apply, bool Real)
 {
+    if (GetTarget()->IsTaxiFlying())
+        return;
+
     if (!Real)
         return;
 
