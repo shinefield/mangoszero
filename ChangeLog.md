@@ -12,6 +12,7 @@ things such as these:
 * support for ScriptDev2 has been dropped, and the matching configuration options
   are gone. Instead we provide our own script library, where we recreate scripts
   for game content from scratch.
+* fixed resting system. Resting will now work as intended.
 
 Minor fixes and improvements have been added, such as:
 
