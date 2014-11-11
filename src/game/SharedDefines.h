@@ -1724,7 +1724,6 @@ enum CreatureEliteType
     CREATURE_ELITE_RAREELITE       = 2,
     CREATURE_ELITE_WORLDBOSS       = 3,
     CREATURE_ELITE_RARE            = 4,
-    CREATURE_UNKNOWN               = 5                      // found in 2.2.3 for 2 mobs
 };
 
 enum HolidayIds
@@ -1757,7 +1756,7 @@ enum QuestSort
     QUEST_SORT_UNDERCITY_OLD       = 23,
     QUEST_SORT_HERBALISM           = 24,
     QUEST_SORT_SCARLET_MONASTERY_OLD = 25,
-    QUEST_SORT_ULDAMN_OLD          = 41,
+    QUEST_SORT_ULDAMAN_OLD         = 41,
     QUEST_SORT_WARLOCK             = 61,
     QUEST_SORT_WARRIOR             = 81,
     QUEST_SORT_SHAMAN              = 82,
@@ -1784,7 +1783,7 @@ enum QuestSort
     QUEST_SORT_LUNAR_FESTIVAL      = 366,
     QUEST_SORT_REPUTATION          = 367,
     QUEST_SORT_INVASION            = 368,
-    QUEST_SORT_MIDSUMMER           = 369
+    QUEST_SORT_MIDSUMMER           = 369,
 };
 
 inline uint8 ClassByQuestSort(int32 QuestSort)
