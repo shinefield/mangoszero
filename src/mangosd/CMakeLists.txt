@@ -29,7 +29,6 @@ include(MacroMangosSourceGroup)
 
 #-----------------------------------------------------------------------------
 # Options
-option(WITH_MOD_SOAP   "Enable SOAP bindings"                             OFF)
 option(WITH_MOD_CLI    "Enable command line interface"                    OFF)
 option(WITH_MOD_REMOTE "Enable remote access"                             OFF)
 
@@ -51,17 +50,6 @@ set(headers
 
 set(mangosd_LIB_SRCS ${sources} ${headers})
 
-if(WITH_MOD_SOAP)
-    list(APPEND mangosd_LIB_SRCS
-        MaNGOSsoap.cpp
-        MaNGOSsoap.h
-        soapC.cpp
-        soapH.h
-        soapServer.cpp
-        soapStub.h
-     )
-endif()
-
 mangos_source_group(${mangosd_LIB_SRCS})
 
 include_directories(
@@ -77,12 +65,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/src/framework/
 )
-
-if(WITH_MOD_SOAP)
-    include_directories(
-        ${CMAKE_SOURCE_DIR}/dep/include/gsoap/
-    )
-endif()
 
 #-----------------------------------------------------------------------------
 # Configure the mangosd application
@@ -109,10 +91,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
 
-if(WITH_MOD_SOAP)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_SOAP")
-    target_link_libraries(mangosd gsoaplite)
-elseif(WITH_MOD_CLI)
+if(WITH_MOD_CLI)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_CLI")
 elseif(WITH_MOD_REMOTE)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_RA")

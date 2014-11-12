@@ -477,12 +477,6 @@ if(FIRST_RUN)
     message(STATUS "")
     message(STATUS "Feature information:")
 
-    if(WITH_MOD_SOAP)
-        message(STATUS "  SOAP interface enabled.")
-    else()
-        message(STATUS "  SOAP interface disabled.")
-    endif()
-
     if(WITH_MOD_CLI)
         message(STATUS "  Command Line interface enabled.")
     else()

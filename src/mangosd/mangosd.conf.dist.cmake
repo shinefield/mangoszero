@@ -1430,7 +1430,7 @@ Network.KickOnBadPacket = 0
 Network.Timeout = 100000
 
 ###################################################################################################################
-# CONSOLE, REMOTE ACCESS AND SOAP
+# CONSOLE, REMOTE ACCESS
 #
 #    Console.Enable
 #        Enable console
@@ -1463,20 +1463,6 @@ Network.Timeout = 100000
 #                 0 - off
 #        Default: 1 - on
 #
-#
-#    SOAP.Enable
-#        Enable soap service
-#        Default: 0 - off
-#                 1 - on
-#
-#    SOAP.IP
-#        Bound SOAP service IP address, use 0.0.0.0 to access from everywhere
-#        Default: 127.0.0.1
-#
-#    SOAP.Port
-#        SOAP port
-#        Default: 7878
-#
 ###################################################################################################################
 
 Console.Enable = 0
@@ -1486,10 +1472,6 @@ Ra.Port = 3443
 Ra.MinLevel = 3
 Ra.Secure = 1
 Ra.Stricted = 1
-
-SOAP.Enabled = 0
-SOAP.IP = 127.0.0.1
-SOAP.Port = 7878
 
 ###################################################################################################################
 #    CharDelete.Method

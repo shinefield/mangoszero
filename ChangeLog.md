@@ -13,6 +13,8 @@ things such as these:
   are gone. Instead we provide our own script library, where we recreate scripts
   for game content from scratch (use WITH_MZ_SCRIPTS parameter to enable/disable).
 * fixed resting system. Resting will now work as intended.
+* SOAP bindings removed! In order to focus our efforts on the server and increasing
+  its' quality, will continue to strip down the server to relevant components.
 
 Minor fixes and improvements have been added, such as:
 
