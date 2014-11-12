@@ -343,11 +343,6 @@ CleanCharacterDB = 1
 #                     in form Logname_#ID_YYYY-MM-DD_HH-MM-SS.Ext
 #                     or form Logname_#ID.Ext
 #
-#    RaLogFile
-#        Log file of RA commands
-#        Default: "remote-access.log"
-#                 "" - Empty name for disable
-#
 #    LogColors
 #        Color for messages (format "normal_color details_color debug_color error_color")
 #        Colors: 0 - BLACK, 1 - RED, 2 - GREEN,  3 - BROWN, 4 - BLUE, 5 - MAGENTA, 6 -  CYAN, 7 - GREY,
@@ -391,7 +386,6 @@ CharLogDump = 0
 GmLogFile = "gamemasters.log"
 GmLogTimestamp = 0
 GmLogPerAccount = 0
-RaLogFile = "remote-access.log"
 LogColors = "13 7 11 9"
 
 ###################################################################################################################
@@ -1430,48 +1424,16 @@ Network.KickOnBadPacket = 0
 Network.Timeout = 100000
 
 ###################################################################################################################
-# CONSOLE, REMOTE ACCESS
+# CONSOLE
 #
 #    Console.Enable
 #        Enable console
 #        Default: 0 - off
 #                 1 - on
 #
-#    Ra.Enable
-#        Enable remote console
-#        Default: 0 - off
-#                 1 - on
-#
-#    Ra.IP
-#        Default remote console IP address, use 0.0.0.0 for every address
-#
-#    Ra.Port
-#        Default remote console port
-#        Default: 3443
-#
-#    Ra.MinLevel
-#        Minimum level that's required to login
-#        Default: 3 (Administrator)
-#
-#    Ra.Secure
-#        Kick client on wrong pass
-#                 0 - off
-#        Default: 1 - on
-#
-#    Ra.Stricted
-#        Not allow execute console level only commands remotely by RA
-#                 0 - off
-#        Default: 1 - on
-#
 ###################################################################################################################
 
 Console.Enable = 0
-Ra.Enable = 0
-Ra.IP = 0.0.0.0
-Ra.Port = 3443
-Ra.MinLevel = 3
-Ra.Secure = 1
-Ra.Stricted = 1
 
 ###################################################################################################################
 #    CharDelete.Method

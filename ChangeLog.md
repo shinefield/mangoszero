@@ -15,6 +15,8 @@ things such as these:
 * fixed resting system. Resting will now work as intended.
 * SOAP bindings removed! In order to focus our efforts on the server and increasing
   its' quality, will continue to strip down the server to relevant components.
+* remote access removed! To reduce possible security risk, we stripped the remote
+  access console from the world server.
 
 Minor fixes and improvements have been added, such as:
 

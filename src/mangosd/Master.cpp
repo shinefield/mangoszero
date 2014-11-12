@@ -54,7 +54,6 @@ extern int m_ServiceStatus;
 #include "DBCStores.h"
 #include "LuaEngine.h"
 #include "CliRunnable.h"
-#include "RASocket.h"
 
 INSTANTIATE_SINGLETON_1(Master);
 
@@ -104,72 +103,6 @@ class FreezeDetectorRunnable : public ACE_Based::Runnable
                 }
             }
             sLog.outString("Anti-freeze thread exiting without problems.");
-        }
-};
-
-class RARunnable : public ACE_Based::Runnable
-{
-    private:
-        ACE_Reactor* m_Reactor;
-        RASocket::Acceptor* m_Acceptor;
-    public:
-        RARunnable()
-        {
-            ACE_Reactor_Impl* imp = 0;
-
-#if defined (ACE_HAS_EVENT_POLL) || defined (ACE_HAS_DEV_POLL)
-
-            imp = new ACE_Dev_Poll_Reactor();
-
-            imp->max_notify_iterations(128);
-            imp->restart(1);
-
-#else
-
-            imp = new ACE_TP_Reactor();
-            imp->max_notify_iterations(128);
-
-#endif
-
-            m_Reactor = new ACE_Reactor(imp, 1 /* 1= delete implementation so we don't have to care */);
-
-            m_Acceptor = new RASocket::Acceptor;
-        }
-
-        ~RARunnable()
-        {
-            delete m_Reactor;
-            delete m_Acceptor;
-        }
-
-        void run()
-        {
-            uint16 raport = sConfig.GetIntDefault("Ra.Port", 3443);
-            std::string stringip = sConfig.GetStringDefault("Ra.IP", "0.0.0.0");
-
-            ACE_INET_Addr listen_addr(raport, stringip.c_str());
-
-            if (m_Acceptor->open(listen_addr, m_Reactor, ACE_NONBLOCK) == -1)
-            {
-                sLog.outError("MaNGOS RA can not bind to port %d on %s", raport, stringip.c_str());
-            }
-
-            sLog.outString("Starting Remote access listener on port %d on %s", raport, stringip.c_str());
-
-            while (!m_Reactor->reactor_event_loop_done())
-            {
-                ACE_Time_Value interval(0, 10000);
-
-                if (m_Reactor->run_reactor_event_loop(interval) == -1)
-                    break;
-
-                if (World::IsStopped())
-                {
-                    m_Acceptor->close();
-                    break;
-                }
-            }
-            sLog.outString("RARunnable thread ended");
         }
 };
 
@@ -245,12 +178,6 @@ int Master::Run()
     {
         ///- Launch CliRunnable thread
         cliThread = new ACE_Based::Thread(new CliRunnable);
-    }
-
-    ACE_Based::Thread* rar_thread = NULL;
-    if (sConfig.GetBoolDefault("Ra.Enable", false))
-    {
-        rar_thread = new ACE_Based::Thread(new RARunnable);
     }
 
     ///- Handle affinity for multiple processors and process priority on Windows
@@ -342,13 +269,6 @@ int Master::Run()
     // when the main thread closes the singletons get unloaded
     // since worldrunnable uses them, it will crash if unloaded after master
     world_thread.wait();
-
-    if (rar_thread)
-    {
-        rar_thread->wait();
-        rar_thread->destroy();
-        delete rar_thread;
-    }
 
     ///- Clean account database before leaving
     clearOnlineAccounts();

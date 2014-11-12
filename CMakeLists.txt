@@ -475,21 +475,6 @@ if(FIRST_RUN)
     endif()
 
     message(STATUS "")
-    message(STATUS "Feature information:")
-
-    if(WITH_MOD_CLI)
-        message(STATUS "  Command Line interface enabled.")
-    else()
-        message(STATUS "  Command Line interface disabled.")
-    endif()
-
-    if(WITH_MOD_REMOTE)
-        message(STATUS "  Remote Access interface enabled.")
-    else()
-        message(STATUS "  Remote Access interface disabled.")
-    endif()
-
-    message(STATUS "")
     message(STATUS "Version information:")
 
     if(GIT_REFSPEC AND GIT_REVISION)

@@ -28,24 +28,17 @@
 include(MacroMangosSourceGroup)
 
 #-----------------------------------------------------------------------------
-# Options
-option(WITH_MOD_CLI    "Enable command line interface"                    OFF)
-option(WITH_MOD_REMOTE "Enable remote access"                             OFF)
-
-#-----------------------------------------------------------------------------
 # Define the mangosd application
 set(sources
     Main.cpp
     Master.cpp
     WorldRunnable.cpp
     CliRunnable.cpp
-    RASocket.cpp
 )
 set(headers
     Master.h
     WorldRunnable.h
     CliRunnable.h
-    RASocket.h
 )
 
 set(mangosd_LIB_SRCS ${sources} ${headers})
@@ -89,12 +82,6 @@ set(BUILD_PROPERTIES "-DHAVE_CONFIG_H")
 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
-endif()
-
-if(WITH_MOD_CLI)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_CLI")
-elseif(WITH_MOD_REMOTE)
-    set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DENABLE_RA")
 endif()
 
 set_target_properties(mangosd PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
