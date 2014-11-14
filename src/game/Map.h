@@ -166,7 +166,7 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         {
             getNGrid(p.x_coord, p.y_coord)->setUnloadExplicitLock(on);
         }
-        void LoadGrid(const Cell& cell, bool no_unload = false);
+        void ForceLoadGrid(float x, float y);
         bool UnloadGrid(const uint32& x, const uint32& y, bool pForce);
         virtual void UnloadAll(bool pForce);
 

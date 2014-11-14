@@ -30,6 +30,7 @@ Minor fixes and improvements have been added, such as:
   stay rooted for real.
 * fixed skinning loot bug.
 * allow non-instanced empty map creation.
+* replaced `Map::LoadGrid` with `Map::ForceLoadGrid`
 
 ## 1.0.0 (2014-10-27)
 
