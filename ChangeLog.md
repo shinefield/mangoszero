@@ -24,6 +24,9 @@ things such as these:
   chose to keep in memory.
 * load active entities based on active maps. Ideas and loop to load all grids on
   a map by Neo2003.
+* implement `CREATURE_FLAG_EXTRA_ACTIVE`: setting this flag in `creature_template`
+  `ExtraFlags` will result in the creature being loaded and set to active when the
+  map is created. Use with care.
 
 Minor fixes and improvements have been added, such as:
 
