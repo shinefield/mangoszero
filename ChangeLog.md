@@ -29,6 +29,7 @@ Minor fixes and improvements have been added, such as:
 * rooted players will now not only appear rooted to other players, but actually
   stay rooted for real.
 * fixed skinning loot bug.
+* allow non-instanced empty map creation.
 
 ## 1.0.0 (2014-10-27)
 
