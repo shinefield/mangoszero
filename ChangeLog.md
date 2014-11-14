@@ -17,6 +17,11 @@ things such as these:
   its' quality, will continue to strip down the server to relevant components.
 * remote access removed! To reduce possible security risk, we stripped the remote
   access console from the world server.
+* **new** configuration setting `LoadAllGridsOnMaps`: with this setting a list of
+  maps can be defined on which grids and creatures will be kept loaded. Continents
+  will be loaded on server start, instances when a player enters. **Notice** that
+  this will increase CPU load and memory usage depending on the amount of maps you
+  chose to keep in memory.
 
 Minor fixes and improvements have been added, such as:
 

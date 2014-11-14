@@ -619,6 +619,9 @@ class World
             return m_configBoolValues[index];
         }
 
+        /// Get configuration about force-loaded maps
+        std::set<uint32>* getConfigForceLoadMapIds() const { return m_configForceLoadMapIds; }
+
         /// Are we on a "Player versus Player" server?
         bool IsPvPRealm()
         {
@@ -793,6 +796,9 @@ class World
         // used versions
         std::string m_DBVersion;
         std::string m_CreatureEventAIVersion;
+
+        // List of Maps that should be force-loaded on startup
+        std::set<uint32>* m_configForceLoadMapIds;
 };
 
 extern uint32 realmID;
