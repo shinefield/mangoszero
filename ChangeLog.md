@@ -22,6 +22,8 @@ things such as these:
   will be loaded on server start, instances when a player enters. **Notice** that
   this will increase CPU load and memory usage depending on the amount of maps you
   chose to keep in memory.
+* load active entities based on active maps. Ideas and loop to load all grids on
+  a map by Neo2003.
 
 Minor fixes and improvements have been added, such as:
 
