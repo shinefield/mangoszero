@@ -1478,9 +1478,9 @@ CharDelete.KeepDays = 30
 #                 1 (Enabled)
 #
 #    Eluna.ScriptPath
-#        Default: "lua_scripts"
+#        Default: "scripts"
 #
 ###################################################################################################################
 
 Eluna.Enabled = 1
-Eluna.ScriptPath = "${CMAKE_INSTALL_PREFIX}/share/${APPLICATION_NAME}/lua_scripts"
+Eluna.ScriptPath = "${CMAKE_INSTALL_PREFIX}/share/${APPLICATION_NAME}/scripts"

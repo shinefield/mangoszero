@@ -68,5 +68,5 @@ set_target_properties(mangos-eluna PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 
 #-----------------------------------------------------------------------------
 # Install the Eluna files
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extensions DESTINATION ${DATA_DIR}/lua_scripts)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/master.lua DESTINATION ${DATA_DIR}/lua_scripts)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extensions DESTINATION ${DATA_DIR}/scripts)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/master.lua DESTINATION ${DATA_DIR}/scripts)
