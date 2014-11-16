@@ -249,7 +249,7 @@ CleanCharacterDB = 1
 #    LogLevel
 #        Server console level of logging
 #        0 = Minimum; 1 = Basic&Error; 2 = Detail; 3 = Full/Debug
-#        Default: 3
+#        Default: 1
 #
 #    LogTime
 #        Include time in server console output [hh:mm:ss]
@@ -269,11 +269,12 @@ CleanCharacterDB = 1
 #    LogFileLevel
 #        Server file level of logging
 #        0 = Minimum; 1 = Error; 2 = Detail; 3 = Full/Debug
-#        Default: 0
+#        Default: 3
 #
 #    LogFilter_CreatureMoves
 #    LogFilter_TransportMoves
 #    LogFilter_PlayerMoves
+#    LogFilter_PlayerStats
 #    LogFilter_VisibilityChanges
 #    LogFilter_Weather
 #    LogFilter_DbStrictedCheck
@@ -287,7 +288,6 @@ CleanCharacterDB = 1
 #
 #    LogFilter_PeriodicAffects
 #    LogFilter_AIAndMovegens
-#    LogFilter_PlayerStats
 #    LogFilter_Damage
 #    LogFilter_Combat
 #    LogFilter_SpellCast
@@ -361,11 +361,11 @@ CleanCharacterDB = 1
 
 LogSQL = 1
 PidFile = ""
-LogLevel = 3
+LogLevel = 1
 LogTime = 0
 LogFile = "world-server.log"
 LogTimestamp = 0
-LogFileLevel = 0
+LogFileLevel = 3
 LogFilter_TransportMoves = 1
 LogFilter_CreatureMoves = 1
 LogFilter_VisibilityChanges = 1
@@ -376,9 +376,9 @@ LogFilter_MapsLoading = 1
 LogFilter_EventAiDev = 1
 LogFilter_PeriodicAffects = 0
 LogFilter_PlayerMoves = 1
+LogFilter_PlayerStats = 1
 LogFilter_SQLText = 1
 LogFilter_AIAndMovegens = 0
-LogFilter_PlayerStats = 0
 LogFilter_Damage = 0
 LogFilter_Combat = 0
 LogFilter_SpellCast = 0
