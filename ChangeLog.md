@@ -41,6 +41,8 @@ Minor fixes and improvements have been added, such as:
 * fixed skinning loot bug.
 * allow non-instanced empty map creation.
 * replaced `Map::LoadGrid` with `Map::ForceLoadGrid`
+* fixed raid instance reset crash
+* added a new admin command to force raid instance resets
 
 ## 1.0.0 (2014-10-27)
 
