@@ -45,6 +45,7 @@ Minor fixes and improvements have been added, such as:
 * added a new admin command to force raid instance resets
 * use strict database filter for creatures with movement points without a
   matching movement type
+* fix possible mount abuse after leaving battlegrounds
 
 ## 1.0.0 (2014-10-27)
 
