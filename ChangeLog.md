@@ -35,6 +35,7 @@ things such as these:
 * remove invisibility aura (18) based on attributes. Passive and negative auras will
   not be removed on combat
 * implement spell effect 19395
+* implement Battleground scores storage system
 
 Minor fixes and improvements have been added, such as:
 

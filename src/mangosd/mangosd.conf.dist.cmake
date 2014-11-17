@@ -3,7 +3,7 @@
 #####################################
 
 [MangosdConf]
-ConfVersion=2013012201
+ConfVersion=2014110301
 
 ###################################################################################################################
 # CONNECTIONS AND DIRECTORIES
@@ -1354,6 +1354,11 @@ Death.Ghost.RunSpeed.Battleground = 1.0
 #        Default: 0 (disable)
 #                 1 (enable)
 #
+#    Battleground.ScoreStatistics
+#        Enable Battleground scores storage in database.
+#        Default: 0 - (Disabled)
+#                 1 - (Enabled)
+#
 #    Battleground.InvitationType
 #        Set Battleground invitation type
 #        Default: 0 (normal - invite as much players to BG as possible, don't bother with balance)
@@ -1374,6 +1379,7 @@ Death.Ghost.RunSpeed.Battleground = 1.0
 Battleground.CastDeserter = 1
 Battleground.QueueAnnouncer.Join = 0
 Battleground.QueueAnnouncer.Start = 0
+Battleground.ScoreStatistics = 0
 Battleground.InvitationType = 0
 BattleGround.PrematureFinishTimer = 300000
 BattleGround.PremadeGroupWaitForMatch = 0
