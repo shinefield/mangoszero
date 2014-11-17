@@ -30,6 +30,7 @@ things such as these:
 * added a new admin command to force raid instance resets
 * implement new TEMPFACTION_TOGGLE flags for `UNIT_FLAG_PACIFIED` and
   `UNIT_FLAG_NOT_SELECTABLE`
+* implement TARGET_UNIT_NEARBY_ALLY and unify handling of TARGET_UNIT_NEARBY_
 
 Minor fixes and improvements have been added, such as:
 
