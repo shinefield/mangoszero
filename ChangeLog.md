@@ -32,6 +32,8 @@ things such as these:
   `UNIT_FLAG_NOT_SELECTABLE`
 * implement TARGET_UNIT_NEARBY_ALLY and unify handling of TARGET_UNIT_NEARBY_
 * allow target 60 to use script target when required
+* remove invisibility aura (18) based on attributes. Passive and negative auras will
+  not be removed on combat
 
 Minor fixes and improvements have been added, such as:
 
