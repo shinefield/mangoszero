@@ -56,6 +56,7 @@ Minor fixes and improvements have been added, such as:
 * fix possible mount abuse after leaving battlegrounds
 * unify startup messages, and changed loading routines for sane
   grouping
+* use a global team index for battleground teams
 
 ## 1.0.0 (2014-10-27)
 
