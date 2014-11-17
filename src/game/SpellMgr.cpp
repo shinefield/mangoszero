@@ -2905,7 +2905,9 @@ void SpellMgr::LoadSpellScriptTarget()
                     spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_SRC_AREA ||
                     spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_SRC_AREA ||
                     spellProto->EffectImplicitTargetA[i] == TARGET_GAMEOBJECT_DEST_AREA ||
-                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_DEST_AREA)
+                    spellProto->EffectImplicitTargetB[i] == TARGET_GAMEOBJECT_DEST_AREA ||
+                    spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_CONE_ENTRY ||
+                    spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_CONE_ENTRY)
             {
                 targetfound = true;
                 break;

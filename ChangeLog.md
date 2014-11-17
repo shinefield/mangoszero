@@ -31,6 +31,7 @@ things such as these:
 * implement new TEMPFACTION_TOGGLE flags for `UNIT_FLAG_PACIFIED` and
   `UNIT_FLAG_NOT_SELECTABLE`
 * implement TARGET_UNIT_NEARBY_ALLY and unify handling of TARGET_UNIT_NEARBY_
+* allow target 60 to use script target when required
 
 Minor fixes and improvements have been added, such as:
 
