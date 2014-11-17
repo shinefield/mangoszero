@@ -57,6 +57,8 @@ Minor fixes and improvements have been added, such as:
 * unify startup messages, and changed loading routines for sane
   grouping
 * use a global team index for battleground teams
+* fixed a bug that caused AreaAura reapply because the code doesn't search the
+  correct rank of it.
 
 ## 1.0.0 (2014-10-27)
 
