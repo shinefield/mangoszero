@@ -34,6 +34,7 @@ things such as these:
 * allow target 60 to use script target when required
 * remove invisibility aura (18) based on attributes. Passive and negative auras will
   not be removed on combat
+* implement spell effect 19395
 
 Minor fixes and improvements have been added, such as:
 
