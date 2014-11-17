@@ -45,9 +45,8 @@ void MapManager::LoadTransports()
     {
         BarGoLink bar(1);
         bar.step();
-
-        sLog.outString();
         sLog.outString(">> Loaded %u transports", count);
+        sLog.outString();
         return;
     }
 
@@ -130,9 +129,6 @@ void MapManager::LoadTransports()
     while (result->NextRow());
     delete result;
 
-    sLog.outString();
-    sLog.outString(">> Loaded %u transports", count);
-
     // check transport data DB integrity
     result = WorldDatabase.Query("SELECT gameobject.guid,gameobject.id,transports.name FROM gameobject,transports WHERE gameobject.id = transports.entry");
     if (result)                                             // wrong data found
@@ -150,6 +146,9 @@ void MapManager::LoadTransports()
 
         delete result;
     }
+
+    sLog.outString(">> Loaded %u transports", count);
+    sLog.outString();
 }
 
 Transport::Transport() : GameObject()

@@ -704,7 +704,6 @@ class World
             return m_CreatureEventAIVersion.c_str();
         }
 
-
         /**
         * \brief: force all client to request player data
         * \param: ObjectGuid guid : guid of the specified player

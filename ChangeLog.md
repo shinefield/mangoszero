@@ -48,6 +48,8 @@ Minor fixes and improvements have been added, such as:
 * use strict database filter for creatures with movement points without a
   matching movement type
 * fix possible mount abuse after leaving battlegrounds
+* unify startup messages, and changed loading routines for sane
+  grouping
 
 ## 1.0.0 (2014-10-27)
 

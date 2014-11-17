@@ -77,8 +77,8 @@ void WaypointManager::Load()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 paths. DB table `creature_movement` is empty.");
+        sLog.outString();
     }
     else
     {
@@ -228,10 +228,8 @@ void WaypointManager::Load()
             }
         }
 
+        sLog.outString(">> Loaded %u paths, %u nodes and %u behaviors from waypoints", total_paths, total_nodes, total_behaviors);
         sLog.outString();
-        sLog.outString(">> Waypoints and behaviors loaded");
-        sLog.outString();
-        sLog.outString(">>> Loaded %u paths, %u nodes and %u behaviors", total_paths, total_nodes, total_behaviors);
 
         delete result;
     }
@@ -246,8 +244,8 @@ void WaypointManager::Load()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 path templates. DB table `creature_movement_template` is empty.");
+        sLog.outString();
     }
     else
     {
@@ -371,16 +369,15 @@ void WaypointManager::Load()
 
         delete result;
 
+        sLog.outString(">> Loaded %u path templates with %u nodes and %u behaviors from waypoint templates", total_paths, total_nodes, total_behaviors);
         sLog.outString();
-        sLog.outString(">> Waypoint templates loaded");
-        sLog.outString();
-        sLog.outString(">>> Loaded %u path templates with %u nodes and %u behaviors", total_paths, total_nodes, total_behaviors);
     }
 
     if (!movementScriptSet.empty())
     {
         for (std::set<uint32>::const_iterator itr = movementScriptSet.begin(); itr != movementScriptSet.end(); ++itr)
             sLog.outErrorDb("Table `dbscripts_on_creature_movement` contain unused script, id %u.", *itr);
+        sLog.outString();
     }
 }
 

@@ -1157,11 +1157,9 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
     if (!result)
     {
         BarGoLink bar(1);
-
         bar.step();
-
-        sLog.outString();
         sLog.outErrorDb(">> Loaded 0 battlegrounds. DB table `battleground_template` is empty.");
+        sLog.outString();
         return;
     }
 
@@ -1237,8 +1235,8 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
 
     delete result;
 
-    sLog.outString();
     sLog.outString(">> Loaded %u battlegrounds", count);
+    sLog.outString();
 }
 
 void BattleGroundMgr::BuildBattleGroundListPacket(WorldPacket* data, ObjectGuid guid, Player* plr, BattleGroundTypeId bgTypeId)
@@ -1371,9 +1369,8 @@ void BattleGroundMgr::LoadBattleMastersEntry()
     {
         BarGoLink bar(1);
         bar.step();
-
-        sLog.outString();
         sLog.outString(">> Loaded 0 battlemaster entries - table is empty!");
+        sLog.outString();
         return;
     }
 
@@ -1400,8 +1397,8 @@ void BattleGroundMgr::LoadBattleMastersEntry()
 
     delete result;
 
-    sLog.outString();
     sLog.outString(">> Loaded %u battlemaster entries", count);
+    sLog.outString();
 }
 
 HolidayIds BattleGroundMgr::BGTypeToWeekendHolidayId(BattleGroundTypeId bgTypeId)
@@ -1487,9 +1484,8 @@ void BattleGroundMgr::LoadBattleEventIndexes()
     {
         BarGoLink bar(1);
         bar.step();
-
-        sLog.outString();
         sLog.outErrorDb(">> Loaded 0 battleground eventindexes.");
+        sLog.outString();
         return;
     }
 
@@ -1548,7 +1544,7 @@ void BattleGroundMgr::LoadBattleEventIndexes()
     }
     while (result->NextRow());
 
-    sLog.outString();
     sLog.outString(">> Loaded %u battleground eventindexes", count);
+    sLog.outString();
     delete result;
 }
