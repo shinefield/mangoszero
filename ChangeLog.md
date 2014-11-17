@@ -43,6 +43,8 @@ Minor fixes and improvements have been added, such as:
 * replaced `Map::LoadGrid` with `Map::ForceLoadGrid`
 * fixed raid instance reset crash
 * added a new admin command to force raid instance resets
+* use strict database filter for creatures with movement points without a
+  matching movement type
 
 ## 1.0.0 (2014-10-27)
 
