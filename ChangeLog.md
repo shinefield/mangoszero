@@ -27,6 +27,9 @@ things such as these:
 * implement `CREATURE_FLAG_EXTRA_ACTIVE`: setting this flag in `creature_template`
   `ExtraFlags` will result in the creature being loaded and set to active when the
   map is created. Use with care.
+* added a new admin command to force raid instance resets
+* implement new TEMPFACTION_TOGGLE flags for `UNIT_FLAG_PACIFIED` and
+  `UNIT_FLAG_NOT_SELECTABLE`
 
 Minor fixes and improvements have been added, such as:
 
@@ -42,7 +45,6 @@ Minor fixes and improvements have been added, such as:
 * allow non-instanced empty map creation.
 * replaced `Map::LoadGrid` with `Map::ForceLoadGrid`
 * fixed raid instance reset crash
-* added a new admin command to force raid instance resets
 * use strict database filter for creatures with movement points without a
   matching movement type
 * fix possible mount abuse after leaving battlegrounds
