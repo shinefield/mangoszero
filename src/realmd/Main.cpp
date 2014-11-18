@@ -213,11 +213,20 @@ extern int main(int argc, char** argv)
 
     DETAIL_LOG("Using ACE: %s", ACE_VERSION);
 
+    // Manually delete this pointers, because memory allocating done with overloaded mem manager
+    // (function new) removed with 'delete' from internal (standard memman) ace library.
+    // As result - crash on exit.
+    ACE_Reactor_Impl* aceReactorImp;
+    ACE_Reactor* aceReactor;
+
 #if defined (ACE_HAS_EVENT_POLL) || defined (ACE_HAS_DEV_POLL)
-    ACE_Reactor::instance(new ACE_Reactor(new ACE_Dev_Poll_Reactor(ACE::max_handles(), 1), 1), true);
+    aceReactorImp = new ACE_Dev_Poll_Reactor(ACE::max_handles(), true);
 #else
-    ACE_Reactor::instance(new ACE_Reactor(new ACE_TP_Reactor(), true), true);
+    aceReactorImp = new ACE_TP_Reactor();
 #endif
+
+    aceReactor = new ACE_Reactor(aceReactorImp, false);
+    ACE_Reactor::instance(aceReactor, false);
 
     sLog.outBasic("Max allowed open files is %d", ACE::max_handles());
 
@@ -350,6 +359,9 @@ extern int main(int argc, char** argv)
         while (m_ServiceStatus == 2) Sleep(1000);
 #endif
     }
+
+    delete aceReactor;
+    delete aceReactorImp;
 
     ///- Wait for the delay thread to exit
     LoginDatabase.HaltDelayThread();
