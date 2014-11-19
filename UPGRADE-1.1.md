@@ -11,6 +11,10 @@ your attention, and may require further action to adapt your installation of the
   [Eluna](http://eluna.demudevs.com/).
 * Support for PostgreSQL has been dropped. IF you previously used this database
   backend, you will have to migrate to using MySQL or MariaDB.
+* Lua 5.2 is now an external dependency. Please install Lua 5.2 and development
+  headers. Windows users should grab [Lua binaries](http://luabinaries.sourceforge.net/)
+  and Linux users will find a Lua 5.2 package from their distribution vendor, e.g.
+  Debian/Ubuntu provide `liblua5.2-0`/`liblua5.2-dev` packages.
 
 ### SOAP
 
