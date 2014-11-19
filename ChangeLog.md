@@ -36,6 +36,7 @@ things such as these:
   not be removed on combat
 * implement spell effect 19395
 * implement Battleground scores storage system
+* implement EVENT_T_ENERGY for EventAI
 
 Minor fixes and improvements have been added, such as:
 
