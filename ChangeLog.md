@@ -37,6 +37,10 @@ things such as these:
 * implement spell effect 19395
 * implement Battleground scores storage system
 * implement EVENT_T_ENERGY for EventAI
+* Lua 5.2 is now an external dependency. Please install Lua 5.2 with development
+  headers. Windows users should grab [Lua binaries](http://luabinaries.sourceforge.net/)
+  and Linux users will find a Lua 5.2 package from their distribution vendor, e.g.
+  Debian/Ubuntu provide `liblua5.2-0`/`liblua5.2-dev` packages.
 
 Minor fixes and improvements have been added, such as:
 

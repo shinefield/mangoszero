@@ -24,6 +24,10 @@
 #=============================================================================
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
+include(FindPackageHandleStandardArgs)
+include(CMakeParseArguments)
+include(SelectLibraryConfigurations)
+include(MacroExtractVersion)
 
 find_path(LUA_INCLUDE_DIR lua.h
   HINTS
@@ -70,10 +74,9 @@ if(LUA_INCLUDE_DIR AND EXISTS "${LUA_INCLUDE_DIR}/lua.h")
   unset(lua_version_str)
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
 # handle the QUIETLY and REQUIRED arguments and set LUA_FOUND to TRUE if
 # all listed variables are TRUE
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Lua52
+find_package_handle_standard_args(Lua52
                                   REQUIRED_VARS LUA_LIBRARIES LUA_INCLUDE_DIR
                                   VERSION_VAR LUA_VERSION_STRING)
 

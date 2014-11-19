@@ -430,8 +430,9 @@ endif()
 find_package(OpenSSL REQUIRED)
 find_package(BZip2 REQUIRED)
 find_package(ZLIB REQUIRED)
-
+find_package(Lua52 REQUIRED)
 find_package(ACE REQUIRED)
+
 if(EXISTS ${ACE_INCLUDE_DIR}/ace/Stack_Trace.h)
     set(HAVE_ACE_STACK_TRACE_H ON)
 endif()

@@ -304,7 +304,7 @@ include_directories(
     ${OPENSSL_INCLUDE_DIR}
     ${ZLIB_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
-    ${CMAKE_SOURCE_DIR}/dep/lua/src/
+    ${LUA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour/Include/
     ${CMAKE_SOURCE_DIR}/src/framework/
     ${CMAKE_CURRENT_SOURCE_DIR}
