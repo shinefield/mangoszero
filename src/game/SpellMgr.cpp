@@ -194,7 +194,7 @@ uint32 GetSpellCastTimeForBonus(SpellEntry const* spellProto, DamageEffectType d
                         if (GetSpellDuration(spellProto))
                             overTime = GetSpellDuration(spellProto);
                         break;
-                        // Penalty for additional effects
+                    // Penalty for additional effects
                     case SPELL_AURA_DUMMY:
                         ++effects;
                         break;
@@ -419,12 +419,12 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
                 {
                     switch (spellInfo->EffectApplyAuraName[i])
                     {
-                            // Food
+                        // Food
                         case SPELL_AURA_MOD_REGEN:
                         case SPELL_AURA_OBS_MOD_HEALTH:
                             food = true;
                             break;
-                            // Drink
+                        // Drink
                         case SPELL_AURA_MOD_POWER_REGEN:
                         case SPELL_AURA_OBS_MOD_MANA:
                             drink = true;
@@ -622,7 +622,7 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
 {
     switch (targetA)
     {
-            // non-positive targets
+        // non-positive targets
         case TARGET_UNIT_TARGET_ENEMY:
         case TARGET_UNIT_SRC_AREA_ENEMY:
         case TARGET_UNIT_DEST_AREA_ENEMY:
@@ -630,7 +630,7 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
         case TARGET_DEST_DYNOBJ_ENEMY:
         case TARGET_DEST_TARGET_ENEMY:
             return false;
-            // positive or dependent
+        // positive or dependent
         case TARGET_SRC_CASTER:
             return (targetB == TARGET_UNIT_SRC_AREA_PARTY || targetB == TARGET_UNIT_SRC_AREA_ALLY);
         default:
@@ -689,14 +689,14 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                     break;
             }
             break;
-            // always positive effects (check before target checks that provided non-positive result in some case for positive effects)
+        // always positive effects (check before target checks that provided non-positive result in some case for positive effects)
         case SPELL_EFFECT_HEAL:
         case SPELL_EFFECT_LEARN_SPELL:
         case SPELL_EFFECT_SKILL_STEP:
         case SPELL_EFFECT_QUEST_COMPLETE:
             return true;
 
-            // non-positive aura use
+        // non-positive aura use
         case SPELL_EFFECT_APPLY_AURA:
         {
             switch (spellproto->EffectApplyAuraName[effIndex])
@@ -709,7 +709,7 @@ bool IsPositiveEffect(SpellEntry const* spellproto, SpellEffectIndex effIndex)
                         case 13139:                         // net-o-matic special effect
                         case 23445:                         // evil twin
                             return false;
-                            // some spells have unclear target modes for selection, so just make effect positive
+                        // some spells have unclear target modes for selection, so just make effect positive
                         case 27184:
                         case 27190:
                         case 27191:
@@ -3091,7 +3091,7 @@ bool SpellMgr::IsSpellValid(SpellEntry const* spellInfo, Player* pl, bool msg)
             case SPELL_EFFECT_NONE:
                 continue;
 
-                // craft spell for crafting non-existent item (break client recipes list show)
+            // craft spell for crafting non-existent item (break client recipes list show)
             case SPELL_EFFECT_CREATE_ITEM:
             {
                 if (!ObjectMgr::GetItemPrototype(spellInfo->EffectItemType[i]))
@@ -3378,7 +3378,7 @@ SpellCastResult SpellMgr::GetSpellAllowedInLocationError(SpellEntry const* spell
 
     switch (spellInfo->Id)
     {
-            // a trinket in alterac valley allows to teleport to the boss
+        // a trinket in alterac valley allows to teleport to the boss
         case 22564:                                         // recall
         case 22563:                                         // recall
         {

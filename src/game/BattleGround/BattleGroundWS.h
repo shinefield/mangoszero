@@ -85,8 +85,14 @@ class BattleGroundWGScore : public BattleGroundScore
         BattleGroundWGScore() : FlagCaptures(0), FlagReturns(0) {};
         virtual ~BattleGroundWGScore() {};
 
-        uint32 GetAttr1() const { return FlagCaptures; }
-        uint32 GetAttr2() const { return FlagReturns; }
+        uint32 GetAttr1() const
+        {
+            return FlagCaptures;
+        }
+        uint32 GetAttr2() const
+        {
+            return FlagReturns;
+        }
 
         uint32 FlagCaptures;
         uint32 FlagReturns;

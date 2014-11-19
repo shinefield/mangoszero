@@ -227,7 +227,7 @@ class MANGOS_DLL_SPEC ObjectGuid
                     return TYPEID_CORPSE;
                 case HIGHGUID_MO_TRANSPORT:
                     return TYPEID_GAMEOBJECT;
-                    // unknown
+                // unknown
                 default:
                     return TYPEID_OBJECT;
             }

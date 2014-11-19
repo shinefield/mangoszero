@@ -1273,11 +1273,21 @@ void Creature::SelectLevel(const CreatureInfo* cinfo, float percentHealth, float
 
         switch (i)
         {
-            case POWER_MANA:        maxValue = mana; break;
-            case POWER_RAGE:        maxValue = 0; break;
-            case POWER_FOCUS:       maxValue = POWER_FOCUS_DEFAULT; break;
-            case POWER_ENERGY:      maxValue = POWER_ENERGY_DEFAULT * cinfo->PowerMultiplier; break;
-            case POWER_HAPPINESS:   maxValue = POWER_HAPPINESS_DEFAULT; break;
+            case POWER_MANA:
+                maxValue = mana;
+                break;
+            case POWER_RAGE:
+                maxValue = 0;
+                break;
+            case POWER_FOCUS:
+                maxValue = POWER_FOCUS_DEFAULT;
+                break;
+            case POWER_ENERGY:
+                maxValue = POWER_ENERGY_DEFAULT * cinfo->PowerMultiplier;
+                break;
+            case POWER_HAPPINESS:
+                maxValue = POWER_HAPPINESS_DEFAULT;
+                break;
         }
 
         uint32 value = maxValue;

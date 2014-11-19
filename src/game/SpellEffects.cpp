@@ -531,7 +531,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     else
                         m_caster->CastSpell(unitTarget, 13279, true);
 
-                      return;
+                    return;
                 }
                 case 13535:                                 // Tame Beast
                 {
@@ -887,12 +887,12 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     m_caster->RemoveAurasDueToSpell(23170); // Brood Affliction: Bronze
                     return;
                 case 23725:                                 // Gift of Life (warrior BWL trinket)
-                    {
-                        int32 healthModSpellBasePoints0 = int32(m_caster->GetMaxHealth() * 0.15);
-                        m_caster->CastCustomSpell(m_caster, 23782, &healthModSpellBasePoints0, NULL, NULL, true, NULL);
-                        m_caster->CastSpell(m_caster, 23783, true);
-                        return;
-                    }
+                {
+                    int32 healthModSpellBasePoints0 = int32(m_caster->GetMaxHealth() * 0.15);
+                    m_caster->CastCustomSpell(m_caster, 23782, &healthModSpellBasePoints0, NULL, NULL, true, NULL);
+                    m_caster->CastSpell(m_caster, 23783, true);
+                    return;
+                }
                 case 24781:                                 // Dream Fog
                 {
                     if (m_caster->GetTypeId() != TYPEID_UNIT || !unitTarget)
@@ -1350,7 +1350,7 @@ void Spell::EffectTriggerSpell(SpellEffectIndex eff_idx)
     // special cases
     switch (triggered_spell_id)
     {
-            // Vanish (not exist)
+        // Vanish (not exist)
         case 18461:
         {
             unitTarget->RemoveSpellsCausingAura(SPELL_AURA_MOD_ROOT);

@@ -1199,8 +1199,8 @@ bool Pet::InitStatsForLevel(uint32 petlevel, Unit* owner)
             SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, sObjectMgr.GetXPForPetLevel(petlevel));
             // these formula may not be correct; however, it is designed to be close to what it should be
             // this makes dps 0.5 of pets level
-            SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float( 0.5*GetAttackTime(BASE_ATTACK)*(petlevel - (petlevel / 4))/1000 ) );
-            SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float( 0.5*GetAttackTime(BASE_ATTACK)*(petlevel + (petlevel / 4))/1000 ) );
+            SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float(0.5*GetAttackTime(BASE_ATTACK)*(petlevel - (petlevel / 4))/1000));
+            SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float(0.5*GetAttackTime(BASE_ATTACK)*(petlevel + (petlevel / 4))/1000));
             // damage is increased afterwards as strength and pet scaling modify attack power
 
             // stored standard pet stats are entry 1 in pet_levelinfo
@@ -1920,8 +1920,6 @@ bool Pet::IsPermanentPetFor(Player* owner)
         case SUMMON_PET:
             switch (owner->getClass())
             {
-                    // oddly enough, Mage's Water Elemental is still treated as temporary pet with Glyph of Eternal Water
-                    // i.e. does not unsummon at mounting, gets dismissed at teleport etc.
                 case CLASS_WARLOCK:
                     return GetCreatureInfo()->CreatureType == CREATURE_TYPE_DEMON;
                 default:
@@ -2028,11 +2026,11 @@ void Pet::SynchronizeLevelWithOwner()
 
     switch (getPetType())
     {
-            // always same level
+        // always same level
         case SUMMON_PET:
             GivePetLevel(owner->getLevel());
             break;
-            // can't be greater owner level
+        // can't be greater owner level
         case HUNTER_PET:
             if (getLevel() > owner->getLevel())
                 GivePetLevel(owner->getLevel());

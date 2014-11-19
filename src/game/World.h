@@ -621,7 +621,10 @@ class World
         }
 
         /// Get configuration about force-loaded maps
-        std::set<uint32>* getConfigForceLoadMapIds() const { return m_configForceLoadMapIds; }
+        std::set<uint32>* getConfigForceLoadMapIds() const
+        {
+            return m_configForceLoadMapIds;
+        }
 
         /// Are we on a "Player versus Player" server?
         bool IsPvPRealm()

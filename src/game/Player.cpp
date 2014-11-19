@@ -2028,8 +2028,8 @@ GameObject* Player::GetGameObjectIfCanInteractWith(ObjectGuid guid, uint32 gameo
             float maxdist;
             switch (go->GetGoType())
             {
-                    // TODO: find out how the client calculates the maximal usage distance to spellless working
-                    // gameobjects like mailboxes - 10.0 is a just an abitrary choosen number
+                // TODO: find out how the client calculates the maximal usage distance to spellless working
+                // gameobjects like mailboxes - 10.0 is a just an abitrary choosen number
                 case GAMEOBJECT_TYPE_MAILBOX:
                     maxdist = 10.0f;
                     break;
@@ -3768,7 +3768,7 @@ void Player::DeleteFromDB(ObjectGuid playerguid, uint32 accountId, bool updateRe
 
     switch (charDelete_method)
     {
-            // completely remove from the database
+        // completely remove from the database
         case 0:
         {
             // return back all mails with COD and Item                 0  1           2              3      4       5          6     7
@@ -7130,8 +7130,8 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
                 loot->clear();
                 switch (loot_type)
                 {
-                        // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
-                        // this is overwrite fishinghole loot for example
+                    // Entry 0 in fishing loot template used for store junk fish loot at fishing fail it junk allowed by config option
+                    // this is overwrite fishinghole loot for example
                     case LOOT_FISHING_FAIL:
                         loot->FillLoot(0, LootTemplates_Fishing, this, true);
                         break;

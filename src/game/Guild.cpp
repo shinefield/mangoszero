@@ -582,11 +582,11 @@ bool Guild::ChangeMemberRank(ObjectGuid guid, uint8 newRank)
 
 void Guild::BroadcastToGuild(WorldSession* session, const std::string& msg, uint32 language)
 {
-    if(!session)
+    if (!session)
         return;
 
     Player* player = session->GetPlayer();
-    if(!player || !HasRankRight(player->GetRank(), GR_RIGHT_GCHATSPEAK))
+    if (!player || !HasRankRight(player->GetRank(), GR_RIGHT_GCHATSPEAK))
         return;
 
     WorldPacket data;
@@ -603,11 +603,11 @@ void Guild::BroadcastToGuild(WorldSession* session, const std::string& msg, uint
 
 void Guild::BroadcastToOfficers(WorldSession* session, const std::string& msg, uint32 language)
 {
-    if(!session)
+    if (!session)
         return;
 
     Player* player = session->GetPlayer();
-    if(!player || !HasRankRight(player->GetRank(), GR_RIGHT_OFFCHATSPEAK))
+    if (!player || !HasRankRight(player->GetRank(), GR_RIGHT_OFFCHATSPEAK))
         return;
 
     for (MemberList::const_iterator itr = members.begin(); itr != members.end(); ++itr)

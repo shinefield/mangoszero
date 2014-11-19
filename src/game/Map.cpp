@@ -1883,30 +1883,30 @@ uint32 Map::GenerateLocalLowGuid(HighGuid guidhigh)
 class StaticMonsterChatBuilder
 {
     public:
-    StaticMonsterChatBuilder(CreatureInfo const* cInfo, ChatMsg msgtype, int32 textId, Language language, Unit const* target, uint32 senderLowGuid = 0)
-        : i_cInfo(cInfo), i_msgtype(msgtype), i_textId(textId), i_language(language), i_target(target)
-{
-    // 0 lowguid not used in core, but accepted fine in this case by client
-    i_senderGuid = i_cInfo->GetObjectGuid(senderLowGuid);
-}
-void operator()(WorldPacket& data, int32 loc_idx)
-{
-    char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
+        StaticMonsterChatBuilder(CreatureInfo const* cInfo, ChatMsg msgtype, int32 textId, Language language, Unit const* target, uint32 senderLowGuid = 0)
+            : i_cInfo(cInfo), i_msgtype(msgtype), i_textId(textId), i_language(language), i_target(target)
+        {
+            // 0 lowguid not used in core, but accepted fine in this case by client
+            i_senderGuid = i_cInfo->GetObjectGuid(senderLowGuid);
+        }
+        void operator()(WorldPacket& data, int32 loc_idx)
+        {
+            char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
 
-    char const* nameForLocale = i_cInfo->Name;
-    sObjectMgr.GetCreatureLocaleStrings(i_cInfo->Entry, loc_idx, &nameForLocale);
+            char const* nameForLocale = i_cInfo->Name;
+            sObjectMgr.GetCreatureLocaleStrings(i_cInfo->Entry, loc_idx, &nameForLocale);
 
-    ChatHandler::BuildChatPacket(data, i_msgtype, text, i_language, CHAT_TAG_NONE, i_senderGuid, nameForLocale, i_target ? i_target->GetObjectGuid() : ObjectGuid(),
-                                 i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
-}
+            ChatHandler::BuildChatPacket(data, i_msgtype, text, i_language, CHAT_TAG_NONE, i_senderGuid, nameForLocale, i_target ? i_target->GetObjectGuid() : ObjectGuid(),
+                                         i_target ? i_target->GetNameForLocaleIdx(loc_idx) : "");
+        }
 
-private:
-ObjectGuid i_senderGuid;
-CreatureInfo const* i_cInfo;
-ChatMsg i_msgtype;
-int32 i_textId;
-Language i_language;
-Unit const* i_target;
+    private:
+        ObjectGuid i_senderGuid;
+        CreatureInfo const* i_cInfo;
+        ChatMsg i_msgtype;
+        int32 i_textId;
+        Language i_language;
+        Unit const* i_target;
 };
 
 

@@ -3228,7 +3228,7 @@ bool ChatHandler::HandleDamageCommand(char* args)
         return false;
 
     Unit* target = getSelectedUnit();
-     Player* player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
 
     if (!target || !player->GetSelectionGuid())
     {
