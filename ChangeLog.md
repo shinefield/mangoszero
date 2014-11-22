@@ -67,6 +67,7 @@ Minor fixes and improvements have been added, such as:
 * fixed AreaAura bug when low level grouped with high level Player. Thank to
   @tarwyn for his precious help and proposed patch.
 * allow logout during duels
+* various code style fixes
 
 ## 1.0.0 (2014-10-27)
 

@@ -258,7 +258,7 @@ enum EventMask
 };
 
 // This functions checks if the NPC has linked NPCs for dynamic action
-bool CreatureLinkingMgr::IsLinkedEventTrigger(Creature* pCreature)
+bool CreatureLinkingMgr::IsLinkedEventTrigger(Creature* pCreature) const
 {
     // Entry case
     if (m_eventTriggers.find(pCreature->GetEntry()) != m_eventTriggers.end())
@@ -277,22 +277,22 @@ bool CreatureLinkingMgr::IsLinkedEventTrigger(Creature* pCreature)
 
 // This function check if the NPC is a master to other NPCs
 // return true only for masters stored by entry - this prevents adding them to master-holder maps
-bool CreatureLinkingMgr::IsLinkedMaster(Creature* pCreature)
+bool CreatureLinkingMgr::IsLinkedMaster(Creature* pCreature) const
 {
     return m_eventTriggers.find(pCreature->GetEntry()) != m_eventTriggers.end();
 }
 
 // This function checks if the spawning of this NPC is dependend on other NPCs
-bool CreatureLinkingMgr::IsSpawnedByLinkedMob(Creature* pCreature)
+bool CreatureLinkingMgr::IsSpawnedByLinkedMob(Creature* pCreature) const
 {
-    CreatureLinkingInfo const* pInfo = CreatureLinkingMgr::GetLinkedTriggerInformation(pCreature);
+    CreatureLinkingInfo const* pInfo = GetLinkedTriggerInformation(pCreature);
 
     return pInfo && pInfo->linkingFlag & (FLAG_CANT_SPAWN_IF_BOSS_DEAD | FLAG_CANT_SPAWN_IF_BOSS_ALIVE) && (pInfo->masterDBGuid || pInfo->searchRange);
 }
 
 // This gives the information of a linked NPC (describes action when its ActionTrigger triggers)
 // Depends of the map
-CreatureLinkingInfo const* CreatureLinkingMgr::GetLinkedTriggerInformation(Creature* pCreature)
+CreatureLinkingInfo const* CreatureLinkingMgr::GetLinkedTriggerInformation(Creature* pCreature) const
 {
     // guid case
     CreatureLinkingMapBounds bounds = m_creatureLinkingGuidMap.equal_range(pCreature->GetGUIDLow());
@@ -377,7 +377,7 @@ void CreatureLinkingHolder::AddMasterToHolder(Creature* pCreature)
 
     // Check, if already stored
     BossGuidMapBounds bounds = m_masterGuid.equal_range(pCreature->GetEntry());
-    for (BossGuidMap::iterator itr = bounds.first; itr != bounds.second; ++itr)
+    for (BossGuidMap::const_iterator itr = bounds.first; itr != bounds.second; ++itr)
         if (itr->second == pCreature->GetObjectGuid())
             return;                                         // Already added
 
@@ -444,7 +444,7 @@ void CreatureLinkingHolder::DoCreatureLinkingEvent(CreatureLinkingEvent eventTyp
             if (pInfo->mapId != INVALID_MAP_ID)             // entry case
             {
                 BossGuidMapBounds finds = m_masterGuid.equal_range(pInfo->masterId);
-                for (BossGuidMap::iterator itr = finds.first; itr != finds.second; ++itr)
+                for (BossGuidMap::const_iterator itr = finds.first; itr != finds.second; ++itr)
                 {
                     pMaster = pSource->GetMap()->GetCreature(itr->second);
                     if (pMaster && IsSlaveInRangeOfBoss(pSource, pMaster, pInfo->searchRange))
@@ -597,7 +597,7 @@ void CreatureLinkingHolder::SetFollowing(Creature* pWho, Creature* pWhom)
 }
 
 // Function to check if a slave belongs to a boss by range-issue
-bool CreatureLinkingHolder::IsSlaveInRangeOfBoss(Creature* pSlave, Creature* pBoss, uint16 searchRange)
+bool CreatureLinkingHolder::IsSlaveInRangeOfBoss(Creature* pSlave, Creature* pBoss, uint16 searchRange) const
 {
     if (!searchRange)
         return true;
@@ -615,7 +615,7 @@ bool CreatureLinkingHolder::IsSlaveInRangeOfBoss(Creature* pSlave, Creature* pBo
 }
 
 // Function to check if a passive spawning condition is met
-bool CreatureLinkingHolder::CanSpawn(Creature* pCreature)
+bool CreatureLinkingHolder::CanSpawn(Creature* pCreature) const
 {
     CreatureLinkingInfo const*  pInfo = sCreatureLinkingMgr.GetLinkedTriggerInformation(pCreature);
     if (!pInfo)
@@ -636,7 +636,7 @@ bool CreatureLinkingHolder::CanSpawn(Creature* pCreature)
 
     // Search for nearby master
     BossGuidMapBounds finds = m_masterGuid.equal_range(pInfo->masterId);
-    for (BossGuidMap::iterator itr = finds.first; itr != finds.second; ++itr)
+    for (BossGuidMap::const_iterator itr = finds.first; itr != finds.second; ++itr)
     {
         Creature* pMaster = pCreature->GetMap()->GetCreature(itr->second);
         if (pMaster && IsSlaveInRangeOfBoss(pCreature, pMaster, pInfo->searchRange))
@@ -664,7 +664,7 @@ bool CreatureLinkingHolder::TryFollowMaster(Creature* pCreature)
     if (pInfo->mapId != INVALID_MAP_ID)                     // entry case
     {
         BossGuidMapBounds finds = m_masterGuid.equal_range(pInfo->masterId);
-        for (BossGuidMap::iterator itr = finds.first; itr != finds.second; ++itr)
+        for (BossGuidMap::const_iterator itr = finds.first; itr != finds.second; ++itr)
         {
             pMaster = pCreature->GetMap()->GetCreature(itr->second);
             if (pMaster && IsSlaveInRangeOfBoss(pCreature, pMaster, pInfo->searchRange))
