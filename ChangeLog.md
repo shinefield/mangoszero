@@ -70,6 +70,9 @@ Minor fixes and improvements have been added, such as:
 * various code style fixes
 * CreatureLinking: improve startup efficiency. No need to use multiple select to
   check and obtain information about db-data of an expectedly unique creature
+* CreatureLinking: allow recursive CanSpawn checks. This will fix behaviour of
+  mobs whose spawning is dependent on mobs whose spawning is dependent on other
+  mobs.
 
 ## 1.0.0 (2014-10-27)
 
