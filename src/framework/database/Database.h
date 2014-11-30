@@ -26,12 +26,12 @@
 #ifndef MANGOS_H_DATABASE
 #define MANGOS_H_DATABASE
 
+#include "utilities/UnorderedMapSet.h"
+#include "policies/ThreadingModel.h"
 #include <ace/Recursive_Thread_Mutex.h>
 #include <ace/TSS_T.h>
 #include <ace/Atomic_Op.h>
 
-#include "utilities/UnorderedMapSet.h"
-#include "policies/ThreadingModel.h"
 #include "database/SqlDelayThread.h"
 #include "threading/Threading.h"
 #include "SqlPreparedStatement.h"

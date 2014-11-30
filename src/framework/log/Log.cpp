@@ -26,15 +26,15 @@
 #include <stdarg.h>
 #include <fstream>
 #include <iostream>
+#include "policies/Singleton.h"
+#include "utilities/Util.h"
 #include <ace/OS_NS_unistd.h>
 
-#include "policies/Singleton.h"
 #include "Common.h"
 #include "network/ByteBuffer.h"
 #include "configuration/Config.h"
 #include "log/Log.h"
 #include "system/ProgressBar.h"
-#include "utilities/Util.h"
 
 INSTANTIATE_SINGLETON_1(Log);
 

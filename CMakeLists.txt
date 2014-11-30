@@ -344,60 +344,101 @@ elseif(WIN32)
 
 elseif(APPLE)
 
-    if(${CMAKE_OSX_DEPLOYMENT_TARGET} STREQUAL "10.5" OR ${CMAKE_OSX_DEPLOYMENT_TARGET} STRGREATER "10.5")
-        set(WITH_LIBS10.5 ON CACHE BOOL "Use 10.5 libs" FORCE) # valid also for 10.6/10.7
+    if(${CMAKE_VERSION} VERSION_LESS 3.0) # else breaks setting CMP0043 policy
+        cmake_minimum_required(VERSION 2.8.8)
+        cmake_policy(VERSION 2.8.8)
     endif()
 
-    if(WITH_LIBS10.5)
-        message(STATUS "Darwin 9.x detected.")
+    if(NOT CMAKE_OSX_ARCHITECTURES)
+        set(CMAKE_OSX_ARCHITECTURES x86_64 CACHE STRING
+        "Choose the architecture you want to build Blender for: i386, x86_64 or ppc"
+        FORCE)
+    endif()
+
+    execute_process(COMMAND uname -r OUTPUT_VARIABLE MAC_SYS) # check for actual system-version
+    if(${MAC_SYS} MATCHES 14)
+        set(OSX_SYSTEM 10.10)
+        # throw an error here, older cmake cannot handle 2 digit subversion!
+        cmake_minimum_required(VERSION 3.0.0)
+    elseif(${MAC_SYS} MATCHES 13)
+        set(OSX_SYSTEM 10.9)
+    elseif(${MAC_SYS} MATCHES 12)
+        set(OSX_SYSTEM 10.8)
+    elseif(${MAC_SYS} MATCHES 11)
+        set(OSX_SYSTEM 10.7)
+    elseif(${MAC_SYS} MATCHES 10)
+        set(OSX_SYSTEM 10.6)
+    elseif(${MAC_SYS} MATCHES 9)
+        set(OSX_SYSTEM 10.5)
     else()
-        if(CMAKE_OSX_ARCHITECTURES MATCHES i386)
-            message(STATUS "Darwin 8.x i386 detected.")
-        else()
-            message(STATUS "Darwin 8.x PowerPC detected.")
-        endif()
+        set(OSX_SYSTEM unsupported)
     endif()
+    message(STATUS "Detected system-version: " ${OSX_SYSTEM})
 
-    find_library(SYSTEMSTUBS_LIBRARY
-        NAMES
-        SystemStubs
-        PATHS
-    )
-    mark_as_advanced(SYSTEMSTUBS_LIBRARY)
-    if(SYSTEMSTUBS_LIBRARY)
-        set(PLATFORM_LINKLIBS stdc++ SystemStubs)
-    else()
-        set(PLATFORM_LINKLIBS stdc++)
-    endif()
+    # workaround for incorrect cmake xcode lookup for developer previews - XCODE_VERSION does not take xcode-select path into accout
+    # but would always look into /Applications/Xcode.app while dev versions are named Xcode<version>-DP<preview_number>
+    execute_process(COMMAND xcode-select --print-path  OUTPUT_VARIABLE XCODE_CHECK OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REPLACE "/Contents/Developer" "" XCODE_BUNDLE ${XCODE_CHECK}) # truncate to bundlepath in any case
+    message(STATUS "Xcode-bundle : " ${XCODE_BUNDLE})
 
-    set(PLATFORM_CFLAGS "-pipe -funsigned-char")
-    set(PLATFORM_LINKFLAGS "-fexceptions -framework CoreServices -framework Foundation -framework IOKit -framework AppKit -framework Carbon -framework AGL -framework AudioUnit -framework AudioToolbox -framework CoreAudio -framework QuickTime")
-    set(WITH_INPUT_NDOF OFF)  # unsupported
+    if(${CMAKE_GENERATOR} MATCHES "Xcode")
 
-    set(EXETYPE MACOSX_BUNDLE)
-
-    set(CMAKE_C_FLAGS_DEBUG "-fno-strict-aliasing -g")
-    set(CMAKE_CXX_FLAGS_DEBUG "-fno-strict-aliasing -g")
-    if(CMAKE_OSX_ARCHITECTURES MATCHES "x86_64" OR CMAKE_OSX_ARCHITECTURES MATCHES "i386")
-        set(CMAKE_CXX_FLAGS_RELEASE "-O2 -mdynamic-no-pic -msse -msse2 -msse3 -mssse3")
-        set(CMAKE_C_FLAGS_RELEASE "-O2 -mdynamic-no-pic  -msse -msse2 -msse3 -mssse3")
-        if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -ftree-vectorize  -fvariable-expansion-in-unroller")
-            set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ftree-vectorize  -fvariable-expansion-in-unroller")
-        endif()
-    else()
-        set(CMAKE_C_FLAGS_RELEASE "-mdynamic-no-pic -fno-strict-aliasing")
-        set(CMAKE_CXX_FLAGS_RELEASE "-mdynamic-no-pic -fno-strict-aliasing")
-    endif()
-
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        if(${CMAKE_GENERATOR} MATCHES "Xcode")
-            if(${XCODE_VERSION} VERSION_EQUAL 5 OR ${XCODE_VERSION} VERSION_GREATER 5)
-                # Xcode 5 has too low template depth of 128 for libmv
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=1024")
+        if(${XCODE_VERSION} VERSION_GREATER 4.2) # earlier xcode has no bundled developer dir, no sense in getting xcode path from
+            string(SUBSTRING "${XCODE_CHECK}" 14 6 DP_NAME) # reduce to XCode name without dp extension
+            if(${DP_NAME} MATCHES Xcode5)
+                set(XCODE_VERSION 5)
             endif()
         endif()
+
+        ##### cmake incompatibility with xcode  4.3 and higher #####
+        if(${XCODE_VERSION} MATCHES '') # cmake fails due looking for xcode in the wrong path, thus will be empty var
+            message(FATAL_ERROR "Xcode 4.3 and higher must be used with cmake 2.8-8 or higher")
+        endif()
+        ### end cmake incompatibility with xcode 4.3 and higher ###
+
+        if(${XCODE_VERSION} VERSION_EQUAL 4 OR ${XCODE_VERSION} VERSION_GREATER 4 AND ${XCODE_VERSION} VERSION_LESS 4.3)
+            # Xcode 4 defaults to the Apple LLVM Compiler.
+            # Override the default compiler selection because Blender only compiles with gcc up to xcode 4.2
+            set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+            message(STATUS "Setting compiler to: " ${CMAKE_XCODE_ATTRIBUTE_GCC_VERSION})
+        endif()
+    else() # unix makefile generator does not fill XCODE_VERSION var, so we get it with a command
+        execute_process(COMMAND xcodebuild -version OUTPUT_VARIABLE XCODE_VERS_BUILD_NR)
+        string(SUBSTRING "${XCODE_VERS_BUILD_NR}" 6 3 XCODE_VERSION) # truncate away build-nr
+        unset(XCODE_VERS_BUILD_NR)
     endif()
+
+    message(STATUS "Detected Xcode-version: " ${XCODE_VERSION})
+
+    if(${XCODE_VERSION} VERSION_LESS 4.3)
+        set(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk CACHE PATH "" FORCE)  # use guaranteed existing sdk
+    else()
+        # note: xcode-select path could be ambigous, cause /Applications/Xcode.app/Contents/Developer or /Applications/Xcode.app would be allowed
+        # so i use a selfcomposed bundlepath here
+        set(OSX_SYSROOT_PREFIX ${XCODE_BUNDLE}/Contents/Developer/Platforms/MacOSX.platform)
+        message(STATUS "OSX_SYSROOT_PREFIX: " ${OSX_SYSROOT_PREFIX})
+        set(OSX_DEVELOPER_PREFIX /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk) # use guaranteed existing sdk
+        set(CMAKE_OSX_SYSROOT ${OSX_SYSROOT_PREFIX}/${OSX_DEVELOPER_PREFIX} CACHE PATH "" FORCE)
+        if(${CMAKE_GENERATOR} MATCHES "Xcode")
+            set(CMAKE_XCODE_ATTRIBUTE_SDKROOT macosx${OSX_SYSTEM}) # to silence sdk not found warning, just overrides CMAKE_OSX_SYSROOT
+        endif()
+    endif()
+
+    if(OSX_SYSTEM MATCHES 10.9)
+        set(CMAKE_FIND_ROOT_PATH ${CMAKE_OSX_SYSROOT}) # make sure syslibs and headers are looked up in sdk ( expecially for 10.9 openGL atm. )
+    endif()
+
+    if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.6" CACHE STRING "" FORCE) # 10.6 is our min. target, if you use higher sdk, weak linking happens
+    endif()
+
+    if(NOT ${CMAKE_GENERATOR} MATCHES "Xcode")
+        # force CMAKE_OSX_DEPLOYMENT_TARGET for makefiles, will not work else ( cmake bug ? )
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        add_definitions("-DMACOSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    endif()
+
 endif()
 
 #-----------------------------------------------------------------------------

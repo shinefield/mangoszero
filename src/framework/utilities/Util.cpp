@@ -25,11 +25,10 @@
 
 #include <utf8.h>
 #include <MersenneTwister.h>
-#include <ace/TSS_T.h>
-#include <ace/INET_Addr.h>
-
 #include "utilities/Timer.h"
 #include "utilities/Util.h"
+#include <ace/TSS_T.h>
+#include <ace/INET_Addr.h>
 
 typedef ACE_TSS<MTRand> MTRandTSS;
 static MTRandTSS mtRand;

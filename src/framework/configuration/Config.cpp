@@ -23,9 +23,9 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
+#include "policies/Singleton.h"
 #include <ace/Configuration_Import_Export.h>
 
-#include "policies/Singleton.h"
 #include "Config.h"
 
 INSTANTIATE_SINGLETON_1(Config);
