@@ -27,6 +27,7 @@
 Thumbs.db
 
 # Generated files
+
 /CMakeLists.txt.user
 /_build/
-/build/
+/.vagrant/
