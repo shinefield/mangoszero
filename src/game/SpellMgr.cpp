@@ -1275,7 +1275,7 @@ struct DoSpellProcEvent
 
     bool HasEntry(uint32 spellId)
     {
-        return spe_map.count(spellId) > 0;
+        return spe_map.find(spellId) != spe_map.end();
     }
     bool SetStateToEntry(uint32 spellId)
     {

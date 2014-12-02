@@ -68,6 +68,7 @@ Minor fixes and improvements have been added, such as:
   @tarwyn for his precious help and proposed patch.
 * allow logout during duels
 * various code style fixes
+* various performance fixes
 * CreatureLinking: improve startup efficiency. No need to use multiple select to
   check and obtain information about db-data of an expectedly unique creature
 * CreatureLinking: allow recursive CanSpawn checks. This will fix behaviour of
