@@ -37,6 +37,9 @@ things such as these:
 * implement spell effect 19395
 * implement Battleground scores storage system
 * implement EVENT_T_ENERGY for EventAI
+* SCRIPT_COMMAND_CAST_SPELL (15) allows passing additional spell-IDs with
+  dataint..dataint4 columns. If these are used, a random spell out of datalong,
+  dataint, ..dataintX is used as cast spell.
 * Lua 5.2 is now an external dependency. Please install Lua 5.2 with development
   headers. Windows users should grab [Lua binaries](http://luabinaries.sourceforge.net/)
   and Linux users will find a Lua 5.2 package from their distribution vendor, e.g.
