@@ -40,7 +40,6 @@
 #include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Mail.h"
-#include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(AuctionHouseMgr);
 
@@ -561,8 +560,6 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(Unit* unit)
 
 AuctionHouseObject::~AuctionHouseObject()
 {
-    Eluna::RemoveRef(this);
-
     for (AuctionEntryMap::const_iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end(); ++itr)
         delete itr->second;
 }

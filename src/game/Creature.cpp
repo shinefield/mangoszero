@@ -163,8 +163,6 @@ Creature::Creature(CreatureSubtype subtype) : Unit(),
 
 Creature::~Creature()
 {
-    Eluna::RemoveRef(this);
-
     CleanupsBeforeDelete();
 
     m_vendorItemCounts.clear();
