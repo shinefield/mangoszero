@@ -302,6 +302,7 @@ enum eConfigBoolValues
     CONFIG_BOOL_SKILL_FAIL_POSSIBLE_FISHINGPOOL,
     CONFIG_BOOL_BATTLEGROUND_CAST_DESERTER,
     CONFIG_BOOL_BATTLEGROUND_QUEUE_ANNOUNCER_START,
+    CONFIG_BOOL_BATTLEGROUND_SCORE_STATISTICS,
     CONFIG_BOOL_OUTDOORPVP_SI_ENABLED,
     CONFIG_BOOL_OUTDOORPVP_EP_ENABLED,
     CONFIG_BOOL_KICK_PLAYER_ON_BAD_PACKET,
@@ -368,7 +369,7 @@ struct CliCommandHolder
     typedef void Print(void*, const char*);
     typedef void CommandFinished(void*, bool success);
 
-    uint32 m_cliAccountId;                                  // 0 for console and real account id for RA/soap
+    uint32 m_cliAccountId;                                  // 0 for console and real account id for RA
     AccountTypes m_cliAccessLevel;
     void* m_callbackArg;
     char* m_command;
@@ -619,6 +620,12 @@ class World
             return m_configBoolValues[index];
         }
 
+        /// Get configuration about force-loaded maps
+        std::set<uint32>* getConfigForceLoadMapIds() const
+        {
+            return m_configForceLoadMapIds;
+        }
+
         /// Are we on a "Player versus Player" server?
         bool IsPvPRealm()
         {
@@ -631,7 +638,7 @@ class World
 
         void KickAll();
         void KickAllLess(AccountTypes sec);
-        BanReturn BanAccount(BanMode mode, std::string nameOrIP, uint32 duration_secs, std::string reason, std::string author);
+        BanReturn BanAccount(BanMode mode, std::string nameOrIP, uint32 duration_secs, std::string reason, const std::string &author);
         bool RemoveBanAccount(BanMode mode, std::string nameOrIP);
 
         // for max speed access
@@ -700,7 +707,6 @@ class World
         {
             return m_CreatureEventAIVersion.c_str();
         }
-
 
         /**
         * \brief: force all client to request player data
@@ -793,6 +799,9 @@ class World
         // used versions
         std::string m_DBVersion;
         std::string m_CreatureEventAIVersion;
+
+        // List of Maps that should be force-loaded on startup
+        std::set<uint32>* m_configForceLoadMapIds;
 };
 
 extern uint32 realmID;

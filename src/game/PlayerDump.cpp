@@ -359,7 +359,7 @@ void PlayerDumpWriter::DumpTableContent(std::string& dump, uint32 guid, char con
                 case DTT_ITEM:
                     StoreGUID(result, 0, ITEM_FIELD_ITEM_TEXT_ID, texts);
                     break;
-                    // item text id collection
+                // item text id collection
                 case DTT_PET:
                     StoreGUID(result, 0, pets);
                     break;     // pet petnumber collection (character_pet.id)
@@ -475,7 +475,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
 
     // normalize the name if specified and check if it exists
     if (!normalizePlayerName(name))
-        name = "";
+        name.clear();
 
     if (ObjectMgr::CheckPlayerName(name, true) == CHAR_NAME_SUCCESS)
     {
@@ -483,12 +483,12 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
         result = CharacterDatabase.PQuery("SELECT * FROM characters WHERE name = '%s'", name.c_str());
         if (result)
         {
-            name = "";                                      // use the one from the dump
+            name.clear();                                   // use the one from the dump
             delete result;
         }
     }
     else
-        name = "";
+        name.clear();
 
     // name encoded or empty
 
@@ -577,7 +577,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
                 if (!changenth(line, 2, chraccount))        // characters.account update
                     ROLLBACK(DUMP_FILE_BROKEN);
 
-                if (name == "")
+                if (name.empty())
                 {
                     // check if the original name already exists
                     name = getnth(line, 3);                 // characters.name

@@ -32,7 +32,7 @@ project(mangos-zero C CXX)
 
 set(APPLICATION_NAME            ${PROJECT_NAME})
 set(APPLICATION_VERSION_MAJOR   "1")
-set(APPLICATION_VERSION_MINOR   "0")
+set(APPLICATION_VERSION_MINOR   "1")
 set(APPLICATION_VERSION_RELEASE "0")
 set(APPLICATION_VERSION         "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_RELEASE}")
 
@@ -59,12 +59,6 @@ endif()
 # We require CMake version 2.8 or newer. Older versions do not detect Visual
 # Studio properly, especially the Express versions.
 cmake_minimum_required(VERSION 2.8)
-
-#-----------------------------------------------------------------------------
-# Keep until CMake-3.0 is the official minimum requirement
-if(NOT (${CMAKE_VERSION} VERSION_LESS 3.0))
-    cmake_policy(SET CMP0043 OLD)
-endif()
 
 #-----------------------------------------------------------------------------
 # Ensure we print configuration summary only on the initial CMake run
@@ -95,10 +89,17 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 #-----------------------------------------------------------------------------
 # Global compile definitions since add_definitions() adds for all.
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG           DEBUG _DEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE         NDEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL      NDEBUG)
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO  NDEBUG)
+if(NOT (${CMAKE_VERSION} VERSION_LESS 3.0))
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Debug>:_DEBUG>)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Release>:NDEBUG>)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:RelWithDebInfo>:NDEBUG>)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:MinSizeRel>:NDEBUG>)
+else()
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG           DEBUG _DEBUG)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE         NDEBUG)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL      NDEBUG)
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO  NDEBUG)
+endif()
 
 #-----------------------------------------------------------------------------
 # Set policies
@@ -130,14 +131,9 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE INTERNAL "" FORCE)
 # mangos-zero internal features
 option(WITH_DEBUG_OUTPUT            "Enable ${CMAKE_PROJECT_NAME} debug output"             OFF)
 
-# mangos-zero database bindings
-option(WITH_MYSQL                   "Enable MySQL database backend"                          ON)
-mark_as_advanced(WITH_MYSQL)
-
-# mangos-zero language bindings
-option(WITH_MOD_SCRIPTDEV2          "Enable C++ scripting library"                          OFF)
-option(WITH_MOD_SCRIPTDEV2_DIR      "Define the SD2 drectory"                         "scripts")
-mark_as_advanced(WITH_MOD_SCRIPTDEV2_DIR)
+# mangos-zero script extensions
+option(WITH_MZ_SCRIPTS              "Enable ${CMAKE_PROJECT_NAME} script extensions"        OFF)
+mark_as_advanced(WITH_MZ_SCRIPTS)
 
 # Modifiers
 option(WITH_RECAST_DEMO             "Build the Recast movement map viewer application"      OFF)
@@ -355,60 +351,101 @@ elseif(WIN32)
 
 elseif(APPLE)
 
-    if(${CMAKE_OSX_DEPLOYMENT_TARGET} STREQUAL "10.5" OR ${CMAKE_OSX_DEPLOYMENT_TARGET} STRGREATER "10.5")
-        set(WITH_LIBS10.5 ON CACHE BOOL "Use 10.5 libs" FORCE) # valid also for 10.6/10.7
+    if(${CMAKE_VERSION} VERSION_LESS 3.0) # else breaks setting CMP0043 policy
+        cmake_minimum_required(VERSION 2.8.8)
+        cmake_policy(VERSION 2.8.8)
     endif()
 
-    if(WITH_LIBS10.5)
-        message(STATUS "Darwin 9.x detected.")
+    if(NOT CMAKE_OSX_ARCHITECTURES)
+        set(CMAKE_OSX_ARCHITECTURES x86_64 CACHE STRING
+        "Choose the architecture you want to build Blender for: i386, x86_64 or ppc"
+        FORCE)
+    endif()
+
+    execute_process(COMMAND uname -r OUTPUT_VARIABLE MAC_SYS) # check for actual system-version
+    if(${MAC_SYS} MATCHES 14)
+        set(OSX_SYSTEM 10.10)
+        # throw an error here, older cmake cannot handle 2 digit subversion!
+        cmake_minimum_required(VERSION 3.0.0)
+    elseif(${MAC_SYS} MATCHES 13)
+        set(OSX_SYSTEM 10.9)
+    elseif(${MAC_SYS} MATCHES 12)
+        set(OSX_SYSTEM 10.8)
+    elseif(${MAC_SYS} MATCHES 11)
+        set(OSX_SYSTEM 10.7)
+    elseif(${MAC_SYS} MATCHES 10)
+        set(OSX_SYSTEM 10.6)
+    elseif(${MAC_SYS} MATCHES 9)
+        set(OSX_SYSTEM 10.5)
     else()
-        if(CMAKE_OSX_ARCHITECTURES MATCHES i386)
-            message(STATUS "Darwin 8.x i386 detected.")
-        else()
-            message(STATUS "Darwin 8.x PowerPC detected.")
-        endif()
+        set(OSX_SYSTEM unsupported)
     endif()
+    message(STATUS "Detected system-version: " ${OSX_SYSTEM})
 
-    find_library(SYSTEMSTUBS_LIBRARY
-        NAMES
-        SystemStubs
-        PATHS
-    )
-    mark_as_advanced(SYSTEMSTUBS_LIBRARY)
-    if(SYSTEMSTUBS_LIBRARY)
-        set(PLATFORM_LINKLIBS stdc++ SystemStubs)
-    else()
-        set(PLATFORM_LINKLIBS stdc++)
-    endif()
+    # workaround for incorrect cmake xcode lookup for developer previews - XCODE_VERSION does not take xcode-select path into accout
+    # but would always look into /Applications/Xcode.app while dev versions are named Xcode<version>-DP<preview_number>
+    execute_process(COMMAND xcode-select --print-path  OUTPUT_VARIABLE XCODE_CHECK OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REPLACE "/Contents/Developer" "" XCODE_BUNDLE ${XCODE_CHECK}) # truncate to bundlepath in any case
+    message(STATUS "Xcode-bundle : " ${XCODE_BUNDLE})
 
-    set(PLATFORM_CFLAGS "-pipe -funsigned-char")
-    set(PLATFORM_LINKFLAGS "-fexceptions -framework CoreServices -framework Foundation -framework IOKit -framework AppKit -framework Carbon -framework AGL -framework AudioUnit -framework AudioToolbox -framework CoreAudio -framework QuickTime")
-    set(WITH_INPUT_NDOF OFF)  # unsupported
+    if(${CMAKE_GENERATOR} MATCHES "Xcode")
 
-    set(EXETYPE MACOSX_BUNDLE)
-
-    set(CMAKE_C_FLAGS_DEBUG "-fno-strict-aliasing -g")
-    set(CMAKE_CXX_FLAGS_DEBUG "-fno-strict-aliasing -g")
-    if(CMAKE_OSX_ARCHITECTURES MATCHES "x86_64" OR CMAKE_OSX_ARCHITECTURES MATCHES "i386")
-        set(CMAKE_CXX_FLAGS_RELEASE "-O2 -mdynamic-no-pic -msse -msse2 -msse3 -mssse3")
-        set(CMAKE_C_FLAGS_RELEASE "-O2 -mdynamic-no-pic  -msse -msse2 -msse3 -mssse3")
-        if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -ftree-vectorize  -fvariable-expansion-in-unroller")
-            set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ftree-vectorize  -fvariable-expansion-in-unroller")
-        endif()
-    else()
-        set(CMAKE_C_FLAGS_RELEASE "-mdynamic-no-pic -fno-strict-aliasing")
-        set(CMAKE_CXX_FLAGS_RELEASE "-mdynamic-no-pic -fno-strict-aliasing")
-    endif()
-
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        if(${CMAKE_GENERATOR} MATCHES "Xcode")
-            if(${XCODE_VERSION} VERSION_EQUAL 5 OR ${XCODE_VERSION} VERSION_GREATER 5)
-                # Xcode 5 has too low template depth of 128 for libmv
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=1024")
+        if(${XCODE_VERSION} VERSION_GREATER 4.2) # earlier xcode has no bundled developer dir, no sense in getting xcode path from
+            string(SUBSTRING "${XCODE_CHECK}" 14 6 DP_NAME) # reduce to XCode name without dp extension
+            if(${DP_NAME} MATCHES Xcode5)
+                set(XCODE_VERSION 5)
             endif()
         endif()
+
+        ##### cmake incompatibility with xcode  4.3 and higher #####
+        if(${XCODE_VERSION} MATCHES '') # cmake fails due looking for xcode in the wrong path, thus will be empty var
+            message(FATAL_ERROR "Xcode 4.3 and higher must be used with cmake 2.8-8 or higher")
+        endif()
+        ### end cmake incompatibility with xcode 4.3 and higher ###
+
+        if(${XCODE_VERSION} VERSION_EQUAL 4 OR ${XCODE_VERSION} VERSION_GREATER 4 AND ${XCODE_VERSION} VERSION_LESS 4.3)
+            # Xcode 4 defaults to the Apple LLVM Compiler.
+            # Override the default compiler selection because Blender only compiles with gcc up to xcode 4.2
+            set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+            message(STATUS "Setting compiler to: " ${CMAKE_XCODE_ATTRIBUTE_GCC_VERSION})
+        endif()
+    else() # unix makefile generator does not fill XCODE_VERSION var, so we get it with a command
+        execute_process(COMMAND xcodebuild -version OUTPUT_VARIABLE XCODE_VERS_BUILD_NR)
+        string(SUBSTRING "${XCODE_VERS_BUILD_NR}" 6 3 XCODE_VERSION) # truncate away build-nr
+        unset(XCODE_VERS_BUILD_NR)
     endif()
+
+    message(STATUS "Detected Xcode-version: " ${XCODE_VERSION})
+
+    if(${XCODE_VERSION} VERSION_LESS 4.3)
+        set(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk CACHE PATH "" FORCE)  # use guaranteed existing sdk
+    else()
+        # note: xcode-select path could be ambigous, cause /Applications/Xcode.app/Contents/Developer or /Applications/Xcode.app would be allowed
+        # so i use a selfcomposed bundlepath here
+        set(OSX_SYSROOT_PREFIX ${XCODE_BUNDLE}/Contents/Developer/Platforms/MacOSX.platform)
+        message(STATUS "OSX_SYSROOT_PREFIX: " ${OSX_SYSROOT_PREFIX})
+        set(OSX_DEVELOPER_PREFIX /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk) # use guaranteed existing sdk
+        set(CMAKE_OSX_SYSROOT ${OSX_SYSROOT_PREFIX}/${OSX_DEVELOPER_PREFIX} CACHE PATH "" FORCE)
+        if(${CMAKE_GENERATOR} MATCHES "Xcode")
+            set(CMAKE_XCODE_ATTRIBUTE_SDKROOT macosx${OSX_SYSTEM}) # to silence sdk not found warning, just overrides CMAKE_OSX_SYSROOT
+        endif()
+    endif()
+
+    if(OSX_SYSTEM MATCHES 10.9)
+        set(CMAKE_FIND_ROOT_PATH ${CMAKE_OSX_SYSROOT}) # make sure syslibs and headers are looked up in sdk ( expecially for 10.9 openGL atm. )
+    endif()
+
+    if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.6" CACHE STRING "" FORCE) # 10.6 is our min. target, if you use higher sdk, weak linking happens
+    endif()
+
+    if(NOT ${CMAKE_GENERATOR} MATCHES "Xcode")
+        # force CMAKE_OSX_DEPLOYMENT_TARGET for makefiles, will not work else ( cmake bug ? )
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        add_definitions("-DMACOSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    endif()
+
 endif()
 
 #-----------------------------------------------------------------------------
@@ -441,15 +478,14 @@ endif()
 find_package(OpenSSL REQUIRED)
 find_package(BZip2 REQUIRED)
 find_package(ZLIB REQUIRED)
-
+find_package(Lua52 REQUIRED)
 find_package(ACE REQUIRED)
+
 if(EXISTS ${ACE_INCLUDE_DIR}/ace/Stack_Trace.h)
     set(HAVE_ACE_STACK_TRACE_H ON)
 endif()
 
-if(WITH_MYSQL)
-    find_package(MySQL REQUIRED)
-endif()
+find_package(MySQL REQUIRED)
 
 #-----------------------------------------------------------------------------
 # Extra compile flags
@@ -469,6 +505,7 @@ add_custom_target("revision.h" ALL
 #-----------------------------------------------------------------------------
 # Build dependencies and our own applications
 add_subdirectory(dep)
+add_subdirectory(sql)
 add_subdirectory(src)
 
 #-----------------------------------------------------------------------------
@@ -480,31 +517,10 @@ if(FIRST_RUN)
     message(STATUS "")
     message(STATUS "Scripting information:")
 
-    if(WITH_MOD_SCRIPTDEV2)
-        message(STATUS "  ScriptDev2 scripting enabled.")
+    if(WITH_MZ_SCRIPTS)
+        message(STATUS "  script extensions enabled.")
     else()
-        message(STATUS "  ScriptDev2 scripting disabled.")
-    endif()
-
-    message(STATUS "")
-    message(STATUS "Feature information:")
-
-    if(WITH_MOD_SOAP)
-        message(STATUS "  SOAP interface enabled.")
-    else()
-        message(STATUS "  SOAP interface disabled.")
-    endif()
-
-    if(WITH_MOD_CLI)
-        message(STATUS "  Command Line interface enabled.")
-    else()
-        message(STATUS "  Command Line interface disabled.")
-    endif()
-
-    if(WITH_MOD_REMOTE)
-        message(STATUS "  Remote Access interface enabled.")
-    else()
-        message(STATUS "  Remote Access interface disabled.")
+        message(STATUS "  script extensions disabled.")
     endif()
 
     message(STATUS "")

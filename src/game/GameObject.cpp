@@ -78,8 +78,6 @@ GameObject::GameObject() : WorldObject(),
 
 GameObject::~GameObject()
 {
-    Eluna::RemoveRef(this);
-
     delete m_model;
 }
 
@@ -299,7 +297,7 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
                             // we need to open doors if they are closed (add there another condition if this code breaks some usage, but it need to be here for battlegrounds)
                             if (GetGoState() != GO_STATE_READY)
                                 ResetDoorOrButton();
-                            // flags in AB are type_button and we need to add them here so no break!
+                        // flags in AB are type_button and we need to add them here so no break!
                         default:
                             if (!m_spawnedByDefault)        // despawn timer
                             {
@@ -333,7 +331,7 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
 
                     // FIXME: this is activation radius (in different casting radius that must be selected from spell data)
                     // TODO: move activated state code (cast itself) to GO_ACTIVATED, in this place only check activating and set state
-                    float radius = float(goInfo->trap.radius);
+                    float radius = (goInfo->trap.radius)/3*2; // TODO rename radius to diameter (goInfo->trap.radius) should be (goInfo->trap.diameter)
                     if (!radius)
                     {
                         if (goInfo->trap.cooldown != 3)     // cast in other case (at some triggering/linked go/etc explicit call)
@@ -441,41 +439,41 @@ void GameObject::Update(uint32 update_diff, uint32 p_time)
                     SetLootState(GO_READY);
                     return; // SetLootState and return because go is treated as "burning flag" due to GetGoAnimProgress() being 100 and would be removed on the client
                 case GAMEOBJECT_TYPE_CHEST:
+                {
+                    uint32 trapEntry = GetGOInfo()->GetLinkedGameObjectEntry();
+                    if (144064) // Special case for Gordunni Cobalt Visual
                     {
-                        uint32 trapEntry = GetGOInfo()->GetLinkedGameObjectEntry();
-                        if (144064) // Special case for Gordunni Cobalt Visual
-                        {
-                            float range = 0.5f;
-                            GameObject* visualGO = NULL;
-
-                            MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, 177683, range); //177683 Visual Entry
-                            MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(visualGO, go_check);
-
-                            Cell::VisitGridObjects(this, checker, range);
-
-                            if (visualGO)
-                                visualGO->SetLootState(GO_JUST_DEACTIVATED);
-                        }
-
-                        if (!trapEntry)
-                            break;
-                        GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(trapEntry);
-                        if (!trapInfo || trapInfo->type != GAMEOBJECT_TYPE_TRAP)
-                            break;
-
                         float range = 0.5f;
+                        GameObject* visualGO = NULL;
 
-                        GameObject* trapGO = NULL;
-
-                        MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, trapEntry, range);
-                        MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(trapGO, go_check);
+                        MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, 177683, range); //177683 Visual Entry
+                        MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(visualGO, go_check);
 
                         Cell::VisitGridObjects(this, checker, range);
 
-                        // found correct GO
-                        if (trapGO)
-                            trapGO->SetLootState(GO_JUST_DEACTIVATED);
+                        if (visualGO)
+                            visualGO->SetLootState(GO_JUST_DEACTIVATED);
                     }
+
+                    if (!trapEntry)
+                        break;
+                    GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(trapEntry);
+                    if (!trapInfo || trapInfo->type != GAMEOBJECT_TYPE_TRAP)
+                        break;
+
+                    float range = 0.5f;
+
+                    GameObject* trapGO = NULL;
+
+                    MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*this, trapEntry, range);
+                    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> checker(trapGO, go_check);
+
+                    Cell::VisitGridObjects(this, checker, range);
+
+                    // found correct GO
+                    if (trapGO)
+                        trapGO->SetLootState(GO_JUST_DEACTIVATED);
+                }
 
                 default:
                     break;

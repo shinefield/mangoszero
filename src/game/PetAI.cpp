@@ -68,8 +68,11 @@ void PetAI::MoveInLineOfSight(Unit* u)
         {
             if (m_creature->IsWithinLOSInMap(u))
             {
-                AttackStart(u);
-                u->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                if (IsVisible(u))
+                {
+                    AttackStart(u);
+                    u->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                }
             }
         }
     }
@@ -106,7 +109,7 @@ bool PetAI::_needToStop() const
     if (m_creature->isCharmed() && m_creature->getVictim() == m_creature->GetCharmer())
         return true;
 
-    return !m_creature->getVictim()->isTargetableForAttack();
+    return !m_creature->getVictim()->isTargetableForAttack() && IsVisible(m_creature->getVictim());
 }
 
 void PetAI::_stopAttack()

@@ -640,6 +640,12 @@ class MANGOS_DLL_SPEC WorldObject : public Object
         bool IsPositionValid() const;
         void UpdateGroundPositionZ(float x, float y, float& z) const;
         void UpdateAllowedPositionZ(float x, float y, float& z) const;
+        void MovePositionToFirstCollision(WorldLocation &pos, float dist, float angle);
+        void GetFirstCollisionPosition(WorldLocation &pos, float dist, float angle)
+        {
+            GetPosition(pos);
+            MovePositionToFirstCollision(pos, dist, angle);
+        }
 
         void GetRandomPoint(float x, float y, float z, float distance, float& rand_x, float& rand_y, float& rand_z) const;
 
@@ -754,10 +760,7 @@ class MANGOS_DLL_SPEC WorldObject : public Object
             return m_currMap;
         }
         // used to check all object's GetMap() calls when object is not in world!
-        void ResetMap()
-        {
-            m_currMap = NULL;
-        }
+        void ResetMap();
 
         // obtain terrain data for map where this object belong...
         TerrainInfo const* GetTerrain() const;
@@ -785,7 +788,7 @@ class MANGOS_DLL_SPEC WorldObject : public Object
 
         virtual void StartGroupLoot(Group* /*group*/, uint32 /*timer*/) {}
 
-        ElunaEventProcessor* const elunaEvents;
+        ElunaEventProcessor* elunaEvents;
 
     protected:
         explicit WorldObject();

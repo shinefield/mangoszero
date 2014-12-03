@@ -3,7 +3,7 @@
 #####################################
 
 [MangosdConf]
-ConfVersion=2013012201
+ConfVersion=2014110301
 
 ###################################################################################################################
 # CONNECTIONS AND DIRECTORIES
@@ -111,6 +111,12 @@ BindIP = "0.0.0.0"
 #        Default: 1 (unload grids)
 #                 0 (do not unload grids)
 #
+#    LoadAllGridsOnMaps
+#        Load grids of maps at server startup (if you have lot memory you can try it to have a living world always loaded)
+#        This also allow ALL creatures on the given maps to update their grid without any player around.
+#        Default: "" (don't load all grids at startup)
+#                 "mapId1[,mapId2[..]]" (DO load all grids on the given maps- Experimental and very resource consuming)
+#
 #    GridCleanUpDelay
 #        Grid clean up delay (in milliseconds)
 #        Default: 300000 (5 min)
@@ -205,6 +211,7 @@ PlayerLimit = 100
 SaveRespawnTimeImmediately = 1
 MaxOverspeedPings = 2
 GridUnload = 1
+LoadAllGridsOnMaps = ""
 GridCleanUpDelay = 300000
 MapUpdateInterval = 100
 ChangeWeatherInterval = 600000
@@ -242,7 +249,7 @@ CleanCharacterDB = 1
 #    LogLevel
 #        Server console level of logging
 #        0 = Minimum; 1 = Basic&Error; 2 = Detail; 3 = Full/Debug
-#        Default: 3
+#        Default: 1
 #
 #    LogTime
 #        Include time in server console output [hh:mm:ss]
@@ -262,11 +269,12 @@ CleanCharacterDB = 1
 #    LogFileLevel
 #        Server file level of logging
 #        0 = Minimum; 1 = Error; 2 = Detail; 3 = Full/Debug
-#        Default: 0
+#        Default: 3
 #
 #    LogFilter_CreatureMoves
 #    LogFilter_TransportMoves
 #    LogFilter_PlayerMoves
+#    LogFilter_PlayerStats
 #    LogFilter_VisibilityChanges
 #    LogFilter_Weather
 #    LogFilter_DbStrictedCheck
@@ -280,7 +288,6 @@ CleanCharacterDB = 1
 #
 #    LogFilter_PeriodicAffects
 #    LogFilter_AIAndMovegens
-#    LogFilter_PlayerStats
 #    LogFilter_Damage
 #    LogFilter_Combat
 #    LogFilter_SpellCast
@@ -343,11 +350,6 @@ CleanCharacterDB = 1
 #                     in form Logname_#ID_YYYY-MM-DD_HH-MM-SS.Ext
 #                     or form Logname_#ID.Ext
 #
-#    RaLogFile
-#        Log file of RA commands
-#        Default: "remote-access.log"
-#                 "" - Empty name for disable
-#
 #    LogColors
 #        Color for messages (format "normal_color details_color debug_color error_color")
 #        Colors: 0 - BLACK, 1 - RED, 2 - GREEN,  3 - BROWN, 4 - BLUE, 5 - MAGENTA, 6 -  CYAN, 7 - GREY,
@@ -359,11 +361,11 @@ CleanCharacterDB = 1
 
 LogSQL = 1
 PidFile = ""
-LogLevel = 3
+LogLevel = 1
 LogTime = 0
 LogFile = "world-server.log"
 LogTimestamp = 0
-LogFileLevel = 0
+LogFileLevel = 3
 LogFilter_TransportMoves = 1
 LogFilter_CreatureMoves = 1
 LogFilter_VisibilityChanges = 1
@@ -374,9 +376,9 @@ LogFilter_MapsLoading = 1
 LogFilter_EventAiDev = 1
 LogFilter_PeriodicAffects = 0
 LogFilter_PlayerMoves = 1
+LogFilter_PlayerStats = 1
 LogFilter_SQLText = 1
 LogFilter_AIAndMovegens = 0
-LogFilter_PlayerStats = 0
 LogFilter_Damage = 0
 LogFilter_Combat = 0
 LogFilter_SpellCast = 0
@@ -391,7 +393,6 @@ CharLogDump = 0
 GmLogFile = "gamemasters.log"
 GmLogTimestamp = 0
 GmLogPerAccount = 0
-RaLogFile = "remote-access.log"
 LogColors = "13 7 11 9"
 
 ###################################################################################################################
@@ -1353,6 +1354,11 @@ Death.Ghost.RunSpeed.Battleground = 1.0
 #        Default: 0 (disable)
 #                 1 (enable)
 #
+#    Battleground.ScoreStatistics
+#        Enable Battleground scores storage in database.
+#        Default: 0 - (Disabled)
+#                 1 - (Enabled)
+#
 #    Battleground.InvitationType
 #        Set Battleground invitation type
 #        Default: 0 (normal - invite as much players to BG as possible, don't bother with balance)
@@ -1373,6 +1379,7 @@ Death.Ghost.RunSpeed.Battleground = 1.0
 Battleground.CastDeserter = 1
 Battleground.QueueAnnouncer.Join = 0
 Battleground.QueueAnnouncer.Start = 0
+Battleground.ScoreStatistics = 0
 Battleground.InvitationType = 0
 BattleGround.PrematureFinishTimer = 300000
 BattleGround.PremadeGroupWaitForMatch = 0
@@ -1430,66 +1437,16 @@ Network.KickOnBadPacket = 0
 Network.Timeout = 100000
 
 ###################################################################################################################
-# CONSOLE, REMOTE ACCESS AND SOAP
+# CONSOLE
 #
 #    Console.Enable
 #        Enable console
 #        Default: 0 - off
 #                 1 - on
 #
-#    Ra.Enable
-#        Enable remote console
-#        Default: 0 - off
-#                 1 - on
-#
-#    Ra.IP
-#        Default remote console IP address, use 0.0.0.0 for every address
-#
-#    Ra.Port
-#        Default remote console port
-#        Default: 3443
-#
-#    Ra.MinLevel
-#        Minimum level that's required to login
-#        Default: 3 (Administrator)
-#
-#    Ra.Secure
-#        Kick client on wrong pass
-#                 0 - off
-#        Default: 1 - on
-#
-#    Ra.Stricted
-#        Not allow execute console level only commands remotely by RA
-#                 0 - off
-#        Default: 1 - on
-#
-#
-#    SOAP.Enable
-#        Enable soap service
-#        Default: 0 - off
-#                 1 - on
-#
-#    SOAP.IP
-#        Bound SOAP service IP address, use 0.0.0.0 to access from everywhere
-#        Default: 127.0.0.1
-#
-#    SOAP.Port
-#        SOAP port
-#        Default: 7878
-#
 ###################################################################################################################
 
 Console.Enable = 0
-Ra.Enable = 0
-Ra.IP = 0.0.0.0
-Ra.Port = 3443
-Ra.MinLevel = 3
-Ra.Secure = 1
-Ra.Stricted = 1
-
-SOAP.Enabled = 0
-SOAP.IP = 127.0.0.1
-SOAP.Port = 7878
 
 ###################################################################################################################
 #    CharDelete.Method
@@ -1527,9 +1484,9 @@ CharDelete.KeepDays = 30
 #                 1 (Enabled)
 #
 #    Eluna.ScriptPath
-#        Default: "lua_scripts"
+#        Default: "scripts"
 #
 ###################################################################################################################
 
 Eluna.Enabled = 1
-Eluna.ScriptPath = "${CMAKE_INSTALL_PREFIX}/share/${APPLICATION_NAME}/lua_scripts"
+Eluna.ScriptPath = "${CMAKE_INSTALL_PREFIX}/share/${APPLICATION_NAME}/scripts"

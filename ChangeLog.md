@@ -4,6 +4,80 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
+## 1.1.0 (2014-12-03)
+
+Major changes for this build which require your attention when upgrading include
+things such as these:
+
+* support for ScriptDev2 has been dropped, and the matching configuration options
+  are gone. Instead we provide our own script library, where we recreate scripts
+  for game content from scratch (use WITH_MZ_SCRIPTS parameter to enable/disable).
+* fixed resting system. Resting will now work as intended.
+* SOAP bindings removed! In order to focus our efforts on the server and increasing
+  its' quality, will continue to strip down the server to relevant components.
+* remote access removed! To reduce possible security risk, we stripped the remote
+  access console from the world server.
+* **new** configuration setting `LoadAllGridsOnMaps`: with this setting a list of
+  maps can be defined on which grids and creatures will be kept loaded. Continents
+  will be loaded on server start, instances when a player enters. **Notice** that
+  this will increase CPU load and memory usage depending on the amount of maps you
+  chose to keep in memory.
+* load active entities based on active maps. Ideas and loop to load all grids on
+  a map by Neo2003.
+* implement `CREATURE_FLAG_EXTRA_ACTIVE`: setting this flag in `creature_template`
+  `ExtraFlags` will result in the creature being loaded and set to active when the
+  map is created. Use with care.
+* added a new admin command to force raid instance resets
+* implement new TEMPFACTION_TOGGLE flags for `UNIT_FLAG_PACIFIED` and
+  `UNIT_FLAG_NOT_SELECTABLE`
+* implement TARGET_UNIT_NEARBY_ALLY and unify handling of TARGET_UNIT_NEARBY_
+* allow target 60 to use script target when required
+* remove invisibility aura (18) based on attributes. Passive and negative auras will
+  not be removed on combat
+* implement spell effect 19395
+* implement Battleground scores storage system
+* implement EVENT_T_ENERGY for EventAI
+* SCRIPT_COMMAND_CAST_SPELL (15) allows passing additional spell-IDs with
+  dataint..dataint4 columns. If these are used, a random spell out of datalong,
+  dataint, ..dataintX is used as cast spell.
+* Lua 5.2 is now an external dependency. Please install Lua 5.2 with development
+  headers. Windows users should grab [Lua binaries](http://luabinaries.sourceforge.net/)
+  and Linux users will find a Lua 5.2 package from their distribution vendor, e.g.
+  Debian/Ubuntu provide `liblua5.2-0`/`liblua5.2-dev` packages.
+
+Minor fixes and improvements have been added, such as:
+
+* the CMake build system is now compatible with CMake 2.8 and CMake 3.
+* fixed the range of traps based on YouTube videos.
+* fixed the range in which spell focus objects (such as fires) will trigger.
+  This prevents fire damage taken even though you're not standing in the fire.
+* database files and updates will now be installed, too.
+* code refactoring in many functions makes the code more readable.
+* rooted players will now not only appear rooted to other players, but actually
+  stay rooted for real.
+* fixed skinning loot bug.
+* allow non-instanced empty map creation.
+* replaced `Map::LoadGrid` with `Map::ForceLoadGrid`
+* fixed raid instance reset crash
+* use strict database filter for creatures with movement points without a
+  matching movement type
+* fix possible mount abuse after leaving battlegrounds
+* unify startup messages, and changed loading routines for sane
+  grouping
+* use a global team index for battleground teams
+* fixed a bug that caused AreaAura reapply because the code doesn't search the
+  correct rank of it.
+* fixed AreaAura bug when low level grouped with high level Player. Thank to
+  @tarwyn for his precious help and proposed patch.
+* allow logout during duels
+* various code style fixes
+* various performance fixes
+* CreatureLinking: improve startup efficiency. No need to use multiple select to
+  check and obtain information about db-data of an expectedly unique creature
+* CreatureLinking: allow recursive CanSpawn checks. This will fix behaviour of
+  mobs whose spawning is dependent on mobs whose spawning is dependent on other
+  mobs.
+
 ## 1.0.0 (2014-10-27)
 
 Minor fixes and improvements have been added, such as:

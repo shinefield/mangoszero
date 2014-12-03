@@ -53,7 +53,6 @@
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "MapManager.h"
-#include "LuaEngine.h"
 
 #define NULL_AURA_SLOT 0xFF
 
@@ -296,11 +295,11 @@ Aura::Aura(SpellEntry const* spellproto, SpellEffectIndex eff, int32* currentBas
 
 Aura::~Aura()
 {
-    Eluna::RemoveRef(this);
 }
 
 AreaAura::AreaAura(SpellEntry const* spellproto, SpellEffectIndex eff, int32* currentBasePoints, SpellAuraHolder* holder, Unit* target,
-                   Unit* caster, Item* castItem) : Aura(spellproto, eff, currentBasePoints, holder, target, caster, castItem)
+                   Unit* caster, Item* castItem, uint32 originalRankSpellId)
+    : Aura(spellproto, eff, currentBasePoints, holder, target, caster, castItem), m_originalRankSpellId(originalRankSpellId)
 {
     m_isAreaAura = true;
 
@@ -457,12 +456,20 @@ void AreaAura::Update(uint32 diff)
 
             for (Spell::UnitList::iterator tIter = targets.begin(); tIter != targets.end(); ++tIter)
             {
-                // flag for seelction is need apply aura to current iteration target
+                // flag for selection is need apply aura to current iteration target
                 bool apply = true;
 
+                SpellEntry const* actualSpellInfo;
+                if (GetCasterGuid() == (*tIter)->GetObjectGuid()) // if caster is same as target then no need to change rank of the spell
+                    actualSpellInfo = GetSpellProto();
+                else
+                    actualSpellInfo = sSpellMgr.SelectAuraRankForLevel(GetSpellProto(), (*tIter)->getLevel()); // use spell id according level of the target
+                if (!actualSpellInfo)
+                    continue;
+
+                Unit::SpellAuraHolderBounds spair = (*tIter)->GetSpellAuraHolderBounds(actualSpellInfo->Id);
                 // we need ignore present caster self applied are auras sometime
                 // in cases if this only auras applied for spell effect
-                Unit::SpellAuraHolderBounds spair = (*tIter)->GetSpellAuraHolderBounds(GetId());
                 for (Unit::SpellAuraHolderMap::const_iterator i = spair.first; i != spair.second; ++i)
                 {
                     if (i->second->IsDeleted())
@@ -482,40 +489,37 @@ void AreaAura::Update(uint32 diff)
                     continue;
 
                 // Skip some targets (TODO: Might require better checks, also unclear how the actual caster must/can be handled)
-                if (GetSpellProto()->HasAttribute(SPELL_ATTR_EX3_ONLY_TARGET_PLAYERS) && (*tIter)->GetTypeId() != TYPEID_PLAYER)
+                if (actualSpellInfo->HasAttribute(SPELL_ATTR_EX3_ONLY_TARGET_PLAYERS) && (*tIter)->GetTypeId() != TYPEID_PLAYER)
                     continue;
 
-                if (SpellEntry const* actualSpellInfo = sSpellMgr.SelectAuraRankForLevel(GetSpellProto(), (*tIter)->getLevel()))
+                int32 actualBasePoints = m_currentBasePoints;
+                // recalculate basepoints for lower rank (all AreaAura spell not use custom basepoints?)
+                if (actualSpellInfo != GetSpellProto())
+                    actualBasePoints = actualSpellInfo->CalculateSimpleValue(m_effIndex);
+
+                SpellAuraHolder* holder = (*tIter)->GetSpellAuraHolder(actualSpellInfo->Id, GetCasterGuid());
+
+                bool addedToExisting = true;
+                if (!holder)
                 {
-                    int32 actualBasePoints = m_currentBasePoints;
-                    // recalculate basepoints for lower rank (all AreaAura spell not use custom basepoints?)
-                    if (actualSpellInfo != GetSpellProto())
-                        actualBasePoints = actualSpellInfo->CalculateSimpleValue(m_effIndex);
-
-                    SpellAuraHolder* holder = (*tIter)->GetSpellAuraHolder(actualSpellInfo->Id, GetCasterGuid());
-
-                    bool addedToExisting = true;
-                    if (!holder)
-                    {
-                        holder = CreateSpellAuraHolder(actualSpellInfo, (*tIter), caster);
-                        addedToExisting = false;
-                    }
-
-                    holder->SetAuraDuration(GetAuraDuration());
-
-                    AreaAura* aur = new AreaAura(actualSpellInfo, m_effIndex, &actualBasePoints, holder, (*tIter), caster, NULL);
-                    holder->AddAura(aur, m_effIndex);
-
-                    if (addedToExisting)
-                    {
-                        (*tIter)->AddAuraToModList(aur);
-                        holder->SetInUse(true);
-                        aur->ApplyModifier(true, true);
-                        holder->SetInUse(false);
-                    }
-                    else
-                        (*tIter)->AddSpellAuraHolder(holder);
+                    holder = CreateSpellAuraHolder(actualSpellInfo, (*tIter), caster);
+                    addedToExisting = false;
                 }
+
+                holder->SetAuraDuration(GetAuraDuration());
+
+                AreaAura* aur = new AreaAura(actualSpellInfo, m_effIndex, &actualBasePoints, holder, (*tIter), caster, NULL, GetSpellProto()->Id);
+                holder->AddAura(aur, m_effIndex);
+
+                if (addedToExisting)
+                {
+                    (*tIter)->AddAuraToModList(aur);
+                    holder->SetInUse(true);
+                    aur->ApplyModifier(true, true);
+                    holder->SetInUse(false);
+                }
+                else
+                    (*tIter)->AddSpellAuraHolder(holder);
             }
         }
         Aura::Update(diff);
@@ -524,6 +528,7 @@ void AreaAura::Update(uint32 diff)
     {
         Unit* caster = GetCaster();
         Unit* target = GetTarget();
+        uint32 originalRankSpellId = m_originalRankSpellId ? m_originalRankSpellId : GetId(); // caster may have different spell id if target has lower level
 
         Aura::Update(diff);
 
@@ -531,9 +536,10 @@ void AreaAura::Update(uint32 diff)
         // or caster is isolated or caster no longer has the aura
         // or caster is (no longer) friendly
         bool needFriendly = true;
-        if (!caster || caster->hasUnitState(UNIT_STAT_ISOLATED) ||
-                !caster->IsWithinDistInMap(target, m_radius)        ||
-                !caster->HasAura(GetId(), GetEffIndex())            ||
+        if (!caster ||
+                caster->hasUnitState(UNIT_STAT_ISOLATED)               ||
+                !caster->HasAura(originalRankSpellId, GetEffIndex())   ||
+                !caster->IsWithinDistInMap(target, m_radius)           ||
                 caster->IsFriendlyTo(target) != needFriendly
            )
         {
@@ -1083,6 +1089,12 @@ void Aura::TriggerSpell()
             case 16191:                                     // Mana Tide
             {
                 triggerTarget->CastCustomSpell(triggerTarget, trigger_spell_id, &m_modifier.m_amount, NULL, NULL, true, NULL, this);
+                return;
+            }
+            case 19695:                                     // Inferno
+            {
+                int32 damageForTick[8] = { 500, 500, 1000, 1000, 2000, 2000, 3000, 5000 };
+                triggerTarget->CastCustomSpell(triggerTarget, 19698, &damageForTick[GetAuraTicks() - 1], NULL, NULL, true, NULL);
                 return;
             }
         }
@@ -2280,9 +2292,9 @@ void Aura::HandleModCharm(bool apply, bool Real)
                     if (target->GetByteValue(UNIT_FIELD_BYTES_0, 1) == 0)
                     {
                         if (cinfo->UnitClass == 0)
-                            sLog.outErrorDb("Creature (Entry: %u) have unit_class = 0 but used in charmed spell, that will be result client crash.", cinfo->Entry);
+                            sLog.outErrorDb("Creature (Entry: %u) have UnitClass = 0 but used in charmed spell, that will be result client crash.", cinfo->Entry);
                         else
-                            sLog.outError("Creature (Entry: %u) have unit_class = %u but at charming have class 0!!! that will be result client crash.", cinfo->Entry, cinfo->UnitClass);
+                            sLog.outError("Creature (Entry: %u) have UnitClass = %u but at charming have class 0!!! that will be result client crash.", cinfo->Entry, cinfo->UnitClass);
 
                         target->SetByteValue(UNIT_FIELD_BYTES_0, 1, CLASS_MAGE);
                     }
@@ -2402,6 +2414,9 @@ void Aura::HandleAuraModDisarm(bool apply, bool Real)
 
 void Aura::HandleAuraModStun(bool apply, bool Real)
 {
+    if (GetTarget()->IsTaxiFlying())
+        return;
+
     if (!Real)
         return;
 
@@ -2744,12 +2759,12 @@ void Aura::HandleModThreat(bool apply, bool Real)
     int multiplier = 0;
     switch (GetId())
     {
-            // Arcane Shroud
+        // Arcane Shroud
         case 26400:
             level_diff = target->getLevel() - 60;
             multiplier = 2;
             break;
-            // The Eye of Diminution
+        // The Eye of Diminution
         case 28862:
             level_diff = target->getLevel() - 60;
             multiplier = 1;
@@ -3007,7 +3022,7 @@ void Aura::HandleAuraProcTriggerSpell(bool apply, bool Real)
 
     switch (GetId())
     {
-            // some spell have charges by functionality not have its in spell data
+        // some spell have charges by functionality not have its in spell data
         case 28200:                                         // Ascendance (Talisman of Ascendance trinket)
             if (apply)
                 GetHolder()->SetAuraCharges(6);
@@ -3513,13 +3528,13 @@ void Aura::HandleAuraModIncreaseHealth(bool apply, bool Real)
 
     switch (GetId())
     {
-            // Special case with temporary increase max/current health
-            // Cases where we need to manually calculate the amount for the spell (by percentage)
-            // recalculate to full amount at apply for proper remove
-            // Backport native TBC: no cases yet
-            // no break here
+        // Special case with temporary increase max/current health
+        // Cases where we need to manually calculate the amount for the spell (by percentage)
+        // recalculate to full amount at apply for proper remove
+        // Backport native TBC: no cases yet
+        // no break here
 
-            // Cases where m_amount already has the correct value (spells cast with CastCustomSpell or absolute values)
+        // Cases where m_amount already has the correct value (spells cast with CastCustomSpell or absolute values)
         case 12976:                                         // Warrior Last Stand triggered spell (Cast with percentage-value by CastCustomSpell)
         {
             if (Real)
@@ -4789,7 +4804,7 @@ void Aura::PeriodicDummyTick()
         {
             switch (spell->Id)
             {
-                    // Forsaken Skills
+                // Forsaken Skills
                 case 7054:
                 {
                     // Possibly need cast one of them (but
@@ -4942,7 +4957,7 @@ SpellAuraHolder::SpellAuraHolder(SpellEntry const* spellproto, Unit* target, Wor
     // some custom stack values at aura holder create
     switch (m_spellProto->Id)
     {
-            // some auras applied with max stack
+        // some auras applied with max stack
         case 24575:                                         // Brittle Armor
         case 24659:                                         // Unstable Power
         case 24662:                                         // Restless Strength
@@ -5346,7 +5361,7 @@ void SpellAuraHolder::HandleSpellSpecificBoosts(bool apply)
         {
             switch (GetId())
             {
-                    // The Beast Within and Bestial Wrath - immunity
+                // The Beast Within and Bestial Wrath - immunity
                 case 19574:
                 {
                     spellId1 = 24395;

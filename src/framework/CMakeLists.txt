@@ -150,8 +150,8 @@ else()
 endif()
 
 #-----------------------------------------------------------------------------
-# Add database library specific sources
-if(WITH_MYSQL AND MYSQL_FOUND)
+# Add MySQL library specific sources
+if(MYSQL_FOUND)
     include_directories(
         ${MYSQL_INCLUDE_DIR}
     )
@@ -199,7 +199,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DMANGOS_DEBUG")
 endif()
 
-if(WITH_MYSQL AND MYSQL_FOUND)
+if(MYSQL_FOUND)
     set(BUILD_PROPERTIES "${BUILD_PROPERTIES} -DDO_MYSQL")
     target_link_libraries(mangos-framework ${MYSQL_LIBRARIES})
 endif()

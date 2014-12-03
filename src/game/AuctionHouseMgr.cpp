@@ -40,7 +40,6 @@
 #include "network/WorldPacket.h"
 #include "WorldSession.h"
 #include "Mail.h"
-#include "LuaEngine.h"
 
 INSTANTIATE_SINGLETON_1(AuctionHouseMgr);
 
@@ -267,7 +266,6 @@ void AuctionHouseMgr::LoadAuctionItems()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 auction items");
         return;
     }
@@ -307,8 +305,8 @@ void AuctionHouseMgr::LoadAuctionItems()
     while (result->NextRow());
     delete result;
 
-    sLog.outString();
     sLog.outString(">> Loaded %u auction items", count);
+    sLog.outString();
 }
 
 void AuctionHouseMgr::LoadAuctions()
@@ -318,7 +316,6 @@ void AuctionHouseMgr::LoadAuctions()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 auctions. DB table `auction` is empty.");
         return;
     }
@@ -331,7 +328,6 @@ void AuctionHouseMgr::LoadAuctions()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 auctions. DB table `auction` is empty.");
         return;
     }
@@ -342,7 +338,6 @@ void AuctionHouseMgr::LoadAuctions()
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 auctions. DB table `auction` is empty.");
         return;
     }
@@ -430,8 +425,8 @@ void AuctionHouseMgr::LoadAuctions()
     while (result->NextRow());
     delete result;
 
-    sLog.outString();
     sLog.outString(">> Loaded %u auctions", AuctionCount);
+    sLog.outString();
 }
 
 void AuctionHouseMgr::AddAItem(Item* it)
@@ -565,8 +560,6 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(Unit* unit)
 
 AuctionHouseObject::~AuctionHouseObject()
 {
-    Eluna::RemoveRef(this);
-
     for (AuctionEntryMap::const_iterator itr = AuctionsMap.begin(); itr != AuctionsMap.end(); ++itr)
         delete itr->second;
 }

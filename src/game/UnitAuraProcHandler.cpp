@@ -47,7 +47,7 @@ pAuraProcHandler AuraProcHandler[TOTAL_AURAS] =
     &Unit::HandleDummyAuraProc,                             //  4 SPELL_AURA_DUMMY
     &Unit::HandleNULLProc,                                  //  5 SPELL_AURA_MOD_CONFUSE
     &Unit::HandleNULLProc,                                  //  6 SPELL_AURA_MOD_CHARM
-    &Unit::HandleNULLProc,                                  //  7 SPELL_AURA_MOD_FEAR
+    &Unit::HandleRemoveByDamageChanceProc,                  //  7 SPELL_AURA_MOD_FEAR
     &Unit::HandleNULLProc,                                  //  8 SPELL_AURA_PERIODIC_HEAL
     &Unit::HandleNULLProc,                                  //  9 SPELL_AURA_MOD_ATTACKSPEED
     &Unit::HandleNULLProc,                                  // 10 SPELL_AURA_MOD_THREAT
@@ -66,7 +66,7 @@ pAuraProcHandler AuraProcHandler[TOTAL_AURAS] =
     &Unit::HandleNULLProc,                                  // 23 SPELL_AURA_PERIODIC_TRIGGER_SPELL
     &Unit::HandleNULLProc,                                  // 24 SPELL_AURA_PERIODIC_ENERGIZE
     &Unit::HandleNULLProc,                                  // 25 SPELL_AURA_MOD_PACIFY
-    &Unit::HandleNULLProc,                                  // 26 SPELL_AURA_MOD_ROOT
+    &Unit::HandleRemoveByDamageChanceProc,                  // 26 SPELL_AURA_MOD_ROOT
     &Unit::HandleNULLProc,                                  // 27 SPELL_AURA_MOD_SILENCE
     &Unit::HandleNULLProc,                                  // 28 SPELL_AURA_REFLECT_SPELLS
     &Unit::HandleNULLProc,                                  // 29 SPELL_AURA_MOD_STAT
@@ -100,7 +100,7 @@ pAuraProcHandler AuraProcHandler[TOTAL_AURAS] =
     &Unit::HandleNULLProc,                                  // 57 SPELL_AURA_MOD_SPELL_CRIT_CHANCE
     &Unit::HandleNULLProc,                                  // 58 SPELL_AURA_MOD_INCREASE_SWIM_SPEED
     &Unit::HandleNULLProc,                                  // 59 SPELL_AURA_MOD_DAMAGE_DONE_CREATURE
-    &Unit::HandleNULLProc,                                  // 60 SPELL_AURA_MOD_PACIFY_SILENCE
+    &Unit::HandleRemoveByDamageChanceProc,                  // 60 SPELL_AURA_MOD_PACIFY_SILENCE
     &Unit::HandleNULLProc,                                  // 61 SPELL_AURA_MOD_SCALE
     &Unit::HandleNULLProc,                                  // 62 SPELL_AURA_PERIODIC_HEALTH_FUNNEL
     &Unit::HandleNULLProc,                                  // 63 SPELL_AURA_PERIODIC_MANA_FUNNEL obsolete?
@@ -331,7 +331,7 @@ SpellAuraProcResult Unit::HandleHasteAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (hasteSpell->Id)
             {
-                    // Blade Flurry
+                // Blade Flurry
                 case 13877:
                 {
                     target = SelectRandomUnfriendlyTarget(pVictim);
@@ -395,9 +395,9 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (dummySpell->Id)
             {
-                    // [-ZERO] TODO:  check all spell id ( most of them are different in 1.12 )
+                // [-ZERO] TODO:  check all spell id ( most of them are different in 1.12 )
 
-                    // Eye for an Eye
+                // Eye for an Eye
                 case 9799:
                 case 25988:
                 {
@@ -442,7 +442,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
                 case 21063:
                     triggered_spell_id = 21064;
                     break;
-                    // Unstable Power
+                // Unstable Power
                 case 24658:
                 {
                     if (!procSpell || procSpell->Id == 24659)
@@ -579,7 +579,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
 
             switch (dummySpell->Id)
             {
-                    // Ignite
+                // Ignite
                 case 11119:
                 case 11120:
                 case 12846:
@@ -649,7 +649,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (dummySpell->Id)
             {
-                    // Vampiric Embrace
+                // Vampiric Embrace
                 case 15286:
                 {
                     if (!pVictim || !pVictim->isAlive())
@@ -686,7 +686,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (dummySpell->Id)
             {
-                    // Healing Touch (Dreamwalker Raiment set)
+                // Healing Touch (Dreamwalker Raiment set)
                 case 28719:
                 {
                     // mana back
@@ -709,7 +709,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (dummySpell->Id)
             {
-                    // Clean Escape
+                // Clean Escape
                 case 23582:
                     // triggered spell have same masks and etc with main Vanish spell
                     if (!procSpell || procSpell->Effect[EFFECT_INDEX_0] == SPELL_EFFECT_NONE)
@@ -786,7 +786,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
 
             switch (dummySpell->Id)
             {
-                    // Holy Power (Redemption Armor set)
+                // Holy Power (Redemption Armor set)
                 case 28789:
                 {
                     if (!pVictim)
@@ -824,7 +824,7 @@ SpellAuraProcResult Unit::HandleDummyAuraProc(Unit* pVictim, uint32 damage, Aura
         {
             switch (dummySpell->Id)
             {
-                    // Totemic Power (The Earthshatterer set)
+                // Totemic Power (The Earthshatterer set)
                 case 28823:
                 {
                     if (!pVictim)
@@ -927,21 +927,21 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
         case SPELLFAMILY_GENERIC:
             switch (auraSpellInfo->Id)
             {
-                    // case 5301:  break;                   // Defensive State (DND)
-                    // case 7137:  break;                   // Shadow Charge (Rank 1)
-                    // case 7377:  break;                   // Take Immune Periodic Damage <Not Working>
-                    // case 13358: break;                   // Defensive State (DND)
-                    // case 16092: break;                   // Defensive State (DND)
-                    // case 18943: break;                   // Double Attack
-                    // case 19194: break;                   // Double Attack
-                    // case 19817: break;                   // Double Attack
-                    // case 19818: break;                   // Double Attack
-                    // case 22835: break;                   // Drunken Rage
-                    //    trigger_spell_id = 14822; break;
+                // case 5301:  break;                   // Defensive State (DND)
+                // case 7137:  break;                   // Shadow Charge (Rank 1)
+                // case 7377:  break;                   // Take Immune Periodic Damage <Not Working>
+                // case 13358: break;                   // Defensive State (DND)
+                // case 16092: break;                   // Defensive State (DND)
+                // case 18943: break;                   // Double Attack
+                // case 19194: break;                   // Double Attack
+                // case 19817: break;                   // Double Attack
+                // case 19818: break;                   // Double Attack
+                // case 22835: break;                   // Drunken Rage
+                //    trigger_spell_id = 14822; break;
                 case 23780:                                 // Aegis of Preservation (Aegis of Preservation trinket)
                     trigger_spell_id = 23781;
                     break;
-                    // case 24949: break;                   // Defensive State 2 (DND)
+                // case 24949: break;                   // Defensive State 2 (DND)
                 case 27522:                                 // Mana Drain Trigger
                 {
                     // On successful melee or ranged attack gain $29471s1 mana and if possible drain $27526s1 mana from the target.
@@ -996,7 +996,7 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
                     case 12867:
                         basepoints[0] = int32(weaponDamage * 0.6f);
                         break;
-                        // Impossible case
+                    // Impossible case
                     default:
                         sLog.outError("Unit::HandleProcTriggerSpellAuraProc: DW unknown spell rank %u", auraSpellInfo->Id);
                         return SPELL_AURA_PROC_FAILED;
@@ -1261,7 +1261,7 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
     // dummy basepoints or other customs
     switch (trigger_spell_id)
     {
-            // Cast positive spell on enemy target
+        // Cast positive spell on enemy target
         case 7099:  // Curse of Mending
         case 39647: // Curse of Mending
         case 29494: // Temptation
@@ -1480,4 +1480,20 @@ SpellAuraProcResult Unit::HandleModResistanceAuraProc(Unit* /*pVictim*/, uint32 
     }
 
     return SPELL_AURA_PROC_OK;
+}
+
+SpellAuraProcResult Unit::HandleRemoveByDamageChanceProc(Unit* pVictim, uint32 damage, Aura* triggeredByAura, SpellEntry const *procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown)
+{
+    // The chance to dispel an aura depends on the damage taken with respect to the casters level.
+    uint32 max_dmg = getLevel() > 8 ? 25 * getLevel() - 150 : 50;
+    float chance = float(damage) / max_dmg * 100.0f;
+    if (roll_chance_f(chance))
+    {
+        triggeredByAura->SetInUse(true);
+        RemoveAurasByCasterSpell(triggeredByAura->GetId(), triggeredByAura->GetCasterGuid());
+        triggeredByAura->SetInUse(false);
+        return SPELL_AURA_PROC_OK;
+    }
+
+    return SPELL_AURA_PROC_FAILED;
 }

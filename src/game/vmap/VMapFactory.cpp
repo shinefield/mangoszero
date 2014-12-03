@@ -32,7 +32,7 @@ using namespace G3D;
 
 namespace VMAP
 {
-    void chompAndTrim(std::string& str)
+    void VMapFactory::chompAndTrim(std::string& str)
     {
         while (str.length() > 0)
         {
@@ -66,7 +66,7 @@ namespace VMAP
     //===============================================
     // result false, if no more id are found
 
-    bool getNextId(const std::string& pString, unsigned int& pStartPos, unsigned int& pId)
+    bool VMapFactory::getNextId(const std::string& pString, unsigned int& pStartPos, unsigned int& pId)
     {
         bool result = false;
         unsigned int i;
@@ -121,7 +121,7 @@ namespace VMAP
     // just return the instance
     IVMapManager* VMapFactory::createOrGetVMapManager()
     {
-        if (gVMapManager == 0)
+        if (!gVMapManager)
             gVMapManager = new VMapManager2();              // should be taken from config ... Please change if you like :-)
         return gVMapManager;
     }

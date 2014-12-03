@@ -26,6 +26,7 @@
 #ifndef MANGOS_H_DATABASEMYSQL
 #define MANGOS_H_DATABASEMYSQL
 
+#include "policies/Singleton.h"
 #include <ace/Thread_Mutex.h>
 #include <ace/Guard_T.h>
 #ifdef WIN32
@@ -33,7 +34,6 @@
 #endif
 #include <mysql.h>
 
-#include "policies/Singleton.h"
 #include "Database.h"
 
 // MySQL prepared statement class

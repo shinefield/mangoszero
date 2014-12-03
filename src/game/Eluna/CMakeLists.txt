@@ -41,7 +41,7 @@ include_directories(
     ${MYSQL_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/dep/include/g3dlite/
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour/Include/
-    ${CMAKE_SOURCE_DIR}/dep/lua/src/
+    ${LUA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/framework/
     ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_SOURCE_DIR}/src/game/BattleGround/
@@ -54,7 +54,7 @@ include_directories(
 #-----------------------------------------------------------------------------
 # Build the Eluna library
 add_library(mangos-eluna STATIC ${eluna_LIB_SRCS})
-target_link_libraries(mangos-eluna mangos-framework Detour g3dlite liblua ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
+target_link_libraries(mangos-eluna mangos-framework Detour g3dlite ${LUA_LIBRARIES} ${ACE_LIBRARIES} ${MYSQL_LIBRARIES})
 
 #-----------------------------------------------------------------------------
 # Append compile flags - if set by build definition
@@ -68,5 +68,5 @@ set_target_properties(mangos-eluna PROPERTIES COMPILE_FLAGS ${BUILD_PROPERTIES})
 
 #-----------------------------------------------------------------------------
 # Install the Eluna files
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extensions DESTINATION ${DATA_DIR}/lua_scripts)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/master.lua DESTINATION ${DATA_DIR}/lua_scripts)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extensions DESTINATION ${DATA_DIR}/scripts)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/master.lua DESTINATION ${DATA_DIR}/scripts)

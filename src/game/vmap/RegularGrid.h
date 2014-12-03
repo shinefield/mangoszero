@@ -49,11 +49,11 @@ struct NodeCreator
 };
 
 template < class T,
-         class Node,
-         class NodeCreatorFunc = NodeCreator<Node>,
-         /*class BoundsFunc = BoundsTrait<T>,*/
-         class PositionFunc = PositionTrait<T>
-         >
+           class Node,
+           class NodeCreatorFunc = NodeCreator<Node>,
+           /*class BoundsFunc = BoundsTrait<T>,*/
+           class PositionFunc = PositionTrait<T>
+           >
 class RegularGrid2D
 {
     public:
@@ -126,7 +126,7 @@ class RegularGrid2D
 
             static Cell ComputeCell(float fx, float fy)
             {
-                Cell c = {fx* (1.f / CELL_SIZE) + (CELL_NUMBER / 2), fy* (1.f / CELL_SIZE) + (CELL_NUMBER / 2)};
+                Cell c = {int(fx * (1.f/CELL_SIZE) + ((float)CELL_NUMBER/2.0f)), int(fy * (1.f/CELL_SIZE) + ((float)CELL_NUMBER/2.0f))};
                 return c;
             }
 

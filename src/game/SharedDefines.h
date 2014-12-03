@@ -511,6 +511,15 @@ enum Team
     ALLIANCE            = 469,
 };
 
+enum PvpTeamIndex
+{
+    TEAM_INDEX_ALLIANCE = 0,
+    TEAM_INDEX_HORDE    = 1,
+    TEAM_INDEX_NEUTRAL  = 2,
+};
+
+#define PVP_TEAM_COUNT    2
+
 enum SpellEffects
 {
     SPELL_EFFECT_NONE                      = 0,
@@ -1724,7 +1733,6 @@ enum CreatureEliteType
     CREATURE_ELITE_RAREELITE       = 2,
     CREATURE_ELITE_WORLDBOSS       = 3,
     CREATURE_ELITE_RARE            = 4,
-    CREATURE_UNKNOWN               = 5                      // found in 2.2.3 for 2 mobs
 };
 
 enum HolidayIds
@@ -1744,7 +1752,6 @@ enum HolidayIds
     HOLIDAY_LUNAR_FESTIVAL           = 327,
     HOLIDAY_LOVE_IS_IN_THE_AIR       = 335,
     HOLIDAY_FIRE_FESTIVAL            = 341,
-    HOLIDAY_BREWFEST                 = 372,
     HOLIDAY_DARKMOON_FAIRE_ELWYNN    = 374,
     HOLIDAY_DARKMOON_FAIRE_THUNDER   = 375,
 };
@@ -1758,7 +1765,7 @@ enum QuestSort
     QUEST_SORT_UNDERCITY_OLD       = 23,
     QUEST_SORT_HERBALISM           = 24,
     QUEST_SORT_SCARLET_MONASTERY_OLD = 25,
-    QUEST_SORT_ULDAMN_OLD          = 41,
+    QUEST_SORT_ULDAMAN_OLD         = 41,
     QUEST_SORT_WARLOCK             = 61,
     QUEST_SORT_WARRIOR             = 81,
     QUEST_SORT_SHAMAN              = 82,
@@ -1786,7 +1793,6 @@ enum QuestSort
     QUEST_SORT_REPUTATION          = 367,
     QUEST_SORT_INVASION            = 368,
     QUEST_SORT_MIDSUMMER           = 369,
-    QUEST_SORT_BREWFEST            = 370
 };
 
 inline uint8 ClassByQuestSort(int32 QuestSort)
@@ -2550,5 +2556,11 @@ enum TrackedAuraType
 
 // Max creature level (included some bosses and elite)
 #define DEFAULT_MAX_CREATURE_LEVEL 65
+
+enum TeleportLocation
+{
+    TELEPORT_LOCATION_HOMEBIND          = 0,
+    TELEPORT_LOCATION_BG_ENTRY_POINT    = 1,
+};
 
 #endif

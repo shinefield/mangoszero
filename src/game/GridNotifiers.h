@@ -495,8 +495,11 @@ namespace MaNGOS
         void Visit(CameraMapType& m)
         {
             for (CameraMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->getSource()->GetBody()->IsWithinDist(i_searcher, i_dist))
-                    i_do(itr->getSource()->GetOwner());
+            {
+                Camera* camera = itr->getSource();
+                if (camera->GetBody()->IsWithinDist(i_searcher, i_dist))
+                    i_do(camera->GetOwner());
+            }
         }
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED>&) {}
     };
@@ -578,13 +581,14 @@ namespace MaNGOS
             }
             bool operator()(GameObject* go) const
             {
-                if (go->GetGOInfo()->type != GAMEOBJECT_TYPE_SPELL_FOCUS)
+                GameObjectInfo const* goInfo = go->GetGOInfo();
+                if (goInfo->type != GAMEOBJECT_TYPE_SPELL_FOCUS)
                     return false;
 
-                if (go->GetGOInfo()->spellFocus.focusId != i_focusId)
+                if (goInfo->spellFocus.focusId != i_focusId)
                     return false;
 
-                float dist = (float)go->GetGOInfo()->spellFocus.dist;
+                float dist = (float)goInfo->spellFocus.dist/2;
 
                 return go->IsWithinDistInMap(i_unit, dist);
             }

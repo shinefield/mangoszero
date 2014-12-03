@@ -1092,9 +1092,9 @@ bool Pet::InitStatsForLevel(uint32 petlevel, Unit* owner)
 
     SetModifierValue(UNIT_MOD_ARMOR, BASE_VALUE, float(petlevel * 50));
 
-    SetAttackTime(BASE_ATTACK, BASE_ATTACK_TIME);
-    SetAttackTime(OFF_ATTACK, BASE_ATTACK_TIME);
-    SetAttackTime(RANGED_ATTACK, BASE_ATTACK_TIME);
+    SetAttackTime(BASE_ATTACK, cinfo->MeleeBaseAttackTime);
+    SetAttackTime(OFF_ATTACK, cinfo->MeleeBaseAttackTime);
+    SetAttackTime(RANGED_ATTACK, cinfo->RangedBaseAttackTime);
 
     SetFloatValue(UNIT_MOD_CAST_SPEED, 1.0);
 
@@ -1199,9 +1199,8 @@ bool Pet::InitStatsForLevel(uint32 petlevel, Unit* owner)
             SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, sObjectMgr.GetXPForPetLevel(petlevel));
             // these formula may not be correct; however, it is designed to be close to what it should be
             // this makes dps 0.5 of pets level
-            SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float(petlevel - (petlevel / 4)));
-            // damage range is then petlevel / 2
-            SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float(petlevel + (petlevel / 4)));
+            SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float(0.5*GetAttackTime(BASE_ATTACK)*(petlevel - (petlevel / 4))/1000));
+            SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float(0.5*GetAttackTime(BASE_ATTACK)*(petlevel + (petlevel / 4))/1000));
             // damage is increased afterwards as strength and pet scaling modify attack power
 
             // stored standard pet stats are entry 1 in pet_levelinfo
@@ -1874,6 +1873,7 @@ void Pet::ToggleAutocast(uint32 spellid, bool apply)
         return;
 
     PetSpellMap::iterator itr = m_spells.find(spellid);
+    PetSpell &petSpell = itr->second;
 
     uint32 i;
 
@@ -1886,11 +1886,11 @@ void Pet::ToggleAutocast(uint32 spellid, bool apply)
         {
             m_autospells.push_back(spellid);
 
-            if (itr->second.active != ACT_ENABLED)
+            if (petSpell.active != ACT_ENABLED)
             {
-                itr->second.active = ACT_ENABLED;
-                if (itr->second.state != PETSPELL_NEW)
-                    itr->second.state = PETSPELL_CHANGED;
+                petSpell.active = ACT_ENABLED;
+                if (petSpell.state != PETSPELL_NEW)
+                    petSpell.state = PETSPELL_CHANGED;
             }
         }
     }
@@ -1903,11 +1903,11 @@ void Pet::ToggleAutocast(uint32 spellid, bool apply)
         if (i < m_autospells.size())
         {
             m_autospells.erase(itr2);
-            if (itr->second.active != ACT_DISABLED)
+            if (petSpell.active != ACT_DISABLED)
             {
-                itr->second.active = ACT_DISABLED;
-                if (itr->second.state != PETSPELL_NEW)
-                    itr->second.state = PETSPELL_CHANGED;
+                petSpell.active = ACT_DISABLED;
+                if (petSpell.state != PETSPELL_NEW)
+                    petSpell.state = PETSPELL_CHANGED;
             }
         }
     }
@@ -1920,8 +1920,6 @@ bool Pet::IsPermanentPetFor(Player* owner)
         case SUMMON_PET:
             switch (owner->getClass())
             {
-                    // oddly enough, Mage's Water Elemental is still treated as temporary pet with Glyph of Eternal Water
-                    // i.e. does not unsummon at mounting, gets dismissed at teleport etc.
                 case CLASS_WARLOCK:
                     return GetCreatureInfo()->CreatureType == CREATURE_TYPE_DEMON;
                 default:
@@ -2028,11 +2026,11 @@ void Pet::SynchronizeLevelWithOwner()
 
     switch (getPetType())
     {
-            // always same level
+        // always same level
         case SUMMON_PET:
             GivePetLevel(owner->getLevel());
             break;
-            // can't be greater owner level
+        // can't be greater owner level
         case HUNTER_PET:
             if (getLevel() > owner->getLevel())
                 GivePetLevel(owner->getLevel());

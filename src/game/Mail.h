@@ -259,7 +259,7 @@ class MailDraft
             m_bodyId = itemTextId;
             return *this;
         }
-        MailDraft& SetSubjectAndBody(std::string subject, std::string text);
+        MailDraft& SetSubjectAndBody(const std::string &subject, const std::string &text);
         MailDraft& SetMailTemplate(uint16 mailTemplateId, bool need_items = true)
         {
             m_mailTemplateId = mailTemplateId, m_mailTemplateItemsNeed = need_items;

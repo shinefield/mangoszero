@@ -1,4 +1,4 @@
-/* This file contain expected by code spell properties from simple existance to spell family mask and icons. */
+/* This file contain expected by code spell properties from simple existence to spell family mask and icons. */
 
 /* This data let easy detect spell properties change at client version       */
 /* support switch and update or drop problematic code associated with checked*/

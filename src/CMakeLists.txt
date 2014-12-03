@@ -47,6 +47,6 @@ add_subdirectory(mangosd)
 
 #-----------------------------------------------------------------------------
 # Add the mangos script library
-if(WITH_MOD_SCRIPTDEV2)
-    add_subdirectory(bindings)
+if(WITH_MZ_SCRIPTS)
+    add_subdirectory(scripts)
 endif()

@@ -28,9 +28,3 @@
 #-----------------------------------------------------------------------------
 # Build the g3d lite library
 add_subdirectory(g3dlite)
-
-#-----------------------------------------------------------------------------
-# Build the gsoap library
-if(WITH_MOD_SOAP)
-    add_subdirectory(gsoap)
-endif()

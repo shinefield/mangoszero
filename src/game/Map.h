@@ -166,7 +166,7 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         {
             getNGrid(p.x_coord, p.y_coord)->setUnloadExplicitLock(on);
         }
-        void LoadGrid(const Cell& cell, bool no_unload = false);
+        void ForceLoadGrid(float x, float y);
         bool UnloadGrid(const uint32& x, const uint32& y, bool pForce);
         virtual void UnloadAll(bool pForce);
 
@@ -204,7 +204,6 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         {
             return i_mapEntry && i_mapEntry->Instanceable();
         }
-        // NOTE: this duplicate of Instanceable(), but Instanceable() can be changed when BG also will be instanceable
         bool IsDungeon() const
         {
             return i_mapEntry && i_mapEntry->IsDungeon();
@@ -216,6 +215,10 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         bool IsBattleGround() const
         {
             return i_mapEntry && i_mapEntry->IsBattleGround();
+        }
+        bool IsContinent() const
+        {
+            return i_mapEntry && i_mapEntry->IsContinent();
         }
 
         // can't be NULL for loaded map
@@ -337,6 +340,9 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
             return &m_creatureLinkingHolder;
         }
 
+        // Teleport all players in that map to choosed location
+        void TeleportAllPlayersTo(TeleportLocation loc);
+
     private:
         void LoadMapAndVMap(int gx, int gy);
 
@@ -350,7 +356,7 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>
         void SendInitTransports(Player* player);
         void SendRemoveTransports(Player* player);
 
-        bool CreatureCellRelocation(Creature* creature, Cell new_cell);
+        bool CreatureCellRelocation(Creature* creature, const Cell &new_cell);
 
         bool loaded(const GridPair&) const;
         void EnsureGridCreated(const GridPair&);

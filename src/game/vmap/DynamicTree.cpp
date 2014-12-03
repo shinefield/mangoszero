@@ -275,6 +275,9 @@ bool DynamicMapTree::getObjectHitPos(const Vector3& pPos1, const Vector3& pPos2,
 
 bool DynamicMapTree::isInLineOfSight(float x1, float y1, float z1, float x2, float y2, float z2) const
 {
+    if (!size())
+        return true;
+
     Vector3 v1(x1, y1, z1), v2(x2, y2, z2);
 
     float maxDist = (v2 - v1).magnitude();

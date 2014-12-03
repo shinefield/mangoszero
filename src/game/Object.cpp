@@ -66,8 +66,6 @@ Object::Object()
 
 Object::~Object()
 {
-    Eluna::RemoveRef(this);
-
     if (IsInWorld())
     {
         ///- Do NOT call RemoveFromWorld here, if the object is a player it will crash
@@ -831,7 +829,7 @@ void Object::MarkForClientUpdate()
 }
 
 WorldObject::WorldObject() :
-    elunaEvents(new ElunaEventProcessor(this)),
+    elunaEvents(NULL),
     m_currMap(NULL),
     m_mapId(0), m_InstanceId(0),
     m_isActiveObject(false)
@@ -840,8 +838,8 @@ WorldObject::WorldObject() :
 
 WorldObject::~WorldObject()
 {
-    Eluna::RemoveRef(this);
     delete elunaEvents;
+    elunaEvents = NULL;
 }
 
 void WorldObject::CleanupsBeforeDelete()
@@ -1257,6 +1255,76 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float& z) const
     }
 }
 
+void WorldObject::MovePositionToFirstCollision(WorldLocation &pos, float dist, float angle)
+{
+    angle += GetOrientation();
+    float destx, desty, destz, ground, floor;
+    pos.coord_z += 2.0f;
+    destx = pos.coord_x + dist * std::cos(angle);
+    desty = pos.coord_y + dist * std::sin(angle);
+
+    // Prevent invalid coordinates here, position is unchanged
+    if (!MaNGOS::IsValidMapCoord(destx, desty))
+    {
+        sLog.outError("WorldObject::MovePositionToFirstCollision invalid coordinates X: %f and Y: %f were passed!", destx, desty);
+        return;
+    }
+
+    ground = GetMap()->GetTerrain()->GetHeightStatic(destx, desty, MAX_HEIGHT, true);
+    floor = GetMap()->GetTerrain()->GetHeightStatic(destx, desty, pos.coord_z, true);
+    destz = fabs(ground - pos.coord_z) <= fabs(floor - pos.coord_z) ? ground : floor;
+
+    bool colPoint = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(GetMapId(), pos.coord_x, pos.coord_y, pos.coord_z + 0.5f, destx, desty, destz + 0.5f, destx, desty, destz, -0.5f);
+
+    // collision occured
+    if (colPoint)
+    {
+        // move back a bit
+        destx -= CONTACT_DISTANCE * std::cos(angle);
+        desty -= CONTACT_DISTANCE * std::sin(angle);
+        dist = sqrt((pos.coord_x - destx)*(pos.coord_x - destx) + (pos.coord_y - desty)*(pos.coord_y - desty));
+    }
+
+    // check dynamic collision
+    colPoint = GetMap()->GetHitPosition(pos.coord_x, pos.coord_y, pos.coord_z + 0.5f, destx, desty, destz, -0.5f);
+
+    // Collided with a gameobject
+    if (colPoint)
+    {
+        destx -= CONTACT_DISTANCE * std::cos(angle);
+        desty -= CONTACT_DISTANCE * std::sin(angle);
+        dist = sqrt((pos.coord_x - destx)*(pos.coord_x - destx) + (pos.coord_y - desty)*(pos.coord_y - desty));
+    }
+
+    float step = dist/10.0f;
+
+    for (int i = 0; i < 10; i++)
+    {
+        // do not allow too big z changes
+        if (fabs(pos.coord_z - destz) > ATTACK_DISTANCE)
+        {
+            destx -= step * std::cos(angle);
+            desty -= step * std::sin(angle);
+            ground = GetMap()->GetTerrain()->GetHeightStatic(destx, desty, MAX_HEIGHT, true);
+            floor = GetMap()->GetTerrain()->GetHeightStatic(destx, desty, pos.coord_z, true);
+            destz = fabs(ground - pos.coord_z) <= fabs(floor - pos.coord_z) ? ground : floor;
+        }
+        // we have correct destz now
+        else
+        {
+            pos.coord_x = destx;
+            pos.coord_y = desty;
+            pos.coord_z = destz;
+            break;
+        }
+    }
+
+    MaNGOS::NormalizeMapCoord(pos.coord_x);
+    MaNGOS::NormalizeMapCoord(pos.coord_y);
+    UpdateGroundPositionZ(pos.coord_x, pos.coord_y, pos.coord_z);
+    pos.orientation = m_position.o;
+}
+
 bool WorldObject::IsPositionValid() const
 {
     return MaNGOS::IsValidMapCoord(m_position.x, m_position.y, m_position.z, m_position.o);
@@ -1431,6 +1499,18 @@ void WorldObject::SetMap(Map* map)
     // lets save current map's Id/instanceId
     m_mapId = map->GetId();
     m_InstanceId = map->GetInstanceId();
+
+    delete elunaEvents;
+    // On multithread replace this with a pointer to map's Eluna pointer stored in a map
+    elunaEvents = new ElunaEventProcessor(&Eluna::GEluna, this);
+}
+
+void WorldObject::ResetMap()
+{
+    delete elunaEvents;
+    elunaEvents = NULL;
+
+    m_currMap = NULL;
 }
 
 TerrainInfo const* WorldObject::GetTerrain() const

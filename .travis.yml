@@ -20,7 +20,8 @@ compiler:
 # Install build requirements
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq libbz2-dev libncurses5-dev libmysqlclient-dev libreadline-dev libsdl1.2-dev libssl-dev zlib1g-dev libace-dev
+ - sudo apt-get install -qq libace-dev libbz2-dev liblua5.2-dev libncurses5-dev libmysqlclient-dev libreadline-dev libsdl1.2-dev libssl-dev zlib1g-dev
+ - sudo apt-get install -qq cmake
  # Disabled as it increases build test time
  # - sudo apt-get install cppcheck
 
@@ -34,9 +35,9 @@ script:
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/realmd/
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/game/
   # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/mangosd/
-  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/bindings/scripts/
+  # - cppcheck --platform=unix64 --enable=warning -DDEBUG=1 -DVMAP_DEBUG=1 -DDT_POLYREF64 ./src/scripts/
   - test -d _build || mkdir _build
   - test -d _install || mkdir _install
   - cd _build
-  - cmake -DCMAKE_INSTALL_PREFIX=../_install -DCMAKE_BUILD_TYPE=Debug -DWITH_DEBUG_OUTPUT=1 -DWITH_MOD_SCRIPTDEV2=0 ..
+  - cmake -DCMAKE_INSTALL_PREFIX=../_install -DCMAKE_BUILD_TYPE=Debug -DWITH_DEBUG_OUTPUT=1 ..
   - make -j4

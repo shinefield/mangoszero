@@ -67,8 +67,6 @@ Group::Group() : m_Id(0), m_groupType(GROUPTYPE_NORMAL),
 
 Group::~Group()
 {
-    Eluna::RemoveRef(this);
-
     if (m_bgGroup)
     {
         DEBUG_LOG("Group::~Group: battleground group being deleted.");
@@ -500,7 +498,7 @@ void Group::Disband(bool hideDestroy)
     sEluna->OnDisband(this);
 
     m_leaderGuid.Clear();
-    m_leaderName = "";
+    m_leaderName.clear();
 }
 
 /*********************************************************/

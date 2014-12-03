@@ -29,13 +29,17 @@ extern "C"
 Eluna::ScriptList Eluna::lua_scripts;
 Eluna::ScriptList Eluna::lua_extensions;
 std::string Eluna::lua_folderpath;
+std::string Eluna::lua_requirepath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
+bool Eluna::initialized = false;
 
-extern void RegisterFunctions(lua_State* L);
+extern void RegisterFunctions(Eluna* E);
 
 void Eluna::Initialize()
 {
+    ASSERT(!initialized);
+
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
 
     lua_scripts.clear();
@@ -48,28 +52,46 @@ void Eluna::Initialize()
             lua_folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
-    // GetScripts(lua_folderpath + "/extensions", lua_extensions);
-    GetScripts(lua_folderpath, lua_scripts);
+    lua_requirepath = "";
+    GetScripts(lua_folderpath);
+    lua_requirepath.erase(lua_requirepath.end() - 1);
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
+    initialized = true;
+
     // Create global eluna
-    new Eluna();
+    GEluna = new Eluna();
 }
 
 void Eluna::Uninitialize()
 {
+    ASSERT(initialized);
+
     delete GEluna;
     GEluna = NULL;
+
     lua_scripts.clear();
     lua_extensions.clear();
+
+    initialized = false;
 }
 
 void Eluna::ReloadEluna()
 {
     eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+
+    EventMgr::ProcessorSet oldProcessors;
+    {
+        EventMgr::ReadGuard lock(sEluna->eventMgr->GetLock());
+        oldProcessors = sEluna->eventMgr->processors;
+    }
     Uninitialize();
     Initialize();
+    {
+        EventMgr::WriteGuard lock(sEluna->eventMgr->GetLock());
+        sEluna->eventMgr->processors.insert(oldProcessors.begin(), oldProcessors.end());
+    }
 
     // in multithread foreach: run scripts
     sEluna->RunScripts();
@@ -89,6 +111,8 @@ void Eluna::ReloadEluna()
 
 Eluna::Eluna() :
 L(luaL_newstate()),
+
+event_level(0),
 
 eventMgr(NULL),
 
@@ -110,7 +134,7 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
 {
     // open base lua
     luaL_openlibs(L);
-    RegisterFunctions(L);
+    RegisterFunctions(this);
 
     // Create hidden table with weak values
     lua_newtable(L);
@@ -118,15 +142,22 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     lua_pushstring(L, "v");
     lua_setfield(L, -2, "__mode");
     lua_setmetatable(L, -2);
-    userdata_table = luaL_ref(L, LUA_REGISTRYINDEX);
+    lua_setglobal(L, ELUNA_OBJECT_STORE);
+
+    // Set lua require folder paths (scripts folder structure)
+    lua_getglobal(L, "package");
+    lua_pushstring(L, lua_requirepath.c_str());
+    lua_setfield(L, -2, "path");
+    lua_pushstring(L, ""); // erase cpath
+    lua_setfield(L, -2, "cpath");
+    lua_pop(L, 1);
 
     // Replace this with map insert if making multithread version
-    ASSERT(!Eluna::GEluna);
-    Eluna::GEluna = this;
+    //
 
     // Set event manager. Must be after setting sEluna
-    eventMgr = new EventMgr();
-    eventMgr->globalProcessor = new ElunaEventProcessor(NULL);
+    // on multithread have a map of state pointers and here insert this pointer to the map and then save a pointer of that pointer to the EventMgr
+    eventMgr = new EventMgr(&Eluna::GEluna);
 }
 
 Eluna::~Eluna()
@@ -134,9 +165,10 @@ Eluna::~Eluna()
     OnLuaStateClose();
 
     delete eventMgr;
+    eventMgr = NULL;
 
     // Replace this with map remove if making multithread version
-    Eluna::GEluna = NULL;
+    //
 
     delete ServerEventBindings;
     delete PlayerEventBindings;
@@ -154,11 +186,27 @@ Eluna::~Eluna()
     delete playerGossipBindings;
     delete BGEventBindings;
 
+    ServerEventBindings = NULL;
+    PlayerEventBindings = NULL;
+    GuildEventBindings = NULL;
+    GroupEventBindings = NULL;
+    VehicleEventBindings = NULL;
+
+    PacketEventBindings = NULL;
+    CreatureEventBindings = NULL;
+    CreatureGossipBindings = NULL;
+    GameObjectEventBindings = NULL;
+    GameObjectGossipBindings = NULL;
+    ItemEventBindings = NULL;
+    ItemGossipBindings = NULL;
+    playerGossipBindings = NULL;
+    BGEventBindings = NULL;
+
     // Must close lua state after deleting stores and mgr
     lua_close(L);
 }
 
-void Eluna::AddScriptPath(std::string filename, std::string fullpath, ScriptList& scripts)
+void Eluna::AddScriptPath(std::string filename, std::string fullpath)
 {
     ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `%s`", fullpath.c_str());
 
@@ -170,25 +218,24 @@ void Eluna::AddScriptPath(std::string filename, std::string fullpath, ScriptList
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    bool luascript = ext == ".lua" || ext == ".dll";
-    bool extension = ext == ".ext" || (filename.length() >= 4 && filename.find_last_of("_ext") == filename.length() - 4);
-    if (!luascript && !extension)
+    if (ext != ".lua" && ext != ".dll" && ext != ".ext")
         return;
+    bool extension = ext == ".ext";
 
     LuaScript script;
     script.fileext = ext;
     script.filename = filename;
     script.filepath = fullpath;
-    script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
+    script.modulepath = fullpath.substr(0, fullpath.length() - filename.length() - ext.length());
     if (extension)
         lua_extensions.push_back(script);
     else
-        scripts.push_back(script);
-    ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
+        lua_scripts.push_back(script);
+    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath add path `%s`", fullpath.c_str());
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
-void Eluna::GetScripts(std::string path, ScriptList& scripts)
+void Eluna::GetScripts(std::string path)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
@@ -198,14 +245,32 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 
     if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
     {
+        lua_requirepath +=
+            path + "/?;" +
+            path + "/?.lua;" +
+            path + "/?.dll;" +
+            path + "/?.so;";
+
         for (boost::filesystem::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
         {
             std::string fullpath = dir_iter->path().generic_string();
 
+            // Check if file is hidden
+#ifdef WIN32
+            DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
+            if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
+                continue;
+#endif
+#ifdef UNIX
+            const char* name = dir_iter->path().filename().generic_string().c_str();
+            if (name != ".." || name != "." || name[0] == '.')
+                continue;
+#endif
+
             // load subfolder
             if (boost::filesystem::is_directory(dir_iter->status()))
             {
-                GetScripts(fullpath, scripts);
+                GetScripts(fullpath);
                 continue;
             }
 
@@ -213,18 +278,20 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
             {
                 // was file, try add
                 std::string filename = dir_iter->path().filename().generic_string();
-                AddScriptPath(filename, fullpath, scripts);
+                AddScriptPath(filename, fullpath);
             }
         }
     }
 #else
     ACE_Dirent dir;
-    if (dir.open(path.c_str()) == -1)
-    {
-        ELUNA_LOG_ERROR("[Eluna]: Error No `%s` directory found, creating it", path.c_str());
-        ACE_OS::mkdir(path.c_str());
+    if (dir.open(path.c_str()) == -1) // Error opening directory, return
         return;
-    }
+
+    lua_requirepath +=
+        path + "/?;" +
+        path + "/?.lua;" +
+        path + "/?.dll;" +
+        path + "/?.so;";
 
     ACE_DIRENT *directory = 0;
     while ((directory = dir.read()))
@@ -235,6 +302,18 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 
         std::string fullpath = path + "/" + directory->d_name;
 
+        // Check if file is hidden
+#ifdef WIN32
+        DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
+        if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
+            continue;
+#endif
+#ifdef UNIX
+        const char* name = directory->d_name.c_str();
+        if (name != ".." || name != "." || name[0] == '.')
+            continue;
+#endif
+
         ACE_stat stat_buf;
         if (ACE_OS::lstat(fullpath.c_str(), &stat_buf) == -1)
             continue;
@@ -242,18 +321,18 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
         // load subfolder
         if ((stat_buf.st_mode & S_IFMT) == (S_IFDIR))
         {
-            GetScripts(fullpath, scripts);
+            GetScripts(fullpath);
             continue;
         }
 
         // was file, try add
         std::string filename = directory->d_name;
-        AddScriptPath(filename, fullpath, scripts);
+        AddScriptPath(filename, fullpath);
     }
 #endif
 }
 
-static bool ScriptpathComparator(const LuaScript& first, const LuaScript& second)
+static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
 {
     return first.filepath.compare(second.filepath) < 0;
 }
@@ -264,17 +343,27 @@ void Eluna::RunScripts()
     uint32 count = 0;
 
     ScriptList scripts;
-    lua_extensions.sort(ScriptpathComparator);
-    lua_scripts.sort(ScriptpathComparator);
+    lua_extensions.sort(ScriptPathComparator);
+    lua_scripts.sort(ScriptPathComparator);
     scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
     scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
+
+    UNORDERED_MAP<std::string, std::string> loaded; // filename, path
 
     lua_getglobal(L, "package");
     luaL_getsubtable(L, -1, "loaded");
     int modules = lua_gettop(L);
     for (ScriptList::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
     {
-        lua_getfield(L, modules, it->modulepath.c_str());
+        // Check that no duplicate names exist
+        if (loaded.find(it->filename) != loaded.end())
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`. File with same name already loaded from `%s`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
+            continue;
+        }
+        loaded[it->filename] = it->filepath;
+
+        lua_getfield(L, modules, it->filename.c_str());
         if (!lua_isnoneornil(L, -1))
         {
             lua_pop(L, 1);
@@ -289,7 +378,7 @@ void Eluna::RunScripts()
                 lua_pop(L, 1);
                 Push(L, true);
             }
-            lua_setfield(L, modules, it->modulepath.c_str());
+            lua_setfield(L, modules, it->filename.c_str());
 
             // successfully loaded and ran file
             ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
@@ -306,20 +395,19 @@ void Eluna::RunScripts()
     OnLuaStateOpen();
 }
 
-void Eluna::RemoveRef(const void* obj)
+void Eluna::InvalidateObjects()
 {
-    if (!sEluna)
-        return;
-    lua_rawgeti(sEluna->L, LUA_REGISTRYINDEX, sEluna->userdata_table);
-    lua_pushfstring(sEluna->L, "%p", obj);
-    lua_gettable(sEluna->L, -2);
-    if (!lua_isnoneornil(sEluna->L, -1))
+    lua_getglobal(L, ELUNA_OBJECT_STORE);
+    ASSERT(lua_istable(L, -1));
+
+    lua_pushnil(L);
+    while (lua_next(L, -2))
     {
-        lua_pushfstring(sEluna->L, "%p", obj);
-        lua_pushnil(sEluna->L);
-        lua_settable(sEluna->L, -4);
+        if (ElunaObject* elunaObj = CHECKOBJ<ElunaObject>(L, -1, false))
+            elunaObj->Invalidate();
+        lua_pop(L, 1);
     }
-    lua_pop(sEluna->L, 2);
+    lua_pop(L, 1);
 }
 
 void Eluna::report(lua_State* L)
@@ -329,7 +417,7 @@ void Eluna::report(lua_State* L)
     lua_pop(L, 1);
 }
 
-void Eluna::ExecuteCall(lua_State* L, int params, int res)
+void Eluna::ExecuteCall(int params, int res)
 {
     int top = lua_gettop(L);
     int type = lua_type(L, top - params);
@@ -337,12 +425,14 @@ void Eluna::ExecuteCall(lua_State* L, int params, int res)
     if (type != LUA_TFUNCTION)
     {
         lua_pop(L, params + 1);  // Cleanup the stack.
-        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is a %s, not a function.", lua_typename(L, type));
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", lua_typename(L, type));
         return;
     }
 
+    ++event_level;
     if (lua_pcall(L, params, res, 0))
         report(L);
+    --event_level;
 }
 
 void Eluna::Push(lua_State* L)
@@ -467,41 +557,41 @@ void Eluna::Push(lua_State* L, Object const* obj)
     }
 }
 
-static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
+static int32 CheckIntegerRange(lua_State* L, int narg, int32 min, int32 max)
 {
-    int64 value = luaL_checknumber(L, narg);
+    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
     char error_buffer[64];
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than %d", max);
+        snprintf(error_buffer, 64, "value must be less than or equal to %d", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
     if (value < min)
     {
-        snprintf(error_buffer, 64, "value must be greater than %d", min);
+        snprintf(error_buffer, 64, "value must be greater than or equal to %d", min);
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return value;
+    return static_cast<int32>(value);
 }
 
-static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
+static uint32 CheckUnsignedRange(lua_State* L, int narg, uint32 max)
 {
-    int64 value = luaL_checknumber(L, narg);
+    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
     char error_buffer[64];
 
     if (value < 0)
-        return luaL_argerror(L, narg, "value must be greater than 0");
+        return luaL_argerror(L, narg, "value must be greater than or equal to 0");
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than %u", max);
+        snprintf(error_buffer, 64, "value must be less than or equal to %u", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return value;
+    return static_cast<uint32>(value);
 }
 
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
@@ -575,11 +665,11 @@ template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
     return l;
 }
 
-#define TEST_OBJ(T, O, E, F)\
+#define TEST_OBJ(T, O, R, F)\
 {\
     if (!O || !O->F())\
     {\
-        if (E)\
+        if (R)\
         {\
             std::string errmsg(ElunaTemplate<T>::tname);\
             errmsg += " expected";\
@@ -616,6 +706,22 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error)
     TEST_OBJ(Corpse, obj, error, ToCorpse);
 }
 #undef TEST_OBJ
+
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error)
+{
+    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
+    if (!ptrHold)
+    {
+        if (error)
+        {
+            char buff[256];
+            snprintf(buff, 256, "Error fetching object index %i", narg);
+            luaL_argerror(L, narg, buff);
+        }
+        return NULL;
+    }
+    return *ptrHold;
+}
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
 void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)

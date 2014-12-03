@@ -521,6 +521,18 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     m_caster->CastSpell(unitTarget, spell_id, true, NULL);
                     return;
                 }
+                case 13280:                                 // Gnomish Death Ray
+                {
+                    if (!unitTarget)
+                        return;
+
+                    if (roll_chance_i(15))
+                        m_caster->CastSpell(m_caster, 13493, true);
+                    else
+                        m_caster->CastSpell(unitTarget, 13279, true);
+
+                    return;
+                }
                 case 13535:                                 // Tame Beast
                 {
                     if (!m_originalCaster || m_originalCaster->GetTypeId() != TYPEID_PLAYER)
@@ -728,6 +740,14 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     unitTarget->RemoveAurasDueToSpell(28820);
                     return;
                 }
+                case 19395:                                 // Gordunni Trap
+                {
+                    if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    unitTarget->CastSpell(unitTarget, urand(0, 1) ? 19394 : 11756, true);
+                    return;
+                }
                 case 19411:                                 // Lava Bomb
                 case 20474:                                 // Lava Bomb
                 {
@@ -866,10 +886,13 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                 case 23645:                                 // Hourglass Sand
                     m_caster->RemoveAurasDueToSpell(23170); // Brood Affliction: Bronze
                     return;
-                case 23725:                                 // Gift of Life (warrior bwl trinket)
-                    m_caster->CastSpell(m_caster, 23782, true);
+                case 23725:                                 // Gift of Life (warrior BWL trinket)
+                {
+                    int32 healthModSpellBasePoints0 = int32(m_caster->GetMaxHealth() * 0.15);
+                    m_caster->CastCustomSpell(m_caster, 23782, &healthModSpellBasePoints0, NULL, NULL, true, NULL);
                     m_caster->CastSpell(m_caster, 23783, true);
                     return;
+                }
                 case 24781:                                 // Dream Fog
                 {
                     if (m_caster->GetTypeId() != TYPEID_UNIT || !unitTarget)
@@ -1327,7 +1350,7 @@ void Spell::EffectTriggerSpell(SpellEffectIndex eff_idx)
     // special cases
     switch (triggered_spell_id)
     {
-            // Vanish (not exist)
+        // Vanish (not exist)
         case 18461:
         {
             unitTarget->RemoveSpellsCausingAura(SPELL_AURA_MOD_ROOT);
@@ -1510,13 +1533,16 @@ void Spell::EffectTeleportUnits(SpellEffectIndex eff_idx)   // TODO - Use target
                 sLog.outError("Spell::EffectTeleportUnits - unknown EffectImplicitTargetB[%u] = %u for spell ID %u", eff_idx, m_spellInfo->EffectImplicitTargetB[eff_idx], m_spellInfo->Id);
                 return;
             }
-            // Init dest coordinates
-            float x = m_targets.m_destX;
-            float y = m_targets.m_destY;
-            float z = m_targets.m_destZ;
+
+            WorldLocation destLoc;
+            destLoc.coord_x = m_targets.m_destX;
+            destLoc.coord_y = m_targets.m_destY;
+            destLoc.coord_z = m_targets.m_destZ;
             float orientation = unitTarget->GetOrientation();
+
             // Teleport
-            unitTarget->NearTeleportTo(x, y, z, orientation, unitTarget == m_caster);
+            unitTarget->MovePositionToFirstCollision(destLoc, unitTarget->GetObjectScale(), orientation);
+            unitTarget->NearTeleportTo(destLoc.coord_x, destLoc.coord_y, (destLoc.coord_z + unitTarget->GetObjectScale()), orientation, unitTarget == m_caster);
             return;
         }
     }
@@ -1663,6 +1689,12 @@ void Spell::EffectHeal(SpellEffectIndex /*eff_idx*/)
             return;
 
         int32 addhealth = damage;
+
+        if (caster->HasAura(23401))                         // Corrupted Healing
+            caster->CastSpell(unitTarget, 23402, true);
+
+        if (m_spellInfo->Id == 23783)                       // Gift of Life
+            addhealth = int32(m_caster->GetMaxHealth() * 0.15);
 
         // Swiftmend - consumes Regrowth or Rejuvenation
         if (m_spellInfo->Id == 18562)
@@ -1901,7 +1933,7 @@ void Spell::EffectEnergize(SpellEffectIndex eff_idx)
     switch (m_spellInfo->Id)
     {
         case 9512:                                          // Restore Energy
-            level_diff = m_caster->getLevel() - 40;
+            level_diff = m_caster->getLevel() - 60;
             level_multiplier = 2;
             break;
         case 24571:                                         // Blood Fury
@@ -4499,18 +4531,11 @@ void Spell::EffectLeapForward(SpellEffectIndex eff_idx)
 
     if (m_spellInfo->rangeIndex == SPELL_RANGE_IDX_SELF_ONLY)
     {
-        float dis = GetSpellRadius(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[eff_idx]));
+        float spellDist = GetSpellRadius(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[eff_idx]));
 
-        // before caster
-        float fx, fy, fz;
-        unitTarget->GetClosePoint(fx, fy, fz, unitTarget->GetObjectBoundingRadius(), dis);
-        float ox, oy, oz;
-        unitTarget->GetPosition(ox, oy, oz);
-
-        if (unitTarget->GetMap()->GetHitPosition(ox, oy, oz + 0.5f, fx, fy, fz, -0.5f))
-            unitTarget->UpdateAllowedPositionZ(fx, fy, fz);
-
-        unitTarget->NearTeleportTo(fx, fy, fz, unitTarget->GetOrientation(), unitTarget == m_caster);
+        WorldLocation destLoc;
+        unitTarget->GetFirstCollisionPosition(destLoc, spellDist, 0.0f);
+        unitTarget->NearTeleportTo(destLoc.coord_x, destLoc.coord_y, (destLoc.coord_z + unitTarget->GetObjectScale()), unitTarget->GetOrientation(), unitTarget == m_caster);
     }
 }
 
@@ -4610,14 +4635,16 @@ void Spell::EffectCharge(SpellEffectIndex /*eff_idx*/)
 
     // TODO: research more ContactPoint/attack distance.
     // 3.666666 instead of ATTACK_DISTANCE(5.0f) in below seem to give more accurate result.
-    float x, y, z;
-    unitTarget->GetContactPoint(m_caster, x, y, z, 3.666666f);
+    float angle = unitTarget->GetAngle(m_caster) - unitTarget->GetOrientation();
+    WorldLocation pos;
+    unitTarget->GetContactPoint(m_caster, pos.coord_x, pos.coord_y, pos.coord_z);
+    unitTarget->GetFirstCollisionPosition(pos, unitTarget->GetObjectScale(), angle);
 
     if (unitTarget->GetTypeId() != TYPEID_PLAYER)
         ((Creature*)unitTarget)->StopMoving();
 
     // Only send MOVEMENTFLAG_WALK_MODE, client has strange issues with other move flags
-    m_caster->MonsterMoveWithSpeed(x, y, z, 24.f, true, true);
+    m_caster->MonsterMoveWithSpeed(pos.coord_x, pos.coord_y, (pos.coord_z + unitTarget->GetObjectScale()), 24.f, true, true);
 
     // not all charge effects used in negative spells
     if (unitTarget != m_caster && !IsPositiveSpell(m_spellInfo->Id))

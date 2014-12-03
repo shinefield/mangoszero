@@ -135,15 +135,15 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Summons(bool check_entry_use)
         if (check_entry_use)
             CheckUnusedAISummons();
 
-        sLog.outString();
         sLog.outString(">> Loaded %u CreatureEventAI summon definitions", Count);
+        sLog.outString();
     }
     else
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 CreatureEventAI Summon definitions. DB table `creature_ai_summons` is empty.");
+        sLog.outString();
     }
 }
 
@@ -183,7 +183,7 @@ void CreatureEventAIMgr::CheckUnusedAISummons()
         sLog.outErrorEventAI("Entry %i in table `creature_ai_summons` but not used in EventAI scripts.", *itr);
 }
 
-/// Helper function to check if a target-suite is suitable for the event-type
+/// Helper function to check if a target-type is suitable for the event-type
 bool IsValidTargetType(EventAI_Type eventType, EventAI_ActionType actionType, uint32 targetType, uint32 eventId, uint8 action)
 {
     switch (targetType)
@@ -199,7 +199,7 @@ bool IsValidTargetType(EventAI_Type eventType, EventAI_ActionType actionType, ui
         case TARGET_T_HOSTILE_RANDOM_NOT_TOP:
             if (actionType == ACTION_T_QUEST_EVENT || actionType == ACTION_T_CAST_EVENT || actionType == ACTION_T_QUEST_EVENT_ALL || actionType == ACTION_T_KILLED_MONSTER)
                 sLog.outErrorEventAI("Event %u Action%u uses LIKELY bad Target type %u for event-type %u (must target player)", eventId, action, targetType, eventType);
-            // no break, check if valid at all
+        // no break, check if valid at all
         case TARGET_T_HOSTILE:
         case TARGET_T_HOSTILE_SECOND_AGGRO:
         case TARGET_T_HOSTILE_LAST_AGGRO:
@@ -330,6 +330,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                 case EVENT_T_MANA:
                 case EVENT_T_TARGET_HP:
                 case EVENT_T_TARGET_MANA:
+                case EVENT_T_ENERGY:
                     if (temp.percent_range.percentMax > 100)
                         sLog.outErrorEventAI("Creature %u are using percentage event(%u) with param2 (MinPercent) > 100. Event will never trigger! ", temp.creature_id, i);
 
@@ -544,7 +545,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                             sLog.outErrorEventAI("Event %u Action %u has not set chance param1. Text will not be displayed", i, j + 1);
                         else if (action.chanced_text.chance >= 100)
                             sLog.outErrorEventAI("Event %u Action %u has set chance param1 >= 100. Text will always be displayed", i, j + 1);
-                        // no break here to check texts
+                    // no break here to check texts
                     case ACTION_T_TEXT:
                     {
                         bool not_set = false;
@@ -932,14 +933,14 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
         CheckUnusedAITexts();
         CheckUnusedAISummons();
 
-        sLog.outString();
         sLog.outString(">> Loaded %u CreatureEventAI scripts", Count);
+        sLog.outString();
     }
     else
     {
         BarGoLink bar(1);
         bar.step();
-        sLog.outString();
         sLog.outString(">> Loaded 0 CreatureEventAI scripts. DB table `creature_ai_scripts` is empty.");
+        sLog.outString();
     }
 }
