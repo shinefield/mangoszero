@@ -467,17 +467,17 @@ void ObjectMgr::LoadCreatureTemplates()
         }
 
         if (!displayScaleEntry)
-            sLog.outErrorDb("Creature (Entry: %u) has non-existent modelid in modelid_1/modelid_2", cInfo->Entry);
+            sLog.outErrorDb("Creature (Entry: %u) has non-existent modelid in ModelId1/ModelId2", cInfo->Entry);
 
         if (!cInfo->MinLevel)
         {
-            sLog.outErrorDb("Creature (Entry: %u) has invalid minlevel, set to 1", cInfo->Entry);
+            sLog.outErrorDb("Creature (Entry: %u) has invalid MinLevel, set to 1", cInfo->Entry);
             const_cast<CreatureInfo*>(cInfo)->MinLevel = 1;
         }
 
         if (cInfo->MinLevel > cInfo->MaxLevel)
         {
-            sLog.outErrorDb("Creature (Entry: %u) has invalid maxlevel, set to minlevel", cInfo->Entry);
+            sLog.outErrorDb("Creature (Entry: %u) has invalid MaxLevel, set to MinLevel", cInfo->Entry);
             const_cast<CreatureInfo*>(cInfo)->MaxLevel = cInfo->MinLevel;
         }
 
@@ -511,7 +511,7 @@ void ObjectMgr::LoadCreatureTemplates()
 
         if (cInfo->DamageSchool >= MAX_SPELL_SCHOOL)
         {
-            sLog.outErrorDb("Creature (Entry: %u) has invalid spell school value (%u) in `dmgschool`", cInfo->Entry, cInfo->DamageSchool);
+            sLog.outErrorDb("Creature (Entry: %u) has invalid spell school value (%u) in `DamageSchool`", cInfo->Entry, cInfo->DamageSchool);
             const_cast<CreatureInfo*>(cInfo)->DamageSchool = SPELL_SCHOOL_NORMAL;
         }
 
@@ -533,7 +533,7 @@ void ObjectMgr::LoadCreatureTemplates()
         // must exist or used hidden but used in data horse case
         if (cInfo->Family && !sCreatureFamilyStore.LookupEntry(cInfo->Family) && cInfo->Family != CREATURE_FAMILY_HORSE_CUSTOM)
         {
-            sLog.outErrorDb("Creature (Entry: %u) has invalid creature family (%u) in `family`", cInfo->Entry, cInfo->Family);
+            sLog.outErrorDb("Creature (Entry: %u) has invalid creature family (%u) in `Family`", cInfo->Entry, cInfo->Family);
             const_cast<CreatureInfo*>(cInfo)->Family = 0;
         }
 
@@ -568,7 +568,7 @@ void ObjectMgr::LoadCreatureTemplates()
         if (cInfo->VendorTemplateId > 0)
         {
             if (!(cInfo->NpcFlags & UNIT_NPC_FLAG_VENDOR))
-                sLog.outErrorDb("Table `creature_template` have creature (Entry: %u) with vendor_id %u but not have flag UNIT_NPC_FLAG_VENDOR (%u), vendor items will ignored.", cInfo->Entry, cInfo->VendorTemplateId, UNIT_NPC_FLAG_VENDOR);
+                sLog.outErrorDb("Table `creature_template` have creature (Entry: %u) with vendor template %u but not have flag UNIT_NPC_FLAG_VENDOR (%u), vendor items will ignored.", cInfo->Entry, cInfo->VendorTemplateId, UNIT_NPC_FLAG_VENDOR);
         }
 
         /// if not set custom creature scale then load scale from CreatureDisplayInfo.dbc
@@ -1082,7 +1082,7 @@ void ObjectMgr::LoadCreatures()
         if (cInfo->ExtraFlags & CREATURE_EXTRA_FLAG_AGGRO_ZONE)
         {
             if (!mapEntry || !mapEntry->IsDungeon())
-                sLog.outErrorDb("Table `creature` have creature (GUID: %u Entry: %u) with `creature_template`.`flags_extra` including CREATURE_EXTRA_FLAG_AGGRO_ZONE (%u) but creature are not in instance.",
+                sLog.outErrorDb("Table `creature` have creature (GUID: %u Entry: %u) with `creature_template`.`ExtraFlags` including CREATURE_EXTRA_FLAG_AGGRO_ZONE (%u) but creature are not in instance.",
                                 guid, data.id, CREATURE_EXTRA_FLAG_AGGRO_ZONE);
         }
 

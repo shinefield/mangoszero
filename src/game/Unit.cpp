@@ -2371,7 +2371,7 @@ bool Unit::IsSpellBlocked(Unit* pCaster, SpellEntry const* spellEntry, WeaponAtt
             return false;
     }
 
-    // Check creatures flags_extra for disable block
+    // Check creatures ExtraFlags for disable block
     if (GetTypeId() == TYPEID_UNIT)
     {
         if (((Creature*)this)->GetCreatureInfo()->ExtraFlags & CREATURE_EXTRA_FLAG_NO_BLOCK)
@@ -2487,7 +2487,7 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* pVictim, SpellEntry const* spell)
         // Can`t parry
         canParry = false;
     }
-    // Check creatures flags_extra for disable parry
+    // Check creatures ExtraFlags for disable parry
     if (pVictim->GetTypeId() == TYPEID_UNIT)
     {
         uint32 flagEx = ((Creature*)pVictim)->GetCreatureInfo()->ExtraFlags;
