@@ -4,6 +4,17 @@ Change log for mangos-zero
 This change log references the relevant changes (bug and security fixes) done
 in 1.0 minor versions.
 
+## 1.2.0 (2014-12-XX)
+
+Major changes for this build which require your attention when upgrading include
+things such as these:
+
+*
+
+Minor fixes and improvements have been added, such as:
+
+*
+
 ## 1.1.0 (2014-12-03)
 
 Major changes for this build which require your attention when upgrading include
