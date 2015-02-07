@@ -405,7 +405,7 @@ bool processArgv(int argc, char** argv)
             result = true;
             preciseVectorData = true;
         }
-        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0)
+        else if (strcmp(argv[i], "--skipJunkMaps") == 0)
         {
             param = argv[++i];
             if (!param)
