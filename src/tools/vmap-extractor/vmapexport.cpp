@@ -385,7 +385,6 @@ bool processArgv(int argc, char** argv)
     bool result = true;
     bool hasInputPathParam = false;
     bool preciseVectorData = false;
-    bool skipJunkMaps = true;
     char* param = NULL;
 
     for (int i = 1; i < argc; ++i)
