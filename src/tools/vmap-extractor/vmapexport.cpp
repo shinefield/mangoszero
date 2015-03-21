@@ -385,7 +385,6 @@ bool processArgv(int argc, char** argv)
     bool result = true;
     bool hasInputPathParam = false;
     bool preciseVectorData = false;
-    bool skipJunkMaps = true;
     char* param = NULL;
 
     for (int i = 1; i < argc; ++i)
@@ -405,7 +404,7 @@ bool processArgv(int argc, char** argv)
             result = true;
             preciseVectorData = true;
         }
-        else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--skipJunkMaps") == 0)
+        else if (strcmp(argv[i], "--skipJunkMaps") == 0)
         {
             param = argv[++i];
             if (!param)
